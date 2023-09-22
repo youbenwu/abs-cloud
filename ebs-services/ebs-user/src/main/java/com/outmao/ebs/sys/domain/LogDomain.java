@@ -1,0 +1,19 @@
+package com.outmao.ebs.sys.domain;
+
+import com.outmao.ebs.sys.dto.LogDTO;
+import com.outmao.ebs.sys.entity.Log;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
+public interface LogDomain {
+
+
+    public Log saveLog(LogDTO request);
+
+
+    public Page<Log> getLogPage(Pageable pageable);
+
+
+
+
+}

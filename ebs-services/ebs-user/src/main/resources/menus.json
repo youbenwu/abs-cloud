@@ -1,0 +1,137 @@
+[
+  {
+    "name": "首页",
+    "path": "/index"
+  },
+  {
+    "name": "执法管理",
+    "path": "/lawe",
+    "children":[
+      {
+        "name": "案情管理",
+        "path": "/lawe/case",
+        "children":[
+          {
+            "name": "案情列表",
+            "path": "/lawe/case/case_list"
+          },
+          {
+            "name": "立案审核",
+            "path": "/lawe/case/caseReview_list"
+          },
+          {
+            "name": "结案审核",
+            "path": "/lawe/case/caseFinishReview_list"
+          },
+          {
+            "name": "审核设置",
+            "path": "/lawe/case/caseSetting"
+          }
+        ]
+      },
+      {
+        "name": "法律法规库存",
+        "path": "/lawe/law",
+        "children":[
+          {
+            "name": "法律法规",
+            "path": "/lawe/law/law_list"
+          },
+          {
+            "name": "法律条款",
+            "path": "/lawe/law/lawPro_list"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "用户管理",
+    "path": "/user",
+    "children":[
+      {
+        "name": "用户列表",
+        "path": "/user/user_list"
+      },
+      {
+        "name": "实名认证",
+        "path": "/user/idAuth_list"
+      },
+      {
+        "name": "用户反馈",
+        "path": "/user/feedback_list"
+      },
+      {
+        "name": "等级配置",
+        "path": "/user/level_list"
+      }
+    ]
+  },
+  {
+    "name": "组织机构",
+    "path": "/org",
+    "children":[
+      {
+        "name": "组织信息",
+        "path": "/org/org"
+      },
+      {
+        "name": "部门管理",
+        "path": "/org/dep_list"
+      },
+      {
+        "name": "职位管理",
+        "path": "/org/job_list"
+      },
+      {
+        "name": "成员管理",
+        "path": "/org/member_list"
+      },
+      {
+        "name": "管理员管理",
+        "path": "/org/admin_list"
+      },
+      {
+        "name": "角色管理",
+        "path": "/org/role_list"
+      }
+    ]
+  },
+  {
+    "name": "系统管理",
+    "path": "/sys",
+    "children":[
+      {
+        "name": "系统信息",
+        "path": "/sys/sys"
+      },
+      {
+        "name": "操作日志",
+        "path": "/sys/log_list"
+      }
+    ]
+  },
+  {
+    "name": "开发管理",
+    "path": "/dev",
+    "children":[
+      {
+        "name": "组织列表",
+        "path": "/dev/org_list"
+      },
+      {
+        "name": "系统列表",
+        "path": "/dev/sys_list"
+      },
+      {
+        "name": "菜单列表",
+        "path": "/dev/menu_list"
+      },
+      {
+        "name": "权限列表",
+        "path": "/dev/per_list"
+      }
+    ]
+  }
+
+]

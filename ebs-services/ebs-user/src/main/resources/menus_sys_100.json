@@ -1,0 +1,71 @@
+[
+  {
+    "name": "首页",
+    "path": "/index"
+  },
+  {
+    "name": "案情管理",
+    "path": "/lawe/case",
+    "children":[
+      {
+        "name": "案情列表",
+        "path": "/lawe/case/case_list"
+      },
+      {
+        "name": "立案审核",
+        "path": "/lawe/case/caseReview_list"
+      },
+      {
+        "name": "结案审核",
+        "path": "/lawe/case/caseFinishReview_list"
+      },
+      {
+        "name": "审核设置",
+        "path": "/lawe/case/caseSetting"
+      }
+    ]
+  },
+  {
+    "name": "法律法规库存",
+    "path": "/lawe/law",
+    "children":[
+      {
+        "name": "法律法规",
+        "path": "/lawe/law/law_list"
+      },
+      {
+        "name": "法律条款",
+        "path": "/lawe/law/lawPro_list"
+      }
+    ]
+  },
+  {
+    "name": "用户管理",
+    "path": "/user",
+    "children":[
+      {
+        "name": "用户列表",
+        "path": "/user/user_list"
+      }
+    ]
+  },
+  {
+    "name": "组织机构",
+    "path": "/org",
+    "children":[
+      {
+        "name": "组织信息",
+        "path": "/org/org"
+      },
+      {
+        "name": "成员管理",
+        "path": "/org/member_list"
+      },
+      {
+        "name": "角色管理",
+        "path": "/org/role_list"
+      }
+    ]
+  }
+
+]

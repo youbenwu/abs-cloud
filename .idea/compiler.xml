@@ -6,10 +6,23 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="ebs-gateway" />
         <module name="ebs-user" />
+        <module name="ebs-gateway" />
         <module name="ebs-eureka" />
+        <module name="ebs-common" />
+        <module name="ebs-clients" />
+        <module name="ebs-service" />
       </profile>
     </annotationProcessing>
+  </component>
+  <component name="JavacSettings">
+    <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="ebs-clients" options="-parameters" />
+      <module name="ebs-common" options="-parameters" />
+      <module name="ebs-eureka" options="-parameters" />
+      <module name="ebs-gateway" options="-parameters" />
+      <module name="ebs-service" options="-parameters" />
+      <module name="ebs-user" options="-parameters" />
+    </option>
   </component>
 </project>
