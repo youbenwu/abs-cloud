@@ -26,4 +26,6 @@ public class WalletTradeEvent extends ActionEvent {
     public boolean async() {
         return super.async();
     }
+
+
 }

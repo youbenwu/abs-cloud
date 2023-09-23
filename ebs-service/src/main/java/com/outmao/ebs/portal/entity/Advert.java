@@ -23,6 +23,13 @@ import java.util.Date;
 public class Advert extends SortEntity {
 
 
+    @ApiModelProperty(name = "orgId", value = "组织ID")
+    private Long orgId;
+
+    @ApiModelProperty(name = "channelId", value = "频道ID")
+    private Long channelId;
+
+
     /**
      *
      * 0--未上架 1--已上架

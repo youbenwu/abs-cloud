@@ -73,9 +73,18 @@ public class AdvertDomainImpl extends BaseDomain implements AdvertDomain {
             p=e.title.like("%"+request.getKeyword()+"%");
         }
 
+        if(request.getOrgId()!=null){
+            p=e.orgId.eq(request.getOrgId()).and(p);
+        }
+
+        if(request.getChannelId()!=null){
+            p=e.channelId.eq(request.getChannelId()).and(p);
+        }
+
         if(request.getStatus()!=null){
             p=e.status.eq(request.getStatus()).and(p);
-        }else{
+        }
+        else{
             Date now =new Date();
             //前端只返回上架的，并且在显示时间之内的
             p=e.status.eq(1).and(e.startTime.before(now).and(e.endTime.after(now))).and(p);

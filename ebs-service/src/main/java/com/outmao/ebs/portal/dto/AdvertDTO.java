@@ -15,6 +15,13 @@ public class AdvertDTO {
 
     @ApiModelProperty(name = "id", value = "ID")
     private Long id;
+
+    @ApiModelProperty(name = "orgId", value = "组织ID")
+    private Long orgId;
+
+    @ApiModelProperty(name = "channelId", value = "频道ID")
+    private Long channelId;
+
     /**
      *
      * 排序

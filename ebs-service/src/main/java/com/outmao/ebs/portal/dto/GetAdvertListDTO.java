@@ -12,6 +12,9 @@ public class GetAdvertListDTO  {
     @ApiModelProperty(name = "orgId", value = "组织ID")
     private Long orgId;
 
+    @ApiModelProperty(name = "channelId", value = "频道ID")
+    private Long channelId;
+
     @ApiModelProperty(name = "keyword", value = "关键字，不传查全部")
     private String keyword;
 

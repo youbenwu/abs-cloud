@@ -28,6 +28,7 @@ import com.outmao.ebs.user.dao.UserDao;
 import com.outmao.ebs.user.dao.UserDetailsDao;
 import com.outmao.ebs.user.dao.UserOauthDao;
 import com.outmao.ebs.user.entity.User;
+import com.outmao.ebs.user.service.OnlineService;
 import com.outmao.ebs.user.vo.UserEmailVO;
 import com.outmao.ebs.user.vo.UserOpenIdVO;
 import com.outmao.ebs.user.vo.UserPhoneVO;
@@ -77,6 +78,9 @@ public class MessageDomainImpl extends BaseDomain implements MessageDomain {
 
 	@Autowired
 	private WXMP wxmp;
+
+	@Autowired
+	private OnlineService onlineService;
 
 
 	private MessageVOConver messageVOConver=new MessageVOConver();
@@ -149,6 +153,9 @@ public class MessageDomainImpl extends BaseDomain implements MessageDomain {
 		um.setSendType(message.getSendType());
 		um.setCreateTime(new Date());
 		um=userMessageDao.save(um);
+
+		onlineService.saveOnline(to.getId(),true);
+
 		return um;
 	}
 
