@@ -5,6 +5,7 @@ package com.outmao.ebs.wallet.domain.impl;
 import com.outmao.ebs.common.base.BaseDomain;
 import com.outmao.ebs.common.services.eventBus.annotation.ActionEvent;
 import com.outmao.ebs.common.util.OrderNoUtil;
+import com.outmao.ebs.common.util.ServletRequestUtil;
 import com.outmao.ebs.wallet.common.constant.*;
 import com.outmao.ebs.wallet.common.event.WalletTradeEvent;
 import com.outmao.ebs.wallet.common.exception.TradeNoFoundException;
@@ -35,6 +36,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 
 @Component
@@ -127,6 +129,7 @@ public class TradeDomainImpl extends BaseDomain implements TradeDomain {
         }
 
         trade.setPayChannel(request.getPayChannel());
+        trade.setOutPayType(request.getOutPayType());
 
         tradeDao.save(trade);
 
@@ -172,20 +175,22 @@ public class TradeDomainImpl extends BaseDomain implements TradeDomain {
             throw new TradeStatusException();
         }
 
+        ServletRequestUtil.setAttribute(WalletConstant.action_key, UUID.randomUUID().toString());
+
         if (trade.getType() == TradeType.Transfer.getType()) {
 
             transferDomain.transferBalance(trade);
             transferDomain.transferFee(trade);
             trade.setFinishTime(new Date());
             trade.setStatus(TradeStatus.TRADE_FINISHED.getStatus());
-            trade.setStatusRemark("交易完成");
+            trade.setStatusRemark(TradeStatus.TRADE_FINISHED.getStatusRemark());
 
         } else if (trade.getType() == TradeType.Pay.getType()) {
 
             transferDomain.transferAdvance(trade);
             trade.setSuccessTime(new Date());
             trade.setStatus(TradeStatus.TRADE_SUCCEED.getStatus());
-            trade.setStatusRemark("支付成功");
+            trade.setStatusRemark(TradeStatus.TRADE_SUCCEED.getStatusRemark());
 
         }else if (trade.getType() == TradeType.Recharge.getType()) {
 
@@ -193,7 +198,7 @@ public class TradeDomainImpl extends BaseDomain implements TradeDomain {
             transferDomain.transferBalance(trade);
             trade.setFinishTime(new Date());
             trade.setStatus(TradeStatus.TRADE_FINISHED.getStatus());
-            trade.setStatusRemark("交易完成");
+            trade.setStatusRemark(TradeStatus.TRADE_FINISHED.getStatusRemark());
 
         }else if (trade.getType() == TradeType.Cash.getType()) {
 
@@ -202,7 +207,7 @@ public class TradeDomainImpl extends BaseDomain implements TradeDomain {
             transferDomain.transferFee(trade);
             trade.setSuccessTime(new Date());
             trade.setStatus(TradeStatus.TRADE_SUCCEED.getStatus());
-            trade.setStatusRemark("等待平台处理");
+            trade.setStatusRemark(TradeStatus.TRADE_SUCCEED.getStatusRemark());
 
         }
 
@@ -228,6 +233,8 @@ public class TradeDomainImpl extends BaseDomain implements TradeDomain {
             throw new TradeStatusException();
         }
 
+        ServletRequestUtil.setAttribute(WalletConstant.action_key, UUID.randomUUID().toString());
+
         Wallet to=walletDao.getOne(request.getToId());
 
 
@@ -247,7 +254,7 @@ public class TradeDomainImpl extends BaseDomain implements TradeDomain {
             //支付完成
             trade.setFinishTime(new Date());
             trade.setStatus(TradeStatus.TRADE_FINISHED.getStatus());
-            trade.setStatusRemark("交易完成");
+            trade.setStatusRemark(TradeStatus.TRADE_FINISHED.getStatusRemark());
         }
 
         tradeDao.save(trade);
@@ -272,12 +279,14 @@ public class TradeDomainImpl extends BaseDomain implements TradeDomain {
             throw new TradeStatusException();
         }
 
+        ServletRequestUtil.setAttribute(WalletConstant.action_key, UUID.randomUUID().toString());
+
         transferDomain.transferTo(trade);
         transferDomain.transferFee(trade);
 
         trade.setFinishTime(new Date());
         trade.setStatus(TradeStatus.TRADE_FINISHED.getStatus());
-        trade.setStatusRemark("交易完成");
+        trade.setStatusRemark(TradeStatus.TRADE_FINISHED.getStatusRemark());
         tradeDao.save(trade);
 
         fireListener(trade);
@@ -299,6 +308,8 @@ public class TradeDomainImpl extends BaseDomain implements TradeDomain {
         if (trade.getStatus() != TradeStatus.TRADE_SUCCEED.getStatus()) {
             throw new TradeStatusException();
         }
+
+        ServletRequestUtil.setAttribute(WalletConstant.action_key, UUID.randomUUID().toString());
 
         long refund=request.getAmount();
         long maxRefund=trade.getAmount()-trade.getPayAmount()-trade.getRefundAmount();
@@ -325,15 +336,15 @@ public class TradeDomainImpl extends BaseDomain implements TradeDomain {
             //全额退款关闭交易
             trade.setCloseTime(new Date());
             trade.setStatus(TradeStatus.TRADE_CLOSED.getStatus());
-            trade.setStatusRemark("交易关闭");
+            trade.setStatusRemark(TradeStatus.TRADE_CLOSED.getStatusRemark());
         }else if(trade.getPayAmount()+trade.getRefundAmount()>=trade.getAmount()){
             transferDomain.transferFee(trade);
             trade.setFinishTime(new Date());
             trade.setStatus(TradeStatus.TRADE_FINISHED.getStatus());
-            trade.setStatusRemark("交易完成");
+            trade.setStatusRemark(TradeStatus.TRADE_FINISHED.getStatusRemark());
         }
 
-        trade = tradeDao.save(trade);
+        tradeDao.save(trade);
 
         fireListener(trade);
 
@@ -385,16 +396,19 @@ public class TradeDomainImpl extends BaseDomain implements TradeDomain {
         dto.setBusinessType(WalletConstant.business_type_recharge);
         Trade trade=tradePrepare(dto);
 
-        trade=tradePay(trade.getTradeNo());
+        tradePay(trade.getTradeNo());
 
         return trade;
     }
+
 
 
     @Override
     public Trade getTradeByTradeNo(String tradeNo) {
         return tradeDao.findByTradeNo(tradeNo);
     }
+
+
 
     @Override
     public TradeVO getTradeVOByTradeNo(String tradeNo) {

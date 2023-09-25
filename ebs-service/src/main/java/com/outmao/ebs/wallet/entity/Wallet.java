@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.outmao.ebs.user.entity.User;
 import lombok.Data;
-
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
@@ -50,7 +49,7 @@ public class Wallet implements Serializable {
 	private int type;
 
 	/**
-	 * 钱包状态0--正常 1--冻结
+	 * 钱包状态 0--正常 1--冻结
 	 */
 	private int status;
 
@@ -61,17 +60,27 @@ public class Wallet implements Serializable {
 
 	/**
 	 *
-	 * 银行帐户ID
+	 * 绑定的银行帐户
 	 *
 	 */
-	private Long bankAccountId;
+	@JsonIgnore
+	@ManyToOne(cascade = CascadeType.REFRESH,fetch = FetchType.LAZY)
+	@JoinColumn(name = "bankAccountId")
+	private BankAccount bankAccount;
 
 	/**
 	 *
-	 * 实名
+	 * 钱包户名
 	 *
 	 */
 	private String realName;
+
+	/**
+	 *
+	 * 绑定手机号
+	 *
+	 */
+	private String phone;
 
 	/**
 	 * 钱包帐号

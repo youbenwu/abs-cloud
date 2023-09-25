@@ -22,12 +22,14 @@ public interface AlipayService {
 
 
 	/**
+	 *
 	 * 关闭交易。
 	 *
 	 */
 	public AlipayTradeCloseResponse tradeClose(String outTradeNo);
 
-	/*
+	/**
+	 *
 	 * 查询订单状态
 	 *
 	 */
@@ -41,6 +43,7 @@ public interface AlipayService {
 	public AlipayFundTransToaccountTransferResponse fundTransToaccountTransfer(String outBizNo, double amount, String payerShowName, String payeeAccount, String payeeRealName, String remark) ;
 
 	/**
+	 *
 	 *
 	 * 单笔转账查询
 	 *

@@ -2,6 +2,7 @@ package com.outmao.ebs.wallet.vo;
 
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.outmao.ebs.wallet.entity.BankAccount;
 import lombok.Data;
 
 import java.util.Date;
@@ -43,7 +44,7 @@ public class WalletVO  {
      * 银行帐户ID
      *
      */
-    private Long bankAccountId;
+    private BankAccount bankAccount;
 
     /**
      *

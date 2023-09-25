@@ -1,23 +1,25 @@
 package com.outmao.ebs.wallet.domain;
 
 
-import com.outmao.ebs.wallet.dto.GetWalletListDTO;
-import com.outmao.ebs.wallet.dto.SetWalletPasswordDTO;
-import com.outmao.ebs.wallet.dto.SetWalletStatusDTO;
-import com.outmao.ebs.wallet.dto.WalletDTO;
+import com.outmao.ebs.wallet.dto.*;
 import com.outmao.ebs.wallet.entity.Wallet;
 import com.outmao.ebs.wallet.vo.WalletVO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-
 import java.util.List;
 
 public interface WalletDomain {
 
+	/**
+	 *
+	 * 注册用户钱包
+	 *
+	 */
+	public Wallet registerWallet(RegisterWalletDTO request);
 
 	/**
 	 * 
-	 * 创建用户钱包
+	 * 修改钱包资料
 	 * 
 	 */
 	public Wallet saveWallet(WalletDTO request);
@@ -62,9 +64,6 @@ public interface WalletDomain {
 	 *
 	 */
 	public Page<WalletVO> getWalletVOPage(GetWalletListDTO request, Pageable pageable);
-
-
-
 
 
 	

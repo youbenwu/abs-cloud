@@ -2,13 +2,12 @@ package com.outmao.ebs.wallet.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
-
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.Objects;
 
-/*
+/**
  *
  * 币种
  * 
@@ -24,42 +23,42 @@ public class Currency implements Serializable {
 	 */
 	private static final long serialVersionUID = 1L;
 
-	/*
+	/**
 	 * 币种ID
 	 */
 	@Id
 	private String id;
 
-	/*
+	/**
 	 * 币种名称，如‘人民币’
 	 */
 	private String name;
 
-	/*
+	/**
 	 * 币种单位，如‘元’
 	 */
 	private String unit;
 
-	/*
+	/**
 	 * 单位数量，货币值/oneUnit=单位值
 	 */
 	private long oneUnit;
 
-	/*
+	/**
 	 * 
 	 * 转换成基准货币的单位价值
 	 * 
 	 */
 	private long par;
 
-	/*
+	/**
 	 * 
 	 * 是否可提现
 	 * 
 	 */
 	private boolean cash;
 
-	/*
+	/**
 	 * 
 	 * 提现费率
 	 * 
@@ -73,12 +72,12 @@ public class Currency implements Serializable {
 	private Fee cashFee;
 
 
-	/*
+	/**
 	 * 创建时间
 	 */
 	private Date createTime;
 
-	/*
+	/**
 	 * 更新时间
 	 */
 	private Date updateTime;

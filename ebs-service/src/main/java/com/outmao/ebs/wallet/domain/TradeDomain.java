@@ -76,6 +76,8 @@ public interface TradeDomain {
     public Trade tradeRecharge(TradeRechargeDTO request);
 
 
+
+
     /**
      *
      * 获取交易
@@ -97,6 +99,8 @@ public interface TradeDomain {
      *
      * */
     public Page<TradeVO> getTradeVOPage(GetTradeListDTO request, Pageable pageable);
+
+
 
 
 }

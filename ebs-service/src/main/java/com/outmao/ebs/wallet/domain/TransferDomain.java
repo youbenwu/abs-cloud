@@ -33,6 +33,7 @@ public interface TransferDomain {
     /**
      *
      * 佘额转帐
+     * 发起方佘额-->收款方佘额
      *
      */
     public Transfer transferBalance(Trade trade);
@@ -41,6 +42,7 @@ public interface TransferDomain {
     /**
      *
      * 预付款
+     * 发起方佘额-->发起方预付款
      *
      */
     public Transfer transferAdvance(Trade trade);
@@ -49,6 +51,7 @@ public interface TransferDomain {
     /**
      *
      * 确定支付
+     * 发起方预付款-->收款方佘额
      *
      */
     public Transfer transferTo(Trade trade);
@@ -87,7 +90,7 @@ public interface TransferDomain {
             long amount,//退款金额
             int businessType, //业务类型
             String business,//业务说明
-            String remark//转帐备注
+            String remark//退款备注
     );
 
 

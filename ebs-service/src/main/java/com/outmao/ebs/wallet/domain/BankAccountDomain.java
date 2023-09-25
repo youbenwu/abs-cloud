@@ -5,7 +5,6 @@ import com.outmao.ebs.wallet.dto.GetBankAccountListDTO;
 import com.outmao.ebs.wallet.entity.BankAccount;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-
 import java.util.List;
 
 public interface BankAccountDomain {

@@ -272,12 +272,19 @@
             <scope>provided</scope>
         </dependency>
 
+        <!-- 微信支付SDK -->
+        <dependency>
+            <groupId>com.github.wechatpay-apiv3</groupId>
+            <artifactId>wechatpay-java</artifactId>
+            <version>0.2.11</version>
+        </dependency>
+
 
         <!-- 支付宝SDK -->
         <dependency>
             <groupId>com.alipay.sdk</groupId>
             <artifactId>alipay-sdk-java</artifactId>
-            <version>3.3.49.ALL</version>
+            <version>4.34.0.ALL</version>
         </dependency>
 
 

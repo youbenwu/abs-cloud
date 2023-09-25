@@ -6,10 +6,10 @@ import com.outmao.ebs.message.common.constant.MessageConstant;
 import com.outmao.ebs.message.dto.SendMessageByTypeDTO;
 import com.outmao.ebs.message.service.MessageService;
 import com.outmao.ebs.wallet.common.event.WalletTradeEvent;
-import com.outmao.ebs.wallet.entity.Trade;
+import com.outmao.ebs.wallet.dao.TransferDao;
 import com.outmao.ebs.wallet.entity.Transfer;
 import org.springframework.beans.factory.annotation.Autowired;
-
+import org.springframework.scheduling.annotation.Async;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -20,17 +20,24 @@ public class WalletTradeEventListener extends ActionEventListener<WalletTradeEve
     @Autowired
     private MessageService messageService;
 
+    @Autowired
+    private TransferDao transferDao;
+
+
     @Subscribe
+    @Async
     @Override
     public void onEvent(WalletTradeEvent event) {
-        Trade trade=event.getTrade();
-        List<Transfer> transfers=trade.getTransfers();
+        if(event.getActionKey()==null)
+            return;
+        List<Transfer> transfers=transferDao.findAllByActionKey(event.getActionKey());
         if(transfers.isEmpty())
             return;
         transfers.forEach(t->{
             sendMessage(t);
         });
     }
+
 
     private void sendMessage(Transfer t){
         if(t.getFrom()!=null&&t.getFromType()== Transfer.TransferType.Balance){

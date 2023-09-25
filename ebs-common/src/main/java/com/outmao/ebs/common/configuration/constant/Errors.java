@@ -10,11 +10,12 @@ public enum Errors {
 
 	//钱包系统异常
 	FailureWalletError(6, 600, "钱包操作失败"),
-	FailureWalletStatusError(6, 601, "钱包状态异常"),
-	FailureWalletPasswordError(6, 602, "密码错误"),
-	FailureWalletTradeNoFoundError(6, 603, "交易不存在"),
-	FailureWalletTradeStatusError(6, 604, "交易状态异常"),
-	FailureWalletBalanceNotEnoughError(6, 605, "佘额不足");
+	FailureWalletRegisterRepeatError(6, 601, "同一用户只能注册一个钱包"),
+	FailureWalletStatusError(6, 602, "钱包状态异常"),
+	FailureWalletPasswordError(6, 603, "密码错误"),
+	FailureWalletTradeNoFoundError(6, 604, "交易不存在"),
+	FailureWalletTradeStatusError(6, 605, "交易状态异常"),
+	FailureWalletBalanceNotEnoughError(6, 606, "佘额不足");
 
 	//状态码
 	private int status;

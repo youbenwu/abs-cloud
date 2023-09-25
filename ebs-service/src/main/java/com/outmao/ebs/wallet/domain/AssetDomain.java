@@ -1,5 +1,6 @@
 package com.outmao.ebs.wallet.domain;
 
+import com.outmao.ebs.wallet.dto.AssetDTO;
 import com.outmao.ebs.wallet.dto.GetAssetListDTO;
 import com.outmao.ebs.wallet.entity.Asset;
 import com.outmao.ebs.wallet.vo.AssetVO;
@@ -11,7 +12,7 @@ import java.util.List;
 public interface AssetDomain {
 
 
-    public List<Asset> saveWalletAssets(Long walletId);
+    public Asset saveAsset(AssetDTO request);
 
     public List<AssetVO> getAssetVOListByWalletId(Long walletId);
 

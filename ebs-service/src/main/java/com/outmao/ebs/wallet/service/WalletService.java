@@ -2,21 +2,63 @@ package com.outmao.ebs.wallet.service;
 
 
 import com.outmao.ebs.wallet.dto.*;
+import com.outmao.ebs.wallet.entity.BankAccount;
+import com.outmao.ebs.wallet.entity.Currency;
 import com.outmao.ebs.wallet.entity.Wallet;
 import com.outmao.ebs.wallet.vo.AssetVO;
 import com.outmao.ebs.wallet.vo.TransferVO;
 import com.outmao.ebs.wallet.vo.WalletVO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-
 import java.util.List;
 
 
 public interface WalletService {
 
+
 	/**
 	 *
-	 * 创建用户钱包
+	 * 保存货币信息
+	 *
+	 */
+	public Currency saveCurrency(CurrencyDTO params);
+
+	/**
+	 *
+	 * 获取货币信息
+	 *
+	 */
+	public Currency getCurrencyById(String id);
+
+	/**
+	 *
+	 * 获取货币信息
+	 *
+	 */
+	public List<Currency> getCurrencyList();
+
+
+
+	public BankAccount saveBankAccount(BankAccountDTO request);
+
+	public void deleteBankAccountById(Long id);
+
+	public BankAccount getBankAccountById(Long id);
+
+	public List<BankAccount> getBankAccountListByUserId(Long userId);
+
+	public Page<BankAccount> getBankAccountPage(GetBankAccountListDTO request, Pageable pageable);
+
+	/**
+	 *
+	 * 注册用户钱包
+	 *
+	 */
+	public Wallet registerWallet(RegisterWalletDTO request);
+
+	/**
+	 *
+	 * 修改钱包资料
 	 *
 	 */
 	public Wallet saveWallet(WalletDTO request);

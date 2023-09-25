@@ -3,6 +3,8 @@ package com.outmao.ebs.wallet.web.admin.api;
 
 
 import com.outmao.ebs.wallet.dto.*;
+import com.outmao.ebs.wallet.entity.BankAccount;
+import com.outmao.ebs.wallet.entity.Currency;
 import com.outmao.ebs.wallet.service.WalletService;
 import com.outmao.ebs.wallet.vo.AssetVO;
 import com.outmao.ebs.wallet.vo.TransferVO;
@@ -16,7 +18,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
 import java.util.List;
 
 
@@ -27,6 +28,75 @@ public class WalletAdminAction {
 
 	@Autowired
     private WalletService walletService;
+
+
+	//Currency
+
+	/*
+	 *
+	 * 保存币种信息
+	 *
+	 * */
+	@PreAuthorize("hasPermission('wallet/currency','save')")
+	@ApiOperation(value = "保存币种信息", notes = "保存币种信息")
+	@PostMapping("/currency/save")
+	public Currency saveCurrency(CurrencyDTO params){
+		return walletService.saveCurrency(params);
+	}
+
+	/*
+	 *
+	 * 获取币种信息
+	 *
+	 * */
+	@PreAuthorize("hasPermission('wallet/currency','read')")
+	@ApiOperation(value = "获取币种信息", notes = "获取币种信息")
+	@PostMapping("/currency/get")
+	public Currency getCurrencyById(String id){
+		return walletService.getCurrencyById(id);
+	}
+
+	/*
+	 *
+	 * 获取所有币种信息
+	 *
+	 * */
+	@PreAuthorize("hasPermission('wallet/currency','read')")
+	@ApiOperation(value = "获取币种信息", notes = "获取币种信息")
+	@PostMapping("/currency/list")
+	public List<Currency> getCurrencyList(){
+		return walletService.getCurrencyList();
+	}
+
+
+	@PreAuthorize("hasPermission('wallet/bankAccount','save')")
+	@ApiOperation(value = "保存银行账户信息", notes = "保存银行账户信息")
+	@PostMapping("/bankAccount/save")
+	public BankAccount saveBankAccount(BankAccountDTO request) {
+		return walletService.saveBankAccount(request);
+	}
+
+	@PreAuthorize("hasPermission('wallet/bankAccount','delete')")
+	@ApiOperation(value = "删除银行账户信息", notes = "删除银行账户信息")
+	@PostMapping("/bankAccount/delete")
+	public void deleteBankAccountById(Long id) {
+		walletService.deleteBankAccountById(id);
+	}
+
+	@PreAuthorize("hasPermission('wallet/bankAccount','read')")
+	@ApiOperation(value = "获取银行账户信息", notes = "获取银行账户信息")
+	@PostMapping("/bankAccount/get")
+	public BankAccount getBankAccountById(Long id) {
+		return walletService.getBankAccountById(id);
+	}
+
+
+	@PreAuthorize("hasPermission('wallet/bankAccount','read')")
+	@ApiOperation(value = "获取银行账户信息列表", notes = "获取银行账户信息列表")
+	@PostMapping("/bankAccount/page")
+	public Page<BankAccount> getBankAccountPage(GetBankAccountListDTO request, Pageable pageable) {
+		return walletService.getBankAccountPage(request,pageable);
+	}
 
 
 	@PreAuthorize("hasPermission('wallet','save')")

@@ -14,4 +14,5 @@ public class TradeStatusException extends WalletException {
         super(Errors.FailureWalletTradeStatusError);
     }
 
+
 }

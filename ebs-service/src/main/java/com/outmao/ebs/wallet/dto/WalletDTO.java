@@ -12,18 +12,6 @@ public class WalletDTO {
     private Long id;
 
     /**
-     * 钱包用户
-     */
-    private Long userId;
-
-    /**
-     *
-     * 钱包类型 0--个人钱包 1--商户钱包
-     *
-     */
-    private int type;
-
-    /**
      *
      * 银行帐户ID
      *
@@ -36,6 +24,13 @@ public class WalletDTO {
      *
      */
     private String realName;
+
+    /**
+     *
+     * 绑定手机号
+     *
+     */
+    private String phone;
 
 
     /**

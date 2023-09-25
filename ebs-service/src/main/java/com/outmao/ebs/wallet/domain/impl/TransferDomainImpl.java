@@ -3,6 +3,7 @@ package com.outmao.ebs.wallet.domain.impl;
 
 import com.outmao.ebs.common.base.BaseDomain;
 import com.outmao.ebs.common.util.OrderNoUtil;
+import com.outmao.ebs.common.util.ServletRequestUtil;
 import com.outmao.ebs.wallet.common.constant.PayChannel;
 import com.outmao.ebs.wallet.common.constant.TradeType;
 import com.outmao.ebs.wallet.common.constant.WalletConstant;
@@ -21,7 +22,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.util.Date;
 
 
@@ -80,8 +80,8 @@ public class TransferDomainImpl extends BaseDomain implements TransferDomain {
         transfer.setTransferNo(OrderNoUtil.generateOrderNo());
         transfer.setFromBalance(assetFrom.getBalance());
         transfer.setToBalance(assetTo.getBalance());
-        transfer = transferDao.save(transfer);
-        trade.getTransfers().add(transfer);
+        transfer.setActionKey((String) ServletRequestUtil.getAttribute(WalletConstant.action_key));
+        transferDao.save(transfer);
 
         return transfer;
     }
@@ -137,7 +137,7 @@ public class TransferDomainImpl extends BaseDomain implements TransferDomain {
         return transfer(
                 trade,
                 from,
-                trade.getTo(),
+                trade.getFrom(),
                 Transfer.TransferType.Balance,
                 Transfer.TransferType.Advance,
                 trade.getTotalAmount(),
@@ -287,4 +287,6 @@ public class TransferDomainImpl extends BaseDomain implements TransferDomain {
 
         return page;
     }
+
+
 }

@@ -23,7 +23,6 @@ public class AlipayServiceImpl implements AlipayService {
 	private AlipayProperties alipayProperties;
 
 
-
 	@Override
 	public AlipayTradeAppPayResponse tradeAppPay(String subject, String body, String outTradeNo, double totalAmount) {
 		String amountS = String.format("%.2f", totalAmount);

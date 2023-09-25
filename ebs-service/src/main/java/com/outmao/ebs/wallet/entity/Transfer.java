@@ -3,7 +3,6 @@ package com.outmao.ebs.wallet.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
-
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
@@ -42,6 +41,12 @@ public class Transfer implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
+
+
+	/**
+	 * 操作KEY，用户每次操作产生一个KEY
+	 */
+	private String actionKey;
 
 	/**
 	 * 所属交易

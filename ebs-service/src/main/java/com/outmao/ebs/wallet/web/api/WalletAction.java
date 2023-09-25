@@ -1,9 +1,12 @@
 package com.outmao.ebs.wallet.web.api;
 
 
+import com.outmao.ebs.wallet.dto.BankAccountDTO;
 import com.outmao.ebs.wallet.dto.GetTransferListDTO;
 import com.outmao.ebs.wallet.dto.SetWalletPasswordDTO;
 import com.outmao.ebs.wallet.dto.WalletDTO;
+import com.outmao.ebs.wallet.entity.BankAccount;
+import com.outmao.ebs.wallet.entity.Currency;
 import com.outmao.ebs.wallet.entity.Wallet;
 import com.outmao.ebs.wallet.service.WalletService;
 import com.outmao.ebs.wallet.vo.TransferVO;
@@ -29,6 +32,59 @@ public class WalletAction {
 
 	@Autowired
     private WalletService walletService;
+
+
+	/**
+	 *
+	 * 获取币种信息
+	 *
+	 * */
+	@ApiOperation(value = "获取币种信息", notes = "获取币种信息")
+	@PostMapping("/currency/get")
+	public Currency getCurrencyById(String id){
+		return walletService.getCurrencyById(id);
+	}
+
+	/**
+	 *
+	 * 获取所有币种信息
+	 *
+	 * */
+	@ApiOperation(value = "获取币种信息", notes = "获取币种信息")
+	@PostMapping("/currency/list")
+	public List<Currency> getCurrencyList(){
+		return walletService.getCurrencyList();
+	}
+
+
+	@PreAuthorize("principal.id.equals(#request.userId)")
+	@ApiOperation(value = "保存银行账户信息", notes = "保存银行账户信息")
+	@PostMapping("/bankAccount/save")
+	public BankAccount saveBankAccount(BankAccountDTO request) {
+		return walletService.saveBankAccount(request);
+	}
+
+
+	@ApiOperation(value = "删除银行账户信息", notes = "删除银行账户信息")
+	@PostMapping("/bankAccount/delete")
+	public void deleteBankAccountById(Long id) {
+		walletService.deleteBankAccountById(id);
+	}
+
+	@PostAuthorize("principal.id.equals(#returnObject.user.id)")
+	@ApiOperation(value = "获取银行账户信息", notes = "获取银行账户信息")
+	@PostMapping("/bankAccount/get")
+	public BankAccount getBankAccountById(Long id) {
+		return walletService.getBankAccountById(id);
+	}
+
+
+	@PreAuthorize("principal.id.equals(#userId)")
+	@ApiOperation(value = "获取银行账户信息列表", notes = "获取银行账户信息列表")
+	@PostMapping("/bankAccount/list")
+	public List<BankAccount> getBankAccountListByUserId(Long userId) {
+		return walletService.getBankAccountListByUserId(userId);
+	}
 
 
 	@PreAuthorize("principal.id.equals(#request.userId)")

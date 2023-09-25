@@ -3,12 +3,9 @@ package com.outmao.ebs.wallet.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
-
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 /**
  * 资产交易
@@ -67,6 +64,8 @@ public class Trade implements Serializable {
 	 */
 	private String statusRemark;
 
+
+
 	/**
 	 * 交易类型
 	 * 
@@ -96,6 +95,12 @@ public class Trade implements Serializable {
 	 * 支付渠道
 	 */
 	private int payChannel;
+
+
+	/**
+	 * 外部支付方式
+	 */
+	private int outPayType;
 
 
 	/**
@@ -153,17 +158,6 @@ public class Trade implements Serializable {
 	 */
 	private Date closeTime;
 
-
-	@JsonIgnore
-	@Transient
-	private List<Transfer> transfers;
-
-
-	public List<Transfer> getTransfers() {
-		if(transfers==null)
-			transfers=new ArrayList<>();
-		return transfers;
-	}
 
 
 

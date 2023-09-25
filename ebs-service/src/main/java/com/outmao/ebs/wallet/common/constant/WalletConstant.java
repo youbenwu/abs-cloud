@@ -2,7 +2,7 @@ package com.outmao.ebs.wallet.common.constant;
 
 public class WalletConstant {
 
-
+    public static final String action_key ="wallet_action_key";
 
     /*
      *

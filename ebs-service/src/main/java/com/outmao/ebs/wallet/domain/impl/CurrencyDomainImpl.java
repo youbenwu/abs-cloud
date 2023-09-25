@@ -51,4 +51,6 @@ public class CurrencyDomainImpl extends BaseDomain implements CurrencyDomain {
     }
 
 
+
+
 }

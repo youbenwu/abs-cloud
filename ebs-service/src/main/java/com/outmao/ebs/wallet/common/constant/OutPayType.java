@@ -1,19 +1,19 @@
 package com.outmao.ebs.wallet.common.constant;
 
 
-public enum TradeType {
+public enum OutPayType {
 
 
-    Transfer(0, "转账"),
-    Pay(1, "支付"),
-    Recharge(2, "充值"),
-    Cash(3, "提现");
+    App(0, "APP支付"),
+    H5(1, "H5支付"),
+    Jsapi(2, "JS支付"),
+    Nativepay(3, "当面付");
 
     private int type;
 
     private String describe;
 
-    private TradeType(int type, String describe) {
+    private OutPayType(int type, String describe) {
         this.type = type;
         this.describe = describe;
     }

@@ -3,6 +3,8 @@ package com.outmao.ebs.wallet.common.event;
 
 import com.outmao.ebs.common.services.eventBus.ActionEvent;
 import com.outmao.ebs.common.services.eventBus.MethodEvent;
+import com.outmao.ebs.common.util.ServletRequestUtil;
+import com.outmao.ebs.wallet.common.constant.WalletConstant;
 import com.outmao.ebs.wallet.entity.Trade;
 import lombok.Data;
 
@@ -14,11 +16,12 @@ import lombok.Data;
 @Data
 public class WalletTradeEvent extends ActionEvent {
 
-    private Trade trade;
+    private String actionKey;
+
 
     @Override
     public void setValue(MethodEvent methodEvent) {
-        trade=(Trade) methodEvent.getReturning();
+        actionKey= (String) ServletRequestUtil.getAttribute(WalletConstant.action_key);
     }
 
 

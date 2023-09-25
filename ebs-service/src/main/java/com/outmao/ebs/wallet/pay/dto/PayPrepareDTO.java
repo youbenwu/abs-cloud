@@ -8,6 +8,7 @@ public class PayPrepareDTO {
 
     private String tradeNo;
     private int payChannel;
+    private int outPayType;
     private String clientIp;
 
 }
