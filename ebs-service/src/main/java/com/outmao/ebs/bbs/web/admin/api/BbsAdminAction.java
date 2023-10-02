@@ -66,7 +66,7 @@ import java.util.List;
 		}),
 })
 
-@Api(value = "admin-bbs", tags = "后台-BBS模块接口")
+@Api(value = "account-bbs", tags = "后台-BBS模块接口")
 @RestController
 @RequestMapping("/api/admin/bbs")
 public class BbsAdminAction {

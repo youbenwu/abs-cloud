@@ -10,6 +10,6 @@ public class DepartmentDTO {
     private Long parentId;
     private int sort;
     private String name;
-    private String description;
+    private String intro;
 
 }

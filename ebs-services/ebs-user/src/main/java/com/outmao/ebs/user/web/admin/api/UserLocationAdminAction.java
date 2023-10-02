@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 
-@Api(value = "admin-user-location", tags = "后台-用户-位置")
+@Api(value = "account-user-location", tags = "后台-用户-位置")
 @RestController
 @RequestMapping("/api/admin/user/location")
 public class UserLocationAdminAction {

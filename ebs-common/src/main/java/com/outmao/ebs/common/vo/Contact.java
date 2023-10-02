@@ -3,6 +3,8 @@ package com.outmao.ebs.common.vo;
 
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+import org.springframework.util.StringUtils;
+
 import javax.persistence.Embeddable;
 import javax.persistence.Embedded;
 import javax.persistence.MappedSuperclass;
@@ -23,5 +25,26 @@ public class Contact {
     @ApiModelProperty(name = "address", value = "联系地址")
     @Embedded
     private Address address;
+
+
+    @Override
+    public String toString(){
+        StringBuffer s=new StringBuffer();
+        if(!StringUtils.isEmpty(name)){
+            s.append(" "+name);
+        }
+        if(!StringUtils.isEmpty(phone)){
+            s.append(" "+phone);
+        }
+        if(!StringUtils.isEmpty(fax)){
+            s.append(" "+fax);
+        }
+        if(!StringUtils.isEmpty(email)){
+            s.append(" "+email);
+        }
+        s.append(" "+address.toString());
+        return s.toString().trim();
+    }
+
 
 }

@@ -1,7 +1,6 @@
 package com.outmao.ebs.qrCode.entity;
 
 import lombok.Data;
-
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;

@@ -7,7 +7,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface MemberRoleDao extends JpaRepository<MemberRole,Long> {
-	
+
+
+
 
 	public MemberRole findByMemberIdAndRoleId(Long memberId, Long roleId);
 
@@ -18,5 +20,7 @@ public interface MemberRoleDao extends JpaRepository<MemberRole,Long> {
 	public void deleteAllByMemberId(Long memberId);
 
 	public void deleteAllByRoleId(Long roleId);
+
+	public void deleteAllByMemberIdAndRoleIdNotIn(Long memberId,List<Long> roleIdNotIn);
 
 }

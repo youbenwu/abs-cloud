@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@Api(value = "admin-user-feedback", tags = "后台-用户-反馈")
+@Api(value = "account-user-feedback", tags = "后台-用户-反馈")
 @RestController
 @RequestMapping("/api/admin/user/feedback")
 public class FeedbackAdminAction {

@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-@Api(value = "admin-message", tags = "后台--消息")
+@Api(value = "account-message", tags = "后台--消息")
 @RestController
 @RequestMapping("/api/admin/message")
 public class MessageAdminAction {

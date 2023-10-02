@@ -92,7 +92,7 @@ public class MessageDomainImpl extends BaseDomain implements MessageDomain {
 	public Message saveMessage(MessageDTO request) {
 		Message m = new Message();
 		BeanUtils.copyProperties(request, m,"tos");
-		m.setFrom(request.getFromId()!=null?userDao.getOne(request.getFromId()):userDao.findByUsername("admin"));
+		m.setFrom(request.getFromId()!=null?userDao.getOne(request.getFromId()):userDao.findByUsername("account"));
 		if(request.getTos()!=null){
 			String tos= JsonUtil.toJson(request.getTos());
 			m.setTos(tos);

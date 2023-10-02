@@ -45,7 +45,7 @@ public class OrgServiceImpl extends BaseService implements OrgService, CommandLi
        //创建根组织
        Org org=orgDomain.getOrg();
        if(org==null){
-           User admin=userDomain.getUserByUsername("admin");
+           User admin=userDomain.getUserByUsername("account");
            RegisterOrgDTO request=new RegisterOrgDTO();
            request.setName("系统组织");
            request.setUserId(admin.getId());
@@ -57,9 +57,9 @@ public class OrgServiceImpl extends BaseService implements OrgService, CommandLi
                    null,
                    org.getId(),
                    org.getUser().getId(),
-                   "admin",
+                   "account",
                    null,
-                   "admin"
+                   "account"
            ));
        }
 

@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 
-@Api(value = "admin-org-job", tags = "后台-组织-职位")
+@Api(value = "account-org-job", tags = "后台-组织-职位")
 @RestController
 @RequestMapping("/api/admin/org/job")
 public class JobAdminAction {

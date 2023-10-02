@@ -57,7 +57,7 @@ public class Admin implements Serializable {
      *
      */
     @JsonIgnore
-    @OneToMany(mappedBy = "admin", cascade = CascadeType.REFRESH, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "account", cascade = CascadeType.REFRESH, fetch = FetchType.LAZY)
     private List<AdminRole> roles;
 
     /**

@@ -25,7 +25,7 @@ import java.util.List;
         }),
 })
 
-@Api(value = "admin-org-menu", tags = "后台-组织-菜单")
+@Api(value = "account-org-menu", tags = "后台-组织-菜单")
 @RestController
 @RequestMapping("/api/admin/org/menu")
 public class MenuAdminAction {

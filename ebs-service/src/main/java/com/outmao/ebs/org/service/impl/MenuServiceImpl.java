@@ -5,6 +5,7 @@ package com.outmao.ebs.org.service.impl;
 import com.outmao.ebs.common.base.BaseService;
 import com.outmao.ebs.common.util.JsonUtil;
 import com.outmao.ebs.common.util.ResourceUtil;
+import com.outmao.ebs.org.domain.AccountDomain;
 import com.outmao.ebs.org.domain.MenuDomain;
 import com.outmao.ebs.org.domain.RoleDomain;
 import com.outmao.ebs.org.dto.MenuDTO;
@@ -14,6 +15,7 @@ import com.outmao.ebs.org.service.MenuService;
 import com.outmao.ebs.org.vo.MenuVO;
 import com.outmao.ebs.sys.domain.SysDomain;
 import com.outmao.ebs.sys.entity.SysMenu;
+import com.outmao.ebs.user.domain.UserDomain;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.core.annotation.Order;
@@ -31,6 +33,7 @@ public class MenuServiceImpl extends BaseService implements MenuService , Comman
 
     @Autowired
     private MenuDomain menuDomain;
+
 
     @Autowired
     private SysDomain sysDomain;
@@ -86,6 +89,7 @@ public class MenuServiceImpl extends BaseService implements MenuService , Comman
         return menuDomain.getMenuVOList();
     }
 
+
     @Override
     public List<MenuVO> getMenuVOListBySysId(Long sysId) {
         List<SysMenu> sysMenus=sysDomain.getSysMenuListBySysId(sysId);
@@ -105,7 +109,7 @@ public class MenuServiceImpl extends BaseService implements MenuService , Comman
 
 
         if(!roleMenus.isEmpty()){
-            Collection<Long> rIds = roleMenus.stream().map(t->t.getMenuId()).collect(Collectors.toList());
+            Collection<Long> rIds = roleMenus.stream().map(t->t.getMenu().getId()).collect(Collectors.toList());
             ids=ids.stream().filter(t->rIds.contains(t)).collect(Collectors.toList());
         }
 

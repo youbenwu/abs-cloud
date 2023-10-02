@@ -15,7 +15,7 @@ public class RoleVOConver implements BeanConver<QRole, RoleVO> {
         vo.setId(t.get(e.id));
         vo.setOrgId(t.get(e.org.id));
         vo.setName(t.get(e.name));
-        vo.setValue(t.get(e.value));
+        vo.setTitle(t.get(e.title));
         vo.setDescription(t.get(e.description));
         vo.setCreateTime(t.get(e.createTime));
         vo.setSort(t.get(e.sort));
@@ -28,7 +28,7 @@ public class RoleVOConver implements BeanConver<QRole, RoleVO> {
                 e.id,
                 e.org.id,
                 e.name,
-                e.value,
+                e.title,
                 e.description,
                 e.createTime,
                 e.sort,

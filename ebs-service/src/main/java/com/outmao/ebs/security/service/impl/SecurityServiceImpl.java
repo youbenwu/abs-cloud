@@ -2,21 +2,26 @@ package com.outmao.ebs.security.service.impl;
 
 
 
+import com.outmao.ebs.common.base.BaseDomain;
 import com.outmao.ebs.common.exception.BusinessException;
 import com.outmao.ebs.common.services.wxmp.WXMP;
 import com.outmao.ebs.common.services.wxmp.WXMPSessionResult;
 import com.outmao.ebs.common.util.RequestUtil;
-import com.outmao.ebs.org.service.AdminService;
+import com.outmao.ebs.org.entity.*;
+import com.outmao.ebs.org.service.AccountService;
 import com.outmao.ebs.org.service.MemberService;
 import com.outmao.ebs.org.service.OrgService;
+import com.outmao.ebs.org.vo.CacheOrgVO;
 import com.outmao.ebs.org.vo.OrgVO;
 import com.outmao.ebs.security.service.SecurityService;
+import com.outmao.ebs.security.service.conver.*;
 import com.outmao.ebs.security.util.SecurityUtil;
 import com.outmao.ebs.security.validate.ValidateCode;
 import com.outmao.ebs.security.validate.ValidateCodeUtil;
 import com.outmao.ebs.security.validate.sms.SmsCodeGenerator;
 import com.outmao.ebs.security.validate.sms.SmsCodeSender;
-import com.outmao.ebs.security.vo.SecurityUser;
+import com.outmao.ebs.security.vo.*;
+import com.outmao.ebs.sys.entity.QSys;
 import com.outmao.ebs.user.common.constant.ClientType;
 import com.outmao.ebs.user.common.constant.Oauth;
 import com.outmao.ebs.user.dto.RegisterDTO;
@@ -24,6 +29,7 @@ import com.outmao.ebs.user.dto.SetAuthenticatedDTO;
 import com.outmao.ebs.user.entity.UserOauth;
 import com.outmao.ebs.user.entity.UserOauthSession;
 import com.outmao.ebs.user.service.UserService;
+import com.querydsl.core.Tuple;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
@@ -33,23 +39,29 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.ServletWebRequest;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
-public class SecurityServiceImpl implements SecurityService {
+public class SecurityServiceImpl extends BaseDomain implements SecurityService {
+
+
+    @Autowired
+    private OrgService orgService;
 
 
     @Autowired
     private UserService userService;
 
-    @Autowired
-    private OrgService orgService;
 
     @Autowired
     private MemberService memberService;
 
     @Autowired
-    private AdminService adminService;
+    private AccountService accountService;
 
 
     @Autowired
@@ -61,21 +73,28 @@ public class SecurityServiceImpl implements SecurityService {
     @Autowired
     private SmsCodeGenerator smsCodeGenerator;
 
+    private SecurityAccountConver securityAccountConver=new SecurityAccountConver();
+    private SecurityAccountRoleConver securityAccountRoleConver=new SecurityAccountRoleConver();
+    private SecurityMemberConver securityMemberConver=new SecurityMemberConver();
+    private SecurityMemberRoleConver securityMemberRoleConver=new SecurityMemberRoleConver();
+    private SecurityOrgConver securityOrgConver=new SecurityOrgConver();
+    private SecurityRolePermissionConver securityRolePermissionConver=new SecurityRolePermissionConver();
+
 
     @Override
     public boolean hasPermission(Long orgId, String url, String permission) {
         if(orgId==null){
-            orgId=orgService.getOrg().getId();
+            orgId=orgService.getCacheOrgVO().getId();
         }
         if(SecurityUtil.hasPermission(orgId,url,permission)){
             return true;
         }
-        OrgVO org=orgService.getOrgVOById(orgId);
-        while (org.getParentId()!=null){
-            if(SecurityUtil.hasPermission(org.getParentId(),url,permission)){
+        CacheOrgVO org=orgService.getCacheOrgVOById(orgId);
+        while (org.getParent()!=null){
+            org=org.getParent();
+            if(SecurityUtil.hasPermission(org.getId(),url,permission)){
                 return true;
             }
-            org=orgService.getOrgVOById(org.getParentId());
         }
         return false;
     }
@@ -184,12 +203,125 @@ public class SecurityServiceImpl implements SecurityService {
     }
 
     private void loadMembers(SecurityUser user){
-        user.setMembers(memberService.getSecurityMemberListByUserId(user.getId()));
-        user.getMembers().addAll(adminService.getSecurityMemberListByUserId(user.getId()));
+        user.setMembers(getSecurityMemberListByUserId(user.getId()));
+        user.getMembers().addAll(getSecurityAcccountListByUserId(user.getId()));
         if(!user.getMembers().isEmpty()) {
             Long sysId=RequestUtil.getHeaderLong("sysId");
-            user.setOrgs(orgService.getSecurityOrgList(user.getMembers().stream().map(t->t.getOrgId()).collect(Collectors.toList()),sysId));
+            user.setOrgs(getSecurityOrgList(user.getMembers().stream().map(t->t.getOrgId()).collect(Collectors.toList()),sysId));
         }
+    }
+
+    private List<SecurityOrg> getSecurityOrgList(Collection<Long> orgIdIn, Long sysId) {
+        QOrg e=QOrg.org;
+        List<SecurityOrg> list=queryList(e,e.id.in(orgIdIn),securityOrgConver);
+
+        if(list.isEmpty())
+            return list;
+
+
+        QSys s=QSys.sys;
+
+        if(sysId!=null){
+            Tuple t=QF.select(s.id,s.name,s.type).from(s).where(s.id.eq(sysId)).fetchOne();
+            list.forEach(org->{
+                if(t.get(s.type).equals(org.getOrgType())){
+                    org.setSysId(t.get(s.id));
+                    org.setSysName(t.get(s.name));
+                }
+            });
+        }else {
+            List<Tuple> ss = QF.select(s.id, s.name, s.type).from(s).where(s.type.in(list.stream().map(t -> t.getOrgType()).collect(Collectors.toList()))).fetch();
+            Map<Integer, Tuple> sMap = ss.stream().collect(Collectors.toMap(t -> t.get(s.type), t -> t));
+            list.forEach(org -> {
+                Tuple t = sMap.get(org.getOrgType());
+                if (t != null) {
+                    org.setSysId(t.get(s.id));
+                    org.setSysName(t.get(s.name));
+                }
+            });
+        }
+
+        return list.stream().filter(t->t.getSysId()!=null).collect(Collectors.toList());
+    }
+
+    private List<SecurityMember> getSecurityMemberListByUserId(Long userId) {
+        QMember e=QMember.member;
+        List<SecurityMember> members=queryList(e,e.user.id.eq(userId),securityMemberConver);
+        if(members.isEmpty())
+            return members;
+
+        members.forEach(t->{
+            t.setRoles(new ArrayList<>());
+        });
+
+        Map<Long,SecurityMember> memberMap=members.stream().collect(Collectors.toMap(t->t.getId(), t->t));
+
+
+        QMemberRole ar=QMemberRole.memberRole;
+        List<SecurityRole> roles=queryList(ar,ar.member.id.in(members.stream().map(t->t.getId()).collect(Collectors.toList())),securityMemberRoleConver);
+        if(roles.isEmpty())
+            return members;
+
+        roles.forEach(t->{
+            t.setPermissions(new ArrayList<>());
+            memberMap.get(t.getMemberId()).getRoles().add(t);
+        });
+
+        Map<Long, SecurityRole> roleMap=roles.stream().collect(Collectors.toMap(t->t.getId(), t->t));
+
+        QRolePermission rp=QRolePermission.rolePermission;
+
+        List<SecurityRolePermission> permissions=queryList(rp,rp.role.id.in(roles.stream().map(t->t.getId()).collect(Collectors.toList())),securityRolePermissionConver);
+
+        if(permissions.isEmpty())
+            return members;
+
+
+        permissions.forEach(t->{
+            roleMap.get(t.getRoleId()).getPermissions().add(t);
+        });
+
+        return members;
+    }
+
+    private List<SecurityMember> getSecurityAcccountListByUserId(Long userId) {
+        QAccount e=QAccount.account;
+        List<SecurityMember> members=queryList(e,e.user.id.eq(userId),securityAccountConver);
+        if(members.isEmpty())
+            return members;
+
+        members.forEach(t->{
+            t.setRoles(new ArrayList<>());
+        });
+
+        Map<Long,SecurityMember> memberMap=members.stream().collect(Collectors.toMap(t->t.getId(),t->t));
+
+
+        QAccountRole ar=QAccountRole.accountRole;
+        List<SecurityRole> roles=queryList(ar,ar.account.id.in(members.stream().map(t->t.getId()).collect(Collectors.toList())),securityAccountRoleConver);
+        if(roles.isEmpty())
+            return members;
+
+        roles.forEach(t->{
+            t.setPermissions(new ArrayList<>());
+            memberMap.get(t.getMemberId()).getRoles().add(t);
+        });
+
+        Map<Long,SecurityRole> roleMap=roles.stream().collect(Collectors.toMap(t->t.getId(),t->t));
+
+        QRolePermission rp=QRolePermission.rolePermission;
+
+        List<SecurityRolePermission> permissions=queryList(rp,rp.role.id.in(roles.stream().map(t->t.getId()).collect(Collectors.toList())),securityRolePermissionConver);
+
+        if(permissions.isEmpty())
+            return members;
+
+
+        permissions.forEach(t->{
+            roleMap.get(t.getRoleId()).getPermissions().add(t);
+        });
+
+        return members;
     }
 
     @Override

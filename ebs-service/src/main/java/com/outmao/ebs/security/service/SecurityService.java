@@ -4,7 +4,6 @@ package com.outmao.ebs.security.service;
 
 import com.outmao.ebs.security.vo.SecurityUser;
 import org.springframework.security.core.userdetails.UserDetailsService;
-
 import javax.servlet.http.HttpServletRequest;
 
 

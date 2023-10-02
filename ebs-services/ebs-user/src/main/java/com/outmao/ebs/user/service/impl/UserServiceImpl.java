@@ -35,9 +35,9 @@ public class UserServiceImpl extends BaseService implements UserService, Command
 	public void run(String... args) throws Exception {
 
 		//创建管理员用户
-		User admin = this.getUserByUsername("admin");
+		User admin = this.getUserByUsername("account");
 		if (admin == null) {
-			this.registerUser(new RegisterDTO(Oauth.USERNAME.getName(), "admin", "123456"));
+			this.registerUser(new RegisterDTO(Oauth.USERNAME.getName(), "account", "123456"));
 		}
 
 	}

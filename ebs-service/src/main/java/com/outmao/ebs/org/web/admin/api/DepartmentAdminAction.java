@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 
-@Api(value = "admin-org-department", tags = "后台-组织-部门")
+@Api(value = "account-org-department", tags = "后台-组织-部门")
 @RestController
 @RequestMapping("/api/admin/org/department")
 public class DepartmentAdminAction {

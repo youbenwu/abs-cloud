@@ -2,7 +2,6 @@ package com.outmao.ebs.org.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
-
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
@@ -14,7 +13,7 @@ import java.util.List;
  */
 @Data
 @Entity
-@Table(name = "ebs_Role", uniqueConstraints = {@UniqueConstraint(columnNames = { "orgId", "value" }) })
+@Table(name = "ebs_Role", uniqueConstraints = {@UniqueConstraint(columnNames = { "orgId", "name" }) })
 public class Role implements Serializable {
 
 	/**
@@ -52,10 +51,10 @@ public class Role implements Serializable {
 	private int sort;
 
 	/**
-	 * 角色名称
+	 * 角色标题
 	 */
 	@Column(nullable = false,length = 50)
-	private String name;
+	private String title;
 
 	/**
 	 * 角色描述
@@ -67,7 +66,7 @@ public class Role implements Serializable {
 	 * 角色值
 	 */
 	@Column(nullable = false,length = 50)
-	private String value;
+	private String name;
 
 	/**
 	 * 创建时间

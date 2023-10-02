@@ -31,5 +31,12 @@ public class RegisterOrgDTO extends OrgDTO {
     private int type;
 
 
+    /**
+     *
+     * 密码
+     *
+     */
+    private String password;
+
 
 }

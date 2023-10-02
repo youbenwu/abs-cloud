@@ -32,7 +32,7 @@ import java.io.IOException;
 		}),
 })
 
-@Api(value = "admin-qrCode", tags = "后台-二维码")
+@Api(value = "account-qrCode", tags = "后台-二维码")
 @RestController
 @RequestMapping("/api/admin/qrCode")
 public class QrCodeAdminAction {

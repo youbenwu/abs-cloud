@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 
-@Api(value = "admin-wallet", tags = "后台-钱包")
+@Api(value = "account-wallet", tags = "后台-钱包")
 @RestController
 @RequestMapping("/api/admin/wallet")
 public class WalletAdminAction {

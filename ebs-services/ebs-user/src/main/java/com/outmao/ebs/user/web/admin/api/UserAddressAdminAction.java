@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 
-@Api(value = "admin-user-address", tags = "后台-用户-地址")
+@Api(value = "account-user-address", tags = "后台-用户-地址")
 @RestController
 @RequestMapping("/api/admin/user/address")
 public class UserAddressAdminAction {

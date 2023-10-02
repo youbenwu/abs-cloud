@@ -30,7 +30,7 @@ import org.springframework.web.bind.annotation.RestController;
 })
 
 
-@Api(value = "admin-data-brand", tags = "后台-数据-品牌")
+@Api(value = "account-data-brand", tags = "后台-数据-品牌")
 @RestController
 @RequestMapping("/api/admin/data/brand")
 public class BrandAdminAction {

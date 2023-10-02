@@ -48,14 +48,6 @@ import java.util.List;
                 @AccessPermission(title = "读取角色菜单",url = "/org/role/menu",name = "read"),
         }),
 
-        @AccessPermissionParent(title = "管理员管理",url = "/org/admin",name = "",children = {
-                @AccessPermission(title = "保存管理员",url = "/org/admin",name = "save"),
-                @AccessPermission(title = "删除管理员",url = "/org/admin",name = "delete"),
-                @AccessPermission(title = "读取管理员",url = "/org/admin",name = "read"),
-                @AccessPermission(title = "保存管理员角色",url = "/org/admin/role",name = "save"),
-                @AccessPermission(title = "删除管理员角色",url = "/org/admin/role",name = "delete"),
-                @AccessPermission(title = "读取管理员角色",url = "/org/admin/role",name = "read"),
-        }),
 
         @AccessPermissionParent(title = "成员管理",url = "/org/member",name = "",children = {
                 @AccessPermission(title = "保存成员",url = "/org/member",name = "save"),
@@ -96,7 +88,7 @@ import java.util.List;
 })
 
 
-@Api(value = "admin-org", tags = "后台-组织")
+@Api(value = "account-org", tags = "后台-组织")
 @RestController
 @RequestMapping("/api/admin/org")
 public class OrgAdminAction {

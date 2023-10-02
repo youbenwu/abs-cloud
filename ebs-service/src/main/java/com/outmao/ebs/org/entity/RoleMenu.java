@@ -1,8 +1,8 @@
 package com.outmao.ebs.org.entity;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
-
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
@@ -27,11 +27,15 @@ public class RoleMenu implements Serializable {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 
-    @Column(updatable = false,nullable = false)
-	private Long roleId;
+	@JsonIgnore
+	@ManyToOne(cascade = CascadeType.REFRESH, optional = false, fetch = FetchType.LAZY)
+	@JoinColumn(name = "roleId")
+	private Role role;
 
-	@Column(updatable = false,nullable = false)
-	private Long menuId;
+	@JsonIgnore
+	@ManyToOne(cascade = CascadeType.REFRESH, optional = false, fetch = FetchType.EAGER)
+	@JoinColumn(name = "menuId")
+	private Menu menu;
 
 	/**
 	 * 创建时间

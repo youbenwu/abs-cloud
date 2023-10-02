@@ -30,7 +30,7 @@ import java.util.List;
 
 
 
-@Api(value = "admin-org-permission", tags = "后台-组织-权限")
+@Api(value = "account-org-permission", tags = "后台-组织-权限")
 @RestController
 @RequestMapping("/api/admin/org/permission")
 public class PermissionAdminAction {

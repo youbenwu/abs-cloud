@@ -31,7 +31,7 @@ public class SecurityRole implements GrantedAuthority {
 	/**
 	 * 角色名称
 	 */
-	private String value;
+	private String name;
 
 	/**
 	 * 角色权限列表
@@ -41,7 +41,7 @@ public class SecurityRole implements GrantedAuthority {
 
 	@Override
 	public String getAuthority() {
-		return value;
+		return name;
 	}
 
 

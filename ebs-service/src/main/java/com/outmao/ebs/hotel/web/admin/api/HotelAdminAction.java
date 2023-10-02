@@ -56,7 +56,7 @@ import org.springframework.web.bind.annotation.RestController;
 })
 
 
-@Api(value = "admin-hotel", tags = "后台-酒店")
+@Api(value = "account-hotel", tags = "后台-酒店")
 @RestController
 @RequestMapping("/api/admin/hotel")
 public class HotelAdminAction {

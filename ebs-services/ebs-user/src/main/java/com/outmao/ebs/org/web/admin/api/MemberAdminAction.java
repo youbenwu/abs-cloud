@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 
-@Api(value = "admin-org-member", tags = "后台-组织-成员")
+@Api(value = "account-org-member", tags = "后台-组织-成员")
 @RestController
 @RequestMapping("/api/admin/org/member")
 public class MemberAdminAction {

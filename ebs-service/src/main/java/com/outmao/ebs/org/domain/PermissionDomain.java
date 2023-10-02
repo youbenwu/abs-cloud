@@ -12,6 +12,7 @@ import java.util.List;
 public interface PermissionDomain {
 	
 	public Permission savePermission(PermissionDTO request);
+
 	public void deletePermissionById(Long id);
 
 	public Long getIdByUrlAndName(String url, String name);

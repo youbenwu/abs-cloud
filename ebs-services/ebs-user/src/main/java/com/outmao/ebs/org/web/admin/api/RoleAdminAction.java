@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 
-@Api(value = "admin-org-role", tags = "后台-组织-角色")
+@Api(value = "account-org-role", tags = "后台-组织-角色")
 @RestController
 @RequestMapping("/api/admin/org/role")
 public class RoleAdminAction {

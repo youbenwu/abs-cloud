@@ -1,15 +1,13 @@
 package com.outmao.ebs.wallet.pay.wechatpay.impl;
 
 import com.outmao.ebs.wallet.pay.wechatpay.WechatPayService;
+import com.outmao.ebs.wallet.pay.wechatpay.config.WechatPayConfiguration;
 import com.outmao.ebs.wallet.pay.wechatpay.config.WechatPayProperties;
-import com.wechat.pay.java.core.Config;
 import com.wechat.pay.java.core.exception.HttpException;
 import com.wechat.pay.java.core.exception.MalformedMessageException;
 import com.wechat.pay.java.core.exception.ServiceException;
-import com.wechat.pay.java.service.payments.app.AppServiceExtension;
 import com.wechat.pay.java.service.payments.app.model.*;
 import com.wechat.pay.java.service.payments.model.Transaction;
-import com.wechat.pay.java.service.refund.RefundService;
 import com.wechat.pay.java.service.refund.model.AmountReq;
 import com.wechat.pay.java.service.refund.model.CreateRequest;
 import com.wechat.pay.java.service.refund.model.Refund;
@@ -27,13 +25,9 @@ public class WechatPayServiceImpl implements WechatPayService {
     private WechatPayProperties properties;
 
     @Autowired
-    private Config config;
+    private WechatPayConfiguration configuration;
 
-    @Autowired
-    private AppServiceExtension appServiceExtension;
 
-    @Autowired
-    private RefundService refundService;
 
     @Override
     public PrepayWithRequestPaymentResponse prepayApp(String outTradeNo, long amount, String description) {
@@ -47,7 +41,7 @@ public class WechatPayServiceImpl implements WechatPayService {
         request.setNotifyUrl(properties.getNotifyUrl());
         request.setOutTradeNo(outTradeNo);
         // response包含了调起支付所需的所有参数，可直接用于前端调起支付
-        PrepayWithRequestPaymentResponse response = appServiceExtension.prepayWithRequestPayment(request);
+        PrepayWithRequestPaymentResponse response = configuration.appServiceExtension().prepayWithRequestPayment(request);
         return response;
     }
 
@@ -65,10 +59,9 @@ public class WechatPayServiceImpl implements WechatPayService {
         request.setNotifyUrl(properties.getNotifyUrl());
         request.setReason(reason);
 
-        refundService.create(request);
 
         try {
-            Refund response = refundService.create(request);
+            Refund response = configuration.refundService().create(request);
             return response;
 
         } catch (HttpException e) { // 发送HTTP请求失败
@@ -89,7 +82,7 @@ public class WechatPayServiceImpl implements WechatPayService {
         QueryOrderByOutTradeNoRequest request=new QueryOrderByOutTradeNoRequest();
         request.setMchid(properties.getMchId());
         request.setOutTradeNo(outTradeNo);
-        Transaction transaction= appServiceExtension.queryOrderByOutTradeNo(request);
+        Transaction transaction= configuration.appServiceExtension().queryOrderByOutTradeNo(request);
         return transaction;
     }
 
@@ -98,7 +91,7 @@ public class WechatPayServiceImpl implements WechatPayService {
         CloseOrderRequest request=new CloseOrderRequest();
         request.setMchid(properties.getMchId());
         request.setOutTradeNo(outTradeNo);
-        appServiceExtension.closeOrder(request);
+        configuration.appServiceExtension().closeOrder(request);
     }
 
 

@@ -8,6 +8,7 @@ import com.outmao.ebs.org.entity.Role;
 import com.outmao.ebs.org.entity.RoleMenu;
 import com.outmao.ebs.org.entity.RolePermission;
 import com.outmao.ebs.org.service.RoleService;
+import com.outmao.ebs.org.vo.RoleMenuVO;
 import com.outmao.ebs.org.vo.RolePermissionVO;
 import com.outmao.ebs.org.vo.RoleVO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,8 +29,13 @@ public class RoleServiceImpl extends BaseService implements RoleService {
     }
 
     @Override
-    public void deleteRole(DeleteRoleDTO request) {
-        roleDomain.deleteRole(request);
+    public void deleteRoleById(Long id) {
+        roleDomain.deleteRoleById(id);
+    }
+
+    @Override
+    public RoleVO getRoleVOById(Long id) {
+        return roleDomain.getRoleVOById(id);
     }
 
     @Override
@@ -48,8 +54,8 @@ public class RoleServiceImpl extends BaseService implements RoleService {
     }
 
     @Override
-    public void deleteRolePermission(DeleteRolePermissionDTO request) {
-        roleDomain.deleteRolePermission(request);
+    public void deleteRolePermissionById(Long id) {
+        roleDomain.deleteRolePermissionById(id);
     }
 
     @Override
@@ -73,8 +79,7 @@ public class RoleServiceImpl extends BaseService implements RoleService {
     }
 
     @Override
-    public List<RoleMenu> getRoleMenuListByRoleId(Long roleId) {
-        return roleDomain.getRoleMenuListByRoleId(roleId);
+    public List<RoleMenuVO> getRoleMenuVOList(GetRoleMenuListDTO request) {
+        return roleDomain.getRoleMenuVOList(request);
     }
-
 }

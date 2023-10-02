@@ -132,4 +132,6 @@ public class MenuDomainImpl extends BaseDomain implements MenuDomain {
     public List<Long> getMenuIdListByPathIn(Collection<String> pathIn) {
         return menuDao.findAllIdByPathIn(pathIn);
     }
+
+
 }

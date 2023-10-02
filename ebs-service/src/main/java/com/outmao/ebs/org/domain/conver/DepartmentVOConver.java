@@ -18,7 +18,7 @@ public class DepartmentVOConver implements BeanConver<QDepartment, DepartmentVO>
         vo.setLevel(t.get(e.level));
         vo.setSort(t.get(e.sort));
         vo.setName(t.get(e.name));
-        vo.setDescription(t.get(e.description));
+        vo.setIntro(t.get(e.intro));
         vo.setMembers(t.get(e.members));
         vo.setCreateTime(t.get(e.createTime));
         vo.setUpdateTime(t.get(e.updateTime));
@@ -35,7 +35,7 @@ public class DepartmentVOConver implements BeanConver<QDepartment, DepartmentVO>
                 e.leaf,
                 e.sort,
                 e.name,
-                e.description,
+                e.intro,
                 e.members,
                 e.createTime,
                 e.updateTime,

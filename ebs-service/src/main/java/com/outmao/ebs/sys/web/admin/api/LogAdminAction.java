@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
         }),
 })
 
-@Api(value = "admin-sys-log", tags = "后台-系统-日志")
+@Api(value = "account-sys-log", tags = "后台-系统-日志")
 @RestController
 @RequestMapping("/api/admin/sys/log")
 public class LogAdminAction {

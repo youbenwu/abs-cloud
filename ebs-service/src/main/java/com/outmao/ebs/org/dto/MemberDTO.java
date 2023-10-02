@@ -51,4 +51,8 @@ public class MemberDTO {
      */
     @ApiModelProperty(name = "email", value = "电子邮箱")
     private String email;
+
+    @ApiModelProperty(name = "password", value = "密码")
+    private String password;
+
 }

@@ -62,7 +62,7 @@ import org.springframework.web.bind.annotation.RestController;
 		}),
 
 })
-@Api(value = "admin-user", tags = "后台-用户")
+@Api(value = "account-user", tags = "后台-用户")
 @RestController
 @RequestMapping("/api/admin/user")
 public class UserAdminAction {

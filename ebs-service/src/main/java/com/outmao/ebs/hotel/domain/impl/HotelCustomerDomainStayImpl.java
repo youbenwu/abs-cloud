@@ -226,7 +226,7 @@ public class HotelCustomerDomainStayImpl extends BaseDomain implements HotelCust
     //cron表达式
     //秒 分 时 日 月 周几
     @Scheduled(cron = "0 0 12 * * ?")
-    private void autoStayOut(){
+    public void autoStayOut(){
         Calendar now=Calendar.getInstance();
         QHotelCustomerStay e=QHotelCustomerStay.hotelCustomerStay;
         Predicate p=e.status.eq(HotelCustomerStay.STATUS_STAY_IN).and(e.endTime.dayOfYear().eq(now.get(Calendar.DAY_OF_YEAR)));

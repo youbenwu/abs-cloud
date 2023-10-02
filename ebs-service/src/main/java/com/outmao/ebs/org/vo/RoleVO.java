@@ -1,5 +1,6 @@
 package com.outmao.ebs.org.vo;
 
+
 import lombok.Data;
 
 import java.util.Date;
@@ -11,11 +12,11 @@ public class RoleVO {
     private Long orgId;
     private int sort;
     private String name;
-    private String value;
+    private String title;
     private String description;
     private List<RolePermissionVO> permissions;
+    private List<RoleMenuVO> menus;
     private Date createTime;
     private Date updateTime;
-
 
 }

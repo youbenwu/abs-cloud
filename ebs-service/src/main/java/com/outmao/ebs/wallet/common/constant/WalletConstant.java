@@ -13,6 +13,8 @@ public class WalletConstant {
      * 103--提现
      * 200--发红包支付
      * 201--领取红包
+     * 300--商品支付
+     * 301--门票支付
      *
      */
     //手续费
@@ -27,6 +29,13 @@ public class WalletConstant {
     public static final int business_type_redpacket_pay =200;
     //领取红包
     public static final int business_type_redpacket_recv =201;
+
+    //商品支付
+    public static final int business_type_pay =300;
+
+    //门票支付
+    public static final int business_type_ticket_pay =301;
+
 
 
 }

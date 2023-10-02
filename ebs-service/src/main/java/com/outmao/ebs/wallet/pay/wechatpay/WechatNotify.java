@@ -4,6 +4,7 @@ package com.outmao.ebs.wallet.pay.wechatpay;
 import com.alibaba.fastjson.JSON;
 import com.outmao.ebs.common.util.RequestUtil;
 import com.outmao.ebs.wallet.pay.wechatpay.common.VerdureRequestWrapper;
+import com.outmao.ebs.wallet.pay.wechatpay.config.WechatPayConfiguration;
 import com.outmao.ebs.wallet.pay.wechatpay.vo.WechatNotifyResult;
 import com.wechat.pay.java.core.Config;
 import com.wechat.pay.java.core.exception.ValidationException;
@@ -30,7 +31,7 @@ public class WechatNotify {
 
 
 	@Autowired
-	private Config config;
+	private WechatPayConfiguration configuration;
 
     @Autowired
     private WechatPayNotifyListener listener;
@@ -68,7 +69,7 @@ public class WechatNotify {
 				.build();
 
 		// 初始化 NotificationParser
-		NotificationParser parser=new NotificationParser((NotificationConfig) config);
+		NotificationParser parser=new NotificationParser((NotificationConfig) configuration.payConfig());
 
 
 		try {

@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 
-@Api(value = "admin-user-idCard", tags = "后台-用户-实名认证")
+@Api(value = "account-user-idCard", tags = "后台-用户-实名认证")
 @RestController
 @RequestMapping("/api/admin/user/idCard")
 public class IdCardAdminAction {

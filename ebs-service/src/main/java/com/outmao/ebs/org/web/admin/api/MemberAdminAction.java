@@ -17,11 +17,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
 import java.util.List;
 
 
-@Api(value = "admin-org-member", tags = "后台-组织-成员")
+@Api(value = "account-org-member", tags = "后台-组织-成员")
 @RestController
 @RequestMapping("/api/admin/org/member")
 public class MemberAdminAction {
@@ -43,8 +42,8 @@ public class MemberAdminAction {
     @PreAuthorize("hasPermission('/org/member','delete')")
     @ApiOperation(value = "删除成员信息", notes = "删除成员信息")
     @PostMapping("/delete")
-    public void deleteMember(DeleteMemberDTO request){
-        memberService.deleteMember(request);
+    public void deleteMemberById(Long id){
+        memberService.deleteMemberById(id);
     }
 
 
@@ -80,8 +79,8 @@ public class MemberAdminAction {
     @PreAuthorize("hasPermission('/org/member/role','delete')")
     @ApiOperation(value = "删除单个成员角色", notes = "删除单个成员角色")
     @PostMapping("/role/delete")
-    public void deleteMemberRole(DeleteMemberRoleDTO request){
-        memberService.deleteMemberRole(request);
+    public void deleteMemberRoleById(Long id){
+        memberService.deleteMemberRoleById(id);
     }
 
     @PreAuthorize("hasPermission('/org/member/role','read')")

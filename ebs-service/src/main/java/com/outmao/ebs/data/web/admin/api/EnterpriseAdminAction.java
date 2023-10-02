@@ -31,7 +31,7 @@ import java.util.List;
 
 
 
-@Api(value = "admin-data-enterprise", tags = "后台-数据-企业")
+@Api(value = "account-data-enterprise", tags = "后台-数据-企业")
 @RestController
 @RequestMapping("/api/admin/org/enterprise")
 public class EnterpriseAdminAction {

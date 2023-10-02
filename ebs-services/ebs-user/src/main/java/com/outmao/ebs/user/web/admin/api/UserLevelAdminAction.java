@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 
-@Api(value = "admin-user-level", tags = "后台-用户-等级配置")
+@Api(value = "account-user-level", tags = "后台-用户-等级配置")
 @RestController
 @RequestMapping("/api/admin/user/level")
 public class UserLevelAdminAction {

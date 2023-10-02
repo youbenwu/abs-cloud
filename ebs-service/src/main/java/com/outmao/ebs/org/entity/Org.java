@@ -143,6 +143,16 @@ public class Org implements Serializable {
      * */
     private Long enterpriseId;
 
+
+    /**
+     *
+     * 搜索关键字
+     *
+     */
+    @Lob
+    @Basic(fetch = FetchType.LAZY)
+    private String keyword;
+
     /**
      *
      * 组织名称

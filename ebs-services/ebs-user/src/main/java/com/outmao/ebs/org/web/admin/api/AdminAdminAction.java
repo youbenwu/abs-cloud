@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 
-@Api(value = "admin-org-admin", tags = "后台-组织-管理员")
+@Api(value = "account-org-account", tags = "后台-组织-管理员")
 @RestController
 @RequestMapping("/api/admin/org/admin")
 public class AdminAdminAction {
@@ -32,7 +32,7 @@ public class AdminAdminAction {
     @ApiOperation(value = "保存管理员", notes = "保存管理员")
     @PostMapping("/save")
     public void saveAdmin(AdminDTO request){
-        if("admin".equals(request.getName())){
+        if("account".equals(request.getName())){
             throw new BusinessException("管理员名称不能是admin");
         }
         adminService.saveAdmin(request);

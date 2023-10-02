@@ -4,15 +4,22 @@ package com.outmao.ebs.org.service.impl;
 
 import com.outmao.ebs.common.base.BaseService;
 import com.outmao.ebs.common.configuration.constant.Status;
-import com.outmao.ebs.org.domain.AdminDomain;
+import com.outmao.ebs.common.vo.Contact;
+import com.outmao.ebs.org.domain.AccountDomain;
 import com.outmao.ebs.org.domain.OrgDomain;
+import com.outmao.ebs.org.domain.RoleDomain;
 import com.outmao.ebs.org.dto.*;
+import com.outmao.ebs.org.dto.AccountDTO;
+import com.outmao.ebs.org.entity.Account;
 import com.outmao.ebs.org.entity.Org;
+import com.outmao.ebs.org.entity.Role;
 import com.outmao.ebs.org.service.OrgService;
+import com.outmao.ebs.org.vo.CacheOrgVO;
 import com.outmao.ebs.org.vo.OrgVO;
-import com.outmao.ebs.security.vo.SecurityOrg;
-import com.outmao.ebs.user.domain.UserDomain;
+import com.outmao.ebs.user.common.constant.Oauth;
+import com.outmao.ebs.user.dto.RegisterDTO;
 import com.outmao.ebs.user.entity.User;
+import com.outmao.ebs.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.core.annotation.Order;
@@ -20,11 +27,13 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
+import org.springframework.util.Assert;
+import org.springframework.util.StringUtils;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 
-@Order(2)
+@Order(1)
 @Service
 public class OrgServiceImpl extends BaseService implements OrgService, CommandLineRunner {
 
@@ -33,42 +42,86 @@ public class OrgServiceImpl extends BaseService implements OrgService, CommandLi
     private OrgDomain orgDomain;
 
     @Autowired
-    private UserDomain userDomain;
+    private AccountDomain accountDomain;
 
     @Autowired
-    private AdminDomain adminDomain;
+    private RoleDomain roleDomain;
 
-    @Transactional
+    @Autowired
+    private UserService userService;
+
     @Override
     public void run(String... args) throws Exception {
-
        //创建根组织
        Org org=orgDomain.getOrg();
        if(org==null){
-           User admin=userDomain.getUserByUsername("admin");
            RegisterOrgDTO request=new RegisterOrgDTO();
            request.setName("系统组织");
-           request.setUserId(admin.getId());
            request.setType(Org.TYPE_SYSTEM);
-           org=orgDomain.registerOrg(request);
-           org.setStatus(Status.NORMAL.getStatus());
-           org.setStatusRemark(Status.NORMAL.getStatusRemark());
-           adminDomain.saveAdmin(new AdminDTO(
-                   null,
-                   org.getId(),
-                   org.getUser().getId(),
-                   "admin",
-                   null,
-                   "admin"
-           ));
+           request.setPassword("123456");
+           request.setContact(new Contact());
+           request.getContact().setName("admin");
+           registerOrg(request);
        }
+    }
+
+
+    @Transactional
+    @Override
+    public Org registerOrg(RegisterOrgDTO request) {
+        if(request.getUserId()==null){
+            findOrRegisterUser(request);
+        }
+        Org org= orgDomain.registerOrg(request);
+        createAdminAccount(org);
+        if(org.getType()==Org.TYPE_SYSTEM){
+            org.setStatus(Status.NORMAL.getStatus());
+            org.setStatusRemark(Status.NORMAL.getStatusRemark());
+        }
+        return org;
+    }
+
+    private void createAdminAccount(Org org){
+        AccountDTO accountDTO=new AccountDTO();
+        accountDTO.setOrgId(org.getId());
+        accountDTO.setUserId(org.getUser().getId());
+        accountDTO.setName(org.getContact().getName());
+        accountDTO.setPhone(org.getContact().getPhone());
+        Account account=accountDomain.saveAccount(accountDTO);
+
+        RoleDTO roleDTO=new RoleDTO();
+        roleDTO.setTitle("超级管理员");
+        roleDTO.setName("admin");
+        roleDTO.setOrgId(org.getId());
+
+        Role role=roleDomain.saveRole(roleDTO);
+
+        accountDomain.saveAccountRole(new AccountRoleDTO(account.getId(),role.getId()));
 
     }
 
-    @Override
-    public Org registerOrg(RegisterOrgDTO request) {
-        Org org= orgDomain.registerOrg(request);
-        return org;
+    private void findOrRegisterUser(RegisterOrgDTO request){
+
+        Assert.notNull(request.getContact(),"联系人不能为空");
+
+        String name=request.getContact().getName();
+        String phone=request.getContact().getPhone();
+
+        User user=userService.getUserByUsername(StringUtils.isEmpty(phone)?name:phone);
+
+        if(user==null){
+            RegisterDTO registerDTO=new RegisterDTO();
+            registerDTO.setPrincipal(StringUtils.isEmpty(phone)?name:phone);
+            registerDTO.setCredentials(request.getPassword());
+            registerDTO.setOauth(StringUtils.isEmpty(phone)?Oauth.USERNAME.getName():Oauth.PHONE.getName());
+            registerDTO.setArgs(new HashMap<>());
+            registerDTO.getArgs().put("nickname",name);
+
+            user=userService.registerUser(registerDTO);
+        }
+
+        request.setUserId(user.getId());
+
     }
 
     @Override
@@ -127,8 +180,13 @@ public class OrgServiceImpl extends BaseService implements OrgService, CommandLi
     }
 
     @Override
-    public List<SecurityOrg> getSecurityOrgList(Collection<Long> orgIdIn, Long sysId) {
-        return orgDomain.getSecurityOrgList(orgIdIn,sysId);
+    public CacheOrgVO getCacheOrgVOById(Long id) {
+        return orgDomain.getCacheOrgVOById(id);
+    }
+
+    @Override
+    public CacheOrgVO getCacheOrgVO() {
+        return orgDomain.getCacheOrgVO();
     }
 
 }

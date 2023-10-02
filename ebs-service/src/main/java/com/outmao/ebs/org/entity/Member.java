@@ -79,6 +79,15 @@ public class Member implements Serializable {
 
     /**
      *
+     * 搜索关键字
+     *
+     */
+    @Lob
+    @Basic(fetch = FetchType.LAZY)
+    private String keyword;
+
+    /**
+     *
      * 名称
      *
      */

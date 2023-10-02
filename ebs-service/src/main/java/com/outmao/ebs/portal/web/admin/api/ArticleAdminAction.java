@@ -38,7 +38,7 @@ import java.util.List;
 })
 
 
-@Api(value = "admin-portal-article", tags = "后台-门户-文章")
+@Api(value = "account-portal-article", tags = "后台-门户-文章")
 @RestController
 @RequestMapping("/api/admin/portal/article")
 public class ArticleAdminAction {

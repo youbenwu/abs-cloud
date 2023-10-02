@@ -25,9 +25,9 @@ public class RoleDTO {
     private String name;
 
     /**
-     * 角色值
+     * 角色标题
      */
-    private String value;
+    private String title;
 
     /**
      * 角色描述

@@ -30,7 +30,7 @@ import org.springframework.web.bind.annotation.RestController;
 })
 
 
-@Api(value = "admin-portal-advert", tags = "后台-门户-广告")
+@Api(value = "account-portal-advert", tags = "后台-门户-广告")
 @RestController
 @RequestMapping("/api/admin/portal/advert")
 public class AdvertAdminAction {

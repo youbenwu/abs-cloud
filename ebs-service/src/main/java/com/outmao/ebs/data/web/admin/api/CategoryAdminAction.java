@@ -31,7 +31,7 @@ import java.util.List;
 })
 
 
-@Api(value = "admin-data-category", tags = "后台-数据-分类")
+@Api(value = "account-data-category", tags = "后台-数据-分类")
 @RestController
 @RequestMapping("/api/admin/data/category")
 public class CategoryAdminAction {

@@ -6,8 +6,8 @@ import com.outmao.ebs.common.base.BaseDomain;
 import com.outmao.ebs.common.exception.BusinessException;
 import com.outmao.ebs.org.dao.OrgDao;
 import com.outmao.ebs.org.domain.OrgDomain;
+import com.outmao.ebs.org.domain.conver.CacheOrgVOConvert;
 import com.outmao.ebs.org.domain.conver.OrgVOConvert;
-import com.outmao.ebs.org.domain.conver.SecurityOrgConver;
 import com.outmao.ebs.org.dto.GetOrgListDTO;
 import com.outmao.ebs.org.dto.OrgDTO;
 import com.outmao.ebs.org.dto.RegisterOrgDTO;
@@ -15,26 +15,22 @@ import com.outmao.ebs.org.dto.SetOrgStatusDTO;
 import com.outmao.ebs.org.entity.Org;
 import com.outmao.ebs.org.entity.OrgContact;
 import com.outmao.ebs.org.entity.QOrg;
+import com.outmao.ebs.org.vo.CacheOrgVO;
 import com.outmao.ebs.org.vo.OrgVO;
-import com.outmao.ebs.security.vo.SecurityOrg;
-import com.outmao.ebs.sys.entity.QSys;
 import com.outmao.ebs.user.dao.UserDao;
-import com.querydsl.core.Tuple;
 import com.querydsl.core.types.Predicate;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 
 @Component
@@ -48,12 +44,7 @@ public class OrgDomainImpl extends BaseDomain implements OrgDomain {
 
     private OrgVOConvert orgVOConvert=new OrgVOConvert();
 
-    @Autowired
-    private SecurityOrgConver securityOrgConver;
-
-    private Org sysOrg;
-
-
+    private CacheOrgVOConvert cacheOrgVOConvert=new CacheOrgVOConvert();
 
 
     @Transactional()
@@ -85,14 +76,10 @@ public class OrgDomainImpl extends BaseDomain implements OrgDomain {
 
         orgDao.save(org);
 
-        if(org.getType()== Org.TYPE_SYSTEM){
-            sysOrg=org;
-        }
 
         return org;
     }
 
-    @CacheEvict(value = "cache_org", key = "#request.id")
     @Transactional()
     @Override
     public Org saveOrg(OrgDTO request) {
@@ -103,16 +90,30 @@ public class OrgDomainImpl extends BaseDomain implements OrgDomain {
 
         org.setUpdateTime(new Date());
 
+        org.setKeyword(getKeyword(org));
+
         orgDao.save(org);
 
-        if(org.getType()== Org.TYPE_SYSTEM){
-            sysOrg=org;
-        }
 
         return org;
     }
 
-    @CacheEvict(value = "cache_org", key = "#request.id")
+
+    private String getKeyword(Org data){
+        StringBuffer s=new StringBuffer();
+        if(!StringUtils.isEmpty(data.getName())){
+            s.append(" "+data.getName());
+        }
+        if(!StringUtils.isEmpty(data.getIntro())){
+            s.append(" "+data.getIntro());
+        }
+        if(data.getContact()!=null){
+            s.append(" "+data.getContact().toString());
+        }
+        return s.toString().trim();
+    }
+
+
     @Transactional()
     @Override
     public Org setOrgStatus(SetOrgStatusDTO request) {
@@ -121,14 +122,9 @@ public class OrgDomainImpl extends BaseDomain implements OrgDomain {
         org.setStatusRemark(request.getStatusRemark());
         orgDao.save(org);
 
-        if(org.getType()== Org.TYPE_SYSTEM){
-            sysOrg=org;
-        }
-
         return org;
     }
 
-    @CacheEvict(value = "cache_org", key = "#request.id")
     @Transactional()
     @Override
     public void deleteOrgById(Long id) {
@@ -158,10 +154,7 @@ public class OrgDomainImpl extends BaseDomain implements OrgDomain {
 
     @Override
     public Org getOrg() {
-        if(sysOrg==null){
-            sysOrg=orgDao.findByType(Org.TYPE_SYSTEM);
-        }
-        return sysOrg;
+        return orgDao.findByType(Org.TYPE_SYSTEM);
     }
 
     @Override
@@ -174,7 +167,6 @@ public class OrgDomainImpl extends BaseDomain implements OrgDomain {
         return orgDao.findIdByTargetId(targetId);
     }
 
-    @Cacheable(value = "cache_org", key = "#id",condition = "#id!=null",unless = "#result == null")
     @Override
     public OrgVO getOrgVOById(Long id) {
         QOrg e=QOrg.org;
@@ -192,7 +184,7 @@ public class OrgDomainImpl extends BaseDomain implements OrgDomain {
         QOrg e=QOrg.org;
         Predicate p=null;
         if(request.getKeyword()!=null){
-            p=e.name.like("%"+request.getKeyword()+"%");
+            p=e.keyword.like("%"+request.getKeyword()+"%");
         }
 
         if(request.getUserId()!=null){
@@ -208,37 +200,25 @@ public class OrgDomainImpl extends BaseDomain implements OrgDomain {
         return page;
     }
 
+
+    @Cacheable(value = "cache_org", key = "#id",condition = "#id!=null",unless = "#result == null")
     @Override
-    public List<SecurityOrg> getSecurityOrgList(Collection<Long> orgIdIn, Long sysId) {
+    public CacheOrgVO getCacheOrgVOById(Long id) {
         QOrg e=QOrg.org;
-        List<SecurityOrg> list=queryList(e,e.id.in(orgIdIn),securityOrgConver);
-
-        if(list.isEmpty())
-            return list;
-
-
-        QSys s=QSys.sys;
-
-        if(sysId!=null){
-            Tuple t=QF.select(s.id,s.name,s.type).from(s).where(s.id.eq(sysId)).fetchOne();
-            list.forEach(org->{
-                if(t.get(s.type).equals(org.getOrgType())){
-                    org.setSysId(t.get(s.id));
-                    org.setSysName(t.get(s.name));
-                }
-            });
-        }else {
-            List<Tuple> ss = QF.select(s.id, s.name, s.type).from(s).where(s.type.in(list.stream().map(t -> t.getOrgType()).collect(Collectors.toList()))).fetch();
-            Map<Integer, Tuple> sMap = ss.stream().collect(Collectors.toMap(t -> t.get(s.type), t -> t));
-            list.forEach(org -> {
-                Tuple t = sMap.get(org.getOrgType());
-                if (t != null) {
-                    org.setSysId(t.get(s.id));
-                    org.setSysName(t.get(s.name));
-                }
-            });
+        CacheOrgVO vo=queryOne(e,e.id.eq(id),cacheOrgVOConvert);
+        if(vo!=null&&vo.getParentId()!=null){
+            vo.setParent(getCacheOrgVOById(vo.getParentId()));
         }
-
-        return list.stream().filter(t->t.getSysId()!=null).collect(Collectors.toList());
+        return vo;
     }
+
+    @Cacheable(value = "cache_org", key = "#methodName",unless = "#result == null")
+    @Override
+    public CacheOrgVO getCacheOrgVO() {
+        QOrg e=QOrg.org;
+        CacheOrgVO vo=queryOne(e,e.type.eq(Org.TYPE_SYSTEM),cacheOrgVOConvert);
+        return vo;
+    }
+
+
 }

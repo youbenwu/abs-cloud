@@ -28,7 +28,7 @@ import org.springframework.web.bind.annotation.RestController;
 })
 
 
-@Api(value = "admin-data-area", tags = "后台-数据-地区数据")
+@Api(value = "account-data-area", tags = "后台-数据-地区数据")
 @RestController
 @RequestMapping("/api/admin/data/area")
 public class AreaAdminAction {

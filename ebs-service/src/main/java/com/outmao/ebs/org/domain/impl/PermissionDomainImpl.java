@@ -18,7 +18,6 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -138,4 +137,5 @@ public class PermissionDomainImpl extends BaseDomain implements PermissionDomain
 	public Long getIdByUrlAndName(String url, String name) {
 		return permissionDao.findIdByUrlAndName(url,name);
 	}
+
 }

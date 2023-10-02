@@ -4,10 +4,12 @@ package com.outmao.ebs.org.domain.impl;
 import com.outmao.ebs.common.base.BaseDomain;
 import com.outmao.ebs.org.dao.*;
 import com.outmao.ebs.org.domain.RoleDomain;
+import com.outmao.ebs.org.domain.conver.RoleMenuVOConver;
 import com.outmao.ebs.org.domain.conver.RolePermissionVOConver;
 import com.outmao.ebs.org.domain.conver.RoleVOConver;
 import com.outmao.ebs.org.dto.*;
 import com.outmao.ebs.org.entity.*;
+import com.outmao.ebs.org.vo.RoleMenuVO;
 import com.outmao.ebs.org.vo.RolePermissionVO;
 import com.outmao.ebs.org.vo.RoleVO;
 import com.querydsl.core.types.Predicate;
@@ -15,7 +17,6 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -27,12 +28,14 @@ public class RoleDomainImpl extends BaseDomain implements RoleDomain {
     @Autowired
     private PermissionDao permissionDao;
     @Autowired
+    private MenuDao menuDao;
+    @Autowired
     private RoleDao roleDao;
     @Autowired
     private RolePermissionDao rolePermissionDao;
 
     @Autowired
-    private AdminRoleDao adminRoleDao;
+    private AccountRoleDao accountRoleDao;
 
     @Autowired
     private RoleMenuDao roleMenuDao;
@@ -44,11 +47,14 @@ public class RoleDomainImpl extends BaseDomain implements RoleDomain {
 
     private RolePermissionVOConver rolePermissionVOConver=new RolePermissionVOConver();
 
+    private RoleMenuVOConver roleMenuVOConver=new RoleMenuVOConver();
+
 
     @Transactional
     @Override
     public Role saveRole(RoleDTO request) {
-        Role role=request.getId()==null?roleDao.findByOrgIdAndValue(request.getOrgId(),request.getValue())
+
+        Role role=request.getId()==null?roleDao.findByOrgIdAndName(request.getOrgId(),request.getName())
                 :roleDao.getOne(request.getId());
 
         if(role==null){
@@ -65,16 +71,17 @@ public class RoleDomainImpl extends BaseDomain implements RoleDomain {
         return role;
     }
 
-    //@CacheEvict(value = "cache_admin", allEntries = true)
     @Transactional
     @Override
-    public void deleteRole(DeleteRoleDTO request) {
+    public void deleteRoleById(Long id) {
 
-        Role role=roleDao.getOne(request.getId());
+        Role role=roleDao.getOne(id);
 
         rolePermissionDao.deleteAllByRoleId(role.getId());
 
-        adminRoleDao.deleteAllByRoleId(role.getId());
+        roleMenuDao.deleteAllByRoleId(id);
+
+        accountRoleDao.deleteAllByRoleId(role.getId());
 
         memberRoleDao.deleteAllByRoleId(role.getId());
 
@@ -84,6 +91,17 @@ public class RoleDomainImpl extends BaseDomain implements RoleDomain {
 
 
     @Override
+    public RoleVO getRoleVOById(Long id) {
+        QRole e= QRole.role;
+        RoleVO vo=queryOne(e,e.id.eq(id),roleVOConver);
+        if(vo!=null){
+            vo.setPermissions(getRolePermissionVOList(new GetRolePermissionListDTO(id)));
+            vo.setMenus(getRoleMenuVOList(new GetRoleMenuListDTO(id)));
+        }
+        return vo;
+    }
+
+    @Override
     public List<RoleVO> getRoleVOList(GetRoleListDTO request) {
         QRole e= QRole.role;
         Predicate p=e.org.id.eq(request.getOrgId());
@@ -91,7 +109,6 @@ public class RoleDomainImpl extends BaseDomain implements RoleDomain {
     }
 
 
-    //@CacheEvict(value = "cache_admin", allEntries = true)
     @Transactional
     @Override
     public RolePermission saveRolePermission(RolePermissionDTO request) {
@@ -107,48 +124,43 @@ public class RoleDomainImpl extends BaseDomain implements RoleDomain {
         return rp;
     }
 
-    //@CacheEvict(value = "cache_admin", allEntries = true)
+
     @Transactional
     @Override
     public List<RolePermission> setRolePermission(SetRolePermissionDTO request) {
 
         Role role=roleDao.getOne(request.getRoleId());
 
-        List<RolePermission> list=rolePermissionDao.findAllByRoleId(request.getRoleId());
+        List<RolePermission> permissions=rolePermissionDao.findAllByRoleId(role.getId());
 
-        Map<Long, Permission> permissions=list.stream().collect(Collectors.toMap(t->t.getPermission().getId(), t->t.getPermission()));
+        Map<Long, RolePermission> permissionMap=permissions.stream().collect(Collectors.toMap(t->t.getPermission().getId(), t->t));
 
-        List<RolePermission> dels=new  ArrayList();
+        List<RolePermission> list=new ArrayList<>();
 
-        for (RolePermission p:list) {
-            if(!request.getPermissions().contains(p.getPermission().getId())){
-                dels.add(p);
-            }
-        }
-
-        List<RolePermission> saves=new ArrayList(request.getPermissions().size());
-
-        for(Long pid:request.getPermissions()){
-            if(!permissions.containsKey(pid)) {
-                RolePermission rp = new RolePermission();
-                rp.setRole(roleDao.getOne(request.getRoleId()));
+        request.getPermissions().forEach(pid->{
+            RolePermission rp=permissionMap.get(pid);
+            if(rp==null){
+                rp = new RolePermission();
+                rp.setRole(role);
                 rp.setPermission(permissionDao.getOne(pid));
                 rp.setCreateTime(new Date());
-                saves.add(rp);
             }
-        }
+            list.add(rp);
+        });
 
-        rolePermissionDao.saveAll(saves);
-        rolePermissionDao.deleteAll(dels);
+        rolePermissionDao.saveAll(list);
 
-        return saves;
+        rolePermissionDao.deleteAllByRoleIdAndPermissionIdNoIn(role.getId(),request.getPermissions());
+
+
+        return list;
     }
 
-    //@CacheEvict(value = "cache_admin", allEntries = true)
+
     @Transactional
     @Override
-    public void deleteRolePermission(DeleteRolePermissionDTO request) {
-        RolePermission rp=rolePermissionDao.getOne(request.getId());
+    public void deleteRolePermissionById(Long id) {
+        RolePermission rp=rolePermissionDao.getOne(id);
         rolePermissionDao.delete(rp);
     }
 
@@ -169,8 +181,8 @@ public class RoleDomainImpl extends BaseDomain implements RoleDomain {
         RoleMenu roleMenu=roleMenuDao.findByRoleIdAndMenuId(request.getRoleId(),request.getMenuId());
         if(roleMenu==null){
             roleMenu=new RoleMenu();
-            roleMenu.setRoleId(request.getRoleId());
-            roleMenu.setMenuId(request.getMenuId());
+            roleMenu.setRole(roleDao.getOne(request.getRoleId()));
+            roleMenu.setMenu(menuDao.getOne(request.getMenuId()));
             roleMenu.setCreateTime(new Date());
             roleMenuDao.save(roleMenu);
         }
@@ -180,30 +192,29 @@ public class RoleDomainImpl extends BaseDomain implements RoleDomain {
     @Transactional
     @Override
     public List<RoleMenu> setRoleMenu(SetRoleMenuDTO request) {
-        List<RoleMenu> list=roleMenuDao.findAllByRoleId(request.getRoleId());
 
-        list.forEach(t->{
-            if(!request.getMenus().contains(t.getMenuId())){
-                roleMenuDao.delete(t);
+        Role role=roleDao.getOne(request.getRoleId());
+        List<RoleMenu> menus=roleMenuDao.findAllByRoleId(request.getRoleId());
+
+        Map<Long,RoleMenu> menuMap=menus.stream().collect(Collectors.toMap(t->t.getMenu().getId(),t->t));
+
+        List<RoleMenu> list=new ArrayList<>();
+
+        request.getMenus().forEach(menuId->{
+            RoleMenu rm=menuMap.get(menuId);
+            if(rm==null){
+                rm=new RoleMenu();
+                rm.setRole(role);
+                rm.setMenu(menuDao.getOne(menuId));
+                rm.setCreateTime(new Date());
             }
+            list.add(rm);
         });
 
-        Map<Long,RoleMenu> listMap=list.stream().collect(Collectors.toMap(t->t.getMenuId(),t->t));
+        roleMenuDao.saveAll(list);
+        roleMenuDao.deleteAllByRoleIdAndMenuIdNotIn(role.getId(),request.getMenus());
 
-        List<RoleMenu> saves=new ArrayList<>();
-        request.getMenus().forEach(t->{
-            if(!listMap.containsKey(t)){
-                RoleMenu roleMenu=new RoleMenu();
-                roleMenu.setRoleId(request.getRoleId());
-                roleMenu.setMenuId(t);
-                roleMenu.setCreateTime(new Date());
-                saves.add(roleMenu);
-            }
-        });
-
-        roleMenuDao.saveAll(saves);
-
-        return saves;
+        return list;
     }
 
     @Transactional
@@ -215,13 +226,14 @@ public class RoleDomainImpl extends BaseDomain implements RoleDomain {
 
 
     @Override
-    public List<RoleMenu> getRoleMenuListByRoleId(Long roleId) {
-        return roleMenuDao.findAllByRoleId(roleId);
+    public List<RoleMenuVO> getRoleMenuVOList(GetRoleMenuListDTO request) {
+        QRoleMenu e=QRoleMenu.roleMenu;
+        return queryList(e,e.role.id.eq(request.getRoleId()),roleMenuVOConver);
     }
-
 
     @Override
     public List<RoleMenu> getRoleMenuListByRoleIdIn(Collection<Long> roleIdIn) {
         return roleMenuDao.findAllByRoleIdIn(roleIdIn);
     }
+
 }

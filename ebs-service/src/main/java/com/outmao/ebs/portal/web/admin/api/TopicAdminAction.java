@@ -30,7 +30,7 @@ import java.util.List;
 })
 
 
-@Api(value = "admin-portal-topic", tags = "后台-门户-专题")
+@Api(value = "account-portal-topic", tags = "后台-门户-专题")
 @RestController
 @RequestMapping("/api/admin/portal/topic")
 public class TopicAdminAction {

@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 
-@Api(value = "admin-user-data", tags = "后台-用户-用户配置数据")
+@Api(value = "account-user-data", tags = "后台-用户-用户配置数据")
 @RestController
 @RequestMapping("/api/admin/user/data")
 public class UserDataAdminAction {

@@ -96,12 +96,6 @@ public class OrgVO implements Serializable {
      */
     private String intro;
 
-    /**
-     *
-     * 地区
-     *
-     */
-    private String area;
 
     /**
      *

@@ -11,6 +11,8 @@ public interface RolePermissionDao extends JpaRepository<RolePermission, Long> {
 
 	public void deleteAllByRoleId(Long roleId);
 
+	public void deleteAllByRoleIdAndPermissionIdNoIn(Long roleId,List<Long> permissionIdNoIn);
+
 	public RolePermission findByRoleIdAndPermissionId(Long roleId, Long permissionId);
 
 	public List<RolePermission> findAllByRoleId(Long roleId);

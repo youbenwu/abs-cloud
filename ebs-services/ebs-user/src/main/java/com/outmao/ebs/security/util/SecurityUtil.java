@@ -19,7 +19,7 @@ public class SecurityUtil {
 	public static boolean isAdminApi(){
 		HttpServletRequest request= RequestUtil.request();
 		if(request!=null)
-			return request.getRequestURI().startsWith("/api/admin/");
+			return request.getRequestURI().startsWith("/api/account/");
 		return false;
 	}
 
@@ -63,7 +63,7 @@ public class SecurityUtil {
 		SecurityUser user = (SecurityUser) authentication.getPrincipal();
 
 		// 无论如何超级管理员都过
-		if (user.getUsername().equals("admin"))
+		if (user.getUsername().equals("account"))
 			return true;
 
 		if(orgId==null)
@@ -94,7 +94,7 @@ public class SecurityUtil {
 		for (SecurityRole authority : authorities) {
 
 			// 无论如何超级管理员都过
-			if("admin".equals(authority.getAuthority()))
+			if("account".equals(authority.getAuthority()))
 				return true;
 
 			// 得到角色所有的权限

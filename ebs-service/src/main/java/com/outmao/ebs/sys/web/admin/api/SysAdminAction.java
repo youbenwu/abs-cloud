@@ -33,7 +33,7 @@ import java.util.List;
         }),
 })
 
-@Api(value = "admin-sys", tags = "后台-系统")
+@Api(value = "account-sys", tags = "后台-系统")
 @RestController
 @RequestMapping("/api/admin/sys")
 public class SysAdminAction {

@@ -1,9 +1,12 @@
 package com.outmao.ebs.org.web.admin.api;
 
 
+import com.outmao.ebs.org.common.annotation.AccessPermission;
+import com.outmao.ebs.org.common.annotation.AccessPermissionGroup;
+import com.outmao.ebs.org.common.annotation.AccessPermissionParent;
 import com.outmao.ebs.org.dto.*;
-import com.outmao.ebs.org.entity.RoleMenu;
 import com.outmao.ebs.org.service.RoleService;
+import com.outmao.ebs.org.vo.RoleMenuVO;
 import com.outmao.ebs.org.vo.RolePermissionVO;
 import com.outmao.ebs.org.vo.RoleVO;
 import io.swagger.annotations.Api;
@@ -14,11 +17,38 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
 import java.util.List;
 
 
-@Api(value = "admin-org-role", tags = "后台-组织-角色")
+
+@AccessPermissionGroup(title="组织管理",url="/org",name="",children = {
+
+
+        @AccessPermissionParent(title = "角色管理",url = "/org/role",name = "",children = {
+                @AccessPermission(title = "保存角色",url = "/org/role",name = "save"),
+                @AccessPermission(title = "删除角色",url = "/org/role",name = "delete"),
+                @AccessPermission(title = "读取角色",url = "/org/role",name = "read"),
+        }),
+
+        @AccessPermissionParent(title = "角色权限管理",url = "/org/role/permission",name = "",children = {
+                @AccessPermission(title = "保存角色权限",url = "/org/role/permission",name = "save"),
+                @AccessPermission(title = "删除角色权限",url = "/org/role/permission",name = "delete"),
+                @AccessPermission(title = "读取角色权限",url = "/org/role/permission",name = "read"),
+        }),
+
+        @AccessPermissionParent(title = "角色菜单管理",url = "/org/role/menu",name = "",children = {
+                @AccessPermission(title = "保存角色菜单",url = "/org/role/menu",name = "save"),
+                @AccessPermission(title = "删除角色菜单",url = "/org/role/menu",name = "delete"),
+                @AccessPermission(title = "读取角色菜单",url = "/org/role/menu",name = "read"),
+        }),
+
+
+
+})
+
+
+
+@Api(value = "account-org-role", tags = "后台-组织-角色")
 @RestController
 @RequestMapping("/api/admin/org/role")
 public class RoleAdminAction {
@@ -34,12 +64,21 @@ public class RoleAdminAction {
         roleService.saveRole(request);
     }
 
-    @PreAuthorize("hasPermission('/org/role','delete')")
+    @PreAuthorize("hasPermission(null,'/org/role','delete')")
     @ApiOperation(value = "删除角色", notes = "删除角色")
     @PostMapping("/delete")
-    public void deleteRole(DeleteRoleDTO request){
-        roleService.deleteRole(request);
+    public void deleteRoleById(Long id){
+        roleService.deleteRoleById(id);
     }
+
+
+    @PreAuthorize("hasPermission(#request.orgId,'/org/role','read')")
+    @ApiOperation(value = "获取角色", notes = "获取角色")
+    @PostMapping("/get")
+    public RoleVO getRoleVOById(Long id){
+        return roleService.getRoleVOById(id);
+    }
+
 
     @PreAuthorize("hasPermission(#request.orgId,'/org/role','read')")
     @ApiOperation(value = "获取角色列表", notes = "获取角色列表")
@@ -75,10 +114,9 @@ public class RoleAdminAction {
     @PreAuthorize("hasPermission('/org/role/menu','read')")
     @ApiOperation(value = "获取角色菜单列表", notes = "获取角色菜单列表")
     @PostMapping("/menu/list")
-    public List<RoleMenu> getRoleMenuListByRoleId(Long roleId) {
-        return roleService.getRoleMenuListByRoleId(roleId);
+    public List<RoleMenuVO> getRoleMenuVOList(GetRoleMenuListDTO request) {
+        return roleService.getRoleMenuVOList(request);
     }
-
 
 
 

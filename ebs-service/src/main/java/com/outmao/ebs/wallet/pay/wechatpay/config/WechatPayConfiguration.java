@@ -9,7 +9,6 @@ import com.wechat.pay.java.service.payments.nativepay.NativePayService;
 import com.wechat.pay.java.service.refund.RefundService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 /**
@@ -24,48 +23,47 @@ public class WechatPayConfiguration {
 	@Autowired
 	private WechatPayProperties properties;
 
-	@Autowired
-	private Config config;
+
+	private Config payConfig;
 
 
-	@Bean
-	public Config config(){
-		Config config = new RSAAutoCertificateConfig.Builder()
+	public Config payConfig(){
+		if(payConfig==null)
+		payConfig = new RSAAutoCertificateConfig.Builder()
 						.merchantId(properties.getMerchantId())
 						.privateKeyFromPath(properties.getPrivateKeyPath())
 						.merchantSerialNumber(properties.getMerchantSerialNumber())
 						.apiV3Key(properties.getApiV3Key())
 						.build();
-		return config;
+		return payConfig;
 	}
 
 
-	@Bean
+
 	public NativePayService nativePayService(){
-		NativePayService service = new NativePayService.Builder().config(config).build();
+		NativePayService service = new NativePayService.Builder().config(payConfig()).build();
 		return service;
 	}
 
 
-	@Bean
+
 	public AppServiceExtension appServiceExtension(){
-		AppServiceExtension service=new AppServiceExtension.Builder().config(config).build();
+		AppServiceExtension service=new AppServiceExtension.Builder().config(payConfig()).build();
 		return service;
 	}
 
-	@Bean
+
 	public JsapiServiceExtension jsapiServiceExtension(){
-		JsapiServiceExtension service=new JsapiServiceExtension.Builder().config(config).build();
+		JsapiServiceExtension service=new JsapiServiceExtension.Builder().config(payConfig()).build();
 		return service;
 	}
 
 
-	@Bean
+
 	public RefundService refundService(){
-		RefundService service=new RefundService.Builder().config(config).build();
+		RefundService service=new RefundService.Builder().config(payConfig()).build();
 		return service;
 	}
-
 
 
 }

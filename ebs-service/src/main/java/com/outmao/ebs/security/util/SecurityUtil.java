@@ -57,6 +57,11 @@ public class SecurityUtil {
 				&&(SecurityContextHolder.getContext().getAuthentication().getPrincipal() instanceof SecurityUser);
 	}
 
+
+	public static boolean hasPermission(Long orgId, String url, String permission) {
+		return hasPermission(SecurityContextHolder.getContext().getAuthentication(),orgId,url,permission);
+	}
+
 	public static boolean hasPermission(Authentication authentication,Long orgId, String url, String permission){
 
 
@@ -79,10 +84,6 @@ public class SecurityUtil {
 		}
 
 		return false;
-	}
-
-	public static boolean hasPermission(Long orgId, String url, String permission) {
-		return hasPermission(SecurityContextHolder.getContext().getAuthentication(),orgId,url,permission);
 	}
 
 
