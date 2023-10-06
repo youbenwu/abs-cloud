@@ -6,10 +6,10 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="ebs-user" />
+        <module name="ebs-common" />
         <module name="ebs-gateway" />
         <module name="ebs-eureka" />
-        <module name="ebs-common" />
+        <module name="ebs-user" />
         <module name="ebs-clients" />
         <module name="ebs-service" />
       </profile>

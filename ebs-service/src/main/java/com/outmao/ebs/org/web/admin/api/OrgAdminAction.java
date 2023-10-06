@@ -17,6 +17,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -100,7 +101,7 @@ public class OrgAdminAction {
     @PreAuthorize("hasPermission(#request.id,'/org/org','save')")
     @ApiOperation(value = "保存组织信息", notes = "保存组织信息")
     @PostMapping("/save")
-    public Org saveOrg(OrgDTO request) {
+    public Org saveOrg(@RequestBody OrgDTO request) {
         return orgService.saveOrg(request);
     }
 

@@ -6,6 +6,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 
 @ApiModel(value = "AccountDTO", description = "保存管理员信息")
 @NoArgsConstructor
@@ -28,5 +30,6 @@ public class AccountDTO {
     @ApiModelProperty(name = "phone", value = "手机")
     private String phone;
 
+    private List<Long> roles;
 
 }

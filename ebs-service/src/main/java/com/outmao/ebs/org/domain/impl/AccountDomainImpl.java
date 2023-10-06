@@ -80,6 +80,10 @@ public class AccountDomainImpl extends BaseDomain implements AccountDomain {
 
         accountDao.save(account);
 
+        if(request.getRoles()!=null){
+            setAccountRole(new SetAccountRoleDTO(account.getId(),request.getRoles()));
+        }
+
         return account;
     }
 

@@ -1,7 +1,115 @@
 [
   {
     "name": "首页",
-    "path": "/index"
+    "path": "/home"
+  },
+  {
+    "name": "用户",
+    "path": "/user",
+    "children":[
+      {
+        "name": "用户管理",
+        "path": "/user/users"
+      },
+      {
+        "name": "实名认证",
+        "path": "/user/idcards"
+      },
+      {
+        "name": "用户反馈",
+        "path": "/user/feedbacks"
+      },
+      {
+        "name": "等级配置",
+        "path": "/user/levels"
+      }
+    ]
+  },
+  {
+    "name": "门户",
+    "path": "/portal",
+    "children":[
+      {
+        "name": "频道管理",
+        "path": "/portal/channels"
+      },
+      {
+        "name": "广告管理",
+        "path": "/portal/adverts"
+      }
+    ]
+  },
+  {
+    "name": "消息",
+    "path": "/message",
+    "children":[
+      {
+        "name": "消息管理",
+        "path": "/message/list"
+      },
+      {
+        "name": "发消息",
+        "path": "/message/send"
+      }
+    ]
+  },
+  {
+    "name": "电商",
+    "path": "/mall",
+    "children":[
+      {
+        "name": "订单",
+        "path": "/mall/order",
+        "children":[
+          {
+            "name": "订单管理",
+            "path": "/mall/order/orders"
+          },
+          {
+            "name": "门票订单管理",
+            "path": "/mall/order/ticketorders"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "酒店",
+    "path": "/hotel",
+    "children":[
+      {
+        "name": "酒店信息",
+        "path": "/hotel/info"
+      },
+      {
+        "name": "酒店管理",
+        "path": "/hotel/hotels"
+      },
+      {
+        "name": "房型管理",
+        "path": "/hotel/roomtypes"
+      },
+      {
+        "name": "房间管理",
+        "path": "/hotel/rooms"
+      },
+      {
+        "name": "客户管理",
+        "path": "/hotel/customers"
+      },
+      {
+        "name": "入住管理",
+        "path": "/hotel/stays"
+      },
+      {
+        "name": "服务管理",
+        "path": "/hotel/works"
+      },
+      {
+        "name": "设备管理",
+        "path": "/hotel/devices"
+      }
+    ]
   },
   {
     "name": "执法管理",
@@ -13,19 +121,19 @@
         "children":[
           {
             "name": "案情列表",
-            "path": "/lawe/case/case_list"
+            "path": "/lawe/case/cases"
           },
           {
             "name": "立案审核",
-            "path": "/lawe/case/caseReview_list"
+            "path": "/lawe/case/casereviews"
           },
           {
             "name": "结案审核",
-            "path": "/lawe/case/caseFinishReview_list"
+            "path": "/lawe/case/casefinishreviews"
           },
           {
             "name": "审核设置",
-            "path": "/lawe/case/caseSetting"
+            "path": "/lawe/case/casesetting"
           }
         ]
       },
@@ -35,103 +143,76 @@
         "children":[
           {
             "name": "法律法规",
-            "path": "/lawe/law/law_list"
+            "path": "/lawe/law/laws"
           },
           {
             "name": "法律条款",
-            "path": "/lawe/law/lawPro_list"
+            "path": "/lawe/law/lawpros"
           }
         ]
       }
     ]
   },
   {
-    "name": "用户管理",
-    "path": "/user",
-    "children":[
-      {
-        "name": "用户列表",
-        "path": "/user/user_list"
-      },
-      {
-        "name": "实名认证",
-        "path": "/user/idAuth_list"
-      },
-      {
-        "name": "用户反馈",
-        "path": "/user/feedback_list"
-      },
-      {
-        "name": "等级配置",
-        "path": "/user/level_list"
-      }
-    ]
-  },
-  {
-    "name": "组织机构",
+    "name": "组织",
     "path": "/org",
     "children":[
       {
         "name": "组织信息",
-        "path": "/org/org"
+        "path": "/org/info"
+      },
+      {
+        "name": "组织管理",
+        "path": "/org/orgs"
       },
       {
         "name": "部门管理",
-        "path": "/org/dep_list"
+        "path": "/org/deps"
       },
       {
         "name": "职位管理",
-        "path": "/org/job_list"
+        "path": "/org/jobs"
       },
       {
         "name": "成员管理",
-        "path": "/org/member_list"
+        "path": "/org/members"
       },
       {
-        "name": "管理员管理",
-        "path": "/org/admin_list"
+        "name": "账号管理",
+        "path": "/org/accounts"
       },
       {
         "name": "角色管理",
-        "path": "/org/role_list"
+        "path": "/org/roles"
+      },
+      {
+        "name": "菜单管理",
+        "path": "/org/menus"
+      },
+      {
+        "name": "权限管理",
+        "path": "/org/pers"
       }
     ]
   },
   {
-    "name": "系统管理",
+    "name": "系统",
     "path": "/sys",
     "children":[
       {
         "name": "系统信息",
-        "path": "/sys/sys"
+        "path": "/sys/info"
+      },
+      {
+        "name": "系统管理",
+        "path": "/sys/syss"
       },
       {
         "name": "操作日志",
-        "path": "/sys/log_list"
-      }
-    ]
-  },
-  {
-    "name": "开发管理",
-    "path": "/dev",
-    "children":[
-      {
-        "name": "组织列表",
-        "path": "/dev/org_list"
-      },
-      {
-        "name": "系统列表",
-        "path": "/dev/sys_list"
-      },
-      {
-        "name": "菜单列表",
-        "path": "/dev/menu_list"
-      },
-      {
-        "name": "权限列表",
-        "path": "/dev/per_list"
+        "path": "/sys/logs"
       }
     ]
   }
+
 
 ]

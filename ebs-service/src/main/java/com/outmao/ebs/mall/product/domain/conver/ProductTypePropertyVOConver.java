@@ -21,7 +21,7 @@ public class ProductTypePropertyVOConver implements BeanConver<QProductTypePrope
         vo.setInputType(t.get(e.inputType));
         vo.setSearchType(t.get(e.searchType));
         vo.setAssoc(t.get(e.assoc));
-        vo.setAdd(t.get(e.add));
+        vo.setAddable(t.get(e.addable));
         return vo;
     }
 
@@ -37,7 +37,7 @@ public class ProductTypePropertyVOConver implements BeanConver<QProductTypePrope
                 e.inputType,
                 e.searchType,
                 e.assoc,
-                e.add,
+                e.addable,
 
         };
     }

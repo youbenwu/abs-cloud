@@ -51,7 +51,7 @@ public class SysServiceImpl extends BaseDomain implements SysService , CommandLi
         for(SysDTO dto:list){
             Sys sys=saveSys(dto);
             loadMenus(sys);
-            loadPers(sys);
+            //loadPers(sys);
         }
 
     }

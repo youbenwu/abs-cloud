@@ -68,6 +68,14 @@ public class RoleDomainImpl extends BaseDomain implements RoleDomain {
 
         roleDao.save(role);
 
+        if(request.getPermissions()!=null){
+            setRolePermission(new SetRolePermissionDTO(role.getId(),request.getPermissions()));
+        }
+
+        if(request.getMenus()!=null){
+            setRoleMenu(new SetRoleMenuDTO(role.getId(),request.getMenus()));
+        }
+
         return role;
     }
 

@@ -86,7 +86,11 @@ public class OrgDomainImpl extends BaseDomain implements OrgDomain {
 
         Org org= orgDao.findByIdForUpdate(request.getId());
 
-        BeanUtils.copyProperties(request,org);
+        BeanUtils.copyProperties(request,org,"contact");
+
+        if(request.getContact()!=null) {
+            BeanUtils.copyProperties(request.getContact(), org.getContact());
+        }
 
         org.setUpdateTime(new Date());
 

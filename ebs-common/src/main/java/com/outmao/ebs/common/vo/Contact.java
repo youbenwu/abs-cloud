@@ -42,7 +42,9 @@ public class Contact {
         if(!StringUtils.isEmpty(email)){
             s.append(" "+email);
         }
-        s.append(" "+address.toString());
+        if(address!=null) {
+            s.append(" " + address.toString());
+        }
         return s.toString().trim();
     }
 

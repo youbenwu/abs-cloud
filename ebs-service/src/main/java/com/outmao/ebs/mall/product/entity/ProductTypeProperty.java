@@ -85,7 +85,7 @@ public class ProductTypeProperty  extends SortEntity {
 	 * 是否支持手动新增
 	 * 
 	 */
-	private boolean add;
+	private boolean addable;
 
 
 }

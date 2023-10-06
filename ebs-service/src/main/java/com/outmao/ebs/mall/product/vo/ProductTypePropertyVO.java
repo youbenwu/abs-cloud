@@ -77,7 +77,7 @@ public class ProductTypePropertyVO {
      * 是否支持手动新增
      *
      */
-    @ApiModelProperty(name = "add", value = "是否支持手动新增")
-    private boolean add;
+    @ApiModelProperty(name = "addable", value = "是否支持手动新增")
+    private boolean addable;
 
 }
