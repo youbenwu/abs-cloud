@@ -4,7 +4,6 @@ package com.outmao.ebs.hotel.dto;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
-import java.util.Date;
 
 /**
  *
@@ -63,7 +62,7 @@ public class HotelDeviceDTO {
     /**
      * 应用类型
      */
-    @ApiModelProperty(name = "appType", value = "应用类型")
+    @ApiModelProperty(name = "appType", value = "应用类型 传HOTEL_PAD")
     private String appType;
 
 

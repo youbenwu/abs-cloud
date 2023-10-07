@@ -24,7 +24,7 @@ public class HotelDevice  implements Serializable {
     private static final long serialVersionUID = 1L;
 
 
-    public static final String APP_TYPE_QY_PAD="ROOM_PAD";
+    public static final String APP_TYPE_QY_PAD="HOTEL_PAD";
 
 
     /**
@@ -73,6 +73,7 @@ public class HotelDevice  implements Serializable {
     /**
      * 设备号
      */
+    @Column(unique = true)
     private String deviceNo;
 
     /**

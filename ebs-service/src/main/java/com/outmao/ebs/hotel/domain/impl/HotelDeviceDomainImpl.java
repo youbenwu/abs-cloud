@@ -38,7 +38,9 @@ public class HotelDeviceDomainImpl extends BaseDomain implements HotelDeviceDoma
     @Transactional()
     @Override
     public HotelDevice saveHotelDevice(HotelDeviceDTO request) {
-        HotelDevice device=request.getId()==null?null:hotelDeviceDao.getOne(request.getId());
+        HotelDevice device=request.getId()==null?hotelDeviceDao.findByDeviceNo(request.getDeviceNo())
+                :hotelDeviceDao.getOne(request.getId());
+
 
         if(device==null){
             device=new HotelDevice();
@@ -47,7 +49,7 @@ public class HotelDeviceDomainImpl extends BaseDomain implements HotelDeviceDoma
             device.setCreateTime(new Date());
         }
 
-        BeanUtils.copyProperties(request,device);
+        BeanUtils.copyProperties(request,device,"id");
         device.setUpdateTime(new Date());
 
         device.setKeyword(getKeyword(device));
