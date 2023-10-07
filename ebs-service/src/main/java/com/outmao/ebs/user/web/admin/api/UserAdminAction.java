@@ -8,6 +8,7 @@ import com.outmao.ebs.user.dto.GetUserListDTO;
 import com.outmao.ebs.user.dto.RegisterDTO;
 import com.outmao.ebs.user.dto.UserDTO;
 import com.outmao.ebs.user.dto.UserDetailsDTO;
+import com.outmao.ebs.user.entity.User;
 import com.outmao.ebs.user.service.UserService;
 import com.outmao.ebs.user.vo.HuaUserVO;
 import com.outmao.ebs.user.vo.UserDetailsVO;
@@ -81,6 +82,8 @@ public class UserAdminAction {
 		userService.registerUser(request);
 	}
 
+
+
 	// 修改用户信息
 	@PreAuthorize("hasPermission(null,'/user/info','save')")
 	@ApiOperation(value = "修改用户信息", notes = "修改用户信息")
@@ -111,6 +114,13 @@ public class UserAdminAction {
 	@PostMapping("/get")
 	public UserVO getUserVOById(Long id){
 		return userService.getUserVOById(id);
+	}
+
+
+	@ApiOperation(value = "获取用户", notes = "获取用户")
+	@PostMapping("/getByUsername")
+	public User getUserByUsername(String username){
+		return userService.getUserByUsername(username);
 	}
 
 	//获取用户列表

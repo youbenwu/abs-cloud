@@ -115,9 +115,10 @@ public class UserAction {
 			@ApiImplicitParam(name = "validateCode", value = "验证码", required = true, dataType = "String")
 	})
 	@PostMapping("/register/phone")
-	public void registerUserByPhone(String phone, String password, String validateCode, HttpServletRequest request) {
+	public void registerUserByPhone(String phone, String password, String validateCode,String nickname, HttpServletRequest request) {
 		ValidateCodeUtil.verify(phone,validateCode, request);
 		Map<String,Object> args= RequestUtil.getHeaders();
+		args.put("nickname",nickname);
 		userService.registerUser(new RegisterDTO(Oauth.PHONE.getName(),phone,password,0,args));
 	}
 
