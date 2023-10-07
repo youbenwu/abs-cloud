@@ -39,7 +39,7 @@ public class OrgAction {
     @PreAuthorize("principal.id.equals(#request.userId)")
     @ApiOperation(value = "注册组织信息", notes = "注册组织信息")
     @PostMapping("/register")
-    public void registerOrg(RegisterOrgDTO request){
+    public void registerOrg(@RequestBody RegisterOrgDTO request){
         request.setType(Org.TYPE_TENANT);
         orgService.registerOrg(request);
     }

@@ -58,8 +58,8 @@ public class HotelServiceImpl extends BaseService implements HotelService {
 
 
 
-    @Transactional()
     @BindingOrg
+    @Transactional()
     @Override
     public Hotel registerHotel(RegisterHotelDTO request) {
         if(request.getUserId()==null){

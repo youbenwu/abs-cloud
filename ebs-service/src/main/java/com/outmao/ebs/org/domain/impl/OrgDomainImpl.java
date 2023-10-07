@@ -4,6 +4,7 @@ package com.outmao.ebs.org.domain.impl;
 
 import com.outmao.ebs.common.base.BaseDomain;
 import com.outmao.ebs.common.exception.BusinessException;
+import com.outmao.ebs.org.dao.OrgContactDao;
 import com.outmao.ebs.org.dao.OrgDao;
 import com.outmao.ebs.org.domain.OrgDomain;
 import com.outmao.ebs.org.domain.conver.CacheOrgVOConvert;
@@ -42,6 +43,9 @@ public class OrgDomainImpl extends BaseDomain implements OrgDomain {
     @Autowired
     private OrgDao orgDao;
 
+    @Autowired
+    private OrgContactDao orgContactDao;
+
     private OrgVOConvert orgVOConvert=new OrgVOConvert();
 
     private CacheOrgVOConvert cacheOrgVOConvert=new CacheOrgVOConvert();
@@ -60,15 +64,12 @@ public class OrgDomainImpl extends BaseDomain implements OrgDomain {
                 parent.setLeaf(false);
             }
         }
-        BeanUtils.copyProperties(request,org,"contact");
+        BeanUtils.copyProperties(request,org,"contact","id");
 
-        OrgContact contact=org.getContact();
-        if(contact==null){
-            contact=new OrgContact();
-            org.setContact(contact);
-        }
+        org.setContact(new OrgContact());
+
         if(request.getContact()!=null) {
-            BeanUtils.copyProperties(request.getContact(), contact);
+            BeanUtils.copyProperties(request.getContact(), org.getContact(),"id");
         }
 
         org.setCreateTime(new Date());
@@ -86,10 +87,10 @@ public class OrgDomainImpl extends BaseDomain implements OrgDomain {
 
         Org org= orgDao.findByIdForUpdate(request.getId());
 
-        BeanUtils.copyProperties(request,org,"contact");
+        BeanUtils.copyProperties(request,org,"contact","id");
 
         if(request.getContact()!=null) {
-            BeanUtils.copyProperties(request.getContact(), org.getContact());
+            BeanUtils.copyProperties(request.getContact(), org.getContact(),"id");
         }
 
         org.setUpdateTime(new Date());
