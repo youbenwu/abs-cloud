@@ -24,7 +24,10 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
+
+import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 
 
 @Component
@@ -159,4 +162,10 @@ public class HotelDomainImpl extends BaseDomain implements HotelDomain {
     }
 
 
+    @Override
+    public List<HotelVO> getHotelVOListByOrgIdIn(Collection<Long> orgIdIn) {
+        QHotel e=QHotel.hotel;
+        Predicate p=e.orgId.in(orgIdIn);
+        return queryList(e,p,hotelVOConver);
+    }
 }

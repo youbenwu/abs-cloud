@@ -8,6 +8,8 @@ import com.outmao.ebs.hotel.vo.*;
 import com.outmao.ebs.org.common.annotation.AccessPermission;
 import com.outmao.ebs.org.common.annotation.AccessPermissionGroup;
 import com.outmao.ebs.org.common.annotation.AccessPermissionParent;
+import com.outmao.ebs.security.util.SecurityUtil;
+import com.outmao.ebs.security.vo.SecurityUser;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +21,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @AccessPermissionGroup(title="酒店管理",url="/hotel",name="",children = {
 
@@ -109,6 +115,16 @@ public class HotelAdminAction {
     @PostMapping("/page")
     public Page<HotelVO> getHotelVOPage(GetHotelListDTO request, Pageable pageable) {
         return hotelService.getHotelVOPage(request,pageable);
+    }
+
+    @ApiOperation(value = "获取登陆用户的酒店信息列表", notes = "获取登陆用户的酒店信息列表")
+    @PostMapping("/list")
+    public List<HotelVO> getHotelVOListByOrgIdIn() {
+        SecurityUser user=SecurityUtil.currentUser();
+        if(user.getMembers()!=null){
+            return hotelService.getHotelVOListByOrgIdIn(user.getMembers().stream().map(t->t.getOrgId()).collect(Collectors.toList()));
+        }
+        return new ArrayList<>(0);
     }
 
 

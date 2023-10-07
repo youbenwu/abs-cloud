@@ -21,7 +21,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 
 
 @Service
@@ -113,6 +115,11 @@ public class HotelServiceImpl extends BaseService implements HotelService {
     @Override
     public Page<HotelVO> getHotelVOPage(GetHotelListDTO request, Pageable pageable) {
         return hotelDomain.getHotelVOPage(request,pageable);
+    }
+
+    @Override
+    public List<HotelVO> getHotelVOListByOrgIdIn(Collection<Long> orgIdIn) {
+        return hotelDomain.getHotelVOListByOrgIdIn(orgIdIn);
     }
 
     @Override

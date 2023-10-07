@@ -9,6 +9,9 @@ import com.outmao.ebs.hotel.vo.HotelVO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.util.Collection;
+import java.util.List;
+
 public interface HotelDomain {
 
     public Hotel registerHotel(RegisterHotelDTO request);
@@ -22,6 +25,8 @@ public interface HotelDomain {
     public HotelVO getHotelVOByOrgId(Long orgId);
 
     public Page<HotelVO> getHotelVOPage(GetHotelListDTO request, Pageable pageable);
+
+    public List<HotelVO> getHotelVOListByOrgIdIn(Collection<Long> orgIdIn);
 
 
 }
