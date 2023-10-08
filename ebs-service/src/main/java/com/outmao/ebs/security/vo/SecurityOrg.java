@@ -7,6 +7,8 @@ import lombok.Data;
 @Data
 public class SecurityOrg {
 
+    private Long targetId;
+
     private Long orgId;
 
     private int orgType;

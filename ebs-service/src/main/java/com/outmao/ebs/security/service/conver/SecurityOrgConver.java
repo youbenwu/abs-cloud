@@ -15,6 +15,7 @@ public class SecurityOrgConver implements BeanConver<QOrg, SecurityOrg> {
         org.setOrgId(t.get(e.id));
         org.setOrgType(t.get(e.type));
         org.setOrgName(t.get(e.name));
+        org.setTargetId(t.get(e.targetId));
         return org;
     }
 
@@ -24,6 +25,7 @@ public class SecurityOrgConver implements BeanConver<QOrg, SecurityOrg> {
                 e.id,
                 e.type,
                 e.name,
+                e.targetId,
         };
     }
 }
