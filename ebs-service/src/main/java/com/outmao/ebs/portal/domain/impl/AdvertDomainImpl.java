@@ -84,11 +84,11 @@ public class AdvertDomainImpl extends BaseDomain implements AdvertDomain {
         if(request.getStatus()!=null){
             p=e.status.eq(request.getStatus()).and(p);
         }
-        else{
-            Date now =new Date();
-            //前端只返回上架的，并且在显示时间之内的
-            p=e.status.eq(1).and(e.startTime.before(now).and(e.endTime.after(now))).and(p);
-        }
+//        else{
+//            Date now =new Date();
+//            //前端只返回上架的，并且在显示时间之内的
+//            p=e.status.eq(1).and(e.startTime.before(now).and(e.endTime.after(now))).and(p);
+//        }
 
         Page<Advert> page=p==null?advertDao.findAll(pageable):advertDao.findAll(p,pageable);
 

@@ -44,6 +44,14 @@ public class Message implements Serializable {
 	@Lob
 	private String content;
 	private String url;
+	/**
+	 *
+	 * 搜索关键字
+	 *
+	 */
+	@Lob
+	@Basic(fetch = FetchType.LAZY)
+	private String keyword;
 	private Date createTime;
 	private Date updateTime;
 

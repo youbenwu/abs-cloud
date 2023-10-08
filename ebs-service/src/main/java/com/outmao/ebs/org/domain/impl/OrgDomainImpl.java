@@ -217,7 +217,7 @@ public class OrgDomainImpl extends BaseDomain implements OrgDomain {
         return vo;
     }
 
-    @Cacheable(value = "cache_org", key = "#methodName",unless = "#result == null")
+    @Cacheable(value = "cache_org", key = "#root.methodName",unless = "#result == null")
     @Override
     public CacheOrgVO getCacheOrgVO() {
         QOrg e=QOrg.org;

@@ -11,4 +11,6 @@ public class GetMessageListDTO {
 
     private List<String> types;
 
+    private String keyword;
+
 }

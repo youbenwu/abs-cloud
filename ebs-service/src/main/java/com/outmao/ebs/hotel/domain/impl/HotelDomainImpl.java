@@ -156,6 +156,10 @@ public class HotelDomainImpl extends BaseDomain implements HotelDomain {
             p=e.keyword.like("%"+request.getKeyword()+"%");
         }
 
+        if(request.getStatus()!=null){
+            p=e.status.eq(request.getStatus()).and(p);
+        }
+
         Page<HotelVO> page=queryPage(e,p,hotelVOConver,pageable);
 
         return page;

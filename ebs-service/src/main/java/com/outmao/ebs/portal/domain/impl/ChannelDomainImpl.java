@@ -61,6 +61,9 @@ public class ChannelDomainImpl extends BaseDomain implements ChannelDomain {
             p=e.orgId.eq(request.getOrgId());
         }
 
+        if(p==null)
+           return channelDao.findAll(pageable);
+
         return channelDao.findAll(p,pageable);
     }
 

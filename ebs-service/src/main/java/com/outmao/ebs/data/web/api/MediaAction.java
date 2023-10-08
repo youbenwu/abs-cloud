@@ -81,6 +81,7 @@ public class MediaAction {
 	}
 
 
+	@PreAuthorize("permitAll")
 	@ApiOperation(value = "上传文件接口", notes = "上传文件,文件大小限制为10M")
 	@ApiImplicitParams({
 			@ApiImplicitParam(name = "path", value = "业务类型", type = "path", required = true, dataType = "String"),

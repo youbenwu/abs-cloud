@@ -43,6 +43,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -101,8 +102,20 @@ public class MessageDomainImpl extends BaseDomain implements MessageDomain {
 		}
 		m.setCreateTime(new Date());
 		m.setUpdateTime(new Date());
+		m.setKeyword(getKeyword(m));
 		m = messageDao.save(m);
 		return m;
+	}
+
+	private String getKeyword(Message data){
+		StringBuffer s=new StringBuffer();
+		if(!StringUtils.isEmpty(data.getTitle())){
+			s.append(" "+data.getTitle());
+		}
+		if(!StringUtils.isEmpty(data.getContent())){
+			s.append(" "+data.getContent());
+		}
+		return s.toString();
 	}
 
 	@Transactional
@@ -134,6 +147,10 @@ public class MessageDomainImpl extends BaseDomain implements MessageDomain {
 
 		if(request.getTypes()!=null&&request.getTypes().size()>0){
 			p=e.type.in(request.getTypes()).and(p);
+		}
+
+		if(!StringUtils.isEmpty(request.getKeyword())){
+			p=e.keyword.like("%"+request.getKeyword()+"%");
 		}
 
 		Page<MessageVO> page=queryPage(e,p,messageVOConver,pageable);
