@@ -34,6 +34,7 @@ public class BindingItem implements Serializable {
 	@Column(name="item_title")
 	private String title;
 
+
 	public BindingItem(Long id,String type){
 		this.id=id;
 		this.type=type;

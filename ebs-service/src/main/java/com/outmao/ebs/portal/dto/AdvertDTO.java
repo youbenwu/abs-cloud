@@ -43,7 +43,7 @@ public class AdvertDTO {
      * 0--无跳转 1--跳转商品
      *
      * */
-    @ApiModelProperty(name = "type", value = "0--无跳转 1--跳转商品")
+    @ApiModelProperty(name = "type", value = "0--无跳转 1--跳转商品 2--跳转地址")
     private int type;
 
     /**
@@ -60,6 +60,9 @@ public class AdvertDTO {
 
     @ApiModelProperty(name = "image", value = "图片地址")
     private String image;
+
+    @ApiModelProperty(name = "url", value = "广告跳转地址")
+    private String url;
 
     @ApiModelProperty(name = "startTime", value = "广告展示开始时间")
     private Date startTime;

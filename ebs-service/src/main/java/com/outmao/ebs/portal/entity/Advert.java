@@ -61,6 +61,9 @@ public class Advert extends SortEntity {
     @ApiModelProperty(name = "image", value = "图片地址")
     private String image;
 
+    @ApiModelProperty(name = "url", value = "广告跳转地址")
+    private String url;
+
     @ApiModelProperty(name = "startTime", value = "广告展示开始时间")
     private Date startTime;
 
