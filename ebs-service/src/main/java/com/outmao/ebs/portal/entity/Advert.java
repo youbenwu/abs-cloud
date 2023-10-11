@@ -58,6 +58,9 @@ public class Advert extends SortEntity {
     @ApiModelProperty(name = "title", value = "广告名称")
     private String title;
 
+    @ApiModelProperty(name = "subtitle", value = "广告副标题")
+    private String subtitle;
+
     @ApiModelProperty(name = "image", value = "图片地址")
     private String image;
 
