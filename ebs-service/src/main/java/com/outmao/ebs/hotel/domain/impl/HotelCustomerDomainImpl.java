@@ -1,6 +1,7 @@
 package com.outmao.ebs.hotel.domain.impl;
 
 import com.outmao.ebs.common.base.BaseDomain;
+import com.outmao.ebs.common.exception.BusinessException;
 import com.outmao.ebs.hotel.dao.HotelCustomerDao;
 import com.outmao.ebs.hotel.dao.HotelCustomerStayDao;
 import com.outmao.ebs.hotel.dao.HotelDao;
@@ -49,6 +50,9 @@ public class HotelCustomerDomainImpl extends BaseDomain implements HotelCustomer
         HotelCustomer customer=request.getId()==null?null:hotelCustomerDao.findByIdForUpdate(request.getId());
 
         if(customer==null){
+            if(hotelCustomerDao.findByHotelIdAndPhone(request.getHotelId(),request.getPhone())!=null){
+                throw new BusinessException("客户已存在");
+            }
             customer=new HotelCustomer();
             customer.setCreateTime(new Date());
             customer.setHotel(hotelDao.getOne(request.getHotelId()));
@@ -83,6 +87,13 @@ public class HotelCustomerDomainImpl extends BaseDomain implements HotelCustomer
         return s.toString();
     }
 
+    @Transactional()
+    @Override
+    public void deleteHotelCustomerById(Long id) {
+        HotelCustomer customer=hotelCustomerDao.getOne(id);
+        hotelCustomerDao.delete(customer);
+    }
+
     @Override
     public HotelCustomer getHotelCustomerByHotelIdAndPhone(Long hotelId, String phone) {
         return hotelCustomerDao.findByHotelIdAndPhone(hotelId,phone);
@@ -95,10 +106,19 @@ public class HotelCustomerDomainImpl extends BaseDomain implements HotelCustomer
         return vo;
     }
 
+
+
     @Override
     public HotelCustomerVO getHotelCustomerVO(Long hotelId, Long userId) {
         QHotelCustomer e=QHotelCustomer.hotelCustomer;
         HotelCustomerVO vo=queryOne(e,e.hotel.id.eq(hotelId).and(e.userId.eq(userId)),hotelCustomerVOConver);
+        return vo;
+    }
+
+    @Override
+    public HotelCustomerVO getHotelCustomerVOByHotelIdAndPhone(Long hotelId, String phone) {
+        QHotelCustomer e=QHotelCustomer.hotelCustomer;
+        HotelCustomerVO vo=queryOne(e,e.hotel.id.eq(hotelId).and(e.phone.eq(phone)),hotelCustomerVOConver);
         return vo;
     }
 

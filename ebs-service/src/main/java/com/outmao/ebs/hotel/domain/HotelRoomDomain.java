@@ -19,6 +19,8 @@ public interface HotelRoomDomain {
 
     public HotelRoomVO getHotelRoomVOById(Long id);
 
+    public HotelRoomVO getHotelRoomVO(Long hotelId,String roomNo);
+
     public Page<HotelRoomVO> getHotelRoomVOPage(GetHotelRoomListDTO request, Pageable pageable);
 
 

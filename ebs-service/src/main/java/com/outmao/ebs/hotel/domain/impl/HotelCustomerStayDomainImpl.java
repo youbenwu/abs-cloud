@@ -2,6 +2,7 @@ package com.outmao.ebs.hotel.domain.impl;
 
 import com.outmao.ebs.common.base.BaseDomain;
 import com.outmao.ebs.common.exception.BusinessException;
+import com.outmao.ebs.hotel.common.constant.HotelRoomStatus;
 import com.outmao.ebs.hotel.dao.HotelCustomerDao;
 import com.outmao.ebs.hotel.dao.HotelCustomerStayDao;
 import com.outmao.ebs.hotel.domain.HotelCustomerStayDomain;
@@ -27,7 +28,7 @@ import java.util.Date;
 
 
 @Component
-public class HotelCustomerDomainStayImpl extends BaseDomain implements HotelCustomerStayDomain {
+public class HotelCustomerStayDomainImpl extends BaseDomain implements HotelCustomerStayDomain {
 
     @Autowired
     private HotelCustomerDao hotelCustomerDao;
@@ -54,18 +55,24 @@ public class HotelCustomerDomainStayImpl extends BaseDomain implements HotelCust
             request.setStartTime(new Date());
         }
 
-        HotelCustomer customer=hotelCustomerDao.getOne(request.getCustomerId());
 
-        HotelCustomerStay stay=new HotelCustomerStay();
+        HotelCustomerStay stay=request.getId()==null?null:hotelCustomerStayDao.findByIdForUpdate(request.getId());
 
-        BeanUtils.copyProperties(request,stay);
+        if(stay==null){
+            stay=new HotelCustomerStay();
+            HotelCustomer customer=hotelCustomerDao.getOne(request.getCustomerId());
+            stay.setOrgId(customer.getOrgId());
+            stay.setHotel(customer.getHotel());
+            stay.setUserId(customer.getUserId());
+            stay.setCustomerId(customer.getId());
+            stay.setCreateTime(new Date());
+        }
 
-        stay.setOrgId(customer.getOrgId());
-        stay.setHotel(customer.getHotel());
-        stay.setUserId(customer.getUserId());
 
-        stay.setCreateTime(new Date());
+        BeanUtils.copyProperties(request,stay,"id","customerId");
+
         stay.setUpdateTime(new Date());
+
 
         Calendar end=Calendar.getInstance();
         end.setTime(stay.getStartTime());
@@ -77,21 +84,22 @@ public class HotelCustomerDomainStayImpl extends BaseDomain implements HotelCust
 
         stay.setEndTime(end.getTime());
 
-
-        Calendar today=Calendar.getInstance();
-        Calendar start=Calendar.getInstance();
-        start.setTime(stay.getStartTime());
-
         stay.setKeyword(getKeyword(stay));
 
         hotelCustomerStayDao.save(stay);
 
-        if(today.get(Calendar.DAY_OF_YEAR)==start.get(Calendar.DAY_OF_YEAR)){
-            SetHotelCustomerStayStatusDTO stayStatusDTO=new SetHotelCustomerStayStatusDTO();
-            stayStatusDTO.setId(stay.getId());
-            stayStatusDTO.setStatus(HotelCustomerStay.STATUS_STAY_IN);
-            stayStatusDTO.setStatusRemark("已入住");
-            setHotelCustomerStayStatus(stayStatusDTO);
+
+        if(stay.getStatus()==HotelCustomerStay.STATUS_STAY_NOT_IN) {
+            Calendar today = Calendar.getInstance();
+            Calendar start = Calendar.getInstance();
+            start.setTime(stay.getStartTime());
+            if (today.get(Calendar.DAY_OF_YEAR) == start.get(Calendar.DAY_OF_YEAR)) {
+                SetHotelCustomerStayStatusDTO stayStatusDTO = new SetHotelCustomerStayStatusDTO();
+                stayStatusDTO.setId(stay.getId());
+                stayStatusDTO.setStatus(HotelCustomerStay.STATUS_STAY_IN);
+                stayStatusDTO.setStatusRemark("已入住");
+                setHotelCustomerStayStatus(stayStatusDTO);
+            }
         }
 
         return stay;
@@ -130,8 +138,9 @@ public class HotelCustomerDomainStayImpl extends BaseDomain implements HotelCust
             throw new BusinessException("状态异常");
         }
 
-        stay.setStatus(request.getStatus());
-        stay.setStatusRemark(request.getStatusRemark());
+        BeanUtils.copyProperties(request,stay);
+        //stay.setStatus(request.getStatus());
+        //stay.setStatusRemark(request.getStatusRemark());
 
 
         if(stay.getStatus()==HotelCustomerStay.STATUS_STAY_IN){
@@ -168,7 +177,7 @@ public class HotelCustomerDomainStayImpl extends BaseDomain implements HotelCust
 
         SetHotelRoomStatusDTO roomStatusDTO=new SetHotelRoomStatusDTO();
         roomStatusDTO.setId(room.getId());
-        roomStatusDTO.setStatus(HotelRoom.STATUS_IN_STAY);
+        roomStatusDTO.setStatus(HotelRoomStatus.Stay.getStatus());
         roomStatusDTO.setStatusRemark("房客："+stay.getName()+" "+stay.getPhone());
         hotelRoomDomain.setHotelRoomStatus(roomStatusDTO);
 
@@ -182,6 +191,7 @@ public class HotelCustomerDomainStayImpl extends BaseDomain implements HotelCust
         HotelCustomer customer =hotelCustomerDao.findByIdForUpdate(stay.getCustomerId());
         customer.setStayStatus(HotelCustomer.STATUS_STAY_NOT_IN);
         customer.setStayDays(customer.getStayDays()+stay.getStayDays());
+        customer.setAmount(customer.getAmount()+stay.getAmount());
         hotelCustomerDao.save(customer);
 
         HotelRoom room=hotelRoomDomain.getHotelRoom(stay.getHotel().getId(),stay.getRoomNo());
@@ -192,7 +202,7 @@ public class HotelCustomerDomainStayImpl extends BaseDomain implements HotelCust
 
         SetHotelRoomStatusDTO roomStatusDTO=new SetHotelRoomStatusDTO();
         roomStatusDTO.setId(room.getId());
-        roomStatusDTO.setStatus(HotelRoom.STATUS_NOT_STAY);
+        roomStatusDTO.setStatus(HotelRoomStatus.Idle.getStatus());
         roomStatusDTO.setStatusRemark("空闲");
         hotelRoomDomain.setHotelRoomStatus(roomStatusDTO);
 
@@ -225,23 +235,23 @@ public class HotelCustomerDomainStayImpl extends BaseDomain implements HotelCust
     //每天中午12点自动退房
     //cron表达式
     //秒 分 时 日 月 周几
-    @Scheduled(cron = "0 0 12 * * ?")
-    public void autoStayOut(){
-        Calendar now=Calendar.getInstance();
-        QHotelCustomerStay e=QHotelCustomerStay.hotelCustomerStay;
-        Predicate p=e.status.eq(HotelCustomerStay.STATUS_STAY_IN).and(e.endTime.dayOfYear().eq(now.get(Calendar.DAY_OF_YEAR)));
-        hotelCustomerStayDao.findAll(p).forEach((HotelCustomerStay stay)->{
-            SetHotelCustomerStayStatusDTO statusDTO=new SetHotelCustomerStayStatusDTO();
-            statusDTO.setId(stay.getId());
-            statusDTO.setStatus(HotelCustomerStay.STATUS_STAY_OUT);
-            statusDTO.setStatusRemark("已退房");
-            try {
-                setHotelCustomerStayStatus(statusDTO);
-            }catch (Exception ex){
-                ex.printStackTrace();
-            }
-        });
-    }
+//    @Scheduled(cron = "0 0 12 * * ?")
+//    public void autoStayOut(){
+//        Calendar now=Calendar.getInstance();
+//        QHotelCustomerStay e=QHotelCustomerStay.hotelCustomerStay;
+//        Predicate p=e.status.eq(HotelCustomerStay.STATUS_STAY_IN).and(e.endTime.dayOfYear().eq(now.get(Calendar.DAY_OF_YEAR)));
+//        hotelCustomerStayDao.findAll(p).forEach((HotelCustomerStay stay)->{
+//            SetHotelCustomerStayStatusDTO statusDTO=new SetHotelCustomerStayStatusDTO();
+//            statusDTO.setId(stay.getId());
+//            statusDTO.setStatus(HotelCustomerStay.STATUS_STAY_OUT);
+//            statusDTO.setStatusRemark("已退房");
+//            try {
+//                setHotelCustomerStayStatus(statusDTO);
+//            }catch (Exception ex){
+//                ex.printStackTrace();
+//            }
+//        });
+//    }
 
 
 }

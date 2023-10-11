@@ -2,7 +2,11 @@ package com.outmao.ebs.hotel.web.admin.api;
 
 
 
+import com.outmao.ebs.common.exception.BusinessException;
+import com.outmao.ebs.hotel.common.constant.HotelRoomStatus;
 import com.outmao.ebs.hotel.dto.*;
+import com.outmao.ebs.hotel.entity.HotelRoom;
+import com.outmao.ebs.hotel.entity.HotelRoomType;
 import com.outmao.ebs.hotel.service.HotelService;
 import com.outmao.ebs.hotel.vo.*;
 import com.outmao.ebs.org.common.annotation.AccessPermission;
@@ -23,6 +27,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -32,6 +37,11 @@ import java.util.stream.Collectors;
                 @AccessPermission(title = "保存酒店信息",url = "/hotel/hotel",name = "save"),
                 @AccessPermission(title = "删除酒店信息",url = "/hotel/hotel",name = "delete"),
                 @AccessPermission(title = "读取酒店信息",url = "/hotel/hotel",name = "read"),
+        }),
+        @AccessPermissionParent(title = "酒店房型管理",url = "/hotel/room/type",name = "",children = {
+                @AccessPermission(title = "保存酒店房型",url = "/hotel/room/type",name = "save"),
+                @AccessPermission(title = "删除酒店房型",url = "/hotel/room/type",name = "delete"),
+                @AccessPermission(title = "读取酒店房型",url = "/hotel/room/type",name = "read"),
         }),
         @AccessPermissionParent(title = "酒店房间管理",url = "/hotel/room",name = "",children = {
                 @AccessPermission(title = "保存酒店房间",url = "/hotel/room",name = "save"),
@@ -94,6 +104,13 @@ public class HotelAdminAction {
     }
 
 
+    @ApiOperation(value = "获取酒店信息", notes = "获取酒店信息")
+    @PostMapping("/count")
+    public long getHotelCount(){
+        return hotelService.getHotelCount();
+    }
+
+
     @PostAuthorize("hasPermission(returnObject.orgId,'/hotel/hotel','read')")
     @ApiOperation(value = "获取酒店信息", notes = "获取酒店信息")
     @PostMapping("/get")
@@ -128,6 +145,49 @@ public class HotelAdminAction {
     }
 
 
+    @ApiOperation(value = "酒店增量统计按天", notes = "酒店增量统计按天")
+    @PostMapping("/addStatsDay")
+    public List<StatsHotelCountVO> getStatsHotelCountVOListByDays(Date fromTime, Date toTime) {
+        return hotelService.getStatsHotelCountVOListByDays(fromTime,toTime);
+    }
+
+    @ApiOperation(value = "酒店增量统计按月", notes = "酒店增量统计按月")
+    @PostMapping("/addStatsMonth")
+    public List<StatsHotelCountVO> getStatsHotelCountVOListByMonths(Date fromTime, Date toTime) {
+        return hotelService.getStatsHotelCountVOListByMonths(fromTime,toTime);
+    }
+
+
+    @PreAuthorize("hasPermission('/hotel/room/type','save')")
+    @ApiOperation(value = "保存酒店房型", notes = "保存酒店房型")
+    @PostMapping("/room/type/save")
+    public void saveHotelRoomType(HotelRoomTypeDTO request) {
+        hotelService.saveHotelRoomType(request);
+    }
+
+
+    @PreAuthorize("hasPermission('/hotel/room/type','delete')")
+    @ApiOperation(value = "删除酒店房型", notes = "删除酒店房型")
+    @PostMapping("/room/type/delete")
+    public void deleteHotelRoomTypeById(Long id) {
+        hotelService.deleteHotelRoomTypeById(id);
+    }
+
+    @PreAuthorize("hasPermission('/hotel/room/type','read')")
+    @ApiOperation(value = "获取酒店房型", notes = "获取酒店房型")
+    @PostMapping("/room/type/get")
+    public HotelRoomTypeVO getHotelRoomTypeVOById(Long id) {
+        return hotelService.getHotelRoomTypeVOById(id);
+    }
+
+    @PreAuthorize("hasPermission('/hotel/room/type','read')")
+    @ApiOperation(value = "获取酒店房型", notes = "获取酒店房型")
+    @PostMapping("/room/type/page")
+    public Page<HotelRoomTypeVO> getHotelRoomTypeVOPage(GetHotelRoomTypeListDTO request, Pageable pageable) {
+        return hotelService.getHotelRoomTypeVOPage(request,pageable);
+    }
+
+
     @PreAuthorize("hasPermission('/hotel/room','save')")
     @ApiOperation(value = "保存酒店房间", notes = "保存酒店房间")
     @PostMapping("/room/save")
@@ -146,6 +206,14 @@ public class HotelAdminAction {
     @ApiOperation(value = "设置酒店房间状态", notes = "设置酒店房间状态")
     @PostMapping("/room/setStatus")
     public void setHotelRoomStatus(SetHotelRoomStatusDTO request){
+        HotelRoomVO room=hotelService.getHotelRoomVOById(request.getId());
+        if(room.getStatus()== HotelRoomStatus.Stay.getStatus()){
+            throw new BusinessException("有客状态不能修改为维修");
+        }
+        if(request.getStatus()== HotelRoomStatus.Stay.getStatus()){
+            throw new BusinessException("请在入住管理里设置状态");
+        }
+
         hotelService.setHotelRoomStatus(request);
     }
 
@@ -154,6 +222,16 @@ public class HotelAdminAction {
     @PostMapping("/room/get")
     public HotelRoomVO getHotelRoomVOById(Long id){
         return hotelService.getHotelRoomVOById(id);
+    }
+
+
+
+
+    @PreAuthorize("hasPermission('/hotel/room','read')")
+    @ApiOperation(value = "获取酒店房间", notes = "获取酒店房间")
+    @PostMapping("/room/getByRoomNo")
+    public HotelRoomVO getHotelRoomVO(Long hotelId,String roomNo){
+        return hotelService.getHotelRoomVO(hotelId,roomNo);
     }
 
 
@@ -177,6 +255,13 @@ public class HotelAdminAction {
     @PostMapping("/device/delete")
     public void deleteHotelDeviceById(Long id){
         hotelService.deleteHotelDeviceById(id);
+    }
+
+
+    @ApiOperation(value = "获取设备数量", notes = "获取设备数量")
+    @PostMapping("/device/count")
+    public long getHotelDeviceCount() {
+        return hotelService.getHotelDeviceCount();
     }
 
     @PreAuthorize("hasPermission('/hotel/device','read')")
@@ -239,6 +324,21 @@ public class HotelAdminAction {
     @PostMapping("/customer/save")
     public void saveHotelCustomer(HotelCustomerDTO request){
          hotelService.saveHotelCustomer(request);
+    }
+
+
+    @PreAuthorize("hasPermission('/hotel/customer','delete')")
+    @ApiOperation(value = "删除酒店客户", notes = "删除酒店客户")
+    @PostMapping("/customer/delete")
+    public void deleteHotelCustomerById(Long id) {
+        hotelService.deleteHotelCustomerById(id);
+    }
+
+    @PreAuthorize("hasPermission('/hotel/customer','read')")
+    @ApiOperation(value = "获取酒店客户", notes = "获取酒店客户")
+    @PostMapping("/customer/getByPhone")
+    public HotelCustomerVO getHotelCustomerVOByHotelIdAndPhone(Long hotelId, String phone) {
+        return hotelService.getHotelCustomerVOByHotelIdAndPhone(hotelId,phone);
     }
 
     @PreAuthorize("hasPermission('/hotel/customer','read')")

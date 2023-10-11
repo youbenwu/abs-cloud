@@ -16,4 +16,6 @@ public interface HotelRoomDao extends JpaRepository<HotelRoom,Long> {
     @Query("select r from HotelRoom r where r.id=?1")
     public HotelRoom findByIdForUpdate(Long id);
 
+    public long countByTypeId(Long typeId);
+
 }

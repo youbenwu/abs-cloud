@@ -13,7 +13,11 @@ public interface HotelCustomerDomain {
 
     public HotelCustomer saveHotelCustomer(HotelCustomerDTO request);
 
+    public void deleteHotelCustomerById(Long id);
+
     public HotelCustomer getHotelCustomerByHotelIdAndPhone(Long hotelId,String phone);
+
+    public HotelCustomerVO getHotelCustomerVOByHotelIdAndPhone(Long hotelId,String phone);
 
     public HotelCustomerVO getHotelCustomerVOById(Long id);
 

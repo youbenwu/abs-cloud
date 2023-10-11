@@ -70,11 +70,34 @@ public class HotelCustomerStayVO {
 
     /**
      *
+     * 房间价格
+     *
+     */
+    private double price;
+
+    /**
+     *
      * 入住天数
      *
      */
     @ApiModelProperty(name = "stayDays", value = "入住天数")
     private int stayDays;
+
+    /**
+     *
+     * 押金
+     *
+     */
+    @ApiModelProperty(name = "rents", value = "押金")
+    private double rents;
+
+    /**
+     *
+     * 消费金额
+     *
+     */
+    @ApiModelProperty(name = "amount", value = "消费金额")
+    private double amount;
 
     /**
      *
@@ -106,6 +129,13 @@ public class HotelCustomerStayVO {
      *
      */
     private String phone;
+
+    /**
+     *
+     * 身份证号码
+     *
+     */
+    private String idNo;
 
 
     /**

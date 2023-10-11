@@ -71,6 +71,18 @@ public class OrderAdminAction {
         orderService.deleteOrderById(id);
     }
 
+    @ApiOperation(value = "获取订单数量", notes = "获取订单数量")
+    @PostMapping("/count")
+    public long getOrderCount(){
+        return orderService.getOrderCount();
+    }
+
+    @ApiOperation(value = "获取订单总金额", notes = "获取订单总金额")
+    @PostMapping("/amount")
+    public double getOrderAmount(){
+        return orderService.getOrderAmount();
+    }
+
     @PreAuthorize("hasPermission('/mall/order','read')")
     @ApiOperation(value = "获取订单信息", notes = "获取订单信息")
     @PostMapping("/get")

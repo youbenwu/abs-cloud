@@ -16,5 +16,8 @@ public class SetHotelCustomerStayStatusDTO {
 
     private String statusRemark;
 
+    @ApiModelProperty(name = "amount", value = "消费金额")
+    private double amount;
+
 
 }

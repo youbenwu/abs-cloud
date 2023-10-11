@@ -54,10 +54,10 @@ public class AccountAdminAction {
     @PreAuthorize("hasPermission(#request.orgId,'/org/account','save')")
     @ApiOperation(value = "保存账号", notes = "保存账号")
     @PostMapping("/save")
-    public void saveAccount(AccountDTO request){
-        if("admin".equals(request.getName())){
-            throw new BusinessException("账号名称不能是admin");
-        }
+    public void saveAccount(@RequestBody AccountDTO request){
+//        if("admin".equals(request.getName())){
+//            throw new BusinessException("账号名称不能是admin");
+//        }
         accountService.saveAccount(request);
     }
 

@@ -108,6 +108,12 @@ public class UserAdminAction {
 		userService.modifyUserPhone(id,phone);
 	}
 
+	@ApiOperation(value = "获取用户数量", notes = "获取用户数量")
+	@PostMapping("/count")
+	public long getUserCount() {
+		return userService.getUserCount();
+	}
+
 	//获取用户
 	@PreAuthorize("hasPermission(null,'/user/info','read')")
 	@ApiOperation(value = "获取用户", notes = "获取用户")

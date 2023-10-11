@@ -35,6 +35,15 @@ public class HotelRoomVO {
     @ApiModelProperty(name = "hotelId", value = "酒店ID")
     private Long hotelId;
 
+    /**
+     *
+     * 房型ID
+     *
+     */
+    @ApiModelProperty(name = "typeId", value = "房型ID")
+    private Long typeId;
+    private HotelRoomTypeVO type;
+
 
     /**
      *
@@ -59,6 +68,14 @@ public class HotelRoomVO {
      */
     @ApiModelProperty(name = "intro", value = "房间配置")
     private String intro;
+
+    /**
+     *
+     * 房间图片
+     *
+     */
+    @ApiModelProperty(name = "image", value = "房间图片")
+    private String image;
 
 
     /**

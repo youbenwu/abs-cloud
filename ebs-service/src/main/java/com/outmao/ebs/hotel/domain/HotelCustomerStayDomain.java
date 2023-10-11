@@ -19,12 +19,15 @@ public interface HotelCustomerStayDomain {
      */
     public HotelCustomerStay saveHotelCustomerStay(HotelCustomerStayDTO request);
 
+
     /***
      *
      * 设置入住状态
      *
      */
     public HotelCustomerStay setHotelCustomerStayStatus(SetHotelCustomerStayStatusDTO request);
+
+
 
 
     public Page<HotelCustomerStayVO> getHotelCustomerStayVOPage(GetHotelCustomerStayListDTO request,Pageable pageable);

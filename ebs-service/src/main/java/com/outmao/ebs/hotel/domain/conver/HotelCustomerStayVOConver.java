@@ -19,9 +19,13 @@ public class HotelCustomerStayVOConver implements BeanConver<QHotelCustomerStay,
         vo.setStatusRemark(t.get(e.statusRemark));
         vo.setUserId(t.get(e.userId));
         vo.setRoomNo(t.get(e.roomNo));
+        vo.setPrice(t.get(e.price));
         vo.setName(t.get(e.name));
         vo.setPhone(t.get(e.phone));
+        vo.setIdNo(t.get(e.idNo));
         vo.setStayDays(t.get(e.stayDays));
+        vo.setRents(t.get(e.rents));
+        vo.setAmount(t.get(e.amount));
         vo.setStartTime(t.get(e.startTime));
         vo.setEndTime(t.get(e.endTime));
         vo.setCreateTime(t.get(e.createTime));
@@ -41,9 +45,13 @@ public class HotelCustomerStayVOConver implements BeanConver<QHotelCustomerStay,
                 e.statusRemark,
                 e.userId,
                 e.roomNo,
+                e.price,
                 e.name,
                 e.phone,
+                e.idNo,
                 e.stayDays,
+                e.rents,
+                e.amount,
                 e.startTime,
                 e.endTime,
                 e.createTime,

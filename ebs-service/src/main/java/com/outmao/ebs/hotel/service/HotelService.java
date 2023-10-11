@@ -7,6 +7,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 
 public interface HotelService {
@@ -17,6 +18,8 @@ public interface HotelService {
 
     public Hotel setHotelStatus(SetHotelStatusDTO request);
 
+    public long getHotelCount();
+
     public HotelVO getHotelVOById(Long id);
 
     public HotelVO getHotelVOByOrgId(Long orgId);
@@ -24,6 +27,20 @@ public interface HotelService {
     public Page<HotelVO> getHotelVOPage(GetHotelListDTO request, Pageable pageable);
 
     public List<HotelVO> getHotelVOListByOrgIdIn(Collection<Long> orgIdIn);
+
+
+    public List<StatsHotelCountVO> getStatsHotelCountVOListByDays(Date fromTime, Date toTime);
+
+    public List<StatsHotelCountVO> getStatsHotelCountVOListByMonths(Date fromTime, Date toTime);
+
+
+    public HotelRoomType saveHotelRoomType(HotelRoomTypeDTO request);
+
+    public void deleteHotelRoomTypeById(Long id);
+
+    public HotelRoomTypeVO getHotelRoomTypeVOById(Long id);
+
+    public Page<HotelRoomTypeVO> getHotelRoomTypeVOPage(GetHotelRoomTypeListDTO request, Pageable pageable);
 
 
     public HotelRoom saveHotelRoom(HotelRoomDTO request);
@@ -34,12 +51,16 @@ public interface HotelService {
 
     public HotelRoomVO getHotelRoomVOById(Long id);
 
+    public HotelRoomVO getHotelRoomVO(Long hotelId,String roomNo);
+
     public Page<HotelRoomVO> getHotelRoomVOPage(GetHotelRoomListDTO request, Pageable pageable);
 
 
     public HotelDevice saveHotelDevice(HotelDeviceDTO request);
 
     public void deleteHotelDeviceById(Long id);
+
+    public long getHotelDeviceCount();
 
     public HotelDeviceVO getHotelDeviceVOById(Long id);
 
@@ -63,9 +84,13 @@ public interface HotelService {
 
     public HotelCustomer saveHotelCustomer(HotelCustomerDTO request);
 
+    public void deleteHotelCustomerById(Long id);
+
     public HotelCustomerVO getHotelCustomerVOById(Long id);
 
     public HotelCustomerVO getHotelCustomerVO(Long hotelId,Long userId);
+
+    public HotelCustomerVO getHotelCustomerVOByHotelIdAndPhone(Long hotelId,String phone);
 
     public Page<HotelCustomerVO> getHotelCustomerVOPage(GetHotelCustomerListDTO request, Pageable pageable);
 

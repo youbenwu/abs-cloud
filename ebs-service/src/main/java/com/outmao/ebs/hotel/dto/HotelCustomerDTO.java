@@ -51,6 +51,14 @@ public class HotelCustomerDTO {
     @ApiModelProperty(name = "phone", value = "手机号",required = true)
     private String phone;
 
+    /**
+     *
+     * 身份证号码
+     *
+     */
+    @ApiModelProperty(name = "idNo", value = "身份证号码")
+    private String idNo;
+
 
 
 }

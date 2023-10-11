@@ -22,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -31,6 +32,10 @@ public class HotelServiceImpl extends BaseService implements HotelService {
 
     @Autowired
     private HotelDomain hotelDomain;
+
+
+    @Autowired
+    private HotelRoomTypeDomain hotelRoomTypeDomain;
 
 
     @Autowired
@@ -103,6 +108,11 @@ public class HotelServiceImpl extends BaseService implements HotelService {
     }
 
     @Override
+    public long getHotelCount() {
+        return hotelDomain.getHotelCount();
+    }
+
+    @Override
     public HotelVO getHotelVOById(Long id) {
         return hotelDomain.getHotelVOById(id);
     }
@@ -120,6 +130,37 @@ public class HotelServiceImpl extends BaseService implements HotelService {
     @Override
     public List<HotelVO> getHotelVOListByOrgIdIn(Collection<Long> orgIdIn) {
         return hotelDomain.getHotelVOListByOrgIdIn(orgIdIn);
+    }
+
+    @Override
+    public List<StatsHotelCountVO> getStatsHotelCountVOListByDays(Date fromTime, Date toTime) {
+        return hotelDomain.getStatsHotelCountVOListByDays(fromTime,toTime);
+    }
+
+    @Override
+    public List<StatsHotelCountVO> getStatsHotelCountVOListByMonths(Date fromTime, Date toTime) {
+        return hotelDomain.getStatsHotelCountVOListByMonths(fromTime,toTime);
+    }
+
+
+    @Override
+    public HotelRoomType saveHotelRoomType(HotelRoomTypeDTO request) {
+        return hotelRoomTypeDomain.saveHotelRoomType(request);
+    }
+
+    @Override
+    public void deleteHotelRoomTypeById(Long id) {
+        hotelRoomTypeDomain.deleteHotelRoomTypeById(id);
+    }
+
+    @Override
+    public HotelRoomTypeVO getHotelRoomTypeVOById(Long id) {
+        return hotelRoomTypeDomain.getHotelRoomTypeVOById(id);
+    }
+
+    @Override
+    public Page<HotelRoomTypeVO> getHotelRoomTypeVOPage(GetHotelRoomTypeListDTO request, Pageable pageable) {
+        return hotelRoomTypeDomain.getHotelRoomTypeVOPage(request,pageable);
     }
 
     @Override
@@ -142,6 +183,14 @@ public class HotelServiceImpl extends BaseService implements HotelService {
     public HotelRoomVO getHotelRoomVOById(Long id) {
         return hotelRoomDomain.getHotelRoomVOById(id);
     }
+
+
+    @Override
+    public HotelRoomVO getHotelRoomVO(Long hotelId, String roomNo) {
+        return hotelRoomDomain.getHotelRoomVO(hotelId,roomNo);
+    }
+
+
 
     @Override
     public Page<HotelRoomVO> getHotelRoomVOPage(GetHotelRoomListDTO request, Pageable pageable) {
@@ -193,6 +242,12 @@ public class HotelServiceImpl extends BaseService implements HotelService {
     @Override
     public void deleteHotelDeviceById(Long id) {
          hotelDeviceDomain.deleteHotelDeviceById(id);
+    }
+
+
+    @Override
+    public long getHotelDeviceCount() {
+        return hotelDeviceDomain.getHotelDeviceCount();
     }
 
     @Override
@@ -275,8 +330,10 @@ public class HotelServiceImpl extends BaseService implements HotelService {
         request.setUserId(user.getId());
     }
 
-
-
+    @Override
+    public void deleteHotelCustomerById(Long id) {
+        hotelCustomerDomain.deleteHotelCustomerById(id);
+    }
 
     @Override
     public HotelCustomerVO getHotelCustomerVOById(Long id) {
@@ -286,6 +343,11 @@ public class HotelServiceImpl extends BaseService implements HotelService {
     @Override
     public HotelCustomerVO getHotelCustomerVO(Long hotelId, Long userId) {
         return hotelCustomerDomain.getHotelCustomerVO(hotelId,userId);
+    }
+
+    @Override
+    public HotelCustomerVO getHotelCustomerVOByHotelIdAndPhone(Long hotelId, String phone) {
+        return hotelCustomerDomain.getHotelCustomerVOByHotelIdAndPhone(hotelId,phone);
     }
 
     @Override

@@ -9,23 +9,19 @@ import java.util.Date;
 
 /**
  *
- * 客人
+ * 房间
  *
  */
 @Data
 @Entity
-@Table(name = "ebs_HotelCustomer", uniqueConstraints = {
-        @UniqueConstraint(columnNames = { "userId", "hotelId" }),
-        @UniqueConstraint(columnNames = { "phone", "hotelId" }) })
-public class HotelCustomer  implements Serializable {
+@Table(name = "ebs_HotelRoomType", uniqueConstraints = {
+        @UniqueConstraint(columnNames = { "hotelId","name" }) })
+public class HotelRoomType implements Serializable {
 
     /**
      *
      */
     private static final long serialVersionUID = 1L;
-
-    public static final int STATUS_STAY_NOT_IN=0;
-    public static final int STATUS_STAY_IN=1;
 
 
     /**
@@ -48,14 +44,6 @@ public class HotelCustomer  implements Serializable {
     @JoinColumn(name = "hotelId")
     private Hotel hotel;
 
-    /**
-     *
-     * 用户ID
-     *
-     */
-    @Column(nullable = false)
-    private Long userId;
-
 
     /**
      *
@@ -68,56 +56,32 @@ public class HotelCustomer  implements Serializable {
 
     /**
      *
-     * 客户状态
-     * 0-未入住 1-已入住
+     * 房型日租
      *
      */
-    private int stayStatus;
-
-    /**
-     *
-     * 入住次数
-     *
-     */
-    private int stays;
-
-    /**
-     *
-     * 入住天数
-     *
-     */
-    private int stayDays;
+    private double price;
 
 
     /**
      *
-     * 消息金额
+     * 可住人数
      *
      */
-    private double amount;
-
+    private int num;
 
     /**
      *
-     * 姓名
+     * 房型名称
      *
      */
     private String name;
 
     /**
      *
-     * 手机号
+     * 房型简介
      *
      */
-    private String phone;
-
-    /**
-     *
-     * 身份证号码
-     *
-     */
-    private String idNo;
-
+    private String intro;
 
     /**
      *
@@ -132,6 +96,7 @@ public class HotelCustomer  implements Serializable {
      *
      */
     private Date updateTime;
+
 
 
 }

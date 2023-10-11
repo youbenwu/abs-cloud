@@ -15,9 +15,11 @@ import java.util.Date;
 public class HotelCustomerStayDTO {
 
 
+    private Long id;
+
+
     @ApiModelProperty(name = "hotelId", value = "酒店ID" ,required = true)
     private Long hotelId;
-
 
     /**
      *
@@ -40,8 +42,16 @@ public class HotelCustomerStayDTO {
      * 手机号
      *
      */
-    @ApiModelProperty(name = "phone", value = "phone",required = true)
+    @ApiModelProperty(name = "phone", value = "手机号",required = true)
     private String phone;
+
+    /**
+     *
+     * 身份证号码
+     *
+     */
+    @ApiModelProperty(name = "idNo", value = "身份证号码")
+    private String idNo;
 
 
     /**
@@ -51,6 +61,15 @@ public class HotelCustomerStayDTO {
      */
     @ApiModelProperty(name = "roomNo", value = "入住房间号")
     private String roomNo;
+
+    /**
+     *
+     * 房间价格
+     *
+     */
+    @ApiModelProperty(name = "price", value = "房间价格")
+    private double price;
+
 
     /**
      *
@@ -68,6 +87,14 @@ public class HotelCustomerStayDTO {
     @ApiModelProperty(name = "stayDays", value = "入住天数")
     private int stayDays;
 
+
+    /**
+     *
+     * 押金
+     *
+     */
+    @ApiModelProperty(name = "rents", value = "押金")
+    private double rents;
 
 
 }

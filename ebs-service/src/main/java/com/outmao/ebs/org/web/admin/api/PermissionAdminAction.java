@@ -64,7 +64,11 @@ public class PermissionAdminAction {
     @ApiOperation(value = "获取系统权限列表", notes = "获取系统权限列表")
     @PostMapping("/listBySys")
     public List<PermissionVO> getPermissionVOListBySysId(Long sysId){
-        return permissionService.getPermissionVOListBySysId(sysId);
+        List<PermissionVO> list= permissionService.getPermissionVOListBySysId(sysId);
+        if(list.isEmpty()){
+            list=permissionService.getPermissionVOList(new GetPermissionListDTO());
+        }
+        return list;
     }
 
 }

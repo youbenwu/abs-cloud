@@ -23,9 +23,6 @@ public class HotelRoom implements Serializable {
      */
     private static final long serialVersionUID = 1L;
 
-    public static final int STATUS_NOT_STAY=0;
-    public static final int STATUS_IN_STAY=1;
-
 
     /**
      *
@@ -50,6 +47,17 @@ public class HotelRoom implements Serializable {
 
     /**
      *
+     * 房型
+     *
+     */
+    @JsonIgnore
+    @ManyToOne(cascade = CascadeType.REFRESH, optional = false, fetch = FetchType.LAZY)
+    @JoinColumn(name = "typeId")
+    private HotelRoomType type;
+
+
+    /**
+     *
      * 搜索关键字
      *
      */
@@ -60,7 +68,7 @@ public class HotelRoom implements Serializable {
     /**
      *
      * 房间状态
-     * 0-空闲 1-有客
+     * 0-空闲 1-有客 2-维修
      *
      */
     private int status;
@@ -93,6 +101,13 @@ public class HotelRoom implements Serializable {
      *
      */
     private String intro;
+
+    /**
+     *
+     * 房间图片
+     *
+     */
+    private String image;
 
     /**
      *

@@ -4,16 +4,6 @@
     "path": "/home"
   },
   {
-    "name": "用户",
-    "path": "/user",
-    "children":[
-      {
-        "name": "用户管理",
-        "path": "/user/users"
-      }
-    ]
-  },
-  {
     "name": "门户",
     "path": "/portal",
     "children":[
@@ -44,10 +34,6 @@
       {
         "name": "酒店信息",
         "path": "/hotel/info"
-      },
-      {
-        "name": "酒店管理",
-        "path": "/hotel/hotels"
       },
       {
         "name": "房型管理",

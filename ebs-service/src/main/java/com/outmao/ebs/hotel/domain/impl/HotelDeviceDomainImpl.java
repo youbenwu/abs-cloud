@@ -82,6 +82,11 @@ public class HotelDeviceDomainImpl extends BaseDomain implements HotelDeviceDoma
     }
 
 
+    @Override
+    public long getHotelDeviceCount() {
+        return hotelDeviceDao.count();
+    }
+
     @Transactional()
     @Override
     public void deleteHotelDeviceById(Long id) {

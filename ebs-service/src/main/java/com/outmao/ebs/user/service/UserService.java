@@ -24,6 +24,9 @@ public interface UserService {
 	// 修改手机号
 	public User modifyUserPhone(Long id, String phone);
 
+	// 获取用户总数
+	public long getUserCount();
+
 	// 获取用户
 	public User getUserById(Long id);
 	// 获取用户

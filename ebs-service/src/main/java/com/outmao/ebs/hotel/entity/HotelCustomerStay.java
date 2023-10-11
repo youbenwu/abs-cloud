@@ -99,10 +99,32 @@ public class HotelCustomerStay implements Serializable {
 
     /**
      *
+     * 房间价格
+     *
+     */
+    private double price;
+
+    /**
+     *
      * 入住天数
      *
      */
     private int stayDays;
+
+
+    /**
+     *
+     * 押金
+     *
+     */
+    private double rents;
+
+    /**
+     *
+     * 消费金额
+     *
+     */
+    private double amount;
 
     /**
      *
@@ -132,6 +154,13 @@ public class HotelCustomerStay implements Serializable {
      *
      */
     private String phone;
+
+    /**
+     *
+     * 身份证号码
+     *
+     */
+    private String idNo;
 
 
     /**

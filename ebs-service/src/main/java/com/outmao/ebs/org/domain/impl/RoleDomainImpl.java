@@ -137,6 +137,11 @@ public class RoleDomainImpl extends BaseDomain implements RoleDomain {
     @Override
     public List<RolePermission> setRolePermission(SetRolePermissionDTO request) {
 
+        if(request.getPermissions()==null||request.getPermissions().isEmpty()){
+            rolePermissionDao.deleteAllByRoleId(request.getRoleId());
+            return new ArrayList<>();
+        }
+
         Role role=roleDao.getOne(request.getRoleId());
 
         List<RolePermission> permissions=rolePermissionDao.findAllByRoleId(role.getId());
@@ -200,6 +205,11 @@ public class RoleDomainImpl extends BaseDomain implements RoleDomain {
     @Transactional
     @Override
     public List<RoleMenu> setRoleMenu(SetRoleMenuDTO request) {
+
+        if(request.getMenus()==null||request.getMenus().isEmpty()){
+            roleMenuDao.deleteAllByRoleId(request.getRoleId());
+            return new ArrayList<>();
+        }
 
         Role role=roleDao.getOne(request.getRoleId());
         List<RoleMenu> menus=roleMenuDao.findAllByRoleId(request.getRoleId());

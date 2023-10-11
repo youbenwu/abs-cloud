@@ -14,6 +14,8 @@ public interface HotelDeviceDomain {
 
     public void deleteHotelDeviceById(Long id);
 
+    public long getHotelDeviceCount();
+
     public HotelDeviceVO getHotelDeviceVOById(Long id);
 
     public HotelDeviceVO getHotelDeviceVOByDeviceNo(String deviceNo);

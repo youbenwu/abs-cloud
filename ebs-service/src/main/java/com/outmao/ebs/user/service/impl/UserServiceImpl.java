@@ -69,6 +69,11 @@ public class UserServiceImpl extends BaseService implements UserService, Command
 	}
 
 	@Override
+	public long getUserCount() {
+		return userDomain.getUserCount();
+	}
+
+	@Override
 	public User getUserById(Long id) {
 		return userDomain.getUserById(id);
 	}

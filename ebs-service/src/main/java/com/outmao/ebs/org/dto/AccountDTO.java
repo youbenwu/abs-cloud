@@ -30,6 +30,8 @@ public class AccountDTO {
     @ApiModelProperty(name = "phone", value = "手机")
     private String phone;
 
+    private String password;
+
     private List<Long> roles;
 
 }

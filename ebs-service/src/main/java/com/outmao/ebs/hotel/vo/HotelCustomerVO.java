@@ -64,6 +64,14 @@ public class HotelCustomerVO {
     @ApiModelProperty(name = "stayDays", value = "入住天数")
     private int stayDays;
 
+    /**
+     *
+     * 消息金额
+     *
+     */
+    @ApiModelProperty(name = "amount", value = "消息金额")
+    private double amount;
+
 
     /**
      *
@@ -80,6 +88,15 @@ public class HotelCustomerVO {
      */
     @ApiModelProperty(name = "phone", value = "手机号")
     private String phone;
+
+
+    /**
+     *
+     * 身份证号码
+     *
+     */
+    @ApiModelProperty(name = "idNo", value = "身份证号码")
+    private String idNo;
 
 
     /**

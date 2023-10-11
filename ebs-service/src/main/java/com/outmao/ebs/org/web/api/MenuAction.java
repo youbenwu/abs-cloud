@@ -31,34 +31,9 @@ public class MenuAction {
 
     @ApiOperation(value = "菜单列表,用于后台管理界面菜单获取", notes = "菜单列表,用于后台管理界面菜单获取")
     @PostMapping("/list")
-    public List<MenuVO> getMenuVOList(){
-        Long sysId= RequestUtil.getHeaderLong("sysId");
-        Long orgId= RequestUtil.getHeaderLong("orgId");
-        SecurityUser user= SecurityUtil.currentUser();
-        if(orgId==null){
-            orgId=user.getOrgs().get(0).getOrgId();
-            sysId=user.getOrgs().get(0).getSysId();
-        }
-        if(sysId==null){
-            for (SecurityOrg org:user.getOrgs()){
-                if(org.getOrgId().equals(orgId)){
-                    sysId=org.getSysId();
-                    break;
-                }
-            }
-        }
-        if(sysId==null||orgId==null)
-            return null;
-        if(user.getMembers()==null||user.getMembers().isEmpty())
-            return null;
+    public List<MenuVO> getMenuVOList(Long sysId){
 
-        Collection<Long> roles=new HashSet<>();
-        for(SecurityMember m:user.getMembers()){
-            if(m.getOrgId().equals(orgId)&&m.getRoles()!=null){
-                roles.addAll(m.getRoles().stream().map(t->t.getId()).collect(Collectors.toList()));
-            }
-        }
-        return menuService.getMenuVOListBySysIdAndRoleIdIn(sysId,roles);
+        return menuService.getMenuVOListBySysId(sysId);
     }
 
 

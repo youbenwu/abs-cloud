@@ -72,7 +72,7 @@ public class AccountDomainImpl extends BaseDomain implements AccountDomain {
 
         security.hasPermission(account.getOrg().getId(),null);
 
-        BeanUtils.copyProperties(request, account,"id");
+        BeanUtils.copyProperties(request, account,"id","roles");
 
         account.setUpdateTime(new Date());
 

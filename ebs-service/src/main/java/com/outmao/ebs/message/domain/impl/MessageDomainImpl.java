@@ -149,6 +149,10 @@ public class MessageDomainImpl extends BaseDomain implements MessageDomain {
 			p=e.type.in(request.getTypes()).and(p);
 		}
 
+		if(request.getOrgId()!=null){
+			p=e.orgId.eq(request.getOrgId()).and(p);
+		}
+
 		if(!StringUtils.isEmpty(request.getKeyword())){
 			p=e.keyword.like("%"+request.getKeyword()+"%");
 		}
