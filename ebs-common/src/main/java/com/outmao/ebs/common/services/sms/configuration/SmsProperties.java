@@ -19,6 +19,6 @@ import org.springframework.context.annotation.Configuration;
 @ConfigurationProperties(prefix = "sms")
 public class SmsProperties {
 
-	private String active="alipay";
+	private String active="ali";
 
 }

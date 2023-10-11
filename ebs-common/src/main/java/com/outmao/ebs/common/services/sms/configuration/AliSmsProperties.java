@@ -17,7 +17,7 @@ import java.util.Map;
 @Data
 @Configuration
 @EnableConfigurationProperties(AliSmsProperties.class)
-@ConfigurationProperties(prefix = "sms.alipay")
+@ConfigurationProperties(prefix = "sms.ali")
 public class AliSmsProperties {
 
 	/** 产品名称:云通信短信API产品,开发者无需替换 */

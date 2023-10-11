@@ -12,7 +12,7 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class SmsConfiguration {
 
-	public static String SMS_Platform_ALI = "alipay";
+	public static String SMS_Platform_ALI = "ali";
 	public static String SMS_Platform_JUHE = "juhe";
 
 	public static String SMS_Template_Validate = "validate";
