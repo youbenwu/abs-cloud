@@ -22,6 +22,15 @@ public class ChannelDTO {
     private Long orgId;
 
 
+    /**
+     *
+     * 0--总后台 1--酒店
+     *
+     */
+    @ApiModelProperty(name = "type", value = "0--总后台 1--酒店")
+    private int type;
+
+
     @ApiModelProperty(name = "code", value = "频道编码")
     private String code;
 

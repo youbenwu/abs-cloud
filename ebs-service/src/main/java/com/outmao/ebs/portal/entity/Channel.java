@@ -41,6 +41,13 @@ public class Channel  implements Serializable {
     @Column(nullable = false)
     private Long orgId;
 
+    /**
+     *
+     * 0--总后台 1--酒店
+     *
+     */
+    private int type;
+
 
     /**
      *
