@@ -15,6 +15,9 @@ public class GetAdvertListDTO  {
     @ApiModelProperty(name = "channelId", value = "频道ID")
     private Long channelId;
 
+    @ApiModelProperty(name = "channelCode", value = "频道CODE")
+    private String channelCode;
+
     @ApiModelProperty(name = "keyword", value = "关键字，不传查全部")
     private String keyword;
 

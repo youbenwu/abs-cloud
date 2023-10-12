@@ -51,6 +51,11 @@ public class ChannelDomainImpl extends BaseDomain implements ChannelDomain {
     }
 
     @Override
+    public Channel getChannelByCode(String code) {
+        return channelDao.findByCode(code);
+    }
+
+    @Override
     public Page<Channel> getChannelPage(GetChannelListDTO request, Pageable pageable) {
 
         QChannel e=QChannel.channel;

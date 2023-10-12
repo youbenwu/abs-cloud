@@ -12,6 +12,8 @@ public interface ChannelDomain {
 
     public void deleteChannelById(Long id);
 
+    public Channel getChannelByCode(String code);
+
     public Page<Channel> getChannelPage(GetChannelListDTO request, Pageable pageable);
 
 

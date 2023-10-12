@@ -22,6 +22,7 @@ public class AdvertDTO {
     @ApiModelProperty(name = "channelId", value = "频道ID")
     private Long channelId;
 
+
     /**
      *
      * 排序

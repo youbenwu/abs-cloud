@@ -2,15 +2,18 @@ package com.outmao.ebs.portal.service.impl;
 
 import com.outmao.ebs.common.base.BaseService;
 import com.outmao.ebs.portal.domain.AdvertDomain;
+import com.outmao.ebs.portal.domain.ChannelDomain;
 import com.outmao.ebs.portal.dto.AdvertDTO;
 import com.outmao.ebs.portal.dto.GetAdvertListDTO;
 import com.outmao.ebs.portal.dto.SetAdvertStatusDTO;
 import com.outmao.ebs.portal.entity.Advert;
+import com.outmao.ebs.portal.entity.Channel;
 import com.outmao.ebs.portal.service.AdvertService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 
 @Service
@@ -18,6 +21,9 @@ public class AdvertServiceImpl extends BaseService implements AdvertService {
 
     @Autowired
     private AdvertDomain advertDomain;
+
+    @Autowired
+    private ChannelDomain channelDomain;
 
 
     @Override
@@ -38,6 +44,14 @@ public class AdvertServiceImpl extends BaseService implements AdvertService {
 
     @Override
     public Page<Advert> getAdvertPage(GetAdvertListDTO request, Pageable pageable) {
+        if(!StringUtils.isEmpty(request.getChannelCode())){
+          Channel channel= channelDomain.getChannelByCode(request.getChannelCode());
+          if(channel!=null){
+              request.setChannelId(channel.getId());
+          }
+        }
         return advertDomain.getAdvertPage(request,pageable);
     }
+
+
 }
