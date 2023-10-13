@@ -69,8 +69,8 @@ public class WalletDomainImpl extends BaseDomain implements WalletDomain {
 			w.setPassword(passwordEncoder.encode(request.getPassword()));
 		}
 
-		w.setStatus(WalletStatus.WALLET_STATUS_NotOpen.getStatus());
-		w.setStatusRemark(WalletStatus.WALLET_STATUS_NotOpen.getStatusRemark());
+		w.setStatus(WalletStatus.WALLET_STATUS_NORMAL.getStatus());
+		w.setStatusRemark(WalletStatus.WALLET_STATUS_NORMAL.getStatusRemark());
 
 		w.setCreateTime(new Date());
 		w.setUpdateTime(new Date());
@@ -84,7 +84,7 @@ public class WalletDomainImpl extends BaseDomain implements WalletDomain {
 	public Wallet saveWallet(WalletDTO request) {
 		Wallet w=walletDao.getOne(request.getId());
 
-		BeanUtils.copyProperties(request,w);
+		BeanUtils.copyProperties(request,w,"password");
 
 		if(request.getBankAccountId()!=null){
 			w.setBankAccount(bankAccountDao.getOne(request.getBankAccountId()));
@@ -93,9 +93,6 @@ public class WalletDomainImpl extends BaseDomain implements WalletDomain {
 		if(StringUtil.isNotEmpty(request.getPassword())) {
 			w.setPassword(passwordEncoder.encode(request.getPassword()));
 		}
-
-		w.setStatus(WalletStatus.WALLET_STATUS_NotAudit.getStatus());
-		w.setStatusRemark(WalletStatus.WALLET_STATUS_NotAudit.getStatusRemark());
 
 		w.setUpdateTime(new Date());
 		walletDao.save(w);

@@ -90,6 +90,7 @@ public class User implements Serializable {
 	 */
 	private String nickname;
 
+
 	/**
 	 * 
 	 * 用户头像
