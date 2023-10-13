@@ -1,6 +1,8 @@
 package com.outmao.ebs.portal.entity;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import javax.persistence.*;
@@ -13,6 +15,8 @@ import java.util.Date;
  * 广告频道
  *
  */
+@ApiModel(value = "AdvertChannel", description = "广告频道")
+@JsonIgnoreProperties(value = {"hibernateLazyInitializer"})
 @Data
 @Entity
 @Table(name = "portal_AdvertChannel")
