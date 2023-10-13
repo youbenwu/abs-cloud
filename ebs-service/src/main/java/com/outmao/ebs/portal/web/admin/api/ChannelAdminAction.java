@@ -41,7 +41,7 @@ public class ChannelAdminAction {
     @PreAuthorize("hasPermission('/portal/channel','save')")
     @ApiOperation(value = "保存频道", notes = "保存频道")
     @PostMapping("/save")
-    public void saveChannel(@RequestBody ChannelDTO request){
+    public void saveChannel(ChannelDTO request){
         channelService.saveChannel(request);
     }
 

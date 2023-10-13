@@ -1,8 +1,11 @@
 package com.outmao.ebs.hotel.web.api;
 
 
+import com.outmao.ebs.hotel.dto.PadRegisterHotelDeviceDTO;
 import com.outmao.ebs.hotel.dto.RegisterHotelDTO;
 import com.outmao.ebs.hotel.service.HotelService;
+import com.outmao.ebs.hotel.vo.HotelDeviceVO;
+import com.outmao.ebs.security.util.SecurityUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +30,23 @@ public class HotelAction {
     @PostMapping("/register")
     public void registerHotel(@RequestBody RegisterHotelDTO request) {
          hotelService.registerHotel(request);
+    }
+
+
+    @ApiOperation(value = "平板激活设备", notes = "平板激活设备")
+    @PostMapping("/device/register")
+    public void registerHotelDevice(@RequestBody PadRegisterHotelDeviceDTO request) {
+        if(request.getUserId()==null){
+            request.setUserId(SecurityUtil.currentUserId());
+        }
+        hotelService.saveHotelDevice(request);
+    }
+
+
+    @ApiOperation(value = "获取设备", notes = "获取设备")
+    @PostMapping("/device/getByDeviceNo")
+    public HotelDeviceVO getHotelDeviceVOByDeviceNo(String deviceNo){
+        return hotelService.getHotelDeviceVOByDeviceNo(deviceNo);
     }
 
 

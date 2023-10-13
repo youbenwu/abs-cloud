@@ -55,7 +55,6 @@ public class StoreDomainImpl extends BaseDomain implements StoreDomain {
 
 
     @Transactional
-    @BindingOrg
     @BindingSubject
     @Override
     public Store saveStore(StoreDTO request) {
@@ -65,6 +64,7 @@ public class StoreDomainImpl extends BaseDomain implements StoreDomain {
             Merchant m=merchantDao.getOne(request.getMerchantId());
             store=new Store();
             store.setMerchant(m);
+            store.setOrgId(m.getOrgId());
             store.setUser(m.getUser());
             store.setCreateTime(new Date());
         }

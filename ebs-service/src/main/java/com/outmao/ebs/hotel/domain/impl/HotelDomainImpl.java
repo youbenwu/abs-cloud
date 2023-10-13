@@ -16,6 +16,7 @@ import com.outmao.ebs.hotel.entity.QHotel;
 import com.outmao.ebs.hotel.vo.HotelVO;
 import com.outmao.ebs.hotel.vo.StatsHotelCountVO;
 import com.outmao.ebs.org.common.annotation.BindingOrg;
+import com.outmao.ebs.org.service.OrgService;
 import com.querydsl.core.Tuple;
 import com.querydsl.core.types.Predicate;
 import org.springframework.beans.BeanUtils;
@@ -39,6 +40,8 @@ public class HotelDomainImpl extends BaseDomain implements HotelDomain {
     private HotelDao hotelDao;
 
     private HotelVOConver hotelVOConver=new HotelVOConver();
+
+
 
 
     @Transactional()
@@ -70,6 +73,7 @@ public class HotelDomainImpl extends BaseDomain implements HotelDomain {
 
 
         hotelDao.save(hotel);
+
 
         return hotel;
     }
@@ -138,6 +142,12 @@ public class HotelDomainImpl extends BaseDomain implements HotelDomain {
     @Override
     public long getHotelCount() {
         return hotelDao.count();
+    }
+
+
+    @Override
+    public Hotel getHotelByUserIdAndName(Long userId, String name) {
+        return hotelDao.findByUserIdAndName(userId,name);
     }
 
     @Override

@@ -23,8 +23,13 @@ import java.util.Date;
 public class Advert extends SortEntity {
 
 
+    @ApiModelProperty(name = "userId", value = "广告投放的用户ID")
+    private Long userId;
+
+
     @ApiModelProperty(name = "orgId", value = "组织ID")
     private Long orgId;
+
 
     @ApiModelProperty(name = "channelId", value = "频道ID")
     private Long channelId;
@@ -43,7 +48,7 @@ public class Advert extends SortEntity {
      * 广告类型
      *
      * */
-    @ApiModelProperty(name = "type", value = "广告类型")
+    @ApiModelProperty(name = "type", value = "广告类型0--系统广告 1--收费广告")
     private int type;
 
     /**

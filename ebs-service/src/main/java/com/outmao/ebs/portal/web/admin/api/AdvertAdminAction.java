@@ -6,6 +6,8 @@ import com.outmao.ebs.org.common.annotation.AccessPermissionGroup;
 import com.outmao.ebs.org.common.annotation.AccessPermissionParent;
 import com.outmao.ebs.portal.dto.*;
 import com.outmao.ebs.portal.entity.Advert;
+import com.outmao.ebs.portal.entity.AdvertChannel;
+import com.outmao.ebs.portal.service.AdvertChannelService;
 import com.outmao.ebs.portal.service.AdvertService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -26,6 +28,11 @@ import org.springframework.web.bind.annotation.RestController;
                 @AccessPermission(title = "读取广告信息",url = "/portal/advert",name = "read"),
                 @AccessPermission(title = "设置广告状态",url = "/portal/advert",name = "status"),
         }),
+        @AccessPermissionParent(title = "广告频道管理",url = "/portal/advert/channel",name = "",children = {
+                @AccessPermission(title = "保存广告频道信息",url = "/portal/advert/channel",name = "save"),
+                @AccessPermission(title = "删除广告频道信息",url = "/portal/advert/channel",name = "delete"),
+                @AccessPermission(title = "读取广告频道信息",url = "/portal/advert/channel",name = "read"),
+        }),
 
 })
 
@@ -37,6 +44,10 @@ public class AdvertAdminAction {
 
 	@Autowired
     private AdvertService advertService;
+
+
+    @Autowired
+	private AdvertChannelService advertChannelService;
 
 
     @PreAuthorize("hasPermission('/portal/advert','save')")
@@ -67,6 +78,34 @@ public class AdvertAdminAction {
         return advertService.getAdvertPage(request,pageable);
     }
 
+
+    @PreAuthorize("hasPermission('/portal/advert/channel','save')")
+    @ApiOperation(value = "保存广告频道", notes = "保存广告频道")
+    @PostMapping("/channel/save")
+    public AdvertChannel saveAdvertChannel(AdvertChannelDTO request){
+        return advertChannelService.saveAdvertChannel(request);
+    }
+
+    @PreAuthorize("hasPermission('/portal/advert/channel','delete')")
+    @ApiOperation(value = "保存广告频道", notes = "保存广告频道")
+    @PostMapping("/channel/delete")
+    public void deleteAdvertChannelById(Long id){
+        advertChannelService.deleteAdvertChannelById(id);
+    }
+
+    @PreAuthorize("hasPermission('/portal/advert/channel','read')")
+    @ApiOperation(value = "获取广告频道", notes = "获取广告频道")
+    @PostMapping("/channel/getByCode")
+    public AdvertChannel getAdvertChannelByCode(String code){
+        return advertChannelService.getAdvertChannelByCode(code);
+    }
+
+    @PreAuthorize("hasPermission('/portal/advert/channel','read')")
+    @ApiOperation(value = "获取广告频道列表", notes = "获取广告频道列表")
+    @PostMapping("/channel/page")
+    public Page<AdvertChannel> getAdvertChannelPage(GetAdvertChannelListDTO request, Pageable pageable){
+        return advertChannelService.getAdvertChannelPage(request,pageable);
+    }
 
 
 }

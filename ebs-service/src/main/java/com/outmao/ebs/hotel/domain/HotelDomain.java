@@ -24,6 +24,8 @@ public interface HotelDomain {
 
     public long getHotelCount();
 
+    public Hotel getHotelByUserIdAndName(Long userId,String name);
+
     public HotelVO getHotelVOById(Long id);
 
     public HotelVO getHotelVOByOrgId(Long orgId);

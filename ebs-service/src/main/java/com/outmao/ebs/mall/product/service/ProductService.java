@@ -22,6 +22,8 @@ public interface ProductService {
 
     public void deleteProductById(Long id);
 
+    public Product getProductById(Long id);
+
     public Product setProductStatus(SetProductStatusDTO request);
 
     public Product setProductAuditStatus(SetProductAuditStatusDTO request);

@@ -111,7 +111,7 @@ public class ProductDTO {
      * 商品类型
      *
      */
-    @ApiModelProperty(name = "type", value = "商品类型")
+    @ApiModelProperty(name = "type", value = "商品类型 0--普通商品 10--广告位")
     private int type;
 
 

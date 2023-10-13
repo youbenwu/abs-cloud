@@ -20,6 +20,10 @@ public interface MerchantDomain {
 
     public Merchant setMerchantStatus(SetMerchantStatusDTO request);
 
+    public Merchant getMerchantByOrgId(Long orgId);
+
+    public Merchant getMerchantByUserId(Long userId);
+
     public MerchantVO getMerchantVOById(Long id);
 
     public MerchantVO getMerchantVOByUserId(Long userId);

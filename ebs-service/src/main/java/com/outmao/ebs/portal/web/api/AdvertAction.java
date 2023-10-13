@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
 
 
 @Api(value = "portal-advert", tags = "门户-广告")
@@ -32,6 +33,19 @@ public class AdvertAction {
         return advertService.getAdvertPage(request,pageable);
     }
 
+
+    @PreAuthorize("permitAll")
+    @ApiOperation(value = "获取广告信息列表", notes = "获取广告信息列表 channelCode--" +
+            "默认首页广告:pad-home-def" +
+            "首页广告:pad-home" +
+            "客服服务页广告:pad-services" +
+            "迁眼互娱影视页:pad-movies" +
+            "迁眼送页:pad-games" +
+            "智慧旅游页:pad-tours")
+    @PostMapping("/list")
+    public List<Advert> getAdvertList(String channelCode,int size) {
+        return advertService.getAdvertList(channelCode,size);
+    }
 
 
 }

@@ -17,6 +17,7 @@ public class MerchantDTO {
     @ApiModelProperty(name = "id", value = "ID")
     private Long id;
 
+
     /**
      *
      * 用户

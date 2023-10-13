@@ -42,27 +42,7 @@ public class BindingOrgAspect {
 		if(bindingOrg.getOrgId()!=null)
 			return;
 
-        Item item=bindingOrg.toItem();
-        RegisterOrgDTO orgDTO=new RegisterOrgDTO();
-        if(bindingOrg.getParentOrgId()!=null){
-            Org parentOrg=orgService.getOrgByTargetId(bindingOrg.getParentOrgId());
-            orgDTO.setParentId(parentOrg.getId());
-        }
-        if(item.getType().equals("Merchant")){
-            orgDTO.setType(Org.TYPE_MERCHANT);
-        }else if(item.getType().equals("Store")){
-            orgDTO.setType(Org.TYPE_STORE);
-        }else if(item.getType().equals("Shop")){
-            orgDTO.setType(Org.TYPE_SHOP);
-        }else if(item.getType().equals("Hotel")){
-            orgDTO.setType(Org.TYPE_HOTEL);
-        }
-        orgDTO.setTargetId(item.getId());
-        orgDTO.setUserId(bindingOrg.getUserId());
-        orgDTO.setName(item.getTitle());
-        orgDTO.setContact(bindingOrg.getContact());
-        Org org=orgService.registerOrg(orgDTO);
-        bindingOrg.setOrgId(org.getId());
+        orgService.registerOrg(bindingOrg);
 
 	}
 

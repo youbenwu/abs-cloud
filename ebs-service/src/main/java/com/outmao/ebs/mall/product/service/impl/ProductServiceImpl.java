@@ -6,6 +6,8 @@ import com.outmao.ebs.bbs.common.data.GetSubjectItemList;
 import com.outmao.ebs.bbs.domain.SubjectDomain;
 import com.outmao.ebs.bbs.vo.SubjectBrowseVO;
 import com.outmao.ebs.bbs.vo.SubjectCollectionVO;
+import com.outmao.ebs.mall.merchant.entity.Merchant;
+import com.outmao.ebs.mall.merchant.service.MerchantService;
 import com.outmao.ebs.portal.domain.RecommendDomain;
 import com.outmao.ebs.portal.dto.GetRecommendListDTO;
 import com.outmao.ebs.portal.vo.RecommendVO;
@@ -36,8 +38,18 @@ public class ProductServiceImpl extends BaseService implements ProductService {
     @Autowired
     private RecommendDomain recommendDomain;
 
+
+    @Autowired
+    private MerchantService merchantService;
+
     @Override
     public Product saveProduct(ProductDTO request) {
+        if(request.getShopId()==null){
+            Merchant merchant=merchantService.getMerchant();
+            request.setShopId(merchant.getShopId());
+        }if(request.getCategoryId()==null){
+            request.setCategoryId(0L);
+        }
         return productDomain.saveProduct(request);
     }
 
@@ -62,6 +74,11 @@ public class ProductServiceImpl extends BaseService implements ProductService {
     @Override
     public Product setProductStock(SetProductStockDTO request) {
         return productDomain.setProductStock(request);
+    }
+
+    @Override
+    public Product getProductById(Long id) {
+        return productDomain.getProductById(id);
     }
 
     @Override

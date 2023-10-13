@@ -37,6 +37,7 @@ public class Merchant implements Serializable , BindingOrg {
     /**
      * 组织ID
      */
+    @Column(unique = true)
     private Long orgId;
 
     /**

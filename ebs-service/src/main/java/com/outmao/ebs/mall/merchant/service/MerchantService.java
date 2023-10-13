@@ -17,6 +17,8 @@ public interface MerchantService {
 
     public Merchant setMerchantStatus(SetMerchantStatusDTO request);
 
+    public Merchant getMerchant();
+
     public MerchantVO getMerchantVOById(Long id);
 
     public MerchantVO getMerchantVOByUserId(Long userId);

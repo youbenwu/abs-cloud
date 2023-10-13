@@ -84,12 +84,12 @@ public class ShopDomainImpl extends BaseDomain implements ShopDomain {
 
         shopDao.save(shop);
 
-        if(shop.getUrl()==null){
-            String url=config.getBaseUrl()+"/shop?id="+shop.getId();
-            String qrCode=qrcodeService.generateQrCode(new GenerateQrCodeDTO(url,500,500));
-            shop.setUrl(url);
-            shop.setQrCode(qrCode);
-        }
+//        if(shop.getUrl()==null){
+//            String url=config.getBaseUrl()+"/shop?id="+shop.getId();
+//            String qrCode=qrcodeService.generateQrCode(new GenerateQrCodeDTO(url,500,500));
+//            shop.setUrl(url);
+//            shop.setQrCode(qrCode);
+//        }
 
         return shop;
     }

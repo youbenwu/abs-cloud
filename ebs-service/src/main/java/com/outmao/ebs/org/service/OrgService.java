@@ -1,6 +1,8 @@
 package com.outmao.ebs.org.service;
 
 
+
+import com.outmao.ebs.org.common.data.BindingOrg;
 import com.outmao.ebs.org.dto.GetOrgListDTO;
 import com.outmao.ebs.org.dto.OrgDTO;
 import com.outmao.ebs.org.dto.RegisterOrgDTO;
@@ -22,6 +24,8 @@ public interface OrgService {
      *
      * */
     public Org registerOrg(RegisterOrgDTO request);
+
+    public Org registerOrg(BindingOrg request);
 
     /**
      *

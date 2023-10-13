@@ -131,9 +131,9 @@ public class ProductDomainImpl extends BaseDomain implements ProductDomain {
             throw new BusinessException("标题不能为空");
         }
 
-        if(request.getImages()==null||request.getImages().isEmpty()) {
-            throw new BusinessException("最少上传一张图片");
-        }
+//        if(request.getImages()==null||request.getImages().isEmpty()) {
+//            throw new BusinessException("最少上传一张图片");
+//        }
 
         if(StringUtil.isEmpty(request.getImage())){
             for(ProductImageDTO t:request.getImages()) {
@@ -171,12 +171,12 @@ public class ProductDomainImpl extends BaseDomain implements ProductDomain {
 
         productDao.save(product);
 
-        if(product.getUrl()==null){
-            String url=config.getBaseUrl()+"/product?id="+product.getId();
-            String qrCode=qrcodeService.generateQrCode(new GenerateQrCodeDTO(url,500,500));
-            product.setUrl(url);
-            product.setQrCode(qrCode);
-        }
+//        if(product.getUrl()==null){
+//            String url=config.getBaseUrl()+"/product?id="+product.getId();
+//            String qrCode=qrcodeService.generateQrCode(new GenerateQrCodeDTO(url,500,500));
+//            product.setUrl(url);
+//            product.setQrCode(qrCode);
+//        }
 
         saveProductAddress(product,request.getAddress());
 
@@ -217,6 +217,10 @@ public class ProductDomainImpl extends BaseDomain implements ProductDomain {
 
 
     private void saveProductPropertyList(SaveProductHolder holder){
+
+        if(holder.request.getAttributes()==null){
+            return;
+        }
 
         Product product=holder.product;
         List<ProductPropertyDTO> data=holder.request.getProperties();
@@ -347,6 +351,10 @@ public class ProductDomainImpl extends BaseDomain implements ProductDomain {
 
     private void saveProductSkuList(SaveProductHolder holder){
 
+        if(holder.request.getSkus()==null){
+            return;
+        }
+
         List<ProductSkuDTO> data=getProductSkuDTOList(holder.product,holder.properties,holder.propertyItemsMap,holder.request.getSkus());
 
 
@@ -473,6 +481,10 @@ public class ProductDomainImpl extends BaseDomain implements ProductDomain {
     }
 
     private void saveProductImageList(SaveProductHolder holder){
+
+        if(holder.request.getImages()==null){
+            return;
+        }
 
         List<ProductImageDTO> data=holder.request.getImages();
 

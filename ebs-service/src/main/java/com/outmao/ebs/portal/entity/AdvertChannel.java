@@ -10,13 +10,13 @@ import java.util.Date;
 
 /**
  *
- * 频道
+ * 广告频道
  *
  */
 @Data
 @Entity
-@Table(name = "portal_Channel")
-public class Channel  implements Serializable {
+@Table(name = "portal_AdvertChannel")
+public class AdvertChannel implements Serializable {
 
     /**
      *
@@ -43,10 +43,46 @@ public class Channel  implements Serializable {
 
     /**
      *
+     * 对应一个产品ID，用于投放收费
+     *
+     */
+    @ApiModelProperty(name = "productId", value = "对应一个产品ID，用于投放收费")
+    private Long productId;
+
+    /**
+     *
      * 投放是否收费 0--免费 1--收费
      *
      */
+    @ApiModelProperty(name = "type", value = "投放是否收费 0--免费 1--收费")
     private int type;
+
+
+    /**
+     *
+     * 位置可以显示广告数量
+     *
+     */
+    @ApiModelProperty(name = "num", value = "位置可以显示广告数量")
+    private int num;
+
+
+    /**
+     *
+     * 最多可以投放广告数
+     *
+     */
+    @ApiModelProperty(name = "maxNum", value = "最多可以投放广告数")
+    private int maxNum;
+
+
+    /**
+     *
+     * 广告投放价格（每天）
+     *
+     */
+    @ApiModelProperty(name = "price", value = "广告投放价格（每天）")
+    private double price;
 
 
     /**
@@ -54,6 +90,7 @@ public class Channel  implements Serializable {
      * 频道编码 唯一标识 在广告里代表广告位置
      *
      */
+    @ApiModelProperty(name = "code", value = "唯一编码 代表广告位置",required = true)
     @Column(unique = true)
     private String code;
 

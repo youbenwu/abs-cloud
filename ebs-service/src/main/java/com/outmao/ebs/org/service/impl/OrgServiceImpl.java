@@ -5,6 +5,8 @@ package com.outmao.ebs.org.service.impl;
 import com.outmao.ebs.common.base.BaseService;
 import com.outmao.ebs.common.configuration.constant.Status;
 import com.outmao.ebs.common.vo.Contact;
+import com.outmao.ebs.common.vo.Item;
+import com.outmao.ebs.org.common.data.BindingOrg;
 import com.outmao.ebs.org.domain.AccountDomain;
 import com.outmao.ebs.org.domain.OrgDomain;
 import com.outmao.ebs.org.domain.RoleDomain;
@@ -78,6 +80,29 @@ public class OrgServiceImpl extends BaseService implements OrgService, CommandLi
             org.setStatus(Status.NORMAL.getStatus());
             org.setStatusRemark(Status.NORMAL.getStatusRemark());
         }
+        return org;
+    }
+
+    @Override
+    public Org registerOrg(BindingOrg bindingOrg) {
+        Item item=bindingOrg.toItem();
+        RegisterOrgDTO orgDTO=new RegisterOrgDTO();
+        if(item.getType().equals("Merchant")){
+            orgDTO.setType(Org.TYPE_MERCHANT);
+        }else if(item.getType().equals("Store")){
+            orgDTO.setType(Org.TYPE_STORE);
+        }else if(item.getType().equals("Shop")){
+            orgDTO.setType(Org.TYPE_SHOP);
+        }else if(item.getType().equals("Hotel")){
+            orgDTO.setType(Org.TYPE_HOTEL);
+        }
+        orgDTO.setParentId(bindingOrg.getParentOrgId());
+        orgDTO.setTargetId(item.getId());
+        orgDTO.setUserId(bindingOrg.getUserId());
+        orgDTO.setName(item.getTitle());
+        orgDTO.setContact(bindingOrg.getContact());
+        Org org=registerOrg(orgDTO);
+        bindingOrg.setOrgId(org.getId());
         return org;
     }
 

@@ -25,7 +25,7 @@ import java.util.Date;
 @Data
 @Entity
 @Table(name = "ebs_Store")
-public class Store implements Serializable, BindingSubject, BindingOrg {
+public class Store implements Serializable, BindingSubject {
 
     /**
      *
@@ -185,16 +185,16 @@ public class Store implements Serializable, BindingSubject, BindingOrg {
     private Date updateTime;
 
 
-    @Override
-    public Long getUserId() {
-        return user.getId();
-    }
-
-    @Override
-    public Long getParentOrgId() {
-        return merchant.getOrgId();
-    }
-
+//    @Override
+//    public Long getUserId() {
+//        return user.getId();
+//    }
+//
+//    @Override
+//    public Long getParentOrgId() {
+//        return merchant.getOrgId();
+//    }
+//
     @Override
     public Item toItem() {
         return new Item(id,"Store",title);

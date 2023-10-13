@@ -24,6 +24,8 @@ import com.outmao.ebs.mall.shop.entity.Shop;
 import com.outmao.ebs.mall.store.domain.StoreDomain;
 import com.outmao.ebs.mall.store.dto.StoreDTO;
 import com.outmao.ebs.org.common.annotation.BindingOrg;
+import com.outmao.ebs.org.entity.Org;
+import com.outmao.ebs.org.service.OrgService;
 import com.outmao.ebs.qrCode.dto.GenerateQrCodeDTO;
 import com.outmao.ebs.qrCode.service.QrCodeService;
 import com.outmao.ebs.user.common.annotation.SetSimpleUser;
@@ -64,13 +66,15 @@ public class MerchantDomainImpl extends BaseDomain implements MerchantDomain {
     @Autowired
     private EnterpriseDomain enterpriseDomain;
 
+    @Autowired
+    private OrgService orgService;
+
 
 
     private MerchantVOConver merchantVOConver=new MerchantVOConver();
     private SimpleMerchantVOConver simpleMerchantVOConver=new SimpleMerchantVOConver();
 
     @Transactional
-    @BindingOrg
     @Override
     public Merchant saveMerchant(MerchantDTO request) {
 
@@ -89,15 +93,13 @@ public class MerchantDomainImpl extends BaseDomain implements MerchantDomain {
         }
 
         if(request.getContact()!=null){
-            MerchantContact contact=merchant.getContact();
-            if(contact==null){
-                contact=new MerchantContact();
+            if(merchant.getContact()==null){
+                merchant.setContact(new MerchantContact());
             }
-            BeanUtils.copyProperties(request.getContact(),contact);
-            merchant.setContact(contact);
+            BeanUtils.copyProperties(request.getContact(),merchant.getContact());
         }
 
-        BeanUtils.copyProperties(request,merchant);
+        BeanUtils.copyProperties(request,merchant,"contact");
         merchant.setUpdateTime(new Date());
 
         merchant.setKeyword(getKeyword(merchant));
@@ -107,12 +109,16 @@ public class MerchantDomainImpl extends BaseDomain implements MerchantDomain {
 
         merchantDao.save(merchant);
 
-        if(merchant.getUrl()==null){
-            String url=config.getBaseUrl()+"/merchant?id="+merchant.getId();
-            String qrCode=qrcodeService.generateQrCode(new GenerateQrCodeDTO(url,500,500));
-            merchant.setUrl(url);
-            merchant.setQrCode(qrCode);
+        if(merchant.getOrgId()==null){
+            orgService.registerOrg(merchant);
         }
+
+//        if(merchant.getUrl()==null){
+//            String url=config.getBaseUrl()+"/merchant?id="+merchant.getId();
+//            String qrCode=qrcodeService.generateQrCode(new GenerateQrCodeDTO(url,500,500));
+//            merchant.setUrl(url);
+//            merchant.setQrCode(qrCode);
+//        }
 
         if(merchant.getShopId()==null){
 
@@ -174,6 +180,16 @@ public class MerchantDomainImpl extends BaseDomain implements MerchantDomain {
 
     }
 
+
+    @Override
+    public Merchant getMerchantByUserId(Long userId) {
+        return merchantDao.findByUserId(userId);
+    }
+
+    @Override
+    public Merchant getMerchantByOrgId(Long orgId) {
+        return merchantDao.findByOrgId(orgId);
+    }
 
     @SetSimpleUser
     @Override

@@ -9,7 +9,9 @@ public enum ProductType {
 
     HOUSE_NEW(11, "新楼盘"),
     HOUSE_OLD(12, "二手房"),
-    HOUSE_RENT(13, "出租房");
+    HOUSE_RENT(13, "出租房"),
+
+    ADVERT_CHANNEL(20, "广告位");
 
     private int type;
 

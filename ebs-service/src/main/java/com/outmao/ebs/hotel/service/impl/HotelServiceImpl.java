@@ -1,6 +1,7 @@
 package com.outmao.ebs.hotel.service.impl;
 
 import com.outmao.ebs.common.base.BaseService;
+import com.outmao.ebs.common.vo.Contact;
 import com.outmao.ebs.hotel.domain.*;
 import com.outmao.ebs.hotel.dto.*;
 import com.outmao.ebs.hotel.entity.*;
@@ -9,7 +10,9 @@ import com.outmao.ebs.hotel.vo.*;
 import com.outmao.ebs.org.common.annotation.BindingOrg;
 import com.outmao.ebs.org.dto.MemberDTO;
 import com.outmao.ebs.org.entity.Member;
+import com.outmao.ebs.org.entity.Org;
 import com.outmao.ebs.org.service.MemberService;
+import com.outmao.ebs.org.service.OrgService;
 import com.outmao.ebs.user.common.constant.Oauth;
 import com.outmao.ebs.user.dto.RegisterDTO;
 import com.outmao.ebs.user.entity.User;
@@ -61,16 +64,21 @@ public class HotelServiceImpl extends BaseService implements HotelService {
     @Autowired
     private MemberService memberService;
 
+    @Autowired
+    private OrgService orgService;
 
 
-    @BindingOrg
     @Transactional()
     @Override
     public Hotel registerHotel(RegisterHotelDTO request) {
         if(request.getUserId()==null){
             findUserOrRegister(request);
         }
-        return hotelDomain.registerHotel(request);
+        Hotel hotel= hotelDomain.registerHotel(request);
+        if(hotel.getOrgId()==null){
+            orgService.registerOrg(hotel);
+        }
+        return hotel;
     }
 
     @Override
@@ -211,8 +219,38 @@ public class HotelServiceImpl extends BaseService implements HotelService {
         return device;
     }
 
+    @Transactional()
+    @Override
+    public HotelDevice saveHotelDevice(PadRegisterHotelDeviceDTO request) {
+        Hotel hotel=hotelDomain.getHotelByUserIdAndName(request.getUserId(),request.getHotelName());
+        if(hotel==null){
+            RegisterHotelDTO hotelDTO=new RegisterHotelDTO();
+            hotelDTO.setUserId(request.getUserId());
+            hotelDTO.setName(request.getHotelName());
+            Contact contact=new Contact();
+            contact.setName(request.getName());
+            contact.setAddress(request.getAddress());
+            hotelDTO.setContact(contact);
+            hotel=registerHotel(hotelDTO);
+        }
+        HotelDeviceDTO deviceDTO=new HotelDeviceDTO();
+        deviceDTO.setDeviceNo(request.getDeviceNo());
+        deviceDTO.setRoomNo(request.getRoomNo());
+        deviceDTO.setHotelId(hotel.getId());
+        deviceDTO.setAppType(HotelDevice.APP_TYPE_QY_PAD);
+        deviceDTO.setName("Android Pad");
+        deviceDTO.setOs("android");
+        deviceDTO.setModel("android pad");
+        return saveHotelDevice(deviceDTO);
+    }
 
     private void findOrRegisterDeviceUser(HotelDevice request){
+        if(request.getOrgId()==null){
+            Org org=orgService.getOrgByTargetId(request.getId());
+            if(org!=null){
+                request.setOrgId(org.getId());
+            }
+        }
         User user=userService.getUserByUsername(request.getDeviceNo());
         if(user==null){
             RegisterDTO registerDTO=new RegisterDTO();
