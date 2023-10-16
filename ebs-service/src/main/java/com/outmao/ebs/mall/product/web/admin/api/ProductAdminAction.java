@@ -1,8 +1,6 @@
 package com.outmao.ebs.mall.product.web.admin.api;
 
 
-import com.outmao.ebs.common.util.StringUtil;
-import com.outmao.ebs.mall.product.entity.Product;
 import com.outmao.ebs.org.common.annotation.AccessPermission;
 import com.outmao.ebs.org.common.annotation.AccessPermissionGroup;
 import com.outmao.ebs.org.common.annotation.AccessPermissionParent;
@@ -15,10 +13,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -32,7 +27,6 @@ import org.springframework.web.bind.annotation.RestController;
                 @AccessPermission(title = "删除商品信息",url = "/mall/product",name = "delete"),
                 @AccessPermission(title = "读取商品信息",url = "/mall/product",name = "read"),
                 @AccessPermission(title = "设置商品状态",url = "/mall/product",name = "status"),
-                @AccessPermission(title = "审核商品信息",url = "/mall/product",name = "hasPermission"),
         }),
         @AccessPermissionParent(title = "商品类别管理",url = "/mall/product/category",name = "",children = {
                 @AccessPermission(title = "保存商品类别",url = "/mall/product/category",name = "save"),
@@ -43,7 +37,7 @@ import org.springframework.web.bind.annotation.RestController;
 })
 
 
-@Api(value = "account-mall-product", tags = "后台-电商-商品")
+@Api(value = "admin-mall-product", tags = "后台-电商-商品")
 @RestController
 @RequestMapping("/api/admin/mall/product")
 public class ProductAdminAction {
@@ -66,18 +60,18 @@ public class ProductAdminAction {
         productService.deleteProductById(id);
     }
 
+    @PreAuthorize("hasPermission('/mall/product','save')")
+    @ApiOperation(value = "设置商品上下架", notes = "设置商品上下架")
+    @PostMapping("/setOnSell")
+    public void setProductOnSell(SetProductOnSellDTO request){
+         productService.setProductOnSell(request);
+    }
+
     @PreAuthorize("hasPermission('/mall/product','status')")
     @ApiOperation(value = "设置商品状态", notes = "设置商品状态")
     @PostMapping("/setStatus")
-    public void setProductStatus(SetProductStatusDTO request){
+    public void setProductStatus(SetProductStatusDTO request) {
          productService.setProductStatus(request);
-    }
-
-    @PreAuthorize("hasPermission('/mall/product','check')")
-    @ApiOperation(value = "设置商品审核状态", notes = "设置商品审核状态")
-    @PostMapping("/setCheckStatus")
-    public void setProductCheckStatus(SetProductAuditStatusDTO request) {
-         productService.setProductAuditStatus(request);
     }
 
     @PreAuthorize("hasPermission('/mall/product','save')")
@@ -100,15 +94,6 @@ public class ProductAdminAction {
     public Page<ProductVO> getProductVOPage(@RequestBody GetProductListDTO request, Pageable pageable){
         return productService.getProductVOPage(request,request.getPageable(pageable));
     }
-
-    //获取首页商品推荐
-    @ApiOperation(value = "获取首页商品推荐列表", notes = "获取首页商品推荐列表")
-    @PostMapping("/recommend/page")
-    public Page<RecommendVO<ProductVO>> getProductRecommendVOPage(GetRecommendListDTO request,Pageable pageable){
-        return productService.getProductRecommendVOPage(request,pageable);
-    }
-
-
 
 
 }

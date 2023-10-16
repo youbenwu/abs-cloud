@@ -14,7 +14,7 @@ public class ProductSalesAddressVOConver implements BeanConver<QProductSalesAddr
         ProductAddressVO vo=new ProductAddressVO();
 
         vo.setId(t.get(e.id));
-        vo.setProductId(t.get(e.product.id));
+        vo.setProductId(t.get(e.productId));
         vo.setLatitude(t.get(e.latitude));
         vo.setLongitude(t.get(e.longitude));
         vo.setProvince(t.get(e.province));
@@ -33,7 +33,7 @@ public class ProductSalesAddressVOConver implements BeanConver<QProductSalesAddr
     public Expression<?>[] select(QProductSalesAddress e) {
         return new Expression[]{
                 e.id,
-                e.product.id,
+                e.productId,
                 e.latitude,
                 e.longitude,
                 e.province,

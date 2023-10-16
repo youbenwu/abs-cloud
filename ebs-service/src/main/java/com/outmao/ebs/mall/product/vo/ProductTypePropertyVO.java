@@ -42,6 +42,14 @@ public class ProductTypePropertyVO {
 
     /**
      *
+     * 显示后缀
+     *
+     */
+    @ApiModelProperty(name = "suffix", value = "显示后缀")
+    private String suffix;
+
+    /**
+     *
      * 唯一属性  单选属性  复选属性
      *
      */

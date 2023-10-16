@@ -1,7 +1,6 @@
 package com.outmao.ebs.mall.product.domain.impl;
 
 
-import com.outmao.ebs.common.configuration.constant.Status;
 import com.outmao.ebs.common.vo.Address;
 import com.outmao.ebs.common.exception.BusinessException;
 import com.outmao.ebs.common.services.amap.AmapClient;
@@ -9,10 +8,8 @@ import com.outmao.ebs.common.services.amap.vo.GeocodeResult;
 import com.outmao.ebs.common.base.BaseDomain;
 import com.outmao.ebs.common.util.JsonUtil;
 import com.outmao.ebs.common.util.StringUtil;
-import com.outmao.ebs.bbs.common.annotation.BindingSubjectId;
 import com.outmao.ebs.bbs.common.annotation.SubjectBrowsesAdd;
 import com.outmao.ebs.bbs.common.annotation.SubjectItemFilter;
-import com.outmao.ebs.mall.product.common.constant.ProductStatus;
 import com.outmao.ebs.mall.product.common.util.SaveProductHolder;
 import com.outmao.ebs.mall.product.common.util.SpecAlgorithm;
 import com.outmao.ebs.mall.product.dao.*;
@@ -28,9 +25,9 @@ import com.outmao.ebs.mall.store.domain.StoreProductDomain;
 import com.outmao.ebs.mall.store.domain.StoreSkuDomain;
 import com.outmao.ebs.mall.store.dto.StoreProductDTO;
 import com.outmao.ebs.mall.store.entity.QStoreProduct;
-import com.outmao.ebs.security.util.SecurityUtil;
-import com.outmao.ebs.qrCode.dto.GenerateQrCodeDTO;
 import com.outmao.ebs.qrCode.service.QrCodeService;
+import com.querydsl.core.Tuple;
+import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Predicate;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.core.types.dsl.NumberExpression;
@@ -41,6 +38,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
+
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -110,30 +109,17 @@ public class ProductDomainImpl extends BaseDomain implements ProductDomain {
     private ProductAddressVOConver productAddressVOConver=new ProductAddressVOConver();
     private ProductSalesAddressVOConver productSalesAddressVOConver=new ProductSalesAddressVOConver();
     private ProductImageVOConver productImageVOConver=new ProductImageVOConver();
-
-    @Autowired
-    private MiniProductSkuVOConver miniProductSkuVOConver;
-    @Autowired
-    private MiniProductVOConver miniProductVOConver;
+    private MiniProductSkuVOConver miniProductSkuVOConver=new MiniProductSkuVOConver();
+    private MiniProductVOConver miniProductVOConver=new MiniProductVOConver();
 
 
     @Transactional
-    @BindingSubjectId
     @Override
     public Product saveProduct(ProductDTO request) {
-
-        if(request.getShopId()==null){
-            Long shopId=QF.select(QShop.shop.id).from(QShop.shop).fetchFirst();
-            request.setShopId(shopId);
-        }
 
         if(StringUtil.isEmpty(request.getTitle())){
             throw new BusinessException("标题不能为空");
         }
-
-//        if(request.getImages()==null||request.getImages().isEmpty()) {
-//            throw new BusinessException("最少上传一张图片");
-//        }
 
         if(StringUtil.isEmpty(request.getImage())){
             for(ProductImageDTO t:request.getImages()) {
@@ -146,6 +132,11 @@ public class ProductDomainImpl extends BaseDomain implements ProductDomain {
 
         if(StringUtil.isEmpty(request.getImage())){
             throw new BusinessException("商品图片不能为空");
+        }
+
+        if(request.getShopId()==null){
+            Long shopId=QF.select(QShop.shop.id).from(QShop.shop).fetchFirst();
+            request.setShopId(shopId);
         }
 
         Product product=request.getId()==null?null:productDao.findByIdForUpdate(request.getId());
@@ -163,9 +154,12 @@ public class ProductDomainImpl extends BaseDomain implements ProductDomain {
 
         security.hasPermission(product.getOrgId(),null);
 
-        product.setLetter(StringUtil.toPinyin(request.getTitle()));
-
         BeanUtils.copyProperties(request,product,"shopId","attributes","properties","skus","images","medias");
+
+        product.setLetter(StringUtil.toPinyin(product.getTitle()));
+
+        //设置keyword
+        product.setKeyword(getKeyword(product));
 
         product.setUpdateTime(new Date());
 
@@ -197,13 +191,10 @@ public class ProductDomainImpl extends BaseDomain implements ProductDomain {
         //保存商品相册列表
         saveProductMediaList(holder);
 
-        //商品关联到门店
-        if(request.getStoreId()!=null){
-            storeProductDomain.saveStoreProduct(new StoreProductDTO(request.getStoreId(),product.getId()));
-        }
-
-        //设置keyword
-        product.setKeyword(getKeyword(product));
+//        //商品关联到门店
+//        if(request.getStoreId()!=null){
+//            storeProductDomain.saveStoreProduct(new StoreProductDTO(request.getStoreId(),product.getId()));
+//        }
 
         //更新库存
         if(shop.isUseStoreStock()) {
@@ -217,10 +208,6 @@ public class ProductDomainImpl extends BaseDomain implements ProductDomain {
 
 
     private void saveProductPropertyList(SaveProductHolder holder){
-
-        if(holder.request.getAttributes()==null){
-            return;
-        }
 
         Product product=holder.product;
         List<ProductPropertyDTO> data=holder.request.getProperties();
@@ -412,10 +399,10 @@ public class ProductDomainImpl extends BaseDomain implements ProductDomain {
     @Transactional
     @Override
     public Product setProductStock(SetProductStockDTO request) {
-        Product product=productDao.findByIdForUpdate(request.getId());
-        Shop shop=shopDao.getOne(product.getShopId());
 
-        if(shop.isUseStoreStock()){
+        Product product=productDao.findByIdForUpdate(request.getId());
+
+        if(product.isUseStoreStock()){
             throw new BusinessException("请使用仓库管理库存");
         }
 
@@ -454,30 +441,35 @@ public class ProductDomainImpl extends BaseDomain implements ProductDomain {
 
     }
 
+    @Transactional
+    @Override
+    public void skuStockOut(List<ProductSkuStockOutDTO> request) {
+        request.forEach(p->{
+            ProductSku sku=productSkuDao.findByIdForUpdate(p.getSkuId());
+            Product product=productDao.findByIdForUpdate(sku.getProduct().getId());
+            if(sku.getStock()<p.getQuantity()){
+                throw new BusinessException("库存不足");
+            }
+            product.setStock(product.getStock()-p.getQuantity());
+            sku.setStock(sku.getStock()-p.getQuantity());
+            productDao.save(product);
+            productSkuDao.save(sku);
+        });
+    }
+
     private String getKeyword(Product m){
         StringBuffer s=new StringBuffer();
-        if(m.getTitle()!=null){
-            s.append(" "+m.getTitle());
-        }
-        if(m.getSubtitle()!=null){
+        s.append(" "+m.getTitle());
+        if(!StringUtils.isEmpty(m.getSubtitle())){
             s.append(" "+m.getSubtitle());
         }
-        if(m.getDescription()!=null){
+        if(!StringUtils.isEmpty(m.getSubjectId())){
+            s.append(" "+m.getSubtitle());
+        }
+        if(!StringUtils.isEmpty(m.getDescription())){
             s.append(" "+m.getDescription());
         }
-        if(m.getDetails()!=null){
-            s.append(" "+m.getDetails());
-        }
-
-        List<String> stores=storeProductDomain.getStoreTitleListByProductId(m.getId());
-
-        if(stores!=null&&stores.size()>0){
-            stores.forEach(t->{
-                s.append(" "+t);
-            });
-        }
-
-        return s.toString();
+        return s.toString().trim();
     }
 
     private void saveProductImageList(SaveProductHolder holder){
@@ -513,12 +505,13 @@ public class ProductDomainImpl extends BaseDomain implements ProductDomain {
     private void saveProductAddress(Product product,ProductAddressDTO data){
         if(data==null)
             return;
-        ProductAddress address=product.getAddress()==null?null:product.getAddress();
+
+        ProductAddress address=product.getAddressId()==null?null:productAddressDao.getOne(product.getAddressId());
 
         if(address==null){
             address=new ProductAddress();
             address.setCreateTime(new Date());
-            address.setProduct(product);
+            address.setProductId(product.getId());
         }
 
         BeanUtils.copyProperties(data,address,"id");
@@ -529,19 +522,19 @@ public class ProductDomainImpl extends BaseDomain implements ProductDomain {
         }
 
         productAddressDao.save(address);
-        product.setAddress(address);
+        product.setAddressId(address.getId());
 
     }
 
     private void saveProductSalesAddress(Product product,ProductAddressDTO data){
         if(data==null)
             return;
-        ProductSalesAddress address=product.getSalesAddress()==null?null:product.getSalesAddress();
+        ProductSalesAddress address=product.getSalesAddressId()==null?null:productSalesAddressDao.getOne(product.getSalesAddressId());
 
         if(address==null){
             address=new ProductSalesAddress();
             address.setCreateTime(new Date());
-            address.setProduct(product);
+            address.setProductId(product.getId());
         }
 
         BeanUtils.copyProperties(data,address,"id");
@@ -554,7 +547,7 @@ public class ProductDomainImpl extends BaseDomain implements ProductDomain {
 
         productSalesAddressDao.save(address);
 
-        product.setSalesAddress(address);
+        product.setSalesAddressId(address.getId());
 
     }
 
@@ -733,13 +726,13 @@ public class ProductDomainImpl extends BaseDomain implements ProductDomain {
 
     @Transactional
     @Override
-    public Product setProductStatus(SetProductStatusDTO request) {
+    public Product setProductOnSell(SetProductOnSellDTO request) {
 
-        Product product=productDao.getOne(request.getId());
+        Product product=productDao.findByIdForUpdate(request.getId());
 
         security.hasPermission(product.getOrgId(),null);
 
-        product.setStatus(request.getStatus());
+        product.setOnSell(request.isOnSell());
 
         productDao.save(product);
 
@@ -748,12 +741,13 @@ public class ProductDomainImpl extends BaseDomain implements ProductDomain {
 
     @Transactional
     @Override
-    public Product setProductAuditStatus(SetProductAuditStatusDTO request) {
-        Product product=productDao.getOne(request.getId());
+    public Product setProductStatus(SetProductStatusDTO request) {
+        Product product=productDao.findByIdForUpdate(request.getId());
 
         security.hasPermission(product.getOrgId(),null);
 
-        product.setAuditStatus(request.getAuditStatus());
+        product.setStatus(request.getStatus());
+        product.setStatusRemark(request.getStatusRemark());
 
         productDao.save(product);
 
@@ -905,12 +899,16 @@ public class ProductDomainImpl extends BaseDomain implements ProductDomain {
 
         Predicate p=null;
 
+        OrderSpecifier orderBy=null;
+
+        JPAQuery<Tuple> query=QF.select(productVOConver.select(e));
+
         if(request.getCategoryId()!=null){
             p=e.categoryId.eq(request.getCategoryId()).and(p);
         }
 
-        if(request.getSCategoryId()!=null){
-            p=e.sCategoryId.eq(request.getSCategoryId()).and(p);
+        if(request.getSpcId()!=null){
+            p=e.spcId.eq(request.getSpcId()).and(p);
         }
 
         if(request.getShopId()!=null){
@@ -927,52 +925,46 @@ public class ProductDomainImpl extends BaseDomain implements ProductDomain {
 
         //价格区间
         if(request.getPriceBetween()!=null){
-            p=e.price.between(Double.parseDouble(request.getPriceBetween().getFrom().toString()),Double.parseDouble(request.getPriceBetween().getTo().toString())).and(p);
+            p=e.price.between(request.getPriceBetween().getFrom(),request.getPriceBetween().getTo()).and(p);
         }
-
 
         if(request.getMarketTimeBetween()!=null){
-            p=e.marketTime.between((Date) request.getMarketTimeBetween().getFrom(),(Date) request.getMarketTimeBetween().getTo()).and(p);
+            p=e.marketTime.between(request.getMarketTimeBetween().getFrom(),request.getMarketTimeBetween().getTo()).and(p);
         }
 
-        if(request.getAuditStatus()!=null){
-            p=e.auditStatus.eq(request.getAuditStatus()).and(p);
-        }else{
-            if(!SecurityUtil.isAdminApi()) {
-                p = e.auditStatus.eq(Status.NORMAL.getStatus()).and(p);
-            }
+
+        if(request.getSalesStatus()!=null){
+            p=e.salesStatus.eq(request.getSalesStatus()).and(p);
         }
+
 
         if(request.getStatus()!=null){
             p=e.status.eq(request.getStatus()).and(p);
-        }else{
-            if(!SecurityUtil.isAdminApi()) {
-                p = e.status.eq(ProductStatus.ON_SELL.getStatus()).and(p);
-            }
         }
 
-
-        NumberExpression<Double> distance=null;
         if(request.getNear()!=null){
-            distance = acos(sin(radians(Expressions.constant(request.getNear().getLatitude())))
-                    .multiply(sin(radians(e.address.latitude)))
+            NumberExpression<Double> distance = acos(sin(radians(Expressions.constant(request.getNear().getLatitude())))
+                    .multiply(sin(radians(e.location.latitude)))
                     .add(cos(radians(Expressions.constant(request.getNear().getLatitude())))
-                            .multiply(cos(radians(e.address.latitude)))
+                            .multiply(cos(radians(e.location.latitude)))
                             .multiply(cos(radians(Expressions.constant(request.getNear().getLongitude()))
-                                    .subtract(radians(e.address.longitude)))))).multiply(6371);
-
+                                    .subtract(radians(e.location.longitude)))))).multiply(6371);
+            orderBy=distance.asc();
         }
 
-
-        Page<ProductVO> page;
 
         if(request.getStoreId()!=null){
             QStoreProduct q=QStoreProduct.storeProduct;
-            JPAQuery query=QF.select(e).from(e,q).where(e.id.eq(q.product.id).and(q.store.id.eq(request.getStoreId())).and(p));
-            page=queryPage(e,query,productVOConver,pageable,distance==null?null:distance.asc());
+            p=e.id.eq(q.product.id).and(q.store.id.eq(request.getStoreId()).and(p));
+            query=query.from(e,q);
         }else{
-            page=queryPage(e,p,productVOConver,pageable,distance==null?null:distance.asc());
+            query=query.from(e);
         }
+
+        query=query.where(p);
+
+        Page<ProductVO> page=queryPage(e,query,productVOConver,pageable,orderBy);
+
 
         if(request.getAttrs()!=null&&request.getAttrs().length>0){
             if(!page.getContent().isEmpty())

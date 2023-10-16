@@ -49,15 +49,23 @@ public class ProductPropertyVO {
     @ApiModelProperty(name = "value", value = "属性的值 List<ProductPropertyItemVO> JSON字符串")
     private String value;
 
-//    /**
-//     *
-//     *
-//     * 属性类型 唯一属性  单选属性  复选属性
-//     *
-//     *
-//     */
-//    @ApiModelProperty(name = "type", value = "属性类型 0--唯一属性  1--单选属性  2--复选属性")
-//    private Integer type;
+    /**
+     *
+     * 显示后缀
+     *
+     */
+    @ApiModelProperty(name = "suffix", value = "显示后缀")
+    private String suffix;
+
+    /**
+     *
+     *
+     * 属性类型 单选属性  复选属性 唯一属性
+     *
+     *
+     */
+    @ApiModelProperty(name = "type", value = "属性类型 0--单选属性  1--复选属性 2--唯一属性")
+    private Integer type;
 
 
 }

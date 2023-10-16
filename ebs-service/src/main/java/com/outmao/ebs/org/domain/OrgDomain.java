@@ -44,6 +44,14 @@ public interface OrgDomain {
      * */
     public void deleteOrgById(Long id);
 
+
+    /**
+     *
+     * 增加父组织
+     *
+     * */
+    public Org addOrgParent(Long id,Long parentId);
+
     /**
      *
      * 获取组织信息

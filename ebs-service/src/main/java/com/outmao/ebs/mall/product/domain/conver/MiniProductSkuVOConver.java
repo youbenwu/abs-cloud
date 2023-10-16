@@ -8,7 +8,7 @@ import com.querydsl.core.types.Expression;
 import org.springframework.stereotype.Component;
 
 
-@Component
+
 public class MiniProductSkuVOConver implements BeanConver<QProductSku, MiniProductSkuVO> {
 
 

@@ -25,9 +25,6 @@ public class OrderProductVO {
     @ApiModelProperty(name = "orderId", value = "订单编号")
     private Long orderId;
 
-    @ApiModelProperty(name = "productType", value = "商品类型")
-    private Integer productType;
-
     /**
      * 商品Id
      */

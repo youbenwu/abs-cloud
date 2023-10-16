@@ -1,17 +1,17 @@
 package com.outmao.ebs.mall.product.common.constant;
 
-public enum ProductStatus {
+public enum ProductSalesStatus {
 
-    //商品状态(0未上架，1已上架，2已删除)
-    NO_SELL(0, "未上架"),
-    ON_SELL(1, "已上架"),
-    DELETED(2, "已删除");
+    //销售状态（0待售/1在售/2售罄）
+    FOR_SELL(0, "0待售"),
+    ON_SELL(1, "1在售"),
+    SELL_OUT(2, "2售罄");
 
     private int status;
 
     private String statusRemark;
 
-    private ProductStatus(int status, String statusRemark) {
+    private ProductSalesStatus(int status, String statusRemark) {
         this.status = status;
         this.statusRemark = statusRemark;
     }

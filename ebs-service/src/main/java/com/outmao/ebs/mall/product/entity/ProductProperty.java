@@ -2,10 +2,8 @@ package com.outmao.ebs.mall.product.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
-
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.List;
 
 /**
  * 
@@ -31,6 +29,7 @@ public class ProductProperty implements Serializable {
 	private Long id;
 
 	/**
+	 *
 	 * 属性所在的商品
 	 * 
 	 */
@@ -44,15 +43,6 @@ public class ProductProperty implements Serializable {
 	@JsonIgnore
 	private int sort;
 
-//	/**
-//	 *
-//	 * 商品规格属性选项
-//	 *
-//	 */
-//	@JsonIgnore
-//	@OneToMany(mappedBy = "property", cascade = CascadeType.REFRESH, fetch = FetchType.LAZY)
-//	@OrderBy(items = "id ASC")
-//	private List<ProductPropertyItem> items;
 
 	/**
 	 *
@@ -77,40 +67,22 @@ public class ProductProperty implements Serializable {
 	 */
 	private String value;
 
-//	/**
-//	 *
-//	 *
-//	 * 属性类型 唯一属性  单选属性  复选属性
-//	 *
-//	 *
-//	 */
-//	private int type;
+	/**
+	 *
+	 * 显示后缀
+	 *
+	 */
+	private String suffix;
 
 	/**
 	 *
-	 * 相同参数值的商品是否关联
+	 *
+	 * 属性类型 单选属性  复选属性  唯一属性
+	 *
 	 *
 	 */
-	@JsonIgnore
-	private boolean linked;
+	private int type;
 
-
-	/**
-	 *
-	 * 能否进行检索 0--不需要检索 1--关键字检索 2--范围检索
-	 *
-	 */
-	@JsonIgnore
-	private int searchType;
-
-
-//	public ProductPropertyItem getItem(String items){
-//		for (ProductPropertyItem item:items){
-//			if(item.getItems().equals(items))
-//				return item;
-//		}
-//		return null;
-//	}
 
 
 }

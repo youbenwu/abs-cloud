@@ -64,6 +64,11 @@ public class MerchantServiceImpl extends BaseService implements MerchantService,
     }
 
     @Override
+    public Merchant getMerchantByUserId(Long userId) {
+        return merchantDomain.getMerchantByUserId(userId);
+    }
+
+    @Override
     public MerchantVO getMerchantVOById(Long id) {
         return merchantDomain.getMerchantVOById(id);
     }
@@ -82,8 +87,6 @@ public class MerchantServiceImpl extends BaseService implements MerchantService,
     public Page<MerchantVO> getMerchantVOPage(GetMerchantListDTO request, Pageable pageable) {
         return merchantDomain.getMerchantVOPage(request,pageable);
     }
-
-
 
     @Override
     public List<SimpleMerchantVO> getSimpleMerchantVOListByIdIn(Collection<Long> idIn) {

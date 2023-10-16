@@ -42,7 +42,7 @@ import java.util.List;
 })
 
 
-@Api(value = "account-mall-product-type", tags = "后台-电商-商品-类型")
+@Api(value = "admin-mall-product-type", tags = "后台-电商-商品-类型")
 @RestController
 @RequestMapping("/api/admin/mall/product/type")
 public class ProductTypeAdminAction {
@@ -81,6 +81,14 @@ public class ProductTypeAdminAction {
     }
 
 
+    @PreAuthorize("hasPermission('/mall/product/type','read')")
+    @ApiOperation(value = "获取商品类型列表", notes = "获取商品类型列表")
+    @PostMapping("/page")
+    public Page<ProductTypeVO> getProductTypeVOPage(GetProductTypeListDTO request, Pageable pageable){
+        return productTypeService.getProductTypeVOPage(request,pageable);
+    }
+
+
     @PreAuthorize("hasPermission('/mall/product/type','save')")
     @ApiOperation(value = "保存商品类型参数", notes = "保存商品类型参数")
     @PostMapping("/attribute/save")
@@ -101,7 +109,6 @@ public class ProductTypeAdminAction {
     public void saveProductTypeAttributeGroup(ProductTypeAttributeGroupDTO request) {
         productTypeService.saveProductTypeAttributeGroup(request);
     }
-
 
     @PreAuthorize("hasPermission('/mall/product/type','save')")
     @ApiOperation(value = "删除商品类型参数分组", notes = "删除商品类型参数分组")

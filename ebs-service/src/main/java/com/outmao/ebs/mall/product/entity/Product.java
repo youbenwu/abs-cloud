@@ -3,6 +3,7 @@ package com.outmao.ebs.mall.product.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.outmao.ebs.common.vo.Item;
 import com.outmao.ebs.bbs.common.data.BindingSubjectId;
+import com.outmao.ebs.common.vo.Location;
 import lombok.Data;
 import javax.persistence.*;
 import java.io.Serializable;
@@ -32,7 +33,6 @@ public class Product implements Serializable, BindingSubjectId {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
-
 
 	/**
 	 *
@@ -84,11 +84,12 @@ public class Product implements Serializable, BindingSubjectId {
 
 	/**
 	 *
+	 *
 	 * 店铺中的商品分类ID
 	 *
 	 *
 	 */
-	private Long sCategoryId;
+	private Long spcId;
 
 	/**
 	 *
@@ -129,32 +130,32 @@ public class Product implements Serializable, BindingSubjectId {
 	/**
 	 *
 	 * 商品SKUS属性
-	 * 
+	 *
 	 */
 	@JsonIgnore
 	@OneToMany(mappedBy = "product", cascade = CascadeType.REFRESH, fetch = FetchType.LAZY)
 	@OrderBy(value = "id ASC")
 	private List<ProductSku> skus;
-
-	/**
-	 *
-	 * 商品轮播图片
-	 *
-	 */
-	@JsonIgnore
-	@OneToMany(mappedBy = "product", cascade = CascadeType.REFRESH, fetch = FetchType.LAZY)
-	@OrderBy(value = "sort ASC")
-	private List<ProductImage> images;
-
-	/**
-	 *
-	 * 商品详情图片
-	 *
-	 */
-	@JsonIgnore
-	@OneToMany(mappedBy = "product", cascade = CascadeType.REFRESH, fetch = FetchType.LAZY)
-	@OrderBy(value = "sort ASC")
-	private List<ProductMedia> medias;
+//
+//	/**
+//	 *
+//	 * 商品轮播图片
+//	 *
+//	 */
+//	@JsonIgnore
+//	@OneToMany(mappedBy = "product", cascade = CascadeType.REFRESH, fetch = FetchType.LAZY)
+//	@OrderBy(value = "sort ASC")
+//	private List<ProductImage> images;
+//
+//	/**
+//	 *
+//	 * 商品详情图片
+//	 *
+//	 */
+//	@JsonIgnore
+//	@OneToMany(mappedBy = "product", cascade = CascadeType.REFRESH, fetch = FetchType.LAZY)
+//	@OrderBy(value = "sort ASC")
+//	private List<ProductMedia> medias;
 
 
 	/**
@@ -162,18 +163,29 @@ public class Product implements Serializable, BindingSubjectId {
 	 * 产品所在地址
 	 *
 	 */
-	@OneToOne(cascade = CascadeType.REFRESH,fetch = FetchType.LAZY)
-	@JoinColumn(name = "addressId")
-	private ProductAddress address;
+//	@OneToOne(cascade = CascadeType.REFRESH,fetch = FetchType.LAZY)
+//	@JoinColumn(name = "addressId")
+//	private ProductAddress address;
+	private Long addressId;
 
 	/**
 	 *
 	 * 销售地址
 	 *
 	 */
-	@OneToOne(cascade = CascadeType.REFRESH,fetch = FetchType.LAZY)
-	@JoinColumn(name = "salesAddressId")
-	private ProductSalesAddress salesAddress;
+//	@OneToOne(cascade = CascadeType.REFRESH,fetch = FetchType.LAZY)
+//	@JoinColumn(name = "salesAddressId")
+//	private ProductSalesAddress salesAddress;
+	private Long salesAddressId;
+
+
+	/**
+	 *
+	 * 位置经纬度
+	 *
+	 */
+	@Embedded
+	private Location location;
 
 
 	/**
@@ -209,7 +221,7 @@ public class Product implements Serializable, BindingSubjectId {
 
 	/**
 	 *
-	 * 拼音
+	 * 标题拼音
 	 *
 	 */
 	private String letter;
@@ -379,19 +391,47 @@ public class Product implements Serializable, BindingSubjectId {
 	 */
 	private Boolean custom;
 
+
 	/**
 	 *
-	 * 商品状态(0未上架，1已上架)
+	 * 上市时间
+	 *
+	 */
+	private Date marketTime;
+
+	/**
+	 *
+	 * 交付时间
+	 * 预售商品交付时间
+	 *
+	 */
+	private Date deliveryTime;
+
+
+	/**
+	 *
+	 * 状态(0--正常 1--禁用 2--未审核 3--审核中 4--审核失败)
 	 *
 	 */
 	private int status;
 
 	/**
 	 *
-	 * 审核状态(0--正常 1--禁用 2--未审核 3--审核中 4--审核成功 5--审核失败 6--删除)
+	 * 状态备注
 	 *
 	 */
-	private int auditStatus;
+	private String statusRemark;
+
+
+	/**
+	 *
+	 * 商品是否上架
+	 * 未上架商品不会在前端展示
+	 * 已经上架商品会在前端展示
+	 *
+	 *
+	 */
+	private boolean onSell;
 
 	/**
 	 *
@@ -400,19 +440,6 @@ public class Product implements Serializable, BindingSubjectId {
 	 */
 	private int salesStatus;
 
-	/**
-	 *
-	 * 开盘时间
-	 *
-	 */
-	private Date marketTime;
-
-	/**
-	 *
-	 * 交付时间
-	 *
-	 */
-	private Date deliveryTime;
 
 	/**
 	 * 
@@ -426,6 +453,13 @@ public class Product implements Serializable, BindingSubjectId {
 	 * 
 	 */
 	private Date updateTime;
+
+	/**
+	 *
+	 * 是否启用仓库库存
+	 *
+	 */
+	private boolean useStoreStock;
 
 
 	@Override

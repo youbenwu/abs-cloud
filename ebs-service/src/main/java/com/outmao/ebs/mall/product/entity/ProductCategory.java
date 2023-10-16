@@ -1,7 +1,6 @@
 package com.outmao.ebs.mall.product.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import javax.persistence.*;
 import java.io.Serializable;
@@ -75,6 +74,15 @@ public class ProductCategory implements Serializable {
 
 	/**
 	 *
+	 * 搜索关键字
+	 *
+	 */
+	@Lob
+	@Basic(fetch = FetchType.LAZY)
+	private String keyword;
+
+	/**
+	 *
 	 * 分类图片,分类的图片地址
 	 *
 	 */
@@ -105,7 +113,6 @@ public class ProductCategory implements Serializable {
 	 * 商品类型
 	 *
 	 */
-	@ApiModelProperty(name = "productType", value = "商品类型")
 	private int productType;
 
 	/**

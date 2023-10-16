@@ -32,11 +32,6 @@ public class ProductCategoryDTO {
     private String description;
 
 
-    /**
-     *
-     * 商品类型
-     *
-     */
     @ApiModelProperty(name = "productType", value = "商品类型")
     private int productType;
 

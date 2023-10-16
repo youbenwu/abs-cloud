@@ -1,6 +1,12 @@
 package com.outmao.ebs.mall.product.common.constant;
 
 
+/**
+ *
+ * 商品类型  0--普通商品 11--新楼盘 12--二手房 13--出租房 1--虚拟商品 20--广告频道 30--酒店服务 100--外部携程旅游商品
+ *
+ * **/
+
 public enum ProductType {
 
 
@@ -11,7 +17,11 @@ public enum ProductType {
     HOUSE_OLD(12, "二手房"),
     HOUSE_RENT(13, "出租房"),
 
-    ADVERT_CHANNEL(20, "广告位");
+    ADVERT_CHANNEL(20, "广告频道"),
+
+    HOTEL_SERVICE(30, "酒店服务"),
+
+    OUT_CTRIP(100, "外部携程旅游商品");
 
     private int type;
 

@@ -18,12 +18,6 @@ public class ProductPropertyItemDTO {
      */
     private String value;
 
-//    /**
-//     *
-//     * 用于计算的值
-//     *
-//     */
-//    private String v;
 
 
 }

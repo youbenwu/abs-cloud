@@ -18,6 +18,7 @@ public class ProductTypeAttributeVOConver implements BeanConver<QProductTypeAttr
         vo.setKey(t.get(e.key));
         vo.setName(t.get(e.name));
         vo.setValue(t.get(e.value));
+        vo.setSuffix(t.get(e.suffix));
         vo.setInputType(t.get(e.inputType));
         vo.setSearchType(t.get(e.searchType));
         vo.setAssoc(t.get(e.assoc));
@@ -32,6 +33,7 @@ public class ProductTypeAttributeVOConver implements BeanConver<QProductTypeAttr
                 e.group.id,
                 e.key,
                 e.name,
+                e.suffix,
                 e.inputType,
                 e.searchType,
                 e.assoc

@@ -162,7 +162,7 @@ public class MerchantBroker implements Serializable, BindingSubject {
 
     /**
      *
-     * 状态 0--正常 1--禁用 2--未审核 3--审核中 4--审核成功 5--审核失败 6--删除
+     * 状态 0--正常 1--禁用 2--未审核 3--审核中 4--审核失败 5--审核成功
      *
      */
     private int status;

@@ -2,6 +2,7 @@ package com.outmao.ebs.mall.order.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.outmao.ebs.mall.product.common.constant.ProductType;
 import com.outmao.ebs.mall.shop.entity.Shop;
 import com.outmao.ebs.user.entity.User;
 import lombok.Data;
@@ -35,32 +36,41 @@ public class Order  implements Serializable{
 	private Long id;
 
 	/**
-	 * 商家店铺
-	 */
-	@ManyToOne(cascade = CascadeType.REFRESH, optional = false, fetch = FetchType.LAZY)
-	@JoinColumn(name = "shopId")
-	private Shop shop;
-
-	/**
-	 * 买家用户
-	 */
-	@ManyToOne(cascade = CascadeType.REFRESH, optional = false, fetch = FetchType.LAZY)
-	@JoinColumn(name = "userId")
-	private User user;
-
-	/**
 	 * 组织ID
 	 */
+	@Column(nullable = false,updatable = false)
 	private Long orgId;
 
 	/**
 	 * 商家ID
 	 */
+	@Column(nullable = false,updatable = false)
 	private Long merchantId;
+
+	/**
+	 * 商家店铺
+	 */
+//	@ManyToOne(cascade = CascadeType.REFRESH, optional = false, fetch = FetchType.LAZY)
+//	@JoinColumn(name = "shopId")
+//	private Shop shop;
+
+	@Column(nullable = false,updatable = false)
+	private Long shopId;
+
+	/**
+	 * 买家用户
+	 */
+//	@ManyToOne(cascade = CascadeType.REFRESH, optional = false, fetch = FetchType.LAZY)
+//	@JoinColumn(name = "userId")
+//	private User user;
+
+	@Column(nullable = false,updatable = false)
+	private Long userId;
 
 	/**
 	 * 卖家用户ID
 	 */
+	@Column(nullable = false,updatable = false)
 	private Long sellerId;
 
 	/**
@@ -69,6 +79,7 @@ public class Order  implements Serializable{
 	 * 在门店下单
 	 *
 	 */
+	@Column(updatable = false)
 	private Long storeId;
 
 
@@ -77,6 +88,8 @@ public class Order  implements Serializable{
 	 */
 	private Long fromStoreId;
 
+
+	//分销相关信息
 
 	/**
 	 * 经纪人ID 计算佣金用
@@ -117,7 +130,7 @@ public class Order  implements Serializable{
 	 * 10 待发货：用户付款商家未发货状态
 	 * 20 待签收：商家发货用户未签收状态
 	 * 30 已完成：用户签收交易完成状态
-	 * 40 已关闭：待付款超时、退款完成进入该状态
+	 * 40 已关闭：待付款超时、全款退款完成进入该状态
 	 *
 	 */
 	private int status;
@@ -169,6 +182,11 @@ public class Order  implements Serializable{
 
 	private Long logisticsId;
 
+
+	/**
+	 * 商品类型
+	 */
+	private Integer type;
 
 
 	//商品信息
@@ -255,5 +273,25 @@ public class Order  implements Serializable{
 	 * 订单关闭时间
 	 */
 	private Date closeTime;
+
+
+	/**
+	 *
+	 * 是否启用仓库库存
+	 *
+	 */
+	private boolean useStoreStock;
+
+
+	//是否外部商品
+	public boolean isOut(){
+		if(type!=null){
+			if(type== ProductType.OUT_CTRIP.getType()){
+				return true;
+			}
+		}
+		return false;
+	}
+
 	
 }

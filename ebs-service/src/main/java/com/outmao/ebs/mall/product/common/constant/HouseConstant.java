@@ -3,39 +3,8 @@ package com.outmao.ebs.mall.product.common.constant;
 public class HouseConstant {
 
 
-    //商品类型 0普通商品 11新楼盘 12二手房 13出租房
-    //普通商品
-    public static final int PRODUCT_TYPE_DEFAULT =0;
-
-    //新房产
-    public static final int PRODUCT_TYPE_HOUSE_NEW =11;
-    //二手房产
-    public static final int PRODUCT_TYPE_HOUSE_OLD =12;
-    //出租房
-    public static final int PRODUCT_TYPE_HOUSE_RENT =13;
-
-
-    //检索类型
-    //能否进行检索 0--不需要检索 1--关键字检索 2--范围检索
-    public static final int SEARCH_TYPE_NONE=0;
-    public static final int SEARCH_TYPE_KEYWORD=1;
-    public static final int SEARCH_TYPE_RANGE=2;
-
-
-    //参数录入方式：0--手动录入 1--单选参数 2--多选参数
-    public static final int INPUT_TYPE_EDIT=0;
-    public static final int INPUT_TYPE_SELECT=1;
-    public static final int INPUT_TYPE_SELECT_MUILT=2;
-
-
-    //唯一属性  单选属性  复选属性
-    public static final int SKU_TYPE_ONE=0;
-    public static final int SKU_TYPE_SELECT=1;
-    public static final int SKU_TYPE_SELECT_MULIT=2;
-
 
     //商品属性健值
-
 
     /**
      * 入住：随时

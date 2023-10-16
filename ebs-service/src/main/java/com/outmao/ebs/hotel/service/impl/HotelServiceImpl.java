@@ -7,6 +7,9 @@ import com.outmao.ebs.hotel.dto.*;
 import com.outmao.ebs.hotel.entity.*;
 import com.outmao.ebs.hotel.service.HotelService;
 import com.outmao.ebs.hotel.vo.*;
+import com.outmao.ebs.mall.merchant.dto.MerchantDTO;
+import com.outmao.ebs.mall.merchant.entity.Merchant;
+import com.outmao.ebs.mall.merchant.service.MerchantService;
 import com.outmao.ebs.org.common.annotation.BindingOrg;
 import com.outmao.ebs.org.dto.MemberDTO;
 import com.outmao.ebs.org.entity.Member;
@@ -67,6 +70,9 @@ public class HotelServiceImpl extends BaseService implements HotelService {
     @Autowired
     private OrgService orgService;
 
+    @Autowired
+    private MerchantService merchantService;
+
 
     @Transactional()
     @Override
@@ -75,9 +81,23 @@ public class HotelServiceImpl extends BaseService implements HotelService {
             findUserOrRegister(request);
         }
         Hotel hotel= hotelDomain.registerHotel(request);
+
+        //给酒店创建组织
         if(hotel.getOrgId()==null){
             orgService.registerOrg(hotel);
         }
+        //给酒店创建商家
+        Merchant merchant=merchantService.getMerchantByUserId(hotel.getUserId());
+        if(merchant==null){
+            MerchantDTO merchantDTO=new MerchantDTO();
+            merchantDTO.setUserId(hotel.getUserId());
+            merchantDTO.setName(hotel.getName());
+            merchant=merchantService.saveMerchant(merchantDTO);
+        }
+        orgService.addOrgParent(merchant.getOrgId(),hotel.getOrgId());
+        hotel.setMerchantId(merchant.getId());
+        hotel.setShopId(merchant.getShopId());
+
         return hotel;
     }
 
@@ -229,6 +249,7 @@ public class HotelServiceImpl extends BaseService implements HotelService {
             hotelDTO.setName(request.getHotelName());
             Contact contact=new Contact();
             contact.setName(request.getName());
+            contact.setPhone(request.getPhone());
             contact.setAddress(request.getAddress());
             hotelDTO.setContact(contact);
             hotel=registerHotel(hotelDTO);

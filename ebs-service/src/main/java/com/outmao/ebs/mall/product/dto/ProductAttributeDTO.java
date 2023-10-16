@@ -39,17 +39,10 @@ public class ProductAttributeDTO {
 
     /**
      *
-     * 用于计算的值
+     * 显示后缀
      *
      */
-    private String v;
-
-    public ProductAttributeDTO(Long id,String key,String name,String value){
-        this.id=id;
-        this.key=key;
-        this.name=name;
-        this.value=value;
-    }
+    private String suffix;
 
 
 }

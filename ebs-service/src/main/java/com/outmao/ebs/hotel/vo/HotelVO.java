@@ -33,6 +33,18 @@ public class HotelVO {
     @ApiModelProperty(name = "orgId", value = "组织ID")
     private Long orgId;
 
+    /**
+     * 商家ID
+     */
+    @ApiModelProperty(name = "merchantId", value = "商家ID")
+    private Long merchantId;
+
+    /**
+     * 店铺ID
+     */
+    @ApiModelProperty(name = "shopId", value = "店铺ID")
+    private Long shopId;
+
 
     /**
      *

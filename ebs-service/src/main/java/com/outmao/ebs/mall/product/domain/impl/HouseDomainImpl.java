@@ -114,7 +114,7 @@ public class HouseDomainImpl extends BaseDomain implements HouseDomain {
 
         if(house.getAddress()!=null) {
             String area=(house.getAddress().getDistrict()!=null?house.getAddress().getDistrict():"")+(house.getAddress().getStreet()!=null?house.getAddress().getStreet():"");
-            attrs.add(new ProductAttributeDTO(null, "houseDistrict", "地区", area));
+            attrs.add(new ProductAttributeDTO(null, "houseDistrict", "地区", area,null));
         }
         if(house.getSkus()!=null&&house.getSkus().size()>0) {
             if(house.getType()==1){
@@ -131,17 +131,17 @@ public class HouseDomainImpl extends BaseDomain implements HouseDomain {
                     }
                 }
                 String area=String.format("建面%d-%dm²",min,max);
-                attrs.add(new ProductAttributeDTO(null, "houseArea", "房屋面积",area ));
+                attrs.add(new ProductAttributeDTO(null, "houseArea", "房屋面积",area ,null));
             }else {
                 HouseSkuDTO sku=house.getSkus().get(0);
                 if(sku.getValue().getHouseArea()!=null) {
                     String area = String.format("%dm²", sku.getValue().getHouseArea());
-                    attrs.add(new ProductAttributeDTO(null, "houseArea", "房屋面积", area));
+                    attrs.add(new ProductAttributeDTO(null, "houseArea", "房屋面积", area,null));
                 }
             }
         }
         if(house.getSkus()!=null&&house.getSkus().size()>0)
-            attrs.add(new ProductAttributeDTO(null,"doorModel","户型",house.getSkus().get(0).getName()));
+            attrs.add(new ProductAttributeDTO(null,"doorModel","户型",house.getSkus().get(0).getName(),null));
 
 
 
@@ -152,31 +152,29 @@ public class HouseDomainImpl extends BaseDomain implements HouseDomain {
          *
          *
          * */
-
-
         if(StringUtil.isNotEmpty(data.getHouseInTime()))
-            attrs.add(new ProductAttributeDTO(null,"houseInTime","入住",data.getHouseInTime()));
+            attrs.add(new ProductAttributeDTO(null,"houseInTime","入住",data.getHouseInTime(),null));
 
         if(StringUtil.isNotEmpty(data.getHouseLease()))
-            attrs.add(new ProductAttributeDTO(null,"houseLease","租期",data.getHouseLease()));
+            attrs.add(new ProductAttributeDTO(null,"houseLease","租期",data.getHouseLease(),null));
 
 
         if(StringUtil.isNotEmpty(data.getHouseFurn()))
-            attrs.add(new ProductAttributeDTO(null,"houseFurn","配备",data.getHouseFurn()));
+            attrs.add(new ProductAttributeDTO(null,"houseFurn","配备",data.getHouseFurn(),null));
 
 
         if(data.getDeposit()!=null)
-            attrs.add(new ProductAttributeDTO(null,"deposit","押金",data.getDeposit()+"元",data.getDeposit().toString()));
+            attrs.add(new ProductAttributeDTO(null,"deposit","押金",data.getDeposit().toString(),"元"));
 
 
         if(data.getRentPay()!=null)
-            attrs.add(new ProductAttributeDTO(null,"rentPay","租金付款方式",data.getRentPay().toString(),data.getRentPay().toString()));
+            attrs.add(new ProductAttributeDTO(null,"rentPay","租金付款方式",data.getRentPay().toString(),null));
 
         if(data.getServiceFee()!=null)
-            attrs.add(new ProductAttributeDTO(null,"serviceFee","服务费",data.getServiceFee()+"元",data.getServiceFee().toString()));
+            attrs.add(new ProductAttributeDTO(null,"serviceFee","服务费",data.getServiceFee().toString(),"元"));
 
         if(data.getAgencyFee()!=null)
-            attrs.add(new ProductAttributeDTO(null,"agencyFee","中介费",data.getAgencyFee()+"元",data.getAgencyFee().toString()));
+            attrs.add(new ProductAttributeDTO(null,"agencyFee","中介费",data.getAgencyFee().toString(),"元"));
 
 
         /**
@@ -190,17 +188,17 @@ public class HouseDomainImpl extends BaseDomain implements HouseDomain {
 
 
         if(StringUtil.isNotEmpty(data.getHouseLift()))
-            attrs.add(new ProductAttributeDTO(null,"houseLift","电梯",data.getHouseLift()));
+            attrs.add(new ProductAttributeDTO(null,"houseLift","电梯",data.getHouseLift(),null));
 
         if(StringUtil.isNotEmpty(data.getHouseDecor()))
-            attrs.add(new ProductAttributeDTO(null,"houseDecor","装修",data.getHouseDecor()));
+            attrs.add(new ProductAttributeDTO(null,"houseDecor","装修",data.getHouseDecor(),null));
         if(StringUtil.isNotEmpty(data.getHouseEra()))
 
         if(StringUtil.isNotEmpty(data.getHouseEra()))
-            attrs.add(new ProductAttributeDTO(null,"houseEra","建造年代",data.getHouseEra()));
+            attrs.add(new ProductAttributeDTO(null,"houseEra","建造年代",data.getHouseEra(),null));
 
         if(StringUtil.isNotEmpty(data.getHouseUse()))
-            attrs.add(new ProductAttributeDTO(null,"houseUse","用途",data.getHouseEra()));
+            attrs.add(new ProductAttributeDTO(null,"houseUse","用途",data.getHouseEra(),null));
 
         if(StringUtil.isNotEmpty(data.getHouseCommunity()))
             attrs.add(new ProductAttributeDTO(null,"houseCommunity","所属小区",data.getHouseCommunity(),data.getHouseCommunityId().toString()));
@@ -221,7 +219,7 @@ public class HouseDomainImpl extends BaseDomain implements HouseDomain {
         g.setAttributes(attrs);
 
         if(StringUtil.isNotEmpty(data.getHouseType()))
-            attrs.add(new ProductAttributeDTO(null,"houseType","建筑类型",data.getHouseType()));
+            attrs.add(new ProductAttributeDTO(null,"houseType","建筑类型",data.getHouseType(),null));
 
         if(data.getHousePropYear()!=null)
             attrs.add(new ProductAttributeDTO(null,"housePropYear","产权年限",data.getHousePropYear()+"年",data.getHousePropYear().toString()));
@@ -258,31 +256,31 @@ public class HouseDomainImpl extends BaseDomain implements HouseDomain {
         g.setAttributes(attrs);
 
         if(StringUtil.isNotEmpty(data.getPropCompany()))
-            attrs.add(new ProductAttributeDTO(null,"propCompany","物业公司",data.getPropCompany()));
+            attrs.add(new ProductAttributeDTO(null,"propCompany","物业公司",data.getPropCompany(),null));
 
         if(data.getPropFee()!=null)
-            attrs.add(new ProductAttributeDTO(null,"propFee","物业费用",data.getPropFee()+"元/m²/月",data.getPropFee().toString()));
+            attrs.add(new ProductAttributeDTO(null,"propFee","物业费用",data.getPropFee().toString(),"元/m²/月"));
 
         if(data.getPropPartThan()!=null)
-            attrs.add(new ProductAttributeDTO(null,"propPartThan","车位比",data.getPropPartThan(),data.getPropPartThan()));
+            attrs.add(new ProductAttributeDTO(null,"propPartThan","车位比",data.getPropPartThan(),null));
 
         if(data.getPropParkNum()!=null)
-            attrs.add(new ProductAttributeDTO(null,"propParkNum","车位数",data.getPropParkNum()+"个",data.getPropParkNum().toString()));
+            attrs.add(new ProductAttributeDTO(null,"propParkNum","车位数",data.getPropParkNum().toString(),"个"));
 
         if(data.getPropPartGNum()!=null)
-            attrs.add(new ProductAttributeDTO(null,"propPartGNum","地上车位数",data.getPropPartGNum()+"个",data.getPropPartGNum().toString()));
+            attrs.add(new ProductAttributeDTO(null,"propPartGNum","地上车位数",data.getPropPartGNum().toString(),"个"));
 
         if(data.getPropPartLNum()!=null)
-            attrs.add(new ProductAttributeDTO(null,"propPartLNum","地下车位数",data.getPropPartLNum()+"个",data.getPropPartLNum().toString()));
+            attrs.add(new ProductAttributeDTO(null,"propPartLNum","地下车位数",data.getPropPartLNum().toString(),"个"));
 
         if(StringUtil.isNotEmpty(data.getPropHeatType()))
-            attrs.add(new ProductAttributeDTO(null,"propHeatType","供暖",data.getPropHeatType()));
+            attrs.add(new ProductAttributeDTO(null,"propHeatType","供暖",data.getPropHeatType(),null));
 
         if(StringUtil.isNotEmpty(data.getPropWaterType()))
-            attrs.add(new ProductAttributeDTO(null,"propWaterType","供水",data.getPropWaterType()));
+            attrs.add(new ProductAttributeDTO(null,"propWaterType","供水",data.getPropWaterType(),null));
 
         if(StringUtil.isNotEmpty(data.getPropPowerType()))
-            attrs.add(new ProductAttributeDTO(null,"propPowerType","供电",data.getPropPowerType()));
+            attrs.add(new ProductAttributeDTO(null,"propPowerType","供电",data.getPropPowerType(),null));
 
         return list;
 
@@ -378,14 +376,14 @@ public class HouseDomainImpl extends BaseDomain implements HouseDomain {
         data.forEach(t->{
             t.getAttributes().forEach(a->{
                 if(a.getKey().equals(HouseConstant.PROPERTY_KEY_HOUSE_COMMUNITY)){
-                    if(StringUtil.isNotEmpty(a.getV()))
-                    attrs.setHouseCommunityId(Long.parseLong(a.getV()));
+                    if(StringUtil.isNotEmpty(a.getSuffix()))
+                    attrs.setHouseCommunityId(Long.parseLong(a.getSuffix()));
                     dataMap.put(a.getKey(),a.getValue());
                 }else if(a.getKey().equals("houseDev")){
-                    attrs.setHouseDevId(a.getV());
+                    attrs.setHouseDevId(a.getSuffix());
                     dataMap.put(a.getKey(),a.getValue());
                 }else {
-                    dataMap.put(a.getKey(), a.getV()==null?a.getValue():a.getV());
+                    dataMap.put(a.getKey(), a.getValue()+(a.getSuffix()==null?"":a.getSuffix()));
                 }
             });
         });

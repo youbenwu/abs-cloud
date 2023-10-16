@@ -6,7 +6,6 @@ import com.outmao.ebs.common.vo.PageDTO;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
-
 import java.util.Date;
 
 
@@ -20,8 +19,8 @@ public class GetProductListDTO extends PageDTO {
     @ApiModelProperty(name = "categoryId", value = "商品分类ID")
     private Long categoryId;
 
-    @ApiModelProperty(name = "sCategoryId", value = "店铺中的商品分类ID")
-    private Long sCategoryId;
+    @ApiModelProperty(name = "spcId", value = "店铺中的商品分类ID")
+    private Long spcId;
 
     @ApiModelProperty(name = "shopId", value = "店铺ID")
     private Long shopId;
@@ -37,11 +36,11 @@ public class GetProductListDTO extends PageDTO {
     private Integer type;
 
 
-    @ApiModelProperty(name = "status", value = "商品状态(0未上架1已上架)")
-    private Integer status;
+    @ApiModelProperty(name = "onSell", value = "商品是否上架")
+    private Boolean onSell;
 
-    @ApiModelProperty(name = "auditStatus", value = "审核状态(0--正常 1--禁用 2--未审核 3--审核中 4--审核成功 5--审核失败 6--删除)")
-    private Integer auditStatus;
+    @ApiModelProperty(name = "status", value = "商品状态(0--正常 1--禁用 2--未审核 3--审核中 4--审核失败)")
+    private Integer status;
 
 
     @ApiModelProperty(name = "priceBetween", value = "价格区间")
@@ -56,7 +55,7 @@ public class GetProductListDTO extends PageDTO {
     private Between<Date> marketTimeBetween;
 
 
-    @ApiModelProperty(name = "near", value = "经度经度 查找附近商品")
+    @ApiModelProperty(name = "near", value = "经纬度 查找附近商品")
     private Location near;
 
 

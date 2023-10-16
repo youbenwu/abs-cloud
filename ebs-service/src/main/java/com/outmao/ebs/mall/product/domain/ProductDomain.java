@@ -19,12 +19,13 @@ public interface ProductDomain {
 
       public void deleteProductById(Long id);
 
+      public Product setProductOnSell(SetProductOnSellDTO request);
+
       public Product setProductStatus(SetProductStatusDTO request);
 
-      public Product setProductAuditStatus(SetProductAuditStatusDTO request);
-
-      //
       public Product setProductStock(SetProductStockDTO request);
+
+      public void skuStockOut(List<ProductSkuStockOutDTO> request);
 
       public long getProductCount();
 

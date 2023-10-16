@@ -2,6 +2,7 @@ package com.outmao.ebs.org.domain.impl;
 
 
 
+import com.alibaba.fastjson.JSON;
 import com.outmao.ebs.common.base.BaseDomain;
 import com.outmao.ebs.common.exception.BusinessException;
 import com.outmao.ebs.org.dao.OrgContactDao;
@@ -22,6 +23,7 @@ import com.outmao.ebs.user.dao.UserDao;
 import com.querydsl.core.types.Predicate;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -29,9 +31,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 
 @Component
@@ -146,6 +146,24 @@ public class OrgDomainImpl extends BaseDomain implements OrgDomain {
         orgDao.delete(org);
     }
 
+    @CacheEvict(value = "cache_org", key = "#id")
+    @Transactional()
+    @Override
+    public Org addOrgParent(Long id, Long parentId) {
+        Org org=orgDao.findByIdForUpdate(id);
+
+
+        Set<Long> parents=new HashSet<>();
+        if(org.getParents()!=null){
+            List<Long> ps= JSON.parseArray(org.getParents(),Long.class);
+            parents.addAll(ps);
+        }
+        parents.add(parentId);
+        org.setParents(JSON.toJSONString(parents));
+
+        orgDao.save(org);
+        return org;
+    }
 
     @Override
     public Org getOrgById(Long id) {

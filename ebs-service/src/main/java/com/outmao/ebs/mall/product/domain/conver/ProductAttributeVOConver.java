@@ -18,7 +18,7 @@ public class ProductAttributeVOConver implements BeanConver<QProductAttribute, P
         vo.setKey(t.get(e.key));
         vo.setName(t.get(e.name));
         vo.setValue(t.get(e.value));
-        vo.setV(t.get(e.v));
+        vo.setSuffix(t.get(e.suffix));
         return vo;
     }
 
@@ -31,7 +31,7 @@ public class ProductAttributeVOConver implements BeanConver<QProductAttribute, P
                 e.key,
                 e.name,
                 e.value,
-                e.v
+                e.suffix
         };
     }
 }

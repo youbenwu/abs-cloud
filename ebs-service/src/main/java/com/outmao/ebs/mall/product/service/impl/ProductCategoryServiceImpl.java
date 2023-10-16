@@ -2,11 +2,14 @@ package com.outmao.ebs.mall.product.service.impl;
 
 import com.outmao.ebs.common.base.BaseService;
 import com.outmao.ebs.mall.product.domain.ProductCategoryDomain;
+import com.outmao.ebs.mall.product.dto.GetProductCategoryListDTO;
 import com.outmao.ebs.mall.product.dto.ProductCategoryDTO;
 import com.outmao.ebs.mall.product.entity.ProductCategory;
 import com.outmao.ebs.mall.product.service.ProductCategoryService;
 import com.outmao.ebs.mall.product.vo.ProductCategoryVO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -36,7 +39,9 @@ public class ProductCategoryServiceImpl extends BaseService implements ProductCa
 
 
     @Override
-    public List<ProductCategoryVO> getAllProductCategoryVO() {
-        return productCategoryDomain.getAllProductCategoryVO();
+    public Page<ProductCategoryVO> getProductCategoryVOPage(GetProductCategoryListDTO request, Pageable pageable) {
+        return productCategoryDomain.getProductCategoryVOPage(request,pageable);
     }
+
+
 }

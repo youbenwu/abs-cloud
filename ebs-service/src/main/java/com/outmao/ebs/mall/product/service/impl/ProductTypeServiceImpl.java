@@ -2,10 +2,7 @@ package com.outmao.ebs.mall.product.service.impl;
 
 import com.outmao.ebs.common.base.BaseService;
 import com.outmao.ebs.mall.product.domain.ProductTypeDomain;
-import com.outmao.ebs.mall.product.dto.ProductTypeAttributeDTO;
-import com.outmao.ebs.mall.product.dto.ProductTypeAttributeGroupDTO;
-import com.outmao.ebs.mall.product.dto.ProductTypeDTO;
-import com.outmao.ebs.mall.product.dto.ProductTypePropertyDTO;
+import com.outmao.ebs.mall.product.dto.*;
 import com.outmao.ebs.mall.product.entity.ProductType;
 import com.outmao.ebs.mall.product.entity.ProductTypeAttribute;
 import com.outmao.ebs.mall.product.entity.ProductTypeAttributeGroup;
@@ -13,6 +10,8 @@ import com.outmao.ebs.mall.product.entity.ProductTypeProperty;
 import com.outmao.ebs.mall.product.service.ProductTypeService;
 import com.outmao.ebs.mall.product.vo.ProductTypeVO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -45,7 +44,10 @@ public class ProductTypeServiceImpl extends BaseService implements ProductTypeSe
         return productTypeDomain.getProductTypeVOList();
     }
 
-
+    @Override
+    public Page<ProductTypeVO> getProductTypeVOPage(GetProductTypeListDTO request, Pageable pageable) {
+        return productTypeDomain.getProductTypeVOPage(request,pageable);
+    }
 
     @Override
     public ProductTypeAttribute saveProductTypeAttribute(ProductTypeAttributeDTO request) {

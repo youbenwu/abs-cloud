@@ -1,7 +1,7 @@
 package com.outmao.ebs.portal.domain.impl;
 
 import com.outmao.ebs.common.base.BaseDomain;
-import com.outmao.ebs.common.vo.DataItemGetter;
+import com.outmao.ebs.common.vo.ItemListGetter;
 import com.outmao.ebs.common.vo.IItem;
 import com.outmao.ebs.portal.dao.RecommendDao;
 import com.outmao.ebs.portal.domain.RecommendDomain;
@@ -80,7 +80,7 @@ public class RecommendDomainImpl extends BaseDomain implements RecommendDomain {
     }
 
     @Override
-    public <T extends IItem> Page<RecommendVO<T>> getRecommendVOPage(GetRecommendListDTO request, DataItemGetter<T> dataItemGetter, Pageable pageable) {
+    public <T extends IItem> Page<RecommendVO<T>> getRecommendVOPage(GetRecommendListDTO request, ItemListGetter<T> itemListGetter, Pageable pageable) {
 
 
         QRecommend e=QRecommend.recommend;
@@ -98,7 +98,7 @@ public class RecommendDomainImpl extends BaseDomain implements RecommendDomain {
         Page<RecommendVO<T>> page=queryPage(e,p,recommendVOConver,pageable);
 
         if(page.getContent().size()>0){
-            List<T> list= dataItemGetter.getDataItemListByIdIn(page.getContent().stream().map(t->t.getItem().getId()).collect(Collectors.toList()));
+            List<T> list= itemListGetter.getItemListByIdIn(page.getContent().stream().map(t->t.getItem().getId()).collect(Collectors.toList()));
             Map<Long,T> map=list.stream().collect(Collectors.toMap(t->t.getId(),t->t));
             page.getContent().forEach(t->{
                 t.setData(map.get(t.getItem().getId()));

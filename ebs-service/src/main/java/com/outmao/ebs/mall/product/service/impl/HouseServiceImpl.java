@@ -1,7 +1,7 @@
 package com.outmao.ebs.mall.product.service.impl;
 
 import com.outmao.ebs.common.base.BaseService;
-import com.outmao.ebs.common.vo.DataItemGetter;
+import com.outmao.ebs.common.vo.ItemListGetter;
 import com.outmao.ebs.bbs.common.data.GetSubjectItemList;
 import com.outmao.ebs.bbs.domain.SubjectDomain;
 import com.outmao.ebs.bbs.vo.SubjectBrowseVO;
@@ -85,9 +85,9 @@ public class HouseServiceImpl extends BaseService implements HouseService {
 
     @Override
     public Page<RecommendVO<HouseVO>> getHouseRecommendVOPage(GetRecommendListDTO request, Pageable pageable) {
-        return recommendDomain.getRecommendVOPage(request,new DataItemGetter<HouseVO>() {
+        return recommendDomain.getRecommendVOPage(request,new ItemListGetter<HouseVO>() {
             @Override
-            public List<HouseVO> getDataItemListByIdIn(Collection<Long> idIn) {
+            public List<HouseVO> getItemListByIdIn(Collection<Long> idIn) {
                 return houseDomain.getHouseVOListByIdIn(idIn);
             }
         },pageable);

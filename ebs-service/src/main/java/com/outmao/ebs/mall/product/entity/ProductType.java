@@ -3,9 +3,8 @@ package com.outmao.ebs.mall.product.entity;
 
 import com.outmao.ebs.common.vo.SortEntity;
 import lombok.Data;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+
+import javax.persistence.*;
 
 
 /**
@@ -22,6 +21,16 @@ public class ProductType extends SortEntity {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+
+
+	/**
+	 *
+	 * 搜索关键字
+	 *
+	 */
+	@Lob
+	@Basic(fetch = FetchType.LAZY)
+	private String keyword;
 
 
 	/**

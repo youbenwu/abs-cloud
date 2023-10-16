@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.Collection;
 import java.util.List;
 
-@Api(value = "account-mall-product-snapshot", tags = "后台-电商-商品-快照")
+@Api(value = "admin-mall-product-snapshot", tags = "后台-电商-商品-快照")
 @RestController
 @RequestMapping("/api/admin/mall/product/snapshot")
 public class ProductSnapshotAdminAction {

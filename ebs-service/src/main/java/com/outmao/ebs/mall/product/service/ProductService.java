@@ -6,12 +6,10 @@ import com.outmao.ebs.portal.dto.GetRecommendListDTO;
 import com.outmao.ebs.portal.vo.RecommendVO;
 import com.outmao.ebs.mall.product.dto.*;
 import com.outmao.ebs.mall.product.entity.Product;
-import com.outmao.ebs.mall.product.vo.HouseVO;
 import com.outmao.ebs.mall.product.vo.ProductVO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-import java.util.Collection;
 import java.util.List;
 
 public interface ProductService {
@@ -24,11 +22,13 @@ public interface ProductService {
 
     public Product getProductById(Long id);
 
+    public Product setProductOnSell(SetProductOnSellDTO request);
+
     public Product setProductStatus(SetProductStatusDTO request);
 
-    public Product setProductAuditStatus(SetProductAuditStatusDTO request);
-
     public Product setProductStock(SetProductStockDTO request);
+
+    public void skuStockOut(List<ProductSkuStockOutDTO> request);
 
     public ProductVO getProductVOById(Long id);
 

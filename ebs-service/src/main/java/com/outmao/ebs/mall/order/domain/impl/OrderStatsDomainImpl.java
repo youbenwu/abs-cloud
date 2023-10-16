@@ -37,13 +37,13 @@ public class OrderStatsDomainImpl extends BaseDomain implements OrderStatsDomain
     public List<StatsOrderVO> getStatsOrderVOListByUserIdIn(Collection<Long> userIdIn) {
         QOrder e=QOrder.order;
 
-        List<Tuple> list=QF.select(e.user.id,e.count(),e.totalAmount.sum()).groupBy(e.user.id).from(e).where(e.user.id.in(userIdIn)).fetch();
+        List<Tuple> list=QF.select(e.userId,e.count(),e.totalAmount.sum()).groupBy(e.userId).from(e).where(e.userId.in(userIdIn)).fetch();
 
         List<StatsOrderVO> vos=new ArrayList<>(list.size());
 
         list.forEach(t->{
             StatsOrderVO vo=new StatsOrderVO();
-            vo.setUserId(t.get(e.user.id));
+            vo.setUserId(t.get(e.userId));
             vo.setCount(t.get(e.count()));
             vo.setAmount(t.get(e.totalAmount.sum()));
             vos.add(vo);

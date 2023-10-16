@@ -21,6 +21,7 @@ public class ProductPropertyItem implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	/**
+	 *
 	 * 唯一不变标识
 	 * 
 	 */
@@ -57,13 +58,6 @@ public class ProductPropertyItem implements Serializable {
 	 */
 	@Column(nullable = false)
 	private String value;
-
-//	/**
-//	 *
-//	 * 用于计算的值
-//	 *
-//	 */
-//	private String v;
 
 
 }

@@ -42,12 +42,26 @@
     ]
   },
   {
+    "name": "商品",
+    "path": "/mall/product",
+    "children":[
+      {
+        "name": "商品分类",
+        "path": "/mall/product/category/list"
+      },
+      {
+        "name": "商品管理",
+        "path": "/mall/product/list"
+      }
+    ]
+  },
+  {
     "name": "订单",
     "path": "/mall/order",
     "children":[
       {
-        "name": "门票订单管理",
-        "path": "/mall/order/ticketorders"
+        "name": "订单管理",
+        "path": "/mall/order/list"
       }
     ]
   },

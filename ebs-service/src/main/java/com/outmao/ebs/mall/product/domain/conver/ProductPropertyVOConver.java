@@ -17,7 +17,7 @@ public class ProductPropertyVOConver implements BeanConver<QProductProperty, Pro
         vo.setProductId(t.get(e.productId));
         vo.setKey(t.get(e.key));
         vo.setName(t.get(e.name));
-        //vo.setType(t.get(e.type));
+        vo.setType(t.get(e.type));
         vo.setValue(t.get(e.value));
         return vo;
     }
@@ -30,7 +30,7 @@ public class ProductPropertyVOConver implements BeanConver<QProductProperty, Pro
                 e.key,
                 e.name,
                 e.value,
-                //e.type,
+                e.type,
         };
     }
 }

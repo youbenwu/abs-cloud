@@ -46,6 +46,9 @@ public class PadRegisterHotelDeviceDTO extends BaseDTO {
     @ApiModelProperty(name = "name", value = "维护人姓名")
     private String name;
 
+    @ApiModelProperty(name = "phone", value = "电话号码")
+    private String phone;
+
 
     @ApiModelProperty(name = "address", value = "酒店信息")
     private Address address;

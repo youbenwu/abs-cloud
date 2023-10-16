@@ -17,6 +17,7 @@ public class ProductTypePropertyVOConver implements BeanConver<QProductTypePrope
         vo.setKey(t.get(e.key));
         vo.setName(t.get(e.name));
         vo.setValue(t.get(e.value));
+        vo.setSuffix(t.get(e.suffix));
         vo.setPropertyType(t.get(e.propertyType));
         vo.setInputType(t.get(e.inputType));
         vo.setSearchType(t.get(e.searchType));
@@ -33,6 +34,7 @@ public class ProductTypePropertyVOConver implements BeanConver<QProductTypePrope
                 e.key,
                 e.name,
                 e.value,
+                e.suffix,
                 e.propertyType,
                 e.inputType,
                 e.searchType,

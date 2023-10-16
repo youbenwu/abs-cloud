@@ -1,15 +1,15 @@
 package com.outmao.ebs.mall.product.domain;
 
 
-import com.outmao.ebs.mall.product.dto.ProductTypeAttributeDTO;
-import com.outmao.ebs.mall.product.dto.ProductTypeAttributeGroupDTO;
-import com.outmao.ebs.mall.product.dto.ProductTypeDTO;
-import com.outmao.ebs.mall.product.dto.ProductTypePropertyDTO;
+import com.outmao.ebs.mall.product.dto.*;
 import com.outmao.ebs.mall.product.entity.ProductType;
 import com.outmao.ebs.mall.product.entity.ProductTypeAttribute;
 import com.outmao.ebs.mall.product.entity.ProductTypeAttributeGroup;
 import com.outmao.ebs.mall.product.entity.ProductTypeProperty;
 import com.outmao.ebs.mall.product.vo.ProductTypeVO;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
 import java.util.List;
 
 public interface ProductTypeDomain {
@@ -21,6 +21,8 @@ public interface ProductTypeDomain {
     public ProductTypeVO getProductTypeVOById(Long id);
 
     public List<ProductTypeVO> getProductTypeVOList();
+
+    public Page<ProductTypeVO> getProductTypeVOPage(GetProductTypeListDTO request, Pageable pageable);
 
 
     public ProductTypeAttribute saveProductTypeAttribute(ProductTypeAttributeDTO request);

@@ -28,7 +28,7 @@ import org.springframework.web.bind.annotation.RestController;
 })
 
 
-@Api(value = "account-mall-house-community", tags = "后台-电商-房源-小区")
+@Api(value = "admin-mall-house-community", tags = "后台-电商-房源-小区")
 @RestController
 @RequestMapping("/api/admin/mall/house/community")
 public class HouseCommunityAdminAction {

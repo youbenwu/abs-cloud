@@ -3,7 +3,6 @@ package com.outmao.ebs.mall.product.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.outmao.ebs.common.vo.Address;
 import lombok.Data;
-
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
@@ -33,10 +32,12 @@ public class ProductSalesAddress extends Address  implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @JsonIgnore
-    @OneToOne(cascade = CascadeType.REFRESH, optional = false, fetch = FetchType.LAZY)
-    @JoinColumn(name = "productId")
-    private Product product;
+//    @JsonIgnore
+//    @OneToOne(cascade = CascadeType.REFRESH, optional = false, fetch = FetchType.LAZY)
+//    @JoinColumn(name = "productId")
+//    private Product product;
+    @Column(unique = true)
+    private Long productId;
 
     /**
      *

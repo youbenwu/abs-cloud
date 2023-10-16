@@ -38,7 +38,7 @@ import java.util.List;
 })
 
 
-@Api(value = "account-mall-product-category", tags = "后台-电商-商品-类别")
+@Api(value = "admin-mall-product-category", tags = "后台-电商-商品-类别")
 @RestController
 @RequestMapping("/api/admin/mall/product/category")
 public class ProductCategoryAdminAction {
@@ -50,7 +50,7 @@ public class ProductCategoryAdminAction {
     @PreAuthorize("hasPermission(null,'/mall/product/category','save')")
     @ApiOperation(value = "保存商品类别", notes = "保存商品类别")
     @PostMapping("/save")
-    public ProductCategory saveProductCategory(@RequestBody ProductCategoryDTO request){
+    public ProductCategory saveProductCategory(ProductCategoryDTO request){
         return productCategoryService.saveProductCategory(request);
     }
 
@@ -70,9 +70,9 @@ public class ProductCategoryAdminAction {
 
     @PreAuthorize("hasPermission(null,'/mall/product/category','read')")
     @ApiOperation(value = "获取商品类别列表(不分级)", notes = "获取商品类别列表(不分级)")
-    @PostMapping("/all")
-    public List<ProductCategoryVO> getAllProductCategoryVO(){
-        return productCategoryService.getAllProductCategoryVO();
+    @PostMapping("/page")
+    public Page<ProductCategoryVO> getProductCategoryVOPage(GetProductCategoryListDTO request, Pageable pageable) {
+        return productCategoryService.getProductCategoryVOPage(request,pageable);
     }
 
 

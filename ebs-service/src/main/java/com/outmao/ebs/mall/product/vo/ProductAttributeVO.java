@@ -61,11 +61,12 @@ public class ProductAttributeVO {
 
     /**
      *
-     * 用于计算的值
+     * 显示后缀
      *
      */
-    @ApiModelProperty(name = "v", value = "用于计算的值")
-    private String v;
+    @ApiModelProperty(name = "suffix", value = "显示后缀")
+    private String suffix;
+
 
 
 }

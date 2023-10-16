@@ -16,10 +16,12 @@ public class ProductVOConver implements BeanConver<QProduct,ProductVO> {
         vo.setSubjectId(t.get(e.subjectId));
         vo.setShopId(t.get(e.shopId));
         vo.setCategoryId(t.get(e.categoryId));
+        vo.setSpcId(t.get(e.spcId));
         vo.setBrandId(t.get(e.brandId));
         vo.setCounselorId(t.get(e.counselorId));
-        vo.setAddressId(t.get(e.address.id));
-        vo.setSalesAddressId(t.get(e.salesAddress.id));
+        vo.setAddressId(t.get(e.addressId));
+        vo.setSalesAddressId(t.get(e.salesAddressId));
+        vo.setLocation(t.get(e.location));
         vo.setType(t.get(e.type));
         vo.setQrCode(t.get(e.qrCode));
         vo.setUrl(t.get(e.url));
@@ -47,12 +49,14 @@ public class ProductVOConver implements BeanConver<QProduct,ProductVO> {
         vo.setVolume(t.get(e.volume));
         vo.setCustom(t.get(e.custom));
         vo.setStatus(t.get(e.status));
-        vo.setAuditStatus(t.get(e.auditStatus));
+        vo.setStatusRemark(t.get(e.statusRemark));
+        vo.setOnSell(t.get(e.onSell));
         vo.setSalesStatus(t.get(e.salesStatus));
         vo.setMarketTime(t.get(e.marketTime));
         vo.setDeliveryTime(t.get(e.deliveryTime));
         vo.setCreateTime(t.get(e.createTime));
         vo.setUpdateTime(t.get(e.updateTime));
+        vo.setUseStoreStock(t.get(e.useStoreStock));
         return vo;
     }
 
@@ -63,10 +67,12 @@ public class ProductVOConver implements BeanConver<QProduct,ProductVO> {
                 e.subjectId,
                 e.shopId,
                 e.categoryId,
+                e.spcId,
                 e.brandId,
                 e.counselorId,
-                e.address.id,
-                e.salesAddress.id,
+                e.location,
+                e.addressId,
+                e.salesAddressId,
                 e.type,
                 e.qrCode,
                 e.url,
@@ -94,12 +100,14 @@ public class ProductVOConver implements BeanConver<QProduct,ProductVO> {
                 e.volume,
                 e.custom,
                 e.status,
-                e.auditStatus,
+                e.statusRemark,
+                e.onSell,
                 e.salesStatus,
                 e.marketTime,
                 e.deliveryTime,
                 e.createTime,
-                e.updateTime
+                e.updateTime,
+                e.useStoreStock
         };
     }
 }

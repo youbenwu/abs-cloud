@@ -42,14 +42,14 @@ public class ProductPropertyDTO {
     private String value;
 
 
-//    /**
-//     *
-//     *
-//     * 属性类型 唯一属性  单选属性  复选属性
-//     *
-//     *
-//     */
-//    private int type;
+    /**
+     *
+     *
+     * 属性类型 单选属性  复选属性  唯一属性
+     *
+     *
+     */
+    private int type;
 
 
     public ProductPropertyItemDTO getItem(String itemValue){

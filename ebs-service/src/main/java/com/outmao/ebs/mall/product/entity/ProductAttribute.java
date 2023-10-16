@@ -1,6 +1,5 @@
 package com.outmao.ebs.mall.product.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import javax.persistence.*;
 import java.io.Serializable;
@@ -66,25 +65,10 @@ public class ProductAttribute implements Serializable {
 
 	/**
 	 *
-	 * 用于计算的值
+	 * 显示后缀
 	 *
 	 */
-	private String v;
-
-	/**
-	 *
-	 * 相同参数值的商品是否关联
-	 *
-	 */
-	private boolean linked;
-
-
-	/**
-	 *
-	 * 能否进行检索 0--不需要检索 1--关键字检索 2--范围检索
-	 *
-	 */
-	private int searchType;
+	private String suffix;
 
 
 

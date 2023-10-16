@@ -40,11 +40,6 @@ public class OrderProduct implements Serializable {
 	private Long snapshotId;
 
 	/**
-	 * 商品类型
-	 */
-	private Integer type;
-
-	/**
 	 * 商品
 	 */
     @Column(nullable = false)

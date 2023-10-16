@@ -15,8 +15,8 @@ public class OrderVOConver implements BeanConver<QOrder, OrderVO> {
         OrderVO vo=new OrderVO();
 
         vo.setId(t.get(e.id));
-        vo.setShopId(t.get(e.shop.id));
-        vo.setUserId(t.get(e.user.id));
+        vo.setShopId(t.get(e.shopId));
+        vo.setUserId(t.get(e.userId));
         vo.setOrgId(t.get(e.orgId));
         vo.setMerchantId(t.get(e.merchantId));
         vo.setStoreId(t.get(e.storeId));
@@ -25,6 +25,7 @@ public class OrderVOConver implements BeanConver<QOrder, OrderVO> {
         vo.setPartnerId(t.get(e.partnerId));
         vo.setCustomerId(t.get(e.customerId));
         vo.setLookId(t.get(e.lookId));
+        vo.setType(t.get(e.type));
         vo.setOrderNo(t.get(e.orderNo));
         vo.setStatus(t.get(e.status));
         vo.setStatusRemark(t.get(e.statusRemark));
@@ -51,8 +52,8 @@ public class OrderVOConver implements BeanConver<QOrder, OrderVO> {
     public Expression<?>[] select(QOrder e) {
         return new Expression[]{
                 e.id,
-                e.shop.id,
-                e.user.id,
+                e.shopId,
+                e.userId,
                 e.orgId,
                 e.merchantId,
                 e.storeId,
@@ -61,6 +62,7 @@ public class OrderVOConver implements BeanConver<QOrder, OrderVO> {
                 e.partnerId,
                 e.customerId,
                 e.lookId,
+                e.type,
                 e.orderNo,
                 e.status,
                 e.statusRemark,

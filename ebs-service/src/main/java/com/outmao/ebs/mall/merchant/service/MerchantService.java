@@ -19,6 +19,8 @@ public interface MerchantService {
 
     public Merchant getMerchant();
 
+    public Merchant getMerchantByUserId(Long userId);
+
     public MerchantVO getMerchantVOById(Long id);
 
     public MerchantVO getMerchantVOByUserId(Long userId);

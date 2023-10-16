@@ -125,7 +125,7 @@ public class MerchantDomainImpl extends BaseDomain implements MerchantDomain {
             //创建店铺
             ShopDTO shopDTO=new ShopDTO();
             shopDTO.setMerchantId(merchant.getId());
-            shopDTO.setTitle(merchant.getName());
+            shopDTO.setTitle(merchant.getId()+":"+merchant.getName());
             Shop shop= shopDomain.saveShop(shopDTO);
             merchant.setShopId(shop.getId());
 
@@ -133,7 +133,7 @@ public class MerchantDomainImpl extends BaseDomain implements MerchantDomain {
             StoreDTO storeDTO=new StoreDTO();
             storeDTO.setMerchantId(merchant.getId());
             storeDTO.setType(1);
-            storeDTO.setTitle("默认仓库");
+            storeDTO.setTitle(merchant.getId()+":"+"默认仓库");
             storeDomain.saveStore(storeDTO);
 
         }

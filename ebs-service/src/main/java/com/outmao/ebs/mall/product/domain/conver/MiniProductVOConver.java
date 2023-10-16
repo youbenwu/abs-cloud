@@ -7,7 +7,7 @@ import com.querydsl.core.Tuple;
 import com.querydsl.core.types.Expression;
 import org.springframework.stereotype.Component;
 
-@Component
+
 public class MiniProductVOConver implements BeanConver<QProduct, MiniProductVO> {
     @Override
     public MiniProductVO fromTuple(Tuple t, QProduct e) {

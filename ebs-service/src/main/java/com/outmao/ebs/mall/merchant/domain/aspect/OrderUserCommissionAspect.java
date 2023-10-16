@@ -53,7 +53,7 @@ public class OrderUserCommissionAspect {
         if(order.getTotalAmount()==0)
             return;
 
-        Merchant merchant=merchantDao.findByShopId(order.getShop().getId());
+        Merchant merchant=merchantDao.findByShopId(order.getShopId());
 
         if(order.getBrokerId()!=null&&merchant.getCommission()>0){
             saveUserCommissionRecord(merchant,order);

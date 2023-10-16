@@ -50,10 +50,17 @@ public class ProductTypeProperty  extends SortEntity {
 	 */
 	private String value;
 
+	/**
+	 *
+	 * 显示后缀
+	 *
+	 */
+	private String suffix;
+
 
 	/**
 	 *
-	 * 唯一属性  单选属性  复选属性
+	 * 单选属性  复选属性  唯一属性
 	 *
 	 */
 	private int propertyType;

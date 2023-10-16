@@ -45,8 +45,18 @@ public class Hotel implements Serializable ,BindingOrg {
     private Long userId;
 
     /**
+     * 商家ID
+     */
+    private Long merchantId;
+
+    /**
+     * 店铺ID
+     */
+    private Long shopId;
+
+    /**
      *
-     * 酒店状态 0--正常 1--禁用 2--未审核 5--审核失败 7--欠费
+     * 酒店状态 0--正常 1--禁用 2--未审核 4--审核失败 5--审核成功 7--欠费
      *
      */
     private int status;

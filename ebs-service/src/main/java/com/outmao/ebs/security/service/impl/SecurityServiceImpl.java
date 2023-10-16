@@ -90,10 +90,24 @@ public class SecurityServiceImpl extends BaseDomain implements SecurityService {
             return true;
         }
         CacheOrgVO org=orgService.getCacheOrgVOById(orgId);
+        if(org.getParents()!=null&&org.getParents().size()>0){
+            for(Long t : org.getParents()){
+                if(SecurityUtil.hasPermission(t,url,permission)){
+                    return true;
+                }
+            }
+        }
         while (org.getParent()!=null){
             org=org.getParent();
             if(SecurityUtil.hasPermission(org.getId(),url,permission)){
                 return true;
+            }
+            if(org.getParents()!=null&&org.getParents().size()>0){
+                for(Long t : org.getParents()){
+                    if(SecurityUtil.hasPermission(t,url,permission)){
+                        return true;
+                    }
+                }
             }
         }
         return false;

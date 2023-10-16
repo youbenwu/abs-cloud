@@ -15,6 +15,8 @@ public class HotelVOConver implements BeanConver<QHotel, HotelVO> {
         vo.setStatusRemark(t.get(e.statusRemark));
         vo.setOrgId(t.get(e.orgId));
         vo.setUserId(t.get(e.userId));
+        vo.setMerchantId(t.get(e.merchantId));
+        vo.setShopId(t.get(e.shopId));
         vo.setName(t.get(e.name));
         vo.setIntro(t.get(e.intro));
         vo.setContact(t.get(e.contact));
@@ -34,6 +36,8 @@ public class HotelVOConver implements BeanConver<QHotel, HotelVO> {
                 e.statusRemark,
                 e.orgId,
                 e.userId,
+                e.merchantId,
+                e.shopId,
                 e.name,
                 e.intro,
                 e.contact,

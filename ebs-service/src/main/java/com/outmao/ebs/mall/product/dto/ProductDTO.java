@@ -1,5 +1,6 @@
 package com.outmao.ebs.mall.product.dto;
 
+import com.outmao.ebs.common.vo.Location;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import java.util.Date;
@@ -45,8 +46,8 @@ public class ProductDTO {
      * 店铺中的商品分类ID
      *
      */
-    @ApiModelProperty(name = "sCategoryId", value = "店铺中的商品分类ID",required = false)
-    private Long sCategoryId;
+    @ApiModelProperty(name = "spcId", value = "店铺中的商品分类ID")
+    private Long spcId;
 
     /**
      *
@@ -78,6 +79,7 @@ public class ProductDTO {
      * 商品规格属性
      *
      */
+    @ApiModelProperty(name = "properties", value = "商品规格属性")
     private List<ProductPropertyDTO> properties;
 
     /**
@@ -104,6 +106,15 @@ public class ProductDTO {
      */
     @ApiModelProperty(name = "salesAddress", value = "销售地址")
     private ProductAddressDTO salesAddress;
+
+
+    /**
+     *
+     * 位置经纬度
+     *
+     */
+    @ApiModelProperty(name = "location", value = "位置经纬度")
+    private Location location;
 
 
     /**
@@ -318,8 +329,8 @@ public class ProductDTO {
      * 商品状态(0未上架，1已上架)
      *
      */
-    @ApiModelProperty(name = "status", value = "商品状态(0--未上架，1--已上架)")
-    private int status;
+    @ApiModelProperty(name = "onSell", value = "商品是否上架")
+    private boolean onSell;
 
     /**
      *
@@ -328,7 +339,6 @@ public class ProductDTO {
      */
     @ApiModelProperty(name = "salesStatus", value = "销售状态（0待售/1在售/2售罄）")
     private int salesStatus;
-
 
     /**
      *

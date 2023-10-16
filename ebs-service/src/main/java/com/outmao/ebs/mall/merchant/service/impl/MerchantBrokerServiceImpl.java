@@ -1,7 +1,7 @@
 package com.outmao.ebs.mall.merchant.service.impl;
 
 import com.outmao.ebs.common.base.BaseService;
-import com.outmao.ebs.common.vo.DataItemGetter;
+import com.outmao.ebs.common.vo.ItemListGetter;
 import com.outmao.ebs.mall.merchant.domain.MerchantBrokerDomain;
 import com.outmao.ebs.mall.merchant.dto.GetMerchantBrokerForServiceDTO;
 import com.outmao.ebs.mall.merchant.dto.GetMerchantBrokerListDTO;
@@ -86,9 +86,9 @@ public class MerchantBrokerServiceImpl extends BaseService implements MerchantBr
 
     @Override
     public Page<RecommendVO<SimpleMerchantBrokerVO>> getMerchantMemberRecommendVOPage(GetRecommendListDTO request, Pageable pageable) {
-        return recommendDomain.getRecommendVOPage(request,new DataItemGetter<SimpleMerchantBrokerVO>() {
+        return recommendDomain.getRecommendVOPage(request,new ItemListGetter<SimpleMerchantBrokerVO>() {
             @Override
-            public List<SimpleMerchantBrokerVO> getDataItemListByIdIn(Collection<Long> idIn) {
+            public List<SimpleMerchantBrokerVO> getItemListByIdIn(Collection<Long> idIn) {
                 return merchantBrokerDomain.getSimpleMerchantBrokerVOListByIdIn(idIn);
             }
         },pageable);

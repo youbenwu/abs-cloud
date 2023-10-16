@@ -2,6 +2,8 @@ package com.outmao.ebs.org.vo;
 
 import lombok.Data;
 import java.io.Serializable;
+import java.util.List;
+import java.util.Set;
 
 @Data
 public class CacheOrgVO implements Serializable {
@@ -10,6 +12,11 @@ public class CacheOrgVO implements Serializable {
      * 自动编号
      */
     private Long id;
+
+    /**
+     * 多个父级组织ID
+     */
+    private Set<Long> parents;
 
 
     /**

@@ -8,6 +8,7 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 /**
  *
@@ -50,6 +51,11 @@ public class Org implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+
+    /**
+     * 多个父级组织ID
+     */
+    private String parents;
 
     /**
      *

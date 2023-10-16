@@ -32,10 +32,12 @@ public class ProductAddress extends Address  implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @JsonIgnore
-    @OneToOne(cascade = CascadeType.REFRESH, optional = false, fetch = FetchType.LAZY)
-    @JoinColumn(name = "productId")
-    private Product product;
+//    @JsonIgnore
+//    @OneToOne(cascade = CascadeType.REFRESH, optional = false, fetch = FetchType.LAZY)
+//    @JoinColumn(name = "productId")
+//    private Product product;
+    @Column(unique = true)
+    private Long productId;
 
     /**
      *

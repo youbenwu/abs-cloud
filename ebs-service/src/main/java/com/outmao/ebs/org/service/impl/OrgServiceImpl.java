@@ -165,6 +165,11 @@ public class OrgServiceImpl extends BaseService implements OrgService, CommandLi
     }
 
     @Override
+    public Org addOrgParent(Long id, Long parentId) {
+        return orgDomain.addOrgParent(id,parentId);
+    }
+
+    @Override
     public Org getOrgById(Long id) {
         return orgDomain.getOrgById(id);
     }

@@ -14,16 +14,26 @@
     ]
   },
   {
-    "name": "消息",
-    "path": "/message",
+    "name": "店铺",
+    "path": "/mall/shop",
     "children":[
       {
-        "name": "消息管理",
-        "path": "/message/list"
+        "name": "店铺商品分类",
+        "path": "/mall/shop/product/category/list"
       },
       {
-        "name": "发消息",
-        "path": "/message/send"
+        "name": "店铺商品管理",
+        "path": "/mall/shop/product/list"
+      }
+    ]
+  },
+  {
+    "name": "订单",
+    "path": "/mall/order",
+    "children":[
+      {
+        "name": "订单管理",
+        "path": "/mall/order/list"
       }
     ]
   },
@@ -58,6 +68,20 @@
       {
         "name": "设备管理",
         "path": "/hotel/devices"
+      }
+    ]
+  },
+  {
+    "name": "消息",
+    "path": "/message",
+    "children":[
+      {
+        "name": "消息管理",
+        "path": "/message/list"
+      },
+      {
+        "name": "发消息",
+        "path": "/message/send"
       }
     ]
   },

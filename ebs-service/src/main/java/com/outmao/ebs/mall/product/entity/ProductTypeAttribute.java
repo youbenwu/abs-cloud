@@ -61,6 +61,13 @@ public class ProductTypeAttribute extends SortEntity {
 
 	/**
 	 *
+	 * 显示后缀
+	 *
+	 */
+	private String suffix;
+
+	/**
+	 *
 	 * 相同参数值的商品是否关联
 	 *
 	 */

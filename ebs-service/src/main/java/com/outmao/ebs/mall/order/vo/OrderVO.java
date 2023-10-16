@@ -79,7 +79,7 @@ public class OrderVO implements SimpleShopSetter , SimpleUserSetter {
             "      10 待发货：用户付款商家未发货状态\n" +
             "      20 待签收：商家发货用户未签收状态\n" +
             "      30 已完成：用户签收交易完成状态\n" +
-            "      40 已关闭：待付款超时、退款完成进入该状态")
+            "      40 已关闭：待付款超时、全额退款完成进入该状态")
     private int status;
 
     /**
@@ -147,6 +147,21 @@ public class OrderVO implements SimpleShopSetter , SimpleUserSetter {
     private OrderLogisticsVO logistics;
 
 
+    /**
+     * 商品类型
+     */
+    @ApiModelProperty(name = "type", value = "商品类型  " +
+            "0--普通商品 " +
+            "11--新楼盘 " +
+            "12--二手房 " +
+            "13--出租房 " +
+            "1--虚拟商品 " +
+            "20--广告频道 " +
+            "30--酒店服务 " +
+            "100--外部携程旅游商品")
+    private Integer type;
+
+
     //商品信息
 
     /**
@@ -206,5 +221,7 @@ public class OrderVO implements SimpleShopSetter , SimpleUserSetter {
 
     @ApiModelProperty(name = "contracts", value = "交易合同")
     private List<OrderContractVO> contracts;
+
+
 
 }

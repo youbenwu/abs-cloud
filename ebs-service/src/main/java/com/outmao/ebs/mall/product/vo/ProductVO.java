@@ -4,6 +4,7 @@ package com.outmao.ebs.mall.product.vo;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.outmao.ebs.bbs.common.data.SubjectItemVO;
 import com.outmao.ebs.common.vo.IItem;
+import com.outmao.ebs.common.vo.Location;
 import com.outmao.ebs.mall.promotion.vo.ProductPromotionVO;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -49,13 +50,21 @@ public class ProductVO extends SubjectItemVO implements IItem {
     @ApiModelProperty(name = "categoryId", value = "商品分类ID")
     private Long categoryId;
 
+    /**
+     *
+     * 店铺中的商品分类ID
+     *
+     */
+    @ApiModelProperty(name = "spcId", value = "店铺中的商品分类ID")
+    private Long spcId;
+
 
     /**
      *
      * 商品品牌
      *
      */
-    @ApiModelProperty(name = "brandId", value = "商品分类ID")
+    @ApiModelProperty(name = "brandId", value = "商品品牌ID")
     private Long brandId;
 
     /**
@@ -130,6 +139,14 @@ public class ProductVO extends SubjectItemVO implements IItem {
 
     @ApiModelProperty(name = "salesAddressId", value = "销售地址ID")
     private Long salesAddressId;
+
+    /**
+     *
+     * 位置经纬度
+     *
+     */
+    @ApiModelProperty(name = "location", value = "位置经纬度")
+    private Location location;
 
     /**
      *
@@ -375,19 +392,27 @@ public class ProductVO extends SubjectItemVO implements IItem {
 
     /**
      *
-     * 商品状态(0未上架，1已上架)
+     * 商品是否上架
      *
      */
-    @ApiModelProperty(name = "status", value = "商品状态(0未上架，1已上架)")
+    @ApiModelProperty(name = "onSell", value = "商品是否上架")
+    private boolean onSell;
+
+    /**
+     *
+     * 审核状态(0--正常 1--禁用 2--未审核 3--审核中 4--审核失败)
+     *
+     */
+    @ApiModelProperty(name = "status", value = "审核状态(0--正常 1--禁用 2--未审核 3--审核中 4--审核失败)")
     private int status;
 
     /**
      *
-     * 审核状态(0--正常 1--禁用 2--未审核 3--审核中 4--审核成功 5--审核失败 6--删除)
+     * 状态备注
      *
      */
-    @ApiModelProperty(name = "auditStatus", value = "审核状态(0--正常 1--禁用 2--未审核 3--审核中 4--审核成功 5--审核失败 6--删除)")
-    private int auditStatus;
+    @ApiModelProperty(name = "statusRemark", value = "状态备注")
+    private String statusRemark;
 
     /**
      *
@@ -427,6 +452,15 @@ public class ProductVO extends SubjectItemVO implements IItem {
      */
     @ApiModelProperty(name = "updateTime", value = "更新时间")
     private Date updateTime;
+
+
+    /**
+     *
+     * 是否启用仓库库存
+     *
+     */
+    @ApiModelProperty(name = "useStoreStock", value = "是否启用仓库库存")
+    private boolean useStoreStock;
 
 
     @ApiModelProperty(name = "promotion", value = "商品促销信息")

@@ -58,16 +58,40 @@
     "path": "/mall",
     "children":[
       {
+        "name": "商品",
+        "path": "/mall/product",
+        "children":[
+          {
+            "name": "商品分类",
+            "path": "/mall/product/category/list"
+          },
+          {
+            "name": "商品管理",
+            "path": "/mall/product/list"
+          }
+        ]
+      },
+      {
+        "name": "店铺",
+        "path": "/mall/shop",
+        "children":[
+          {
+            "name": "商品分类",
+            "path": "/mall/shop/product/category/list"
+          },
+          {
+            "name": "商品管理",
+            "path": "/mall/shop/product/list"
+          }
+        ]
+      },
+      {
         "name": "订单",
         "path": "/mall/order",
         "children":[
           {
             "name": "订单管理",
-            "path": "/mall/order/orders"
-          },
-          {
-            "name": "门票订单管理",
-            "path": "/mall/order/ticketorders"
+            "path": "/mall/order/list"
           }
         ]
       }

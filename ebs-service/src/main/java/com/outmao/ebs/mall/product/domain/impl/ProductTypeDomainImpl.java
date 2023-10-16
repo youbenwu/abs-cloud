@@ -11,19 +11,21 @@ import com.outmao.ebs.mall.product.domain.conver.ProductTypeAttributeGroupVOConv
 import com.outmao.ebs.mall.product.domain.conver.ProductTypeAttributeVOConver;
 import com.outmao.ebs.mall.product.domain.conver.ProductTypePropertyVOConver;
 import com.outmao.ebs.mall.product.domain.conver.ProductTypeVOConver;
-import com.outmao.ebs.mall.product.dto.ProductTypeAttributeDTO;
-import com.outmao.ebs.mall.product.dto.ProductTypeAttributeGroupDTO;
-import com.outmao.ebs.mall.product.dto.ProductTypeDTO;
-import com.outmao.ebs.mall.product.dto.ProductTypePropertyDTO;
+import com.outmao.ebs.mall.product.dto.*;
 import com.outmao.ebs.mall.product.entity.*;
 import com.outmao.ebs.mall.product.vo.ProductTypeAttributeGroupVO;
 import com.outmao.ebs.mall.product.vo.ProductTypeAttributeVO;
 import com.outmao.ebs.mall.product.vo.ProductTypePropertyVO;
 import com.outmao.ebs.mall.product.vo.ProductTypeVO;
+import com.querydsl.core.types.Predicate;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -75,6 +77,8 @@ public class ProductTypeDomainImpl extends BaseDomain implements ProductTypeDoma
         BeanUtils.copyProperties(request,type);
         type.setUpdateTime(new Date());
 
+        type.setKeyword(getKeyword(type));
+
         productTypeDao.save(type);
 
         if(request.getAttributes()!=null) {
@@ -87,6 +91,15 @@ public class ProductTypeDomainImpl extends BaseDomain implements ProductTypeDoma
         return type;
     }
 
+
+    private String getKeyword(ProductType data){
+        StringBuffer s=new StringBuffer();
+        s.append(data.getName());
+        if(!StringUtils.isEmpty(data.getDescription())){
+            s.append(" "+data.getDescription());
+        }
+        return s.toString();
+    }
 
     private void saveProductTypePropertyList(ProductType type,List<ProductTypePropertyDTO> data){
         Map<String,ProductTypePropertyDTO> dataMap=data.stream().collect(Collectors.toMap(t->t.getKey(), t->t,(v1,v2)->v1));
@@ -289,6 +302,20 @@ public class ProductTypeDomainImpl extends BaseDomain implements ProductTypeDoma
     }
 
 
+    @Override
+    public Page<ProductTypeVO> getProductTypeVOPage(GetProductTypeListDTO request, Pageable pageable) {
+
+        QProductType e=QProductType.productType;
+        Predicate p=null;
+
+        if(request.getKeyword()!=null){
+            p=e.keyword.like("%"+request.getKeyword()+"%").and(p);
+        }
+
+        Page<ProductTypeVO> page=queryPage(e,p,productTypeVOConver,pageable);
+
+        return page;
+    }
 
     @Transactional
     @Override

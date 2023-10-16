@@ -10,6 +10,7 @@ import com.outmao.ebs.mall.merchant.entity.MerchantCustomer;
 import com.outmao.ebs.mall.order.common.constant.OrderStatus;
 import com.outmao.ebs.mall.order.domain.OrderContractDomain;
 import com.outmao.ebs.mall.order.domain.OrderLogisticsDomain;
+import com.outmao.ebs.mall.product.common.constant.ProductType;
 import com.outmao.ebs.mall.product.dao.ProductDao;
 import com.outmao.ebs.mall.product.dao.ProductSkuDao;
 import com.outmao.ebs.mall.product.entity.Product;
@@ -93,8 +94,7 @@ public class OrderDomainImpl extends BaseDomain implements OrderDomain {
     private UserDao userDao;
 
 
-    @Autowired
-    private StoreSkuDomain storeSkuDomain;
+
 
 
     @Autowired
@@ -116,12 +116,12 @@ public class OrderDomainImpl extends BaseDomain implements OrderDomain {
         Shop shop=shopDao.getOne(request.getShopId());
         User user=userDao.getOne(request.getUserId());
 
-        order.setShop(shop);
-        order.setUser(user);
-
-        order.setSellerId(shop.getId());
+        order.setShopId(shop.getId());
+        order.setUserId(user.getId());
+        order.setSellerId(shop.getUserId());
         order.setOrgId(shop.getOrgId());
         order.setMerchantId(shop.getMerchantId());
+        order.setUseStoreStock(shop.isUseStoreStock());
 
         MerchantCustomer customer=merchantCustomerDomain.getMerchantCustomer(shop.getMerchantId(),user.getId());
         if(customer!=null){
@@ -136,12 +136,12 @@ public class OrderDomainImpl extends BaseDomain implements OrderDomain {
         //设置订单号
         order.setOrderNo(OrderNoUtil.generateOrderNo());
 
-
-
         BeanUtils.copyProperties(request,order,"address","products");
         order.setCreateTime(new Date());
         order.setUpdateTime(new Date());
         orderDao.save(order);
+
+        saveOrderProductList(order,request.getProducts());
 
         //订单地址
         setAddress(order,request.getAddress());
@@ -149,58 +149,15 @@ public class OrderDomainImpl extends BaseDomain implements OrderDomain {
         //设置物流信息
         setOrderLogistics(order);
 
-        saveOrderProductList(order,request.getProducts());
-
         saveOrderContractList(order,request.getContracts());
 
         order.setKeyword(getKeyword(order));
 
-        //更新库存
-        updateStore(order);
-
         return order;
     }
 
-    private void updateStore(Order order){
 
-        if(!order.getShop().isUseStoreStock()){
-            for(OrderProduct p:order.getProducts()){
-                Product product=productDao.findByIdForUpdate(p.getProductId());
-                ProductSku sku=productSkuDao.findByIdForUpdate(p.getSkuId());
-                if(sku.getStock()<p.getQuantity()){
-                    throw new BusinessException("库存不足");
-                }
-                product.setStock(product.getStock()-p.getQuantity());
-                sku.setStock(sku.getStock()-p.getQuantity());
-            }
-            return ;
-        }
 
-        StoreSkuStockOutDTO dto=new StoreSkuStockOutDTO();
-        dto.setOrderId(order.getId());
-        dto.setStoreId(order.getFromStoreId());
-        if(order.getAddressId()!=null) {
-            OrderAddress address=orderAddressDao.getOne(order.getAddressId());
-            SimpleContact contact=new SimpleContact();
-            contact.setName(address.getName());
-            contact.setPhone(address.getPhone());
-            contact.setAddress(address.toFullAddress());
-            dto.setTo(contact);
-        }
-
-        List<StoreSkuStockOutItemDTO> items=new ArrayList<>(order.getProducts().size());
-
-        order.getProducts().forEach(t->{
-            StoreSkuStockOutItemDTO item=new StoreSkuStockOutItemDTO();
-            item.setSkuId(t.getSkuId());
-            item.setStock(t.getQuantity());
-        });
-
-        dto.setItems(items);
-
-        storeSkuDomain.saveStoreSkuStockOut(dto);
-
-    }
 
     private void setAddress(Order order,OrderAddressDTO data){
         if(data==null)
@@ -220,9 +177,11 @@ public class OrderDomainImpl extends BaseDomain implements OrderDomain {
             BeanUtils.copyProperties(t,p);
             products.add(p);
         }
-        saveSnapshotList(products);
         orderProductDao.saveAll(products);
         order.setProducts(products);
+        if(!order.isOut()) {
+            saveSnapshotList(products);
+        }
     }
 
     private void setOrderLogistics(Order order){
@@ -313,20 +272,6 @@ public class OrderDomainImpl extends BaseDomain implements OrderDomain {
 
         orderDao.save(order);
 
-        if(order.getStatus()==OrderStatus.DELIVERED.getStatus()){
-            SetStoreSkuStockOutStatusDTO dto=new SetStoreSkuStockOutStatusDTO();
-            dto.setOrderId(order.getId());
-            dto.setStatus(StoreSkuStockOutStatus.WAIT_OUT.getStatus());
-            dto.setStatusRemark(StoreSkuStockOutStatus.WAIT_OUT.getStatusRemark());
-            storeSkuDomain.setStoreSkuStockOutStatus(dto);
-        }else if(order.getStatus()==OrderStatus.CLOSED.getStatus()){
-            SetStoreSkuStockOutStatusDTO dto=new SetStoreSkuStockOutStatusDTO();
-            dto.setOrderId(order.getId());
-            dto.setStatus(StoreSkuStockOutStatus.CLOSED.getStatus());
-            dto.setStatusRemark(StoreSkuStockOutStatus.CLOSED.getStatusRemark());
-            storeSkuDomain.setStoreSkuStockOutStatus(dto);
-        }
-
         return order;
     }
 
@@ -396,11 +341,11 @@ public class OrderDomainImpl extends BaseDomain implements OrderDomain {
         }
 
         if(request.getShopId()!=null){
-            p=e.shop.id.eq(request.getShopId()).and(p);
+            p=e.shopId.eq(request.getShopId()).and(p);
         }
 
         if(request.getUserId()!=null){
-            p=e.user.id.eq(request.getUserId()).and(p);
+            p=e.userId.eq(request.getUserId()).and(p);
         }
 
         if(request.getBrokerId()!=null){
