@@ -188,6 +188,13 @@ public class Order  implements Serializable{
 	 */
 	private Integer type;
 
+	/**
+	 *
+	 * 自定义业务参数
+	 *
+	 */
+	private String business;
+
 
 	//商品信息
 

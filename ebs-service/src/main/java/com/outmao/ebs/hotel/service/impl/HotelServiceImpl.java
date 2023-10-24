@@ -62,6 +62,10 @@ public class HotelServiceImpl extends BaseService implements HotelService {
     private HotelCustomerStayDomain hotelCustomerStayDomain;
 
     @Autowired
+    private HotelDeviceOwnerDomain hotelDeviceOwnerDomain;
+
+
+    @Autowired
     private UserService userService;
 
     @Autowired
@@ -444,4 +448,27 @@ public class HotelServiceImpl extends BaseService implements HotelService {
     public Page<HotelCustomerStayVO> getHotelCustomerStayVOPage(GetHotelCustomerStayListDTO request, Pageable pageable) {
         return hotelCustomerStayDomain.getHotelCustomerStayVOPage(request,pageable);
     }
+
+
+    @Override
+    public HotelDeviceOwner saveHotelDeviceOwner(HotelDeviceOwnerDTO request) {
+        return hotelDeviceOwnerDomain.saveHotelDeviceOwner(request);
+    }
+
+    @Override
+    public HotelDeviceOwner addHotelDeviceOwnerIncome(Long userId, double addIncome) {
+        return hotelDeviceOwnerDomain.addHotelDeviceOwnerIncome(userId,addIncome);
+    }
+
+    @Override
+    public HotelDeviceOwner getHotelDeviceOwnerByUserId(Long userId) {
+        return hotelDeviceOwnerDomain.getHotelDeviceOwnerByUserId(userId);
+    }
+
+    @Override
+    public Page<HotelDeviceOwner> getHotelDeviceOwnerPage(GetHotelDeviceOwnerListDTO request, Pageable pageable) {
+        return hotelDeviceOwnerDomain.getHotelDeviceOwnerPage(request,pageable);
+    }
+
+
 }

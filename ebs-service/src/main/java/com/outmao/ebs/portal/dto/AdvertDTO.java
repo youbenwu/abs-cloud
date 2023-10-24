@@ -56,6 +56,9 @@ public class AdvertDTO {
     @Embedded
     private BindingItem item;
 
+    @ApiModelProperty(name = "advertType", value = "广告类型 PPV--普通图片视频广告 PPC--带广告链接 PPA--带二维码")
+    private String advertType;
+
     @ApiModelProperty(name = "title", value = "广告名称")
     private String title;
 
@@ -64,6 +67,12 @@ public class AdvertDTO {
 
     @ApiModelProperty(name = "url", value = "广告跳转地址")
     private String url;
+
+    @ApiModelProperty(name = "video", value = "广告视频地址")
+    private String video;
+
+    @ApiModelProperty(name = "qrCode", value = "广告二维码地址")
+    private String qrCode;
 
     @ApiModelProperty(name = "startTime", value = "广告展示开始时间")
     private Date startTime;

@@ -5,6 +5,7 @@ import com.outmao.ebs.hotel.dto.PadRegisterHotelDeviceDTO;
 import com.outmao.ebs.hotel.dto.RegisterHotelDTO;
 import com.outmao.ebs.hotel.service.HotelService;
 import com.outmao.ebs.hotel.vo.HotelDeviceVO;
+import com.outmao.ebs.hotel.vo.HotelVO;
 import com.outmao.ebs.security.util.SecurityUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -30,6 +31,13 @@ public class HotelAction {
     @PostMapping("/register")
     public void registerHotel(@RequestBody RegisterHotelDTO request) {
          hotelService.registerHotel(request);
+    }
+
+
+    @ApiOperation(value = "获取酒店信息", notes = "获取酒店信息")
+    @PostMapping("/get")
+    public HotelVO getHotelVOById(Long id) {
+        return hotelService.getHotelVOById(id);
     }
 
 

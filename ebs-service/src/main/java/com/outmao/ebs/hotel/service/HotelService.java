@@ -115,4 +115,16 @@ public interface HotelService {
     public Page<HotelCustomerStayVO> getHotelCustomerStayVOPage(GetHotelCustomerStayListDTO request,Pageable pageable);
 
 
+    public HotelDeviceOwner saveHotelDeviceOwner(HotelDeviceOwnerDTO request);
+
+
+    public HotelDeviceOwner addHotelDeviceOwnerIncome(Long userId,double addIncome);
+
+
+    public HotelDeviceOwner getHotelDeviceOwnerByUserId(Long userId);
+
+
+    public Page<HotelDeviceOwner> getHotelDeviceOwnerPage(GetHotelDeviceOwnerListDTO request, Pageable pageable);
+
+
 }
