@@ -35,7 +35,7 @@ public class DataStatsServiceImpl extends BaseService implements DataStatsServic
 
         for(DataStatsType type : types){
             DataStatsDTO dataStatsDTO=new DataStatsDTO();
-            dataStatsDTO.setGroup(type.getGroup());
+            dataStatsDTO.setChannel(type.getChannel());
             dataStatsDTO.setType(type.getType());
             dataStatsDTO.setSuffix(type.getSuffix());
             dataStatsDTO.setValue("0");

@@ -55,16 +55,16 @@ public class DataStatsDomainImpl extends BaseDomain implements DataStatsDomain {
 
     @Override
     public List<DataStats> getDataStatsList(GetDataStatsListDTO request) {
-        return dataStatsDao.findAllByGroup(request.getGroup());
+        return dataStatsDao.findAllByChannel(request.getChannel());
     }
 
 
     @Override
     public Page<DataStats> getDataStatsPage(GetDataStatsListDTO request, Pageable pageable) {
-        if(StringUtils.isEmpty(request.getGroup())){
-            return dataStatsDao.findAllByGroup(pageable);
+        if(StringUtils.isEmpty(request.getChannel())){
+            return dataStatsDao.findAll(pageable);
         }
-        return dataStatsDao.findAllByGroup(request.getGroup(),pageable);
+        return dataStatsDao.findAllByChannel(request.getChannel(),pageable);
     }
 
 }

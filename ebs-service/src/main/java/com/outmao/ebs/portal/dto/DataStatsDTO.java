@@ -25,7 +25,7 @@ public class DataStatsDTO  {
      * 分组
      *
      */
-    private String group;
+    private String channel;
 
     /**
      *

@@ -11,10 +11,10 @@ public interface DataStatsDao extends JpaRepository<DataStats,Long> {
 
     public DataStats findByType(int type);
 
-    public List<DataStats> findAllByGroup(String group);
+    public List<DataStats> findAllByChannel(String channel);
 
-    public Page<DataStats> findAllByGroup(String group, Pageable pageable);
+    public Page<DataStats> findAllByChannel(String channel, Pageable pageable);
 
-    public Page<DataStats> findAllByGroup(Pageable pageable);
+
 
 }

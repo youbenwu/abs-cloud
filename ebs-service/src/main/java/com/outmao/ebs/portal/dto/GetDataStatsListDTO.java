@@ -17,7 +17,7 @@ public class GetDataStatsListDTO {
      * 分组
      *
      */
-    private String group;
+    private String channel;
 
 
 
