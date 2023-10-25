@@ -55,7 +55,7 @@ public class UserActiveDomainImpl extends BaseDomain implements UserActiveDomain
             calendar.set(t.get(e.createTime.year()),t.get(e.createTime.month())-1,t.get(e.createTime.dayOfMonth()));
             vo.setTime(calendar.getTime());
             vo.setIndex(formatter.format(calendar.getTime()));
-            vo.setCount(t.get(e.count()));
+            vo.setCount(t.get(e.userId.countDistinct()));
             vos.add(vo);
         });
         return vos;
