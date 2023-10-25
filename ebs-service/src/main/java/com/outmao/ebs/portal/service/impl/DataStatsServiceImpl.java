@@ -28,13 +28,14 @@ public class DataStatsServiceImpl extends BaseService implements DataStatsServic
     public void run(String... args) throws Exception {
 
 
-        if(dataStatsDomain.getCount()>0)
-            return;
+//        if(dataStatsDomain.getCount()>0)
+//            return;
 
         DataStatsType[] types=DataStatsType.values();
 
         for(DataStatsType type : types){
             DataStatsDTO dataStatsDTO=new DataStatsDTO();
+            dataStatsDTO.setTitle(type.getDesc());
             dataStatsDTO.setChannel(type.getChannel());
             dataStatsDTO.setType(type.getType());
             dataStatsDTO.setSuffix(type.getSuffix());
