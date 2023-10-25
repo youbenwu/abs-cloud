@@ -34,6 +34,7 @@ public class UserActiveDomainImpl extends BaseDomain implements UserActiveDomain
     public UserActive saveUserActive(UserActiveDTO request) {
         UserActive a=new UserActive();
         BeanUtils.copyProperties(request,a);
+        a.setCreateTime(new Date());
         userActiveDao.save(a);
         return a;
     }
