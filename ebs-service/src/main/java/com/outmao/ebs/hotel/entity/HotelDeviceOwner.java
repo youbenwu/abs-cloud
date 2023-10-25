@@ -74,6 +74,14 @@ public class HotelDeviceOwner implements Serializable {
 
     /**
      *
+     * 购买设备总金额
+     *
+     */
+    private Double amount;
+
+
+    /**
+     *
      * 获得总收益
      *
      */

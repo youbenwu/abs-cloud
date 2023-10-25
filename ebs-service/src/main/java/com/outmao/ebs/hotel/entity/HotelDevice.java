@@ -1,7 +1,6 @@
 package com.outmao.ebs.hotel.entity;
 
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import javax.persistence.*;
 import java.io.Serializable;
@@ -36,22 +35,60 @@ public class HotelDevice  implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
+
     /**
-     * 组织ID
+     * 0--未激活
+     * 1--已激活
      */
-    @Column(nullable = false)
+    private int status;
+
+
+    /**
+     * 酒店对应组织ID
+     */
     private Long orgId;
 
-    @JsonIgnore
-    @ManyToOne(cascade = CascadeType.REFRESH, optional = false, fetch = FetchType.LAZY)
-    @JoinColumn(name = "hotelId")
-    private Hotel hotel;
-
+    /**
+     * 酒店ID
+     */
+    private Long hotelId;
 
     /**
-     * 房间号
+     * 绑定房间号
      */
     private String roomNo;
+
+    /**
+     *
+     * 迁眼PAD应用--会同时创建一个虚拟的用户，代表房客用户
+     *
+     */
+    private Long userId;
+
+    /**
+     * 设备号
+     */
+    @Column(unique = true)
+    private String deviceNo;
+
+    /**
+     * 设备投放城市
+     */
+    private String city;
+
+    /**
+     *
+     * 设备所有者用户ID
+     *
+     */
+    private Long ownerId;
+
+    /**
+     *
+     * 购买设备的金额
+     *
+     */
+    private Double amount;
 
     /**
      *
@@ -61,20 +98,6 @@ public class HotelDevice  implements Serializable {
     @Lob
     @Basic(fetch = FetchType.LAZY)
     private String keyword;
-
-
-
-    /**
-     * 迁眼PAD应用--会同时创建一个虚拟的用户，代表房客用户
-     */
-    private Long userId;
-
-
-    /**
-     * 设备号
-     */
-    @Column(unique = true)
-    private String deviceNo;
 
     /**
      * 设备名称

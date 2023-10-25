@@ -269,6 +269,11 @@ public class HotelServiceImpl extends BaseService implements HotelService {
         return saveHotelDevice(deviceDTO);
     }
 
+    @Override
+    public HotelDevice saveHotelDevice(HotelDeviceNewDTO request) {
+        return hotelDeviceDomain.saveHotelDevice(request);
+    }
+
     private void findOrRegisterDeviceUser(HotelDevice request){
         if(request.getOrgId()==null){
             Org org=orgService.getOrgByTargetId(request.getId());

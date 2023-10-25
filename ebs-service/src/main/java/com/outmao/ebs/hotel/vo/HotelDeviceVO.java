@@ -22,6 +22,12 @@ public class HotelDeviceVO {
     private Long id;
 
     /**
+     * 0--未激活
+     * 1--已激活
+     */
+    private int status;
+
+    /**
      * 组织ID
      */
     private Long orgId;
@@ -38,6 +44,8 @@ public class HotelDeviceVO {
     private String roomNo;
 
 
+
+
     /**
      * 迁眼PAD应用--会同时创建一个虚拟的用户，代表房客用户
      */
@@ -50,6 +58,25 @@ public class HotelDeviceVO {
      */
     @ApiModelProperty(name = "deviceNo", value = "设备号")
     private String deviceNo;
+
+    /**
+     * 设备投放城市
+     */
+    private String city;
+
+    /**
+     *
+     * 设备所有者用户ID
+     *
+     */
+    private Long ownerId;
+
+    /**
+     *
+     * 购买设备的金额
+     *
+     */
+    private Double amount;
 
     /**
      * 设备名称

@@ -7,6 +7,8 @@ import com.outmao.ebs.hotel.domain.HotelDeviceDomain;
 import com.outmao.ebs.hotel.domain.conver.HotelDeviceVOConver;
 import com.outmao.ebs.hotel.dto.GetHotelDeviceListDTO;
 import com.outmao.ebs.hotel.dto.HotelDeviceDTO;
+import com.outmao.ebs.hotel.dto.HotelDeviceNewDTO;
+import com.outmao.ebs.hotel.entity.Hotel;
 import com.outmao.ebs.hotel.entity.HotelDevice;
 import com.outmao.ebs.hotel.entity.QHotelDevice;
 import com.outmao.ebs.hotel.vo.HotelDeviceVO;
@@ -43,9 +45,10 @@ public class HotelDeviceDomainImpl extends BaseDomain implements HotelDeviceDoma
 
 
         if(device==null){
+            Hotel hotel=hotelDao.getOne(request.getHotelId());
             device=new HotelDevice();
-            device.setHotel(hotelDao.getOne(request.getHotelId()));
-            device.setOrgId(device.getHotel().getOrgId());
+            device.setHotelId(request.getHotelId());
+            device.setOrgId(hotel.getOrgId());
             device.setCreateTime(new Date());
         }
 
@@ -59,6 +62,16 @@ public class HotelDeviceDomainImpl extends BaseDomain implements HotelDeviceDoma
         return device;
     }
 
+    @Transactional()
+    @Override
+    public HotelDevice saveHotelDevice(HotelDeviceNewDTO request) {
+        HotelDevice device=new HotelDevice();
+        device.setCreateTime(new Date());
+        device.setUpdateTime(new Date());
+        BeanUtils.copyProperties(request,device);
+        hotelDeviceDao.save(device);
+        return device;
+    }
 
     private String getKeyword(HotelDevice device){
         StringBuffer s=new StringBuffer();
@@ -123,7 +136,7 @@ public class HotelDeviceDomainImpl extends BaseDomain implements HotelDeviceDoma
         }
 
         if(request.getHotelId()!=null){
-            p=e.hotel.id.eq(request.getHotelId()).and(p);
+            p=e.hotelId.eq(request.getHotelId()).and(p);
         }
 
         Page<HotelDeviceVO> page=queryPage(e,p,hotelDeviceVOConver,pageable);

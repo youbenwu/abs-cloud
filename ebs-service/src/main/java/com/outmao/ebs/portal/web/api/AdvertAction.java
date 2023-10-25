@@ -44,7 +44,11 @@ public class AdvertAction {
             "智慧旅游页:pad-tours")
     @PostMapping("/list")
     public List<Advert> getAdvertList(String channelCode,int size) {
-        return advertService.getAdvertList(channelCode,size);
+        List<Advert> list= advertService.getAdvertList(channelCode,size);
+        if(list.isEmpty()){
+            list=advertService.getAdvertList("pad-home-def",size);
+        }
+        return list;
     }
 
 

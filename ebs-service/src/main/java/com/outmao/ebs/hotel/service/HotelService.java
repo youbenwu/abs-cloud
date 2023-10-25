@@ -58,6 +58,8 @@ public interface HotelService {
 
     public HotelDevice saveHotelDevice(HotelDeviceDTO request);
 
+    public HotelDevice saveHotelDevice(HotelDeviceNewDTO request);
+
     public HotelDevice saveHotelDevice(PadRegisterHotelDeviceDTO request);
 
     public void deleteHotelDeviceById(Long id);

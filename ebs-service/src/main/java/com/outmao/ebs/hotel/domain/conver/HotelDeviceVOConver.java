@@ -13,9 +13,13 @@ public class HotelDeviceVOConver implements BeanConver<QHotelDevice, HotelDevice
 
         vo.setId(t.get(e.id));
         vo.setOrgId(t.get(e.orgId));
-        vo.setHotelId(t.get(e.hotel.id));
+        vo.setHotelId(t.get(e.hotelId));
         vo.setRoomNo(t.get(e.roomNo));
         vo.setUserId(t.get(e.userId));
+        vo.setStatus(t.get(e.status));
+        vo.setOwnerId(t.get(e.ownerId));
+        vo.setAmount(t.get(e.amount));
+        vo.setCity(t.get(e.city));
         vo.setName(t.get(e.name));
         vo.setModel(t.get(e.model));
         vo.setOs(t.get(e.os));
@@ -32,8 +36,12 @@ public class HotelDeviceVOConver implements BeanConver<QHotelDevice, HotelDevice
         return new Expression[]{
                 e.id,
                 e.orgId,
-                e.hotel.id,
+                e.hotelId,
                 e.roomNo,
+                e.status,
+                e.amount,
+                e.ownerId,
+                e.city,
                 e.userId,
                 e.name,
                 e.model,

@@ -34,7 +34,7 @@ public class HotelDeviceOwnerDTO {
 
     /**
      *
-     * 拥有设备数量
+     * 设备数量
      *
      */
     private int quantity;
@@ -42,10 +42,18 @@ public class HotelDeviceOwnerDTO {
 
     /**
      *
-     * 新增设备数量
+     * 设备单价
      *
      */
-    private int addQuantity;
+    private Double price;
+
+
+    /**
+     *
+     * 设备总价
+     *
+     */
+    private Double amount;
 
 
 }
