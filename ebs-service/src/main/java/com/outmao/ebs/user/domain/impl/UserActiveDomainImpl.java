@@ -76,7 +76,7 @@ public class UserActiveDomainImpl extends BaseDomain implements UserActiveDomain
 
         list.forEach(t->{
             StatsUserActiveCountVO vo=new StatsUserActiveCountVO();
-            calendar.set(t.get(e.createTime.year()),t.get(e.createTime.month())-1,0);
+            calendar.set(t.get(e.createTime.year()),t.get(e.createTime.month())-1,1);
             vo.setTime(calendar.getTime());
             vo.setIndex(formatter.format(calendar.getTime()));
             vo.setCount(t.get(e.userId.countDistinct()));
