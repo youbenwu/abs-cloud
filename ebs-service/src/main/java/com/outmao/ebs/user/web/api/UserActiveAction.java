@@ -27,7 +27,7 @@ public class UserActiveAction {
     private UserActiveService userActiveService;
 
 
-	@PreAuthorize("principal.id.equals(#userId)")
+	@PreAuthorize("principal.id.equals(#request.userId)")
 	@ApiOperation(value = "用户活跃记录", notes = "用户活跃记录")
 	@PostMapping("/save")
 	public UserActive saveUserActive(UserActiveDTO request){
