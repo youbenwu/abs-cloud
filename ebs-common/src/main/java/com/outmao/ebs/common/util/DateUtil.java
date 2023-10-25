@@ -30,6 +30,12 @@ public class DateUtil {
         return calendar.getTime();
     }
 
+    public static Date beforeMonths(int months){
+        Calendar calendar=Calendar.getInstance();
+        calendar.add(MONTH, -months);
+        return calendar.getTime();
+    }
+
     /*
     * 获取当天零点时间
     * */

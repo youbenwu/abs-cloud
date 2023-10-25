@@ -24,7 +24,7 @@ public class OnlineAction {
 	@PreAuthorize("principal.id.equals(#userId)")
 	@ApiOperation(value = "用户维持心跳", notes = "用户维持心跳")
 	@PostMapping("/get")
-	public Online getOnline(Long userId,long time){
+	public Online getOnline(Long userId,Long time){
 		Online online=onlineService.getOnlineByUserId(userId);
 		if(online!=null&&online.getTime()==time){
 			return null;
