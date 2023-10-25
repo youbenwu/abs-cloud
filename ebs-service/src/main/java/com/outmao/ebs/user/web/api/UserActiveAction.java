@@ -35,6 +35,7 @@ public class UserActiveAction {
 	}
 
 
+	@PreAuthorize("permitAll")
 	@ApiOperation(value = "活跃用户数量统计按天", notes = "活跃用户数量统计按天")
 	@PostMapping("/stats/days")
 	public List<StatsUserActiveCountVO> getStatsUserActiveCountVOListByDays(Date fromTime, Date toTime) {
@@ -48,6 +49,7 @@ public class UserActiveAction {
 	}
 
 
+	@PreAuthorize("permitAll")
 	@ApiOperation(value = "活跃用户数量统计按月", notes = "活跃用户数量统计按月")
 	@PostMapping("/stats/months")
 	public List<StatsUserActiveCountVO> getStatsUserActiveCountVOListByMonths(Date fromTime, Date toTime) {
