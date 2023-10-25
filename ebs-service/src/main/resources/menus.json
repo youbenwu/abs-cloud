@@ -36,6 +36,10 @@
       {
         "name": "广告管理",
         "path": "/portal/adverts"
+      },
+      {
+        "name": "数据大屏数据",
+        "path": "/portal/data/stats/list"
       }
     ]
   },

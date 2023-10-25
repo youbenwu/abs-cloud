@@ -28,8 +28,8 @@ public class DataStatsServiceImpl extends BaseService implements DataStatsServic
     public void run(String... args) throws Exception {
 
 
-//        if(dataStatsDomain.getCount()>0)
-//            return;
+        if(dataStatsDomain.getCount()>0)
+            return;
 
         DataStatsType[] types=DataStatsType.values();
 
