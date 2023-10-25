@@ -42,6 +42,7 @@ public class DataStats  implements Serializable {
      * 分组
      *
      */
+    @Column(name = "_group")
     private String group;
 
     /**
