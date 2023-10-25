@@ -29,7 +29,7 @@ import org.springframework.web.bind.annotation.RestController;
 })
 
 
-@Api(value = "account-portal-channel", tags = "后台-门户-频道")
+@Api(value = "admin-portal-channel", tags = "后台-门户-频道")
 @RestController
 @RequestMapping("/api/admin/portal/channel")
 public class ChannelAdminAction {
