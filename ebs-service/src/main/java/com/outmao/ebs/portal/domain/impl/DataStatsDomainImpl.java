@@ -55,6 +55,9 @@ public class DataStatsDomainImpl extends BaseDomain implements DataStatsDomain {
 
     @Override
     public List<DataStats> getDataStatsList(GetDataStatsListDTO request) {
+        if(StringUtils.isEmpty(request.getChannel())){
+            return dataStatsDao.findAll();
+        }
         return dataStatsDao.findAllByChannel(request.getChannel());
     }
 
