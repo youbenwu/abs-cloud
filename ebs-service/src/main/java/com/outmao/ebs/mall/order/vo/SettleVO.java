@@ -35,6 +35,21 @@ public class SettleVO {
     @ApiModelProperty(name = "payChannel", value = "订单支付渠道")
     private String payChannel;
 
+    /**
+     * 商品类型
+     */
+    @ApiModelProperty(name = "type", value = "商品类型  " +
+            "0--普通商品 " +
+            "11--新楼盘 " +
+            "12--二手房 " +
+            "13--出租房 " +
+            "1--虚拟商品 " +
+            "20--广告频道 " +
+            "30--酒店洗衣服务 " +
+            "31--酒店送餐服务 " +
+            "100--外部携程旅游商品")
+    private Integer type;
+
     @ApiModelProperty(name = "shops", value = "按店铺分组结算")
     private List<SettleShopVO> shops;
 
