@@ -282,7 +282,7 @@ public class SettleDomainImpl extends BaseDomain implements SettleDomain {
             orders.add(order);
         }
         ToOrderVO vo=new ToOrderVO();
-        vo.setOrders(orders.stream().map(t->t.getId()).collect(Collectors.toList()));
+        vo.setOrders(orders.stream().map(t->t.getOrderNo()).collect(Collectors.toList()));
         vo.setPayChannel(settle.getPayChannel());
         vo.setTotalAmount(settle.getTotalAmount());
 

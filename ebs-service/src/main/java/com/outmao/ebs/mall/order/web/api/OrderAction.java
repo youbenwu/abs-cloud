@@ -43,6 +43,13 @@ public class OrderAction {
     }
 
 
+    @ApiOperation(value = "获取订单信息", notes = "获取订单信息")
+    @PostMapping("/getByOrderNo")
+    public OrderVO getOrderVOByOrderNo(String orderNo) {
+        return orderService.getOrderVOByOrderNo(orderNo);
+    }
+
+
     //@PreAuthorize("principal.id.equals(#request.userId)")
     @ApiOperation(value = "获取订单信息列表", notes = "获取订单信息列表")
     @PostMapping("/page")

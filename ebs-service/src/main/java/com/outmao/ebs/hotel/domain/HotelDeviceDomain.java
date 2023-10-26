@@ -6,6 +6,7 @@ import com.outmao.ebs.hotel.dto.HotelDeviceNewDTO;
 import com.outmao.ebs.hotel.entity.HotelDevice;
 import com.outmao.ebs.hotel.vo.HotelDeviceVO;
 import com.outmao.ebs.hotel.vo.StatsHotelDeviceCityVO;
+import com.outmao.ebs.hotel.vo.StatsHotelDeviceProvinceVO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -31,6 +32,8 @@ public interface HotelDeviceDomain {
 
     public List<StatsHotelDeviceCityVO> getStatsHotelDeviceCityVOList(Integer size);
 
+
+    public List<StatsHotelDeviceProvinceVO> getStatsHotelDeviceProvinceVOList(Integer size);
 
 
 }

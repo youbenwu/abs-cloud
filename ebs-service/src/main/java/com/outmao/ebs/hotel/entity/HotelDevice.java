@@ -71,6 +71,12 @@ public class HotelDevice  implements Serializable {
     @Column(unique = true)
     private String deviceNo;
 
+
+    /**
+     * 设备投放省
+     */
+    private String province;
+
     /**
      * 设备投放城市
      */

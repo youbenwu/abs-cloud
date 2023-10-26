@@ -7,7 +7,7 @@ import java.util.List;
 @Data
 public class ToOrderVO {
 
-    private List<Long> orders;
+    private List<String> orders;
 
     private String payChannel;
 

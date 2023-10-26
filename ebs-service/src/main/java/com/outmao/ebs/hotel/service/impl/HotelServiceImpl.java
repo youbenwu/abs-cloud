@@ -489,7 +489,8 @@ public class HotelServiceImpl extends BaseService implements HotelService {
     }
 
 
-
-
-
+    @Override
+    public List<StatsHotelDeviceProvinceVO> getStatsHotelDeviceProvinceVOList(Integer size) {
+        return hotelDeviceDomain.getStatsHotelDeviceProvinceVOList(size);
+    }
 }

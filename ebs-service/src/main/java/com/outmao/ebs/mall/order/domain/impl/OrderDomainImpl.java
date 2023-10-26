@@ -157,9 +157,12 @@ public class OrderDomainImpl extends BaseDomain implements OrderDomain {
     }
 
 
+    @Override
+    public Order getOrderByOrderNo(String orderNo) {
+        return orderDao.findByOrderNo(orderNo);
+    }
 
-
-    private void setAddress(Order order,OrderAddressDTO data){
+    private void setAddress(Order order, OrderAddressDTO data){
         if(data==null)
             return;
         OrderAddress address=new OrderAddress();
@@ -244,25 +247,34 @@ public class OrderDomainImpl extends BaseDomain implements OrderDomain {
     @Transactional
     @Override
     public Order setOrderStatus(SetOrderStatusDTO request) {
-        Order order=orderDao.findByIdForUpdate(request.getId());
+
+        Order order=orderDao.findByOrderNo(request.getOrderNo());
 
         if(order.getStatus()==request.getStatus()){
             return order;
         }
 
         if(order.getStatus()==OrderStatus.WAIT_PAY.getStatus()){
-            if(request.getStatus()!=OrderStatus.SUCCESSED.getStatus()&&request.getStatus()!=OrderStatus.CLOSED.getStatus()){
+            //待支付--》支付成功 交易关闭
+            if(request.getStatus()!=OrderStatus.SUCCESSED.getStatus()
+                    &&request.getStatus()!=OrderStatus.CLOSED.getStatus()){
                 throw new BusinessException("不允许的状态");
             }
         }else if(order.getStatus()==OrderStatus.SUCCESSED.getStatus()){
-            if(request.getStatus()!=OrderStatus.DELIVERED.getStatus()&&request.getStatus()!=OrderStatus.CLOSED.getStatus()){
+            //支付成功--》商家发货 交易完成 交易关闭
+            if(request.getStatus()!=OrderStatus.DELIVERED.getStatus()
+                    &&request.getStatus()!=OrderStatus.FINISHED.getStatus()
+                    &&request.getStatus()!=OrderStatus.CLOSED.getStatus()){
                 throw new BusinessException("不允许的状态");
             }
         }else if(order.getStatus()==OrderStatus.DELIVERED.getStatus()){
-            if(request.getStatus()!=OrderStatus.FINISHED.getStatus()&&request.getStatus()!=OrderStatus.CLOSED.getStatus()){
+            //商家发货--》 交易完成 交易关闭
+            if(request.getStatus()!=OrderStatus.FINISHED.getStatus()
+                    &&request.getStatus()!=OrderStatus.CLOSED.getStatus()){
                 throw new BusinessException("不允许的状态");
             }
         }else if(order.getStatus()==OrderStatus.FINISHED.getStatus()){
+            //交易完成--》  交易关闭
             if(request.getStatus()!=OrderStatus.CLOSED.getStatus()){
                 throw new BusinessException("不允许的状态");
             }
@@ -301,13 +313,33 @@ public class OrderDomainImpl extends BaseDomain implements OrderDomain {
         if(vo==null)
             return null;
 
-        vo.setProducts(getOrderProductVOListByOrderId(id));
+        loadData(vo);
+
+        return vo;
+    }
+
+    private void loadData(OrderVO vo){
+        vo.setProducts(getOrderProductVOListByOrderId(vo.getId()));
 
         vo.setAddress(getOrderAddressVOById(vo.getAddressId()));
 
         vo.setLogistics(orderLogisticsDomain.getOrderLogisticsVOById(vo.getLogisticsId()));
 
-        vo.setContracts(orderContractDomain.getOrderContractVOListByOrderId(id));
+        vo.setContracts(orderContractDomain.getOrderContractVOListByOrderId(vo.getId()));
+    }
+
+    @SetSimpleUser
+    @SetSimpleShop
+    @Override
+    public OrderVO getOrderVOByOrderNo(String orderNo) {
+        QOrder e=QOrder.order;
+
+        OrderVO vo=queryOne(e,e.orderNo.eq(orderNo),orderVOConver);
+
+        if(vo==null)
+            return null;
+
+        loadData(vo);
 
         return vo;
     }
@@ -422,6 +454,7 @@ public class OrderDomainImpl extends BaseDomain implements OrderDomain {
             amount=0.0;
         return amount;
     }
+
 
 
 }

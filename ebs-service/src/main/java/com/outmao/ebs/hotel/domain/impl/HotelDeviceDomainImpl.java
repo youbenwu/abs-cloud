@@ -14,6 +14,7 @@ import com.outmao.ebs.hotel.entity.HotelDevice;
 import com.outmao.ebs.hotel.entity.QHotelDevice;
 import com.outmao.ebs.hotel.vo.HotelDeviceVO;
 import com.outmao.ebs.hotel.vo.StatsHotelDeviceCityVO;
+import com.outmao.ebs.hotel.vo.StatsHotelDeviceProvinceVO;
 import com.querydsl.core.Tuple;
 import com.querydsl.core.types.Predicate;
 import com.querydsl.jpa.impl.JPAQuery;
@@ -61,6 +62,7 @@ public class HotelDeviceDomainImpl extends BaseDomain implements HotelDeviceDoma
             device.setOrgId(hotel.getOrgId());
             device.setStatus(1);
             if(hotel.getContact()!=null&&hotel.getContact().getAddress()!=null) {
+                device.setProvince(hotel.getContact().getAddress().getProvince());
                 device.setCity(hotel.getContact().getAddress().getCity());
             }
         }
@@ -193,5 +195,23 @@ public class HotelDeviceDomainImpl extends BaseDomain implements HotelDeviceDoma
         });
         return vos;
     }
+
+    @Override
+    public List<StatsHotelDeviceProvinceVO> getStatsHotelDeviceProvinceVOList(Integer size) {
+        QHotelDevice e=QHotelDevice.hotelDevice;
+        List<Tuple> list=QF.select(e.amount.sum(),e.count(),e.province).groupBy(e.province).from(e).where(e.province.isNotEmpty()).limit(size==null?10000:size).orderBy(e.count().desc()).fetch();
+
+        List<StatsHotelDeviceProvinceVO> vos=new ArrayList<>(list.size());
+
+        list.forEach(t->{
+            StatsHotelDeviceProvinceVO vo=new StatsHotelDeviceProvinceVO();
+            vo.setProvince(t.get(e.province));
+            vo.setCount(t.get(e.count()));
+            vo.setAmount(t.get(e.amount.sum()));
+            vos.add(vo);
+        });
+        return vos;
+    }
+
 
 }

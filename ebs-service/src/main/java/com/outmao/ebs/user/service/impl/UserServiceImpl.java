@@ -8,6 +8,9 @@ import com.outmao.ebs.user.dto.*;
 import com.outmao.ebs.user.entity.*;
 import com.outmao.ebs.user.service.UserService;
 import com.outmao.ebs.user.vo.*;
+import com.outmao.ebs.wallet.dto.RegisterWalletDTO;
+import com.outmao.ebs.wallet.entity.Wallet;
+import com.outmao.ebs.wallet.service.WalletService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.core.annotation.Order;
@@ -29,6 +32,9 @@ public class UserServiceImpl extends BaseService implements UserService, Command
 	@Autowired
 	private UserOauthDomain userOauthDomain;
 
+	@Autowired
+	private WalletService walletService;
+
 
 	@Transactional
 	@Override
@@ -43,10 +49,26 @@ public class UserServiceImpl extends BaseService implements UserService, Command
 	}
 
 
+	@Transactional
 	@Override
 	public User registerUser(RegisterDTO request) {
-		return userDomain.registerUser(request);
+
+		User user= userDomain.registerUser(request);
+
+		registerWallet(user);
+
+		return user;
 	}
+
+	private void registerWallet(User user){
+		RegisterWalletDTO walletDTO=new RegisterWalletDTO();
+		walletDTO.setUserId(user.getId());
+		walletDTO.setPhone(user.getDetails().getPhone());
+		walletDTO.setRealName(user.getDetails().getRealName());
+		Wallet wallet=walletService.registerWallet(walletDTO);
+		user.setWalletId(wallet.getId());
+	}
+
 
 	@Override
 	public User saveUser(UserDTO request) {
@@ -73,9 +95,15 @@ public class UserServiceImpl extends BaseService implements UserService, Command
 		return userDomain.getUserCount();
 	}
 
+	@Transactional
 	@Override
 	public User getUserById(Long id) {
-		return userDomain.getUserById(id);
+
+		User user= userDomain.getUserById(id);
+		if(user.getWalletId()==null){
+			registerWallet(user);
+		}
+		return user;
 	}
 
 	@Override

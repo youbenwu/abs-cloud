@@ -14,6 +14,8 @@ public interface OrderDomain {
 
     public Order setOrderStatus(SetOrderStatusDTO request);
 
+    public Order getOrderByOrderNo(String orderNo);
+
     public void deleteOrderById(Long id);
 
     public long getOrderCount();
@@ -21,6 +23,8 @@ public interface OrderDomain {
     public double getOrderAmount();
 
     public OrderVO getOrderVOById(Long id);
+
+    public OrderVO getOrderVOByOrderNo(String orderNo);
 
     public Page<OrderVO> getOrderVOPage(GetOrderListDTO request, Pageable pageable);
 

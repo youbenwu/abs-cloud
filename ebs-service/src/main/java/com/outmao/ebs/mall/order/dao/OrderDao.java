@@ -14,6 +14,9 @@ public interface OrderDao extends JpaRepository<Order,Long> {
     @Query("select o from Order o where o.id=?1")
     public Order findByIdForUpdate(Long id);
 
+    @Lock(value = LockModeType.PESSIMISTIC_READ)
+    public Order findByOrderNo(String orderNo);
+
     @Query("select sum(o.totalAmount) from Order o")
     public Double sumTotalAmount();
 

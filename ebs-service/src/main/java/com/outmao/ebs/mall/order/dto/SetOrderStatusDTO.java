@@ -9,8 +9,8 @@ import lombok.Data;
 @Data
 public class SetOrderStatusDTO {
 
-    @ApiModelProperty(name = "id", value = "自动编号")
-    private Long id;
+    @ApiModelProperty(name = "orderNo", value = "订单号")
+    private String orderNo;
 
     @ApiModelProperty(name = "status", value = "订单状态\n" +
             "      00 待付款：用户下单未付款状态\n" +

@@ -19,6 +19,7 @@ public class HotelDeviceVOConver implements BeanConver<QHotelDevice, HotelDevice
         vo.setStatus(t.get(e.status));
         vo.setOwnerId(t.get(e.ownerId));
         vo.setAmount(t.get(e.amount));
+        vo.setProvince(t.get(e.province));
         vo.setCity(t.get(e.city));
         vo.setName(t.get(e.name));
         vo.setModel(t.get(e.model));
@@ -42,6 +43,7 @@ public class HotelDeviceVOConver implements BeanConver<QHotelDevice, HotelDevice
                 e.amount,
                 e.ownerId,
                 e.city,
+                e.province,
                 e.userId,
                 e.name,
                 e.model,

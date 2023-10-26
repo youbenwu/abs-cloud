@@ -8,6 +8,7 @@ import com.outmao.ebs.hotel.service.HotelService;
 import com.outmao.ebs.hotel.vo.HotelDeviceVO;
 import com.outmao.ebs.hotel.vo.HotelVO;
 import com.outmao.ebs.hotel.vo.StatsHotelDeviceCityVO;
+import com.outmao.ebs.hotel.vo.StatsHotelDeviceProvinceVO;
 import com.outmao.ebs.security.util.SecurityUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -69,6 +70,13 @@ public class HotelAction {
         return hotelService.getStatsHotelDeviceCityVOList(size);
     }
 
+
+    @PreAuthorize("permitAll")
+    @ApiOperation(value = "设备按省统计数量和金额", notes = "设备按省统计数量和金额")
+    @PostMapping("/device/stats/province")
+    public List<StatsHotelDeviceProvinceVO> getStatsHotelDeviceProvinceVOList(Integer size) {
+        return hotelService.getStatsHotelDeviceProvinceVOList(size);
+    }
 
 
     @ApiOperation(value = "获取机主信息", notes = "获取机主信息")

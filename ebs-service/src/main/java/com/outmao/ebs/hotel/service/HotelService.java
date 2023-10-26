@@ -131,5 +131,7 @@ public interface HotelService {
 
     public List<StatsHotelDeviceCityVO> getStatsHotelDeviceCityVOList(Integer size);
 
+    public List<StatsHotelDeviceProvinceVO> getStatsHotelDeviceProvinceVOList(Integer size);
+
 
 }
