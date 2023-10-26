@@ -180,7 +180,7 @@ public class HotelDeviceDomainImpl extends BaseDomain implements HotelDeviceDoma
     @Override
     public List<StatsHotelDeviceCityVO> getStatsHotelDeviceCityVOList(Integer size) {
         QHotelDevice e=QHotelDevice.hotelDevice;
-        List<Tuple> list=QF.select(e.amount.sum(),e.count(),e.city).groupBy(e.city).from(e).limit(size==null?10000:size).orderBy(e.count().desc()).fetch();
+        List<Tuple> list=QF.select(e.amount.sum(),e.count(),e.city).groupBy(e.city).from(e).where(e.city.isNotEmpty()).limit(size==null?10000:size).orderBy(e.count().desc()).fetch();
 
         List<StatsHotelDeviceCityVO> vos=new ArrayList<>(list.size());
 
