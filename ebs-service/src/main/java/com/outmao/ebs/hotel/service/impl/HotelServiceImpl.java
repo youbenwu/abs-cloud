@@ -335,6 +335,11 @@ public class HotelServiceImpl extends BaseService implements HotelService {
 
 
     @Override
+    public List<StatsHotelDeviceCityVO> getStatsHotelDeviceCityVOList(Integer size) {
+        return hotelDeviceDomain.getStatsHotelDeviceCityVOList(size);
+    }
+
+    @Override
     public HotelWorkOrder saveHotelWorkOrder(HotelWorkOrderDTO request) {
         return hotelWorkOrderDomain.saveHotelWorkOrder(request);
     }
@@ -455,9 +460,17 @@ public class HotelServiceImpl extends BaseService implements HotelService {
     }
 
 
+    @Transactional()
     @Override
     public HotelDeviceOwner saveHotelDeviceOwner(HotelDeviceOwnerDTO request) {
-        return hotelDeviceOwnerDomain.saveHotelDeviceOwner(request);
+        HotelDeviceOwner owner= hotelDeviceOwnerDomain.saveHotelDeviceOwner(request);
+        if(request.getId()==null){
+            //新增
+            for (int i=0;i<request.getQuantity();i++){
+                hotelDeviceDomain.saveHotelDevice(new HotelDeviceNewDTO(request.getUserId(),request.getPrice()));
+            }
+        }
+        return owner;
     }
 
     @Override
@@ -474,6 +487,9 @@ public class HotelServiceImpl extends BaseService implements HotelService {
     public Page<HotelDeviceOwner> getHotelDeviceOwnerPage(GetHotelDeviceOwnerListDTO request, Pageable pageable) {
         return hotelDeviceOwnerDomain.getHotelDeviceOwnerPage(request,pageable);
     }
+
+
+
 
 
 }

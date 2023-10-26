@@ -1,6 +1,7 @@
 package com.outmao.ebs.hotel.domain.impl;
 
 import com.outmao.ebs.common.base.BaseDomain;
+import com.outmao.ebs.common.exception.BusinessException;
 import com.outmao.ebs.hotel.dao.HotelDao;
 import com.outmao.ebs.hotel.dao.HotelDeviceDao;
 import com.outmao.ebs.hotel.domain.HotelDeviceDomain;
@@ -12,7 +13,10 @@ import com.outmao.ebs.hotel.entity.Hotel;
 import com.outmao.ebs.hotel.entity.HotelDevice;
 import com.outmao.ebs.hotel.entity.QHotelDevice;
 import com.outmao.ebs.hotel.vo.HotelDeviceVO;
+import com.outmao.ebs.hotel.vo.StatsHotelDeviceCityVO;
+import com.querydsl.core.Tuple;
 import com.querydsl.core.types.Predicate;
+import com.querydsl.jpa.impl.JPAQuery;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -21,7 +25,9 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 
 @Component
@@ -46,13 +52,20 @@ public class HotelDeviceDomainImpl extends BaseDomain implements HotelDeviceDoma
 
         if(device==null){
             Hotel hotel=hotelDao.getOne(request.getHotelId());
-            device=new HotelDevice();
+            device=getHotelDeviceByNew();
+            if(device==null) {
+                device = new HotelDevice();
+                device.setCreateTime(new Date());
+            }
             device.setHotelId(request.getHotelId());
             device.setOrgId(hotel.getOrgId());
-            device.setCreateTime(new Date());
+            device.setStatus(1);
+            if(hotel.getContact()!=null&&hotel.getContact().getAddress()!=null) {
+                device.setCity(hotel.getContact().getAddress().getCity());
+            }
         }
 
-        BeanUtils.copyProperties(request,device,"id");
+        BeanUtils.copyProperties(request,device,"id","hotelId");
         device.setUpdateTime(new Date());
 
         device.setKeyword(getKeyword(device));
@@ -60,6 +73,25 @@ public class HotelDeviceDomainImpl extends BaseDomain implements HotelDeviceDoma
         hotelDeviceDao.save(device);
 
         return device;
+    }
+
+
+    private HotelDevice getHotelDeviceByNew(){
+        try{
+            QHotelDevice e=QHotelDevice.hotelDevice;
+            HotelDevice device=QF.select(e).from(e).where(e.status.eq(0)).fetchFirst();
+            if(device!=null){
+                device=hotelDeviceDao.findByIdForUpdate(device.getId());
+                if(device.getStatus()!=0){
+                    Thread.sleep(100);
+                    return getHotelDeviceByNew();
+                }
+            }
+            return device;
+        }catch (Exception e){
+            e.printStackTrace();
+            throw new BusinessException("服务器繁忙，请稍候再试！");
+        }
     }
 
     @Transactional()
@@ -145,5 +177,21 @@ public class HotelDeviceDomainImpl extends BaseDomain implements HotelDeviceDoma
         return page;
     }
 
+    @Override
+    public List<StatsHotelDeviceCityVO> getStatsHotelDeviceCityVOList(Integer size) {
+        QHotelDevice e=QHotelDevice.hotelDevice;
+        List<Tuple> list=QF.select(e.amount.sum(),e.count(),e.city).groupBy(e.city).from(e).limit(size==null?10000:size).orderBy(e.count().desc()).fetch();
+
+        List<StatsHotelDeviceCityVO> vos=new ArrayList<>(list.size());
+
+        list.forEach(t->{
+            StatsHotelDeviceCityVO vo=new StatsHotelDeviceCityVO();
+            vo.setCity(t.get(e.city));
+            vo.setCount(t.get(e.count()));
+            vo.setAmount(t.get(e.amount.sum()));
+            vos.add(vo);
+        });
+        return vos;
+    }
 
 }

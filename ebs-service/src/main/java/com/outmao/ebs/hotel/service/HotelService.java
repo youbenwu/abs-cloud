@@ -129,4 +129,7 @@ public interface HotelService {
     public Page<HotelDeviceOwner> getHotelDeviceOwnerPage(GetHotelDeviceOwnerListDTO request, Pageable pageable);
 
 
+    public List<StatsHotelDeviceCityVO> getStatsHotelDeviceCityVOList(Integer size);
+
+
 }

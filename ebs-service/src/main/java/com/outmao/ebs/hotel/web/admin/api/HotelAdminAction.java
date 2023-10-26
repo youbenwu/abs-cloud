@@ -5,6 +5,7 @@ package com.outmao.ebs.hotel.web.admin.api;
 import com.outmao.ebs.common.exception.BusinessException;
 import com.outmao.ebs.hotel.common.constant.HotelRoomStatus;
 import com.outmao.ebs.hotel.dto.*;
+import com.outmao.ebs.hotel.entity.HotelDeviceOwner;
 import com.outmao.ebs.hotel.entity.HotelRoom;
 import com.outmao.ebs.hotel.entity.HotelRoomType;
 import com.outmao.ebs.hotel.service.HotelService;
@@ -67,6 +68,11 @@ import java.util.stream.Collectors;
                 @AccessPermission(title = "保存入住记录",url = "/hotel/customer/stay",name = "save"),
                 @AccessPermission(title = "删除入住记录",url = "/hotel/customer/stay",name = "delete"),
                 @AccessPermission(title = "读取入住记录",url = "/hotel/customer/stay",name = "read"),
+        }),
+        @AccessPermissionParent(title = "机主信息管理",url = "/hotel/device/owner",name = "",children = {
+                @AccessPermission(title = "保存机主信息",url = "/hotel/device/owner",name = "save"),
+                @AccessPermission(title = "删除机主信息",url = "/hotel/device/owner",name = "delete"),
+                @AccessPermission(title = "读取机主信息",url = "/hotel/device/owner",name = "read"),
         }),
 
 })
@@ -379,6 +385,19 @@ public class HotelAdminAction {
         return hotelService.getHotelCustomerStayVOPage(request,pageable);
     }
 
+    @PreAuthorize("hasPermission('/hotel/device/owner','save')")
+    @ApiOperation(value = "保存用户投放的设备信息", notes = "保存用户投放的设备信息")
+    @PostMapping("/device/owner/save")
+    public HotelDeviceOwner saveHotelDeviceOwner(HotelDeviceOwnerDTO request){
+        return hotelService.saveHotelDeviceOwner(request);
+    }
+
+    @PreAuthorize("hasPermission('/hotel/device/owner','read')")
+    @ApiOperation(value = "获取用户投放的设备信息", notes = "获取用户投放的设备信息")
+    @PostMapping("/device/owner/page")
+    public Page<HotelDeviceOwner> getHotelDeviceOwnerPage(GetHotelDeviceOwnerListDTO request, Pageable pageable){
+        return hotelService.getHotelDeviceOwnerPage(request,pageable);
+    }
 
 
 

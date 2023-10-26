@@ -5,8 +5,11 @@ import com.outmao.ebs.hotel.dto.HotelDeviceDTO;
 import com.outmao.ebs.hotel.dto.HotelDeviceNewDTO;
 import com.outmao.ebs.hotel.entity.HotelDevice;
 import com.outmao.ebs.hotel.vo.HotelDeviceVO;
+import com.outmao.ebs.hotel.vo.StatsHotelDeviceCityVO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+
+import java.util.List;
 
 public interface HotelDeviceDomain {
 
@@ -24,6 +27,10 @@ public interface HotelDeviceDomain {
     public HotelDeviceVO getHotelDeviceVOByDeviceNo(String deviceNo);
 
     public Page<HotelDeviceVO> getHotelDeviceVOPage(GetHotelDeviceListDTO request, Pageable pageable);
+
+
+    public List<StatsHotelDeviceCityVO> getStatsHotelDeviceCityVOList(Integer size);
+
 
 
 }

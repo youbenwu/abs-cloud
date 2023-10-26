@@ -3,9 +3,11 @@ package com.outmao.ebs.hotel.web.api;
 
 import com.outmao.ebs.hotel.dto.PadRegisterHotelDeviceDTO;
 import com.outmao.ebs.hotel.dto.RegisterHotelDTO;
+import com.outmao.ebs.hotel.entity.HotelDeviceOwner;
 import com.outmao.ebs.hotel.service.HotelService;
 import com.outmao.ebs.hotel.vo.HotelDeviceVO;
 import com.outmao.ebs.hotel.vo.HotelVO;
+import com.outmao.ebs.hotel.vo.StatsHotelDeviceCityVO;
 import com.outmao.ebs.security.util.SecurityUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -15,6 +17,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 
 @Api(value = "hotel", tags = "酒店")
@@ -55,6 +59,22 @@ public class HotelAction {
     @PostMapping("/device/getByDeviceNo")
     public HotelDeviceVO getHotelDeviceVOByDeviceNo(String deviceNo){
         return hotelService.getHotelDeviceVOByDeviceNo(deviceNo);
+    }
+
+
+    @PreAuthorize("permitAll")
+    @ApiOperation(value = "设备按城市统计数量和金额", notes = "设备按城市统计数量和金额")
+    @PostMapping("/device/stats/city")
+    public List<StatsHotelDeviceCityVO> getStatsHotelDeviceCityVOList(Integer size) {
+        return hotelService.getStatsHotelDeviceCityVOList(size);
+    }
+
+
+
+    @ApiOperation(value = "获取机主信息", notes = "获取机主信息")
+    @PostMapping("/device/owner/get")
+    public HotelDeviceOwner getHotelDeviceOwnerByUserId(Long userId){
+        return hotelService.getHotelDeviceOwnerByUserId(userId);
     }
 
 

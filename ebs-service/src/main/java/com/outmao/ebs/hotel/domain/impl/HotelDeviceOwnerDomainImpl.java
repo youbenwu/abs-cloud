@@ -30,15 +30,19 @@ public class HotelDeviceOwnerDomainImpl extends BaseDomain implements HotelDevic
     @Transactional()
     @Override
     public HotelDeviceOwner saveHotelDeviceOwner(HotelDeviceOwnerDTO request) {
-        HotelDeviceOwner owner=request.getId()==null?null:hotelDeviceOwnerDao.getOne(request.getId());
+        HotelDeviceOwner owner=hotelDeviceOwnerDao.findByUserId(request.getUserId());
         if(owner==null){
-            owner=hotelDeviceOwnerDao.findByUserId(request.getUserId());
-            if(owner==null){
-                owner=new HotelDeviceOwner();
-                owner.setCreateTime(new Date());
-                owner.setUserId(request.getUserId());
+            owner=new HotelDeviceOwner();
+            owner.setCreateTime(new Date());
+            owner.setUserId(request.getUserId());
+        }
 
-            }
+        if(request.getId()==null){
+            owner.setAmount(owner.getAmount()+request.getAmount());
+            owner.setQuantity(owner.getQuantity()+request.getQuantity());
+        }else{
+            owner.setAmount(request.getAmount());
+            owner.setQuantity(request.getQuantity());
         }
 
         BeanUtils.copyProperties(request,owner,"id","userId","quantity","amount");
@@ -51,6 +55,9 @@ public class HotelDeviceOwnerDomainImpl extends BaseDomain implements HotelDevic
 
         return owner;
     }
+
+
+
 
     public String getKeyword(HotelDeviceOwner data){
         StringBuffer s=new StringBuffer();

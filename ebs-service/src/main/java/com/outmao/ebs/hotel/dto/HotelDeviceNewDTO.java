@@ -1,7 +1,9 @@
 package com.outmao.ebs.hotel.dto;
 
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 
 /**
@@ -9,6 +11,8 @@ import lombok.Data;
  * 新增设备绑定用户
  *
  */
+@NoArgsConstructor
+@AllArgsConstructor
 @Data
 public class HotelDeviceNewDTO {
 
