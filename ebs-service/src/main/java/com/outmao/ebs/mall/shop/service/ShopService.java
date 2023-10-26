@@ -32,7 +32,10 @@ public interface ShopService {
 
     public void deleteShopProductCategoryById(Long id);
 
-    public List<ShopProductCategoryVO> getShopProductCategoryVOList(Long shopId);
+    public List<ShopProductCategoryVO> getShopProductCategoryVOList(GetShopProductCategoryListDTO request);
+
+    public Page<ShopProductCategoryVO> getShopProductCategoryVOPage(GetShopProductCategoryListDTO request, Pageable pageable);
+
 
 
 

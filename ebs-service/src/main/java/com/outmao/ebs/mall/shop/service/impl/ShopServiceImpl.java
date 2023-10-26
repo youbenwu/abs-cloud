@@ -61,11 +61,14 @@ public class ShopServiceImpl extends BaseService implements ShopService {
         shopProductCategoryDomain.deleteShopProductCategoryById(id);
     }
 
+
     @Override
-    public List<ShopProductCategoryVO> getShopProductCategoryVOList(Long shopId) {
-        return shopProductCategoryDomain.getShopProductCategoryVOList(shopId);
+    public List<ShopProductCategoryVO> getShopProductCategoryVOList(GetShopProductCategoryListDTO request) {
+        return shopProductCategoryDomain.getShopProductCategoryVOList(request);
     }
 
-
-
+    @Override
+    public Page<ShopProductCategoryVO> getShopProductCategoryVOPage(GetShopProductCategoryListDTO request, Pageable pageable) {
+        return shopProductCategoryDomain.getShopProductCategoryVOPage(request,pageable);
+    }
 }

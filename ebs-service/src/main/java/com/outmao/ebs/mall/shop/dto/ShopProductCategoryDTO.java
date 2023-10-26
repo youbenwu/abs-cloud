@@ -21,6 +21,14 @@ public class ShopProductCategoryDTO {
     @ApiModelProperty(name = "sort", value = "分类排序")
     private int sort;
 
+    /**
+     *
+     * 商品类型
+     *
+     */
+    @ApiModelProperty(name = "productType", value = "商品类型 30--酒店干洗服务 31--酒店送餐服务")
+    private Integer productType;
+
     @ApiModelProperty(name = "image", value = "分类图片")
     private String image;
 
@@ -29,5 +37,6 @@ public class ShopProductCategoryDTO {
 
     @ApiModelProperty(name = "description", value = "分类描述")
     private String description;
+
 
 }

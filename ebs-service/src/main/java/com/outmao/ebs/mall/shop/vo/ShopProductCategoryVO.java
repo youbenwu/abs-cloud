@@ -63,6 +63,14 @@ public class ShopProductCategoryVO {
 
     /**
      *
+     * 商品类型
+     *
+     */
+    @ApiModelProperty(name = "productType", value = "商品类型 30--酒店干洗服务 31--酒店送餐服务")
+    private Integer productType;
+
+    /**
+     *
      * 分类图片,分类的图片地址
      *
      */

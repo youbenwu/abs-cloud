@@ -104,8 +104,8 @@ public class ShopAdminAction {
     @PreAuthorize("hasPermission('/mall/shop/product/category','read')")
     @ApiOperation(value = "获取店铺分类信息列表", notes = "获取店铺分类信息列表")
     @PostMapping("/product/category/list")
-    public List<ShopProductCategoryVO> getShopProductCategoryVOList(Long shopId) {
-        return shopService.getShopProductCategoryVOList(shopId);
+    public List<ShopProductCategoryVO> getShopCategoryVOList(GetShopProductCategoryListDTO request) {
+        return shopService.getShopProductCategoryVOList(request);
     }
 
 

@@ -6,16 +6,24 @@ import com.outmao.ebs.mall.shop.dao.ShopProductCategoryDao;
 import com.outmao.ebs.mall.shop.dao.ShopDao;
 import com.outmao.ebs.mall.shop.domain.ShopProductCategoryDomain;
 import com.outmao.ebs.mall.shop.domain.conver.ShopProductCategoryVOConver;
+import com.outmao.ebs.mall.shop.dto.GetShopProductCategoryListDTO;
 import com.outmao.ebs.mall.shop.dto.ShopProductCategoryDTO;
 import com.outmao.ebs.mall.shop.entity.QShopProductCategory;
 import com.outmao.ebs.mall.shop.entity.ShopProductCategory;
 import com.outmao.ebs.mall.shop.vo.ShopProductCategoryVO;
+import com.querydsl.core.types.Predicate;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 
 @Component
@@ -75,33 +83,50 @@ public class ShopProductCategoryDomainImpl extends BaseDomain implements ShopPro
     }
 
     @Override
-    public List<ShopProductCategoryVO> getShopProductCategoryVOList(Long shopId) {
+    public List<ShopProductCategoryVO> getShopProductCategoryVOList(GetShopProductCategoryListDTO request) {
         QShopProductCategory e=QShopProductCategory.shopProductCategory;
-        List<ShopProductCategoryVO> list=queryList(e,e.level.eq(0),e.sort.asc(),shopCategoryVOConver);
-        list.forEach(t->{
-            if(!t.isLeaf()){
-                t.setChildren(getShopCategoryVOListByParentId(t.getId()));
+
+        Predicate p=e.shop.id.eq(request.getShopId());
+
+        if(request.getProductType()!=null){
+            p=e.productType.eq(request.getProductType()).and(p);
+        }
+
+        List<ShopProductCategoryVO> list=queryList(e,p,e.sort.asc(),shopCategoryVOConver);
+
+        return toLevel(list);
+    }
+
+
+    private List<ShopProductCategoryVO> toLevel(List<ShopProductCategoryVO> all){
+        Map<Long,ShopProductCategoryVO> map=all.stream().collect(Collectors.toMap(t->t.getId(), t->t));
+        List<ShopProductCategoryVO> list=new ArrayList<>();
+        for(ShopProductCategoryVO vo:all){
+            if(vo.getParentId()!=null){
+                ShopProductCategoryVO parent=map.get(vo.getParentId());
+                if(parent.getChildren()==null){
+                    parent.setChildren(new ArrayList<>());
+                }
+                parent.getChildren().add(vo);
+            }else{
+                list.add(vo);
             }
-        });
+        }
         return list;
     }
 
-    private List<ShopProductCategoryVO> getShopCategoryVOListByParentId(Long parentId){
-
+    @Override
+    public Page<ShopProductCategoryVO> getShopProductCategoryVOPage(GetShopProductCategoryListDTO request, Pageable pageable) {
         QShopProductCategory e=QShopProductCategory.shopProductCategory;
 
-        List<ShopProductCategoryVO> list=queryList(e,e.parent.id.eq(parentId),shopCategoryVOConver);
+        Predicate p=e.shop.id.eq(request.getShopId());
 
-        list.forEach(t->{
-            if(!t.isLeaf()){
-                t.setChildren(getShopCategoryVOListByParentId(t.getId()));
-            }
-        });
+        if(request.getProductType()!=null){
+            p=e.productType.eq(request.getProductType()).and(p);
+        }
 
-        return list;
-
+        return queryPage(e,p,shopCategoryVOConver,pageable);
     }
-
 
 
 }

@@ -71,6 +71,13 @@ public class ShopProductCategory implements Serializable {
     private int sort;
 
     /**
+     *
+     * 商品类型
+     *
+     */
+    private Integer productType;
+
+    /**
      * 分类标题
      */
     private String title;

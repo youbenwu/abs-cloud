@@ -19,7 +19,8 @@ public enum ProductType {
 
     ADVERT_CHANNEL(20, "广告频道"),
 
-    HOTEL_SERVICE(30, "酒店服务"),
+    HOTEL_WASH_SERVICE(30, "酒店干洗服务"),
+    HOTEL_FOOD_SERVICE(31, "酒店送餐服务"),
 
     OUT_CTRIP(100, "外部携程旅游商品");
 
