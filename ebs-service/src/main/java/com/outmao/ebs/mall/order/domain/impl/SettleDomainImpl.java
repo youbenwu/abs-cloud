@@ -296,6 +296,7 @@ public class SettleDomainImpl extends BaseDomain implements SettleDomain {
         OrderDTO dto=new OrderDTO();
 
         BeanUtils.copyProperties(settle,dto,"address");
+
         if(settle.getAddress()!=null){
             OrderAddressDTO address=new OrderAddressDTO();
             BeanUtils.copyProperties(settle.getAddress(),address);

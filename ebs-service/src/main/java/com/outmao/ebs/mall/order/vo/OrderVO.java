@@ -157,7 +157,8 @@ public class OrderVO implements SimpleShopSetter , SimpleUserSetter {
             "13--出租房 " +
             "1--虚拟商品 " +
             "20--广告频道 " +
-            "30--酒店服务 " +
+            "30--酒店洗衣服务 " +
+            "31--酒店送餐服务 " +
             "100--外部携程旅游商品")
     private Integer type;
 
