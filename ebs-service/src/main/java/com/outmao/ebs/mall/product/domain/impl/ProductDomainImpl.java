@@ -981,19 +981,27 @@ public class ProductDomainImpl extends BaseDomain implements ProductDomain {
 
         QProductAttribute e=QProductAttribute.productAttribute;
 
-        List<ProductAttributeVO> list=queryList(e,e.productId.in(dataMap.keySet()).and(e.key.in(attrs)),productAttributeVOConver);
+        Predicate p=e.productId.in(dataMap.keySet());
+
+        if(attrs.length==1&&attrs[0].equals("all")){
+
+        }else{
+            p=e.key.in(attrs).and(p);
+        }
+
+        List<ProductAttributeVO> list=queryList(e,p,productAttributeVOConver);
 
         if(list.isEmpty())
             return;
 
         for(ProductAttributeVO a:list){
-            ProductVO p=dataMap.get(a.getProductId());
-            if(p.getAttributes()==null){
-                p.setAttributes(new ArrayList<>());
-                p.getAttributes().add(new ProductAttributeGroupVO());
-                p.getAttributes().get(0).setAttributes(new ArrayList<>());
+            ProductVO vo=dataMap.get(a.getProductId());
+            if(vo.getAttributes()==null){
+                vo.setAttributes(new ArrayList<>());
+                vo.getAttributes().add(new ProductAttributeGroupVO());
+                vo.getAttributes().get(0).setAttributes(new ArrayList<>());
             }
-            p.getAttributes().get(0).getAttributes().add(a);
+            vo.getAttributes().get(0).getAttributes().add(a);
         }
 
     }

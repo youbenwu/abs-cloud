@@ -16,6 +16,7 @@ public class GetProductListDTO extends PageDTO {
     @ApiModelProperty(name = "attrs", value = "反回哪些KEY参数数据")
     private String[] attrs;
 
+
     @ApiModelProperty(name = "categoryId", value = "商品分类ID")
     private Long categoryId;
 
