@@ -222,7 +222,11 @@ public class OrderServiceImpl extends BaseService implements OrderService, Trade
 
     @Transactional
     @Override
-    public Object payPrepare(OrderPayPrepare request) {
+    public Trade payPrepare(OrderPayPrepare request) {
+
+        if(StringUtils.isEmpty(request.getPayChannel())){
+            request.setPayChannel(PayChannel.WalletPay.name());
+        }
 
         if(StringUtils.isEmpty(request.getCurrency())){
             request.setCurrency("RMB");
@@ -232,6 +236,13 @@ public class OrderServiceImpl extends BaseService implements OrderService, Trade
         }
 
         Order order=orderDomain.getOrderByOrderNo(request.getOrderNo());
+
+
+        if(order.getStatus()!=OrderStatus.WAIT_PAY.getStatus()){
+            throw new  BusinessException("订单状态异常");
+        }
+
+        order.setPayChannel(request.getPayChannel());
 
         User fromUser=userService.getUserById(order.getUserId());
         User toUser=userService.getUserById(order.getSellerId());
@@ -249,23 +260,16 @@ public class OrderServiceImpl extends BaseService implements OrderService, Trade
         TradePrepareDTO dto=new TradePrepareDTO();
         dto.setTradeNo(order.getOrderNo());
         dto.setFromId(fromUser.getWalletId());
+        dto.setToId(toUser.getWalletId());
         dto.setCurrencyId(request.getCurrency());
-        if(request.getCurrency().equals("RMB")){
-//            long amount=(long) (order.getTotalAmount()*currency.getOneUnit());
-//            dto.setAmount(amount);
-//            dto.setRemark(order.getRemark());
-        }else if(request.getCurrency().equals("COIN")){
+        dto.setAmount(amount);
+        dto.setType(TradeType.Pay.getType());
+        dto.setBusinessType(WalletConstant.business_type_pay);
+        dto.setBusiness("购买商品支付");
+        dto.setPayChannel(PayChannel.valueOf(request.getPayChannel()).getType());
 
+        return payService.tradePrepare(dto);
 
-        }
-        dto.setType(TradeType.Cash.getType());
-        dto.setBusinessType(WalletConstant.business_type_recharge_pay);
-        dto.setBusiness("用户充值支付");
-        dto.setPayChannel(PayChannel.WalletPay.getType());
-
-        payService.tradePrepare(dto);
-
-        return null;
     }
 
 

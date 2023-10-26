@@ -214,4 +214,6 @@ public class HotelDeviceDomainImpl extends BaseDomain implements HotelDeviceDoma
     }
 
 
+
+
 }
