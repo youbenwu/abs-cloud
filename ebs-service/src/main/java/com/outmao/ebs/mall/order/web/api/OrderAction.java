@@ -3,9 +3,11 @@ package com.outmao.ebs.mall.order.web.api;
 
 import com.outmao.ebs.mall.order.dto.GetOrderListDTO;
 import com.outmao.ebs.mall.order.dto.OrderDTO;
+import com.outmao.ebs.mall.order.dto.OrderPayPrepare;
 import com.outmao.ebs.mall.order.entity.Order;
 import com.outmao.ebs.mall.order.service.OrderService;
 import com.outmao.ebs.mall.order.vo.OrderVO;
+import com.outmao.ebs.wallet.entity.Trade;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,6 +57,12 @@ public class OrderAction {
     @PostMapping("/page")
     public Page<OrderVO> getOrderVOPage(GetOrderListDTO request, Pageable pageable) {
         return orderService.getOrderVOPage(request,pageable);
+    }
+
+    @ApiOperation(value = "获取订单支付信息", notes = "获取订单支付信息")
+    @PostMapping("/payPrepare")
+    public Trade payPrepare(OrderPayPrepare request){
+        return orderService.payPrepare(request);
     }
 
 
