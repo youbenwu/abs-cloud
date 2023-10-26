@@ -17,6 +17,7 @@ public class ShopProductCategoryVOConver implements BeanConver<QShopProductCateg
         vo.setLevel(t.get(e.level));
         vo.setLeaf(t.get(e.leaf));
         vo.setSort(t.get(e.sort));
+        vo.setProductType(t.get(e.productType));
         vo.setImage(t.get(e.image));
         vo.setTitle(t.get(e.title));
         vo.setDescription(t.get(e.description));
@@ -33,6 +34,7 @@ public class ShopProductCategoryVOConver implements BeanConver<QShopProductCateg
                 e.level,
                 e.leaf,
                 e.sort,
+                e.productType,
                 e.image,
                 e.title,
                 e.description,
