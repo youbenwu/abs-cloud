@@ -6,6 +6,7 @@ import com.outmao.ebs.common.exception.BusinessException;
 import com.outmao.ebs.hotel.dao.HotelDao;
 import com.outmao.ebs.hotel.domain.HotelDomain;
 import com.outmao.ebs.hotel.domain.conver.HotelVOConver;
+import com.outmao.ebs.hotel.domain.conver.SimpleHotelVOConver;
 import com.outmao.ebs.hotel.dto.GetHotelListDTO;
 import com.outmao.ebs.hotel.dto.HotelDTO;
 import com.outmao.ebs.hotel.dto.RegisterHotelDTO;
@@ -14,6 +15,7 @@ import com.outmao.ebs.hotel.entity.Hotel;
 import com.outmao.ebs.hotel.entity.HotelContact;
 import com.outmao.ebs.hotel.entity.QHotel;
 import com.outmao.ebs.hotel.vo.HotelVO;
+import com.outmao.ebs.hotel.vo.SimpleHotelVO;
 import com.outmao.ebs.hotel.vo.StatsHotelCountVO;
 import com.outmao.ebs.org.common.annotation.BindingOrg;
 import com.outmao.ebs.org.service.OrgService;
@@ -41,6 +43,7 @@ public class HotelDomainImpl extends BaseDomain implements HotelDomain {
 
     private HotelVOConver hotelVOConver=new HotelVOConver();
 
+    private SimpleHotelVOConver simpleHotelVOConver=new SimpleHotelVOConver();
 
 
 
@@ -189,6 +192,11 @@ public class HotelDomainImpl extends BaseDomain implements HotelDomain {
         return queryList(e,p,hotelVOConver);
     }
 
+    @Override
+    public List<SimpleHotelVO> getSimpleHotelVOListByIdIn(Collection<Long> idIn) {
+        QHotel e=QHotel.hotel;
+        return queryList(e,e.id.in(idIn),simpleHotelVOConver);
+    }
 
     @Override
     public List<StatsHotelCountVO> getStatsHotelCountVOListByDays(Date fromTime, Date toTime) {

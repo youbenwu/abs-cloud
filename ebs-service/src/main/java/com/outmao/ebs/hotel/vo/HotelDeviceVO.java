@@ -1,6 +1,7 @@
 package com.outmao.ebs.hotel.vo;
 
 
+import com.outmao.ebs.hotel.common.data.SimpleHotelSetter;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import java.util.Date;
@@ -11,7 +12,7 @@ import java.util.Date;
  *
  */
 @Data
-public class HotelDeviceVO {
+public class HotelDeviceVO implements SimpleHotelSetter {
 
 
     /**
@@ -35,6 +36,8 @@ public class HotelDeviceVO {
 
 
     private Long hotelId;
+
+    private SimpleHotelVO hotel;
 
 
     /**

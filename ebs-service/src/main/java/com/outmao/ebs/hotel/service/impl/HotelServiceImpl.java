@@ -2,6 +2,7 @@ package com.outmao.ebs.hotel.service.impl;
 
 import com.outmao.ebs.common.base.BaseService;
 import com.outmao.ebs.common.vo.Contact;
+import com.outmao.ebs.hotel.common.annotation.SetSimpleHotel;
 import com.outmao.ebs.hotel.domain.*;
 import com.outmao.ebs.hotel.dto.*;
 import com.outmao.ebs.hotel.entity.*;
@@ -318,16 +319,19 @@ public class HotelServiceImpl extends BaseService implements HotelService {
         return hotelDeviceDomain.getHotelDeviceCount();
     }
 
+    @SetSimpleHotel
     @Override
     public HotelDeviceVO getHotelDeviceVOById(Long id) {
         return hotelDeviceDomain.getHotelDeviceVOById(id);
     }
 
+    @SetSimpleHotel
     @Override
     public HotelDeviceVO getHotelDeviceVOByDeviceNo(String deviceNo) {
         return hotelDeviceDomain.getHotelDeviceVOByDeviceNo(deviceNo);
     }
 
+    @SetSimpleHotel
     @Override
     public Page<HotelDeviceVO> getHotelDeviceVOPage(GetHotelDeviceListDTO request, Pageable pageable) {
         return hotelDeviceDomain.getHotelDeviceVOPage(request,pageable);

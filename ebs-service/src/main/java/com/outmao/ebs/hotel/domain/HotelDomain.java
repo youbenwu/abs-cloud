@@ -6,6 +6,7 @@ import com.outmao.ebs.hotel.dto.RegisterHotelDTO;
 import com.outmao.ebs.hotel.dto.SetHotelStatusDTO;
 import com.outmao.ebs.hotel.entity.Hotel;
 import com.outmao.ebs.hotel.vo.HotelVO;
+import com.outmao.ebs.hotel.vo.SimpleHotelVO;
 import com.outmao.ebs.hotel.vo.StatsHotelCountVO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -33,6 +34,8 @@ public interface HotelDomain {
     public Page<HotelVO> getHotelVOPage(GetHotelListDTO request, Pageable pageable);
 
     public List<HotelVO> getHotelVOListByOrgIdIn(Collection<Long> orgIdIn);
+
+    public List<SimpleHotelVO> getSimpleHotelVOListByIdIn(Collection<Long> idIn);
 
     public List<StatsHotelCountVO> getStatsHotelCountVOListByDays(Date fromTime, Date toTime);
 

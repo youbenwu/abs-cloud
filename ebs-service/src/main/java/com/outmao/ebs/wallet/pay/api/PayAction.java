@@ -39,7 +39,7 @@ public class PayAction {
 	//钱包支付
 	@ApiOperation(value = "钱包支付", notes = "钱包支付")
 	@RequestMapping(value = "/walletPay", method = RequestMethod.POST)
-	public Trade tradeWalletPay(@RequestBody PayWalletDTO request){
+	public Trade tradeWalletPay(PayWalletDTO request){
 		return payService.payWallet(request);
 	}
 
