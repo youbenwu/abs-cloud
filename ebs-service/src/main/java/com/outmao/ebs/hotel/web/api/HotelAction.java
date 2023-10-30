@@ -7,10 +7,9 @@ import com.outmao.ebs.hotel.entity.Hotel;
 import com.outmao.ebs.hotel.entity.HotelDevice;
 import com.outmao.ebs.hotel.entity.HotelDeviceOwner;
 import com.outmao.ebs.hotel.service.HotelService;
-import com.outmao.ebs.hotel.vo.HotelDeviceVO;
-import com.outmao.ebs.hotel.vo.HotelVO;
-import com.outmao.ebs.hotel.vo.StatsHotelDeviceCityVO;
-import com.outmao.ebs.hotel.vo.StatsHotelDeviceProvinceVO;
+import com.outmao.ebs.hotel.vo.*;
+import com.outmao.ebs.qrCode.dto.GenerateQrCodeDTO;
+import com.outmao.ebs.qrCode.service.QrCodeService;
 import com.outmao.ebs.security.util.SecurityUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -31,6 +30,9 @@ public class HotelAction {
 
 	@Autowired
     private HotelService hotelService;
+
+	@Autowired
+    private QrCodeService qrCodeService;
 
 
     @PreAuthorize("permitAll")
@@ -87,19 +89,31 @@ public class HotelAction {
         return hotelService.getHotelDeviceOwnerByUserId(userId);
     }
 
-    public String getMpPayQrcode(Long productId){
+
+    @ApiOperation(value = "获取购买二维码", notes = "通过微信扫描二维码，进入小程序支付")
+    @PostMapping("/mpBuyQrCode")
+    public MpBuyQrcodeVO getMpBuyQrcode(Long productId){
 
         Long userId=SecurityUtil.currentUserId();
 
         HotelDevice device=hotelService.getHotelDeviceByUserId(userId);
 
-        HotelVO hotel=hotelService.getHotelVOById(device.getHotelId());
 
         String url="https://mp.qyhuyu.cn/product/buy?productId="+productId+"&hotelId="+device.getHotelId()+"&roomNo="+device.getRoomNo();
 
+        System.out.println(url);
 
+        GenerateQrCodeDTO codeDTO=new GenerateQrCodeDTO();
+        codeDTO.setCode(url);
+        codeDTO.setWidth(500);
+        codeDTO.setHeight(500);
+        String qrcode=qrCodeService.generateQrCode(codeDTO);
 
-        return null;
+        MpBuyQrcodeVO vo=new MpBuyQrcodeVO();
+        vo.setTitle("请用微信扫描二维码购买");
+        vo.setQrCode(qrcode);
+
+        return vo;
     }
 
 
