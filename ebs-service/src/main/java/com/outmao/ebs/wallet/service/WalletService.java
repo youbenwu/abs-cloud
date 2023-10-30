@@ -38,15 +38,40 @@ public interface WalletService {
 	public List<Currency> getCurrencyList();
 
 
-
+	/**
+	 *
+	 * 保存用户银行卡信息
+	 *
+	 */
 	public BankAccount saveBankAccount(BankAccountDTO request);
 
+
+	/**
+	 *
+	 * 删除用户银行卡信息
+	 *
+	 */
 	public void deleteBankAccountById(Long id);
 
+	/**
+	 *
+	 * 获取用户银行卡信息
+	 *
+	 */
 	public BankAccount getBankAccountById(Long id);
 
+	/**
+	 *
+	 * 获取用户银行卡信息
+	 *
+	 */
 	public List<BankAccount> getBankAccountListByUserId(Long userId);
 
+	/**
+	 *
+	 * 获取用户银行卡信息
+	 *
+	 */
 	public Page<BankAccount> getBankAccountPage(GetBankAccountListDTO request, Pageable pageable);
 
 	/**

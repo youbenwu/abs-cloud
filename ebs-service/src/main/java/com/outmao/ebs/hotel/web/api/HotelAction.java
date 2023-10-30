@@ -3,6 +3,8 @@ package com.outmao.ebs.hotel.web.api;
 
 import com.outmao.ebs.hotel.dto.PadRegisterHotelDeviceDTO;
 import com.outmao.ebs.hotel.dto.RegisterHotelDTO;
+import com.outmao.ebs.hotel.entity.Hotel;
+import com.outmao.ebs.hotel.entity.HotelDevice;
 import com.outmao.ebs.hotel.entity.HotelDeviceOwner;
 import com.outmao.ebs.hotel.service.HotelService;
 import com.outmao.ebs.hotel.vo.HotelDeviceVO;
@@ -83,6 +85,21 @@ public class HotelAction {
     @PostMapping("/device/owner/get")
     public HotelDeviceOwner getHotelDeviceOwnerByUserId(Long userId){
         return hotelService.getHotelDeviceOwnerByUserId(userId);
+    }
+
+    public String getMpPayQrcode(Long productId){
+
+        Long userId=SecurityUtil.currentUserId();
+
+        HotelDevice device=hotelService.getHotelDeviceByUserId(userId);
+
+        HotelVO hotel=hotelService.getHotelVOById(device.getHotelId());
+
+        String url="https://mp.qyhuyu.cn/product/buy?productId="+productId+"&hotelId="+device.getHotelId()+"&roomNo="+device.getRoomNo();
+
+
+
+        return null;
     }
 
 

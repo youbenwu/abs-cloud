@@ -78,8 +78,8 @@ public class TransferDomainImpl extends BaseDomain implements TransferDomain {
         transfer.setBusiness(business);
         transfer.setCreateTime(new Date());
         transfer.setTransferNo(OrderNoUtil.generateOrderNo());
-        transfer.setFromBalance(assetFrom.getBalance());
-        transfer.setToBalance(assetTo.getBalance());
+        transfer.setFromBalance(assetFrom!=null?assetFrom.getBalance():0);
+        transfer.setToBalance(assetTo!=null?assetTo.getBalance():0);
         transfer.setActionKey((String) ServletRequestUtil.getAttribute(WalletConstant.action_key));
         transferDao.save(transfer);
 
@@ -133,11 +133,12 @@ public class TransferDomainImpl extends BaseDomain implements TransferDomain {
     @Override
     public Transfer transferAdvance(Trade trade) {
         Wallet from=trade.getPayChannel()== PayChannel.WalletPay.getType()?trade.getFrom():null;
+        Wallet to=trade.getTo()!=null?trade.getTo():trade.getFrom();
         // 转帐业务
         return transfer(
                 trade,
                 from,
-                trade.getFrom(),
+                to,
                 Transfer.TransferType.Balance,
                 Transfer.TransferType.Advance,
                 trade.getTotalAmount(),
@@ -153,10 +154,18 @@ public class TransferDomainImpl extends BaseDomain implements TransferDomain {
         //计算可用金额
         long amount=trade.getAmount()-trade.getPayAmount()-trade.getRefundAmount();
         if(amount>0){
+
+            //找到支付记录
+            Transfer transferFrom=transferDao.findByTradeIdAndToType(trade.getId(), Transfer.TransferType.Advance);
+            if(transferFrom==null){
+                throw  new WalletException("找不到支付记录");
+            }
+
             trade.setPayAmount(trade.getPayAmount()+amount);
+
             return transfer(
                     trade,
-                    trade.getFrom(),
+                    transferFrom.getTo(),
                     trade.getTo(),
                     Transfer.TransferType.Advance,
                     Transfer.TransferType.Balance,
@@ -165,6 +174,7 @@ public class TransferDomainImpl extends BaseDomain implements TransferDomain {
                     trade.getBusiness(),
                     trade.getRemark()
             );
+
         }
         return null;
     }
@@ -186,11 +196,17 @@ public class TransferDomainImpl extends BaseDomain implements TransferDomain {
             throw new WalletBalanceNotEnoughException();
         }
 
+        //找到支付记录
+        Transfer transferFrom=transferDao.findByTradeIdAndToType(trade.getId(), Transfer.TransferType.Advance);
+        if(transferFrom==null){
+            throw  new WalletException("找不到支付记录");
+        }
+
         trade.setPayAmount(trade.getPayAmount()+amount);
 
         return transfer(
                 trade,
-                trade.getFrom(),
+                transferFrom.getTo(),
                 to,
                 Transfer.TransferType.Advance,
                 Transfer.TransferType.Balance,
@@ -220,9 +236,14 @@ public class TransferDomainImpl extends BaseDomain implements TransferDomain {
                     "手续费"
             );
         }else{
+            //找到支付记录
+            Transfer transferFrom=transferDao.findByTradeIdAndToType(trade.getId(), Transfer.TransferType.Advance);
+            if(transferFrom==null){
+                throw  new WalletException("找不到支付记录");
+            }
             return transfer(
                     trade,
-                    trade.getFrom(),
+                    transferFrom.getTo(),
                     null,
                     Transfer.TransferType.Advance,
                     Transfer.TransferType.Balance,
@@ -254,9 +275,9 @@ public class TransferDomainImpl extends BaseDomain implements TransferDomain {
         Wallet to= transferFrom.getFrom();
 
         if(to==null){
-            if(!transferFrom.getTrade().isRefundOut()) {
+            if(!trade.isRefundOut()) {
                 //退回到钱包
-                to = transferFrom.getTrade().getFrom();
+                to = trade.getFrom();
             }
         }
 
@@ -274,6 +295,7 @@ public class TransferDomainImpl extends BaseDomain implements TransferDomain {
                 business,
                 remark
         );
+
     }
 
 

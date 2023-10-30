@@ -376,6 +376,10 @@ public class OrderDomainImpl extends BaseDomain implements OrderDomain {
             p=e.shopId.eq(request.getShopId()).and(p);
         }
 
+        if(request.getHotelId()!=null){
+            p=e.hotelId.eq(request.getHotelId()).and(p);
+        }
+
         if(request.getUserId()!=null){
             p=e.userId.eq(request.getUserId()).and(p);
         }

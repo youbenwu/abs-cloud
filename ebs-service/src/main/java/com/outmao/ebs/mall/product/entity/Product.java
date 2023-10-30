@@ -76,6 +76,14 @@ public class Product implements Serializable, BindingSubjectId {
 
 	/**
 	 *
+	 * 酒店ID，酒店中商品
+	 *
+	 */
+	private Long hotelId;
+
+
+	/**
+	 *
 	 * 商品分类ID
 	 * 
 	 */

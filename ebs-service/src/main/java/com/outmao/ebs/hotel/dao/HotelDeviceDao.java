@@ -15,4 +15,6 @@ public interface HotelDeviceDao extends JpaRepository<HotelDevice,Long> {
     @Query("select r from HotelDevice r where r.id=?1")
     public HotelDevice findByIdForUpdate(Long id);
 
+    public HotelDevice findByUserId(Long userId);
+
 }

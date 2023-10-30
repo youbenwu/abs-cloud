@@ -23,6 +23,12 @@ public class OrderDTO {
     @ApiModelProperty(name = "lookId", value = "关联带看ID")
     private Long lookId;
 
+    @ApiModelProperty(name = "hotelId", value = "酒店ID")
+    private Long hotelId;
+
+    @ApiModelProperty(name = "roomNo", value = "房间号")
+    private String roomNo;
+
     /**
      * 商品类型
      */

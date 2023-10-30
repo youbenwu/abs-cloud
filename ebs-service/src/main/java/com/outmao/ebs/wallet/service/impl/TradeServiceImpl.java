@@ -28,12 +28,6 @@ public class TradeServiceImpl extends BaseService implements TradeService {
         return tradeDomain.tradePrepare(request);
     }
 
-
-    @Override
-    public Trade tradePayPrepare(TradePayPrepareDTO request) {
-        return tradeDomain.tradePayPrepare(request);
-    }
-
     @Override
     public Trade tradePay(String tradeNo) {
         return tradeDomain.tradePay(tradeNo);
@@ -59,9 +53,20 @@ public class TradeServiceImpl extends BaseService implements TradeService {
         return tradeDomain.tradeClose(tradeNo);
     }
 
+
+    @Override
+    public Trade tradeRecharge(TradeRechargeDTO request) {
+        return tradeDomain.tradeRecharge(request);
+    }
+
     @Override
     public Trade getTradeByTradeNo(String tradeNo) {
         return tradeDomain.getTradeByTradeNo(tradeNo);
+    }
+
+    @Override
+    public TradeVO getTradeVOById(Long id) {
+        return tradeDomain.getTradeVOById(id);
     }
 
     @Override
@@ -73,4 +78,5 @@ public class TradeServiceImpl extends BaseService implements TradeService {
     public Page<TradeVO> getTradeVOPage(GetTradeListDTO request, Pageable pageable) {
         return tradeDomain.getTradeVOPage(request,pageable);
     }
+
 }

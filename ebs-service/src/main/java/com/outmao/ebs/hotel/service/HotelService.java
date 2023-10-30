@@ -66,6 +66,8 @@ public interface HotelService {
 
     public long getHotelDeviceCount();
 
+    public HotelDevice getHotelDeviceByUserId(Long userId);
+
     public HotelDeviceVO getHotelDeviceVOById(Long id);
 
     public HotelDeviceVO getHotelDeviceVOByDeviceNo(String deviceNo);
@@ -132,6 +134,9 @@ public interface HotelService {
     public List<StatsHotelDeviceCityVO> getStatsHotelDeviceCityVOList(Integer size);
 
     public List<StatsHotelDeviceProvinceVO> getStatsHotelDeviceProvinceVOList(Integer size);
+
+
+
 
 
 }

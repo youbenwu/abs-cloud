@@ -15,7 +15,7 @@ public class CashVOConver implements BeanConver<QCash, CashVO> {
         CashVO vo=new CashVO();
         vo.setId(t.get(e.id));
         vo.setWalletId(t.get(e.wallet.id));
-        vo.setCashNo(t.get(e.cashNo));
+        vo.setOrderNo(t.get(e.orderNo));
         vo.setBankAccount(t.get(e.bankAccount));
         vo.setAmount(t.get(e.amount));
         vo.setRemark(t.get(e.remark));
@@ -33,7 +33,7 @@ public class CashVOConver implements BeanConver<QCash, CashVO> {
         return new Expression[]{
                 e.id,
                 e.wallet.id,
-                e.cashNo,
+                e.orderNo,
                 e.bankAccount,
                 e.amount,
                 e.remark,

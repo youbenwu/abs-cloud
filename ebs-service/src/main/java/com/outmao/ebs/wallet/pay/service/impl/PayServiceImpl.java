@@ -1,13 +1,11 @@
 package com.outmao.ebs.wallet.pay.service.impl;
 
-
+import cn.jiguang.common.utils.StringUtils;
 import com.outmao.ebs.common.exception.BusinessException;
-import com.outmao.ebs.wallet.common.constant.OutPayType;
 import com.outmao.ebs.wallet.common.constant.PayChannel;
 import com.outmao.ebs.wallet.common.constant.TradeStatus;
 import com.outmao.ebs.wallet.common.exception.WalletPasswordErrorException;
 import com.outmao.ebs.wallet.common.listener.TradeStatusListener;
-import com.outmao.ebs.wallet.dto.TradePayPrepareDTO;
 import com.outmao.ebs.wallet.dto.TradePayToDTO;
 import com.outmao.ebs.wallet.dto.TradePrepareDTO;
 import com.outmao.ebs.wallet.dto.TradeRefundDTO;
@@ -18,15 +16,13 @@ import com.outmao.ebs.wallet.pay.dto.PayPrepareDTO;
 import com.outmao.ebs.wallet.pay.dto.PayWalletDTO;
 import com.outmao.ebs.wallet.pay.service.PayService;
 import com.outmao.ebs.wallet.pay.wechatpay.WechatPayService;
-import com.outmao.ebs.wallet.pay.wxpay.WXPayService;
 import com.outmao.ebs.wallet.service.TradeService;
+import com.outmao.ebs.wallet.vo.TradeVO;
 import com.wechat.pay.java.service.payments.model.Transaction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Map;
 import java.util.UUID;
 
 @Service
@@ -38,9 +34,7 @@ public class PayServiceImpl implements PayService {
 
 	@Autowired
     private AlipayService alipayService;
-	
-//	@Autowired
-//    private WXPayService wxpayService;
+
 
     @Autowired
 	private WechatPayService wechatPayService;
@@ -56,22 +50,20 @@ public class PayServiceImpl implements PayService {
 
 
     @Override
-    public Trade tradePayTo(TradePayToDTO request) {
-        return tradeService.tradePayTo(request);
-    }
-
-    @Override
-    public Trade tradePrepare(TradePrepareDTO request) {
-        return tradeService.tradePrepare(request);
+    public TradeVO tradePrepare(TradePrepareDTO request) {
+        tradeQuery(request.getTradeNo());
+        Trade trade= tradeService.tradePrepare(request);
+        return tradeService.getTradeVOById(trade.getId());
     }
 
 
+
     @Override
-    public Object payPrepare(PayPrepareDTO request) {
+    public Object appPayPrepare(PayPrepareDTO request) {
 
         tradeQuery(request.getTradeNo());
 
-        Trade trade =tradeService.tradePayPrepare(new TradePayPrepareDTO(request.getTradeNo(), request.getPayChannel(),request.getOutPayType()));
+        Trade trade =tradeService.getTradeByTradeNo(request.getTradeNo());
 
         if (trade.getPayChannel()== PayChannel.WalletPay.getType()) {
             return trade;
@@ -80,17 +72,11 @@ public class PayServiceImpl implements PayService {
                     trade.getTradeNo(), trade.getTotalAmount()/100.0);
             return result;
         } else if (trade.getPayChannel()== PayChannel.WxPay.getType()) {
-//            Object result = wxpayService.unifiedOrder(trade.getTradeNo(),
-//                    trade.getBusiness()!=null?trade.getBusiness():trade.getRemark()
-//                    , trade.getTotalAmount()/100.0, request.getClientIp());
-//            return  result;
-
             Object result = wechatPayService.prepayApp(trade.getTradeNo(),trade.getTotalAmount(),
                     trade.getBusiness()!=null?trade.getBusiness():trade.getRemark());
             return  result;
 
         }
-
         return null;
     }
 
@@ -102,12 +88,14 @@ public class PayServiceImpl implements PayService {
 
         tradeQuery(request.getTradeNo());
 
-        Trade trade =tradeService.tradePayPrepare(new TradePayPrepareDTO(request.getTradeNo(), PayChannel.WalletPay.getType(),0));
+        Trade trade =tradeService.getTradeByTradeNo(request.getTradeNo());
 
         Wallet wallet=trade.getFrom();
 
-        if (!passwordEncoder.matches(request.getPassword(), wallet.getPassword())) {
-            throw new WalletPasswordErrorException();
+        if(!StringUtils.isEmpty(wallet.getPassword())) {
+            if (!passwordEncoder.matches(request.getPassword(), wallet.getPassword())) {
+                throw new WalletPasswordErrorException();
+            }
         }
 
         trade= tradeService.tradePay(request.getTradeNo());
@@ -145,43 +133,18 @@ public class PayServiceImpl implements PayService {
                         trade =  tradeService.tradePay(tradeNo);
                         break;
                     case CLOSED:
-                        trade = tradeService.tradeClose(tradeNo);
                         break;
                 }
-
-//                Map<String, String> data=wxpayService.orderQuery(tradeNo);
-//                String trade_state = data.get("trade_state");
-//                /*
-//                 *
-//                 * SUCCESS—支付成功
-//                 * REFUND—转入退款
-//                 * NOTPAY—未支付
-//                 * CLOSED—已关闭
-//                 * REVOKED—已撤销（刷卡支付）
-//                 * USERPAYING--用户支付中
-//                 * PAYERROR--支付失败(其他原因，如银行返回失败)
-//                 *
-//                 */
-//                if(trade_state.equals("SUCCESS")) {
-//                    trade= tradeService.tradePay(tradeNo);
-//                }else if(trade_state.equals("REFUND")) {
-//
-//                }else if(trade_state.equals("NOTPAY")) {
-//
-//                }else if(trade_state.equals("CLOSED")) {
-//
-//                }else if(trade_state.equals("REVOKED")) {
-//
-//                }else if(trade_state.equals("USERPAYING")) {
-//
-//                }else if(trade_state.equals("PAYERROR")) {
-//
-//                }
 
             }
         }
 
         return trade;
+    }
+
+    @Override
+    public Trade tradePayTo(TradePayToDTO request) {
+        return tradeService.tradePayTo(request);
     }
 
     @Override
@@ -192,7 +155,6 @@ public class PayServiceImpl implements PayService {
             if(trade.getPayChannel()== PayChannel.AliPay.getType()){
                 alipayService.tradeClose(tradeNo);
             }else if(trade.getPayChannel()== PayChannel.WxPay.getType()){
-               // wxpayService.closeOrder(tradeNo);
                 wechatPayService.closeOrder(tradeNo);
             }
         }
@@ -216,7 +178,6 @@ public class PayServiceImpl implements PayService {
             if (trade.getPayChannel() == PayChannel.AliPay.getType()) {
                 alipayService.tradeRefund(tradeNo,amount/100.0);
             } else if (trade.getPayChannel() == PayChannel.WxPay.getType()) {
-                //wxpayService.refund(tradeNo, amount/100.0);
                 wechatPayService.refund(tradeNo, UUID.randomUUID().toString(),amount,"客户退款");
             }
         }

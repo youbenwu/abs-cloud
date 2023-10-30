@@ -319,6 +319,11 @@ public class HotelServiceImpl extends BaseService implements HotelService {
         return hotelDeviceDomain.getHotelDeviceCount();
     }
 
+    @Override
+    public HotelDevice getHotelDeviceByUserId(Long userId) {
+        return hotelDeviceDomain.getHotelDeviceByUserId(userId);
+    }
+
     @SetSimpleHotel
     @Override
     public HotelDeviceVO getHotelDeviceVOById(Long id) {

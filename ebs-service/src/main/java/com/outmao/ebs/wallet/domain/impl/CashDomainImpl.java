@@ -3,6 +3,7 @@ package com.outmao.ebs.wallet.domain.impl;
 
 import com.outmao.ebs.common.base.BaseDomain;
 import com.outmao.ebs.common.exception.BusinessException;
+import com.outmao.ebs.common.util.OrderNoUtil;
 import com.outmao.ebs.wallet.common.constant.TradeStatus;
 import com.outmao.ebs.wallet.dao.CashDao;
 import com.outmao.ebs.wallet.dao.WalletDao;
@@ -45,14 +46,20 @@ public class CashDomainImpl extends BaseDomain implements CashDomain {
         cash.setWallet(walletDao.getOne(request.getWalletId()));
         cash.setCreateTime(new Date());
         BeanUtils.copyProperties(request,cash);
+        cash.setOrderNo(OrderNoUtil.generateOrderNo());
         cashDao.save(cash);
         return cash;
+    }
+
+    @Override
+    public Cash getCashByOrderNo(String orderNo) {
+        return cashDao.findByOrderNo(orderNo);
     }
 
     @Transactional
     @Override
     public Cash setCashStatus(SetCashStatusDTO request) {
-        Cash cash=cashDao.findByCashNo(request.getCashNo());
+        Cash cash=cashDao.findByOrderNo(request.getCashNo());
 
         if(cash==null)
             return null;
@@ -97,8 +104,8 @@ public class CashDomainImpl extends BaseDomain implements CashDomain {
 
         Predicate p=null;
 
-        if(request.getStatusIn()!=null){
-            p=e.status.in(request.getStatusIn());
+        if(request.getStatus()!=null){
+            p=e.status.eq(request.getStatus());
         }
 
         if(request.getWalletId()!=null){

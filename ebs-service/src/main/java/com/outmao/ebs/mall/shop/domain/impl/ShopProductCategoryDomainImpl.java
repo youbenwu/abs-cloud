@@ -125,6 +125,10 @@ public class ShopProductCategoryDomainImpl extends BaseDomain implements ShopPro
             p=e.productType.eq(request.getProductType()).and(p);
         }
 
+        if(request.getHotelId()!=null){
+            p=e.hotelId.eq(request.getHotelId()).and(p);
+        }
+
         return queryPage(e,p,shopCategoryVOConver,pageable);
     }
 

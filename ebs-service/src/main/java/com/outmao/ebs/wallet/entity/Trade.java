@@ -65,7 +65,6 @@ public class Trade implements Serializable {
 	private String statusRemark;
 
 
-
 	/**
 	 * 交易类型
 	 * 

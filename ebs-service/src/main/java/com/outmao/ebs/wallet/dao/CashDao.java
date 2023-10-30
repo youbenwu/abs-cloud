@@ -10,6 +10,6 @@ import javax.persistence.LockModeType;
 public interface CashDao extends JpaRepository<Cash,Long> {
 
     @Lock(value = LockModeType.PESSIMISTIC_READ)
-    public Cash findByCashNo(String cashNo);
+    public Cash findByOrderNo(String orderNo);
 
 }

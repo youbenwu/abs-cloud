@@ -44,6 +44,14 @@ public class ProductVO extends SubjectItemVO implements IItem {
 
     /**
      *
+     * 酒店ID，酒店中商品
+     *
+     */
+    @ApiModelProperty(name = "hotelId", value = "酒店ID，酒店中商品")
+    private Long hotelId;
+
+    /**
+     *
      * 商品分类
      *
      */

@@ -19,13 +19,6 @@ public interface TradeService {
      * */
     public Trade tradePrepare(TradePrepareDTO request);
 
-    /**
-     *
-     * 准备支付
-     *
-     * */
-    public Trade tradePayPrepare(TradePayPrepareDTO request);
-
 
     /**
      *
@@ -66,10 +59,24 @@ public interface TradeService {
 
     /**
      *
+     * 充值
+     *
+     * */
+    public Trade tradeRecharge(TradeRechargeDTO request);
+
+    /**
+     *
      * 获取交易
      *
      * */
     public Trade getTradeByTradeNo(String tradeNo);
+
+    /**
+     *
+     * 获取交易
+     *
+     * */
+    public TradeVO getTradeVOById(Long id);
 
     /**
      *

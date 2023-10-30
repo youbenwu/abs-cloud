@@ -32,6 +32,7 @@ import com.outmao.ebs.wallet.entity.Currency;
 import com.outmao.ebs.wallet.entity.Trade;
 import com.outmao.ebs.wallet.pay.service.PayService;
 import com.outmao.ebs.wallet.service.WalletService;
+import com.outmao.ebs.wallet.vo.TradeVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.data.domain.Page;
@@ -222,7 +223,7 @@ public class OrderServiceImpl extends BaseService implements OrderService, Trade
 
     @Transactional
     @Override
-    public Trade payPrepare(OrderPayPrepare request) {
+    public TradeVO payPrepare(OrderPayPrepare request) {
 
         if(StringUtils.isEmpty(request.getPayChannel())){
             request.setPayChannel(PayChannel.WalletPay.name());

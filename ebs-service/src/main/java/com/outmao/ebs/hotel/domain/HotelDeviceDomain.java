@@ -23,6 +23,8 @@ public interface HotelDeviceDomain {
 
     public long getHotelDeviceCount();
 
+    public HotelDevice getHotelDeviceByUserId(Long userId);
+
     public HotelDeviceVO getHotelDeviceVOById(Long id);
 
     public HotelDeviceVO getHotelDeviceVOByDeviceNo(String deviceNo);

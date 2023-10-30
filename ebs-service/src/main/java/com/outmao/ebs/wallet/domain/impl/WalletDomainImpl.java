@@ -145,8 +145,8 @@ public class WalletDomainImpl extends BaseDomain implements WalletDomain {
 		if(request.getType()!=null){
 			p=e.type.eq(request.getType());
 		}
-		if(request.getStatusIn()!=null){
-			p=e.status.in(request.getStatusIn()).and(p);
+		if(request.getStatus()!=null){
+			p=e.status.eq(request.getStatus()).and(p);
 		}
 
 		Page<WalletVO> page=queryPage(e,p,walletVOConver,pageable);

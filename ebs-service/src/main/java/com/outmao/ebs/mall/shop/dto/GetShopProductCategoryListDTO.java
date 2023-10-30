@@ -18,4 +18,8 @@ public class GetShopProductCategoryListDTO {
     private Integer productType;
 
 
+    @ApiModelProperty(name = "hotelId", value = "酒店ID")
+    private Long hotelId;
+
+
 }

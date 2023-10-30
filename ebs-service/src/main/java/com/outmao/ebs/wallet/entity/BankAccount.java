@@ -11,7 +11,7 @@ import java.util.Date;
 
 /**
  *
- * 银行账号
+ * 用户银行账号
  *
  * */
 @JsonIgnoreProperties(value = {"hibernateLazyInitializer"})
@@ -42,16 +42,23 @@ public class BankAccount  implements Serializable {
 
     /**
      * 0--个人 1--公司
+     *
      */
     private int type;
 
     /**
-     * 银行名称
+     * 0--储蓄卡 1--信用卡
+     *
+     */
+    private int cardType;
+
+    /**
+     * 开户银行名称
      */
     private String bankName;
 
     /**
-     * 支行名称
+     * 开户银行支行名称
      */
     private String branchBankName;
 

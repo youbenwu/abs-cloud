@@ -29,17 +29,16 @@ public class PayAction {
 	 *
 	 * */
 	@ApiOperation(value = "APP支付", notes = "获取APP支付订单信息 直接给客户端请求，无需再做处理")
-	@RequestMapping(value = "/prepare", method = RequestMethod.POST)
-	public Object tradePrepare(PayPrepareDTO request){
-		return Result.successResult(payService.payPrepare(request));
+	@RequestMapping(value = "/appPayPrepare", method = RequestMethod.POST)
+	public Object appPayPrepare(PayPrepareDTO request){
+		return Result.successResult(payService.appPayPrepare(request));
 	}
-
 
 
 	//钱包支付
 	@ApiOperation(value = "钱包支付", notes = "钱包支付")
 	@RequestMapping(value = "/walletPay", method = RequestMethod.POST)
-	public Trade tradeWalletPay(PayWalletDTO request){
+	public Trade walletPay(PayWalletDTO request){
 		return payService.payWallet(request);
 	}
 

@@ -7,7 +7,7 @@ import com.outmao.ebs.mall.order.dto.SetOrderStatusDTO;
 import com.outmao.ebs.mall.order.entity.Order;
 import com.outmao.ebs.mall.order.vo.StatsOrderVO;
 import com.outmao.ebs.mall.order.vo.OrderVO;
-import com.outmao.ebs.wallet.entity.Trade;
+import com.outmao.ebs.wallet.vo.TradeVO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -38,7 +38,7 @@ public interface OrderService {
 
     public List<StatsOrderVO> getStatsOrderVOListByUserIdIn(Collection<Long> userIdIn);
 
-    public Trade payPrepare(OrderPayPrepare request);
+    public TradeVO payPrepare(OrderPayPrepare request);
 
 
 

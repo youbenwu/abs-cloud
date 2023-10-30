@@ -23,14 +23,6 @@ public interface TradeDomain {
 
     /**
      *
-     * 准备支付
-     *
-     * */
-    public Trade tradePayPrepare(TradePayPrepareDTO request);
-
-
-    /**
-     *
      * 交易支付
      *
      * */
@@ -67,14 +59,12 @@ public interface TradeDomain {
     public Trade tradeClose(String tradeNo);
 
 
-
     /**
      *
      * 充值
      *
      * */
     public Trade tradeRecharge(TradeRechargeDTO request);
-
 
 
 
@@ -85,6 +75,14 @@ public interface TradeDomain {
      * */
     public Trade getTradeByTradeNo(String tradeNo);
 
+
+
+    /**
+     *
+     * 获取交易
+     *
+     * */
+    public TradeVO getTradeVOById(Long id);
 
     /**
      *

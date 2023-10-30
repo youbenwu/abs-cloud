@@ -9,7 +9,7 @@ public class GetCashListDTO {
 
     private Long walletId;
 
-    private Integer[] statusIn;
+    private Integer status;
 
 
 

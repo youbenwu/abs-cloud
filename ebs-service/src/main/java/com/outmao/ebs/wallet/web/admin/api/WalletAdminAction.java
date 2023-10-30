@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 
-@Api(value = "account-wallet", tags = "后台-钱包")
+@Api(value = "admin-wallet", tags = "后台-钱包")
 @RestController
 @RequestMapping("/api/admin/wallet")
 public class WalletAdminAction {
@@ -32,11 +32,7 @@ public class WalletAdminAction {
 
 	//Currency
 
-	/*
-	 *
-	 * 保存币种信息
-	 *
-	 * */
+
 	@PreAuthorize("hasPermission('wallet/currency','save')")
 	@ApiOperation(value = "保存币种信息", notes = "保存币种信息")
 	@PostMapping("/currency/save")
@@ -44,11 +40,6 @@ public class WalletAdminAction {
 		return walletService.saveCurrency(params);
 	}
 
-	/*
-	 *
-	 * 获取币种信息
-	 *
-	 * */
 	@PreAuthorize("hasPermission('wallet/currency','read')")
 	@ApiOperation(value = "获取币种信息", notes = "获取币种信息")
 	@PostMapping("/currency/get")
@@ -56,13 +47,9 @@ public class WalletAdminAction {
 		return walletService.getCurrencyById(id);
 	}
 
-	/*
-	 *
-	 * 获取所有币种信息
-	 *
-	 * */
+
 	@PreAuthorize("hasPermission('wallet/currency','read')")
-	@ApiOperation(value = "获取币种信息", notes = "获取币种信息")
+	@ApiOperation(value = "获取所有币种信息", notes = "获取所有币种信息")
 	@PostMapping("/currency/list")
 	public List<Currency> getCurrencyList(){
 		return walletService.getCurrencyList();

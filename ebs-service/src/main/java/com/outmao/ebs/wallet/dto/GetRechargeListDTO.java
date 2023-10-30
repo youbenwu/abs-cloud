@@ -7,6 +7,6 @@ public class GetRechargeListDTO {
 
     private Long walletId;
 
-    private Integer[] statusIn;
+    private Integer status;
 
 }

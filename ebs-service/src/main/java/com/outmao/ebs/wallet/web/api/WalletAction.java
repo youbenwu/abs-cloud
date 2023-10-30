@@ -21,7 +21,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
 import java.util.List;
 
 
@@ -34,23 +33,13 @@ public class WalletAction {
     private WalletService walletService;
 
 
-	/**
-	 *
-	 * 获取币种信息
-	 *
-	 * */
 	@ApiOperation(value = "获取币种信息", notes = "获取币种信息")
 	@PostMapping("/currency/get")
 	public Currency getCurrencyById(String id){
 		return walletService.getCurrencyById(id);
 	}
 
-	/**
-	 *
-	 * 获取所有币种信息
-	 *
-	 * */
-	@ApiOperation(value = "获取币种信息", notes = "获取币种信息")
+	@ApiOperation(value = "获取所有币种信息", notes = "获取所有币种信息")
 	@PostMapping("/currency/list")
 	public List<Currency> getCurrencyList(){
 		return walletService.getCurrencyList();

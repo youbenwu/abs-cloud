@@ -83,6 +83,11 @@ public class Order  implements Serializable{
 	private Long storeId;
 
 
+	private Long hotelId;
+
+	private String roomNo;
+
+
 	/**
 	 * 出货仓库ID
 	 */

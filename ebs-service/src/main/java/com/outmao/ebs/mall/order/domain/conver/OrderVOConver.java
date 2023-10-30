@@ -25,6 +25,8 @@ public class OrderVOConver implements BeanConver<QOrder, OrderVO> {
         vo.setPartnerId(t.get(e.partnerId));
         vo.setCustomerId(t.get(e.customerId));
         vo.setLookId(t.get(e.lookId));
+        vo.setHotelId(t.get(e.hotelId));
+        vo.setRoomNo(t.get(e.roomNo));
         vo.setType(t.get(e.type));
         vo.setOrderNo(t.get(e.orderNo));
         vo.setStatus(t.get(e.status));
@@ -62,6 +64,8 @@ public class OrderVOConver implements BeanConver<QOrder, OrderVO> {
                 e.partnerId,
                 e.customerId,
                 e.lookId,
+                e.hotelId,
+                e.roomNo,
                 e.type,
                 e.orderNo,
                 e.status,

@@ -15,6 +15,7 @@ public class ProductVOConver implements BeanConver<QProduct,ProductVO> {
         vo.setId(t.get(e.id));
         vo.setSubjectId(t.get(e.subjectId));
         vo.setShopId(t.get(e.shopId));
+        vo.setHotelId(t.get(e.hotelId));
         vo.setCategoryId(t.get(e.categoryId));
         vo.setSpcId(t.get(e.spcId));
         vo.setBrandId(t.get(e.brandId));
@@ -66,6 +67,7 @@ public class ProductVOConver implements BeanConver<QProduct,ProductVO> {
                 e.id,
                 e.subjectId,
                 e.shopId,
+                e.hotelId,
                 e.categoryId,
                 e.spcId,
                 e.brandId,

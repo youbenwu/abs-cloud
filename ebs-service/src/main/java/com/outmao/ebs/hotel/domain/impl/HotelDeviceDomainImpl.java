@@ -142,6 +142,11 @@ public class HotelDeviceDomainImpl extends BaseDomain implements HotelDeviceDoma
     }
 
     @Override
+    public HotelDevice getHotelDeviceByUserId(Long userId) {
+        return hotelDeviceDao.findByUserId(userId);
+    }
+
+    @Override
     public HotelDeviceVO getHotelDeviceVOById(Long id) {
         QHotelDevice e=QHotelDevice.hotelDevice;
 

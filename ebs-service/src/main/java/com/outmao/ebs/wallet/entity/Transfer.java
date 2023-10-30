@@ -44,11 +44,6 @@ public class Transfer implements Serializable {
 
 
 	/**
-	 * 操作KEY，用户每次操作产生一个KEY
-	 */
-	private String actionKey;
-
-	/**
 	 * 所属交易
 	 */
 	@JsonIgnore
@@ -137,6 +132,11 @@ public class Transfer implements Serializable {
 	 * 
 	 */
 	private String transferNo;
+
+	/**
+	 * 操作KEY，用户每次操作产生一个KEY
+	 */
+	private String actionKey;
 
 	/**
 	 * 转帐备注

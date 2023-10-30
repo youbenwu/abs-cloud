@@ -18,6 +18,9 @@ public class GetOrderListDTO {
     @ApiModelProperty(name = "userId", value = "下单用户ID")
     private Long userId;
 
+    @ApiModelProperty(name = "hotelId", value = "酒店ID")
+    private Long hotelId;
+
     @ApiModelProperty(name = "brokerId", value = "经纪人ID")
     private Long brokerId;
 

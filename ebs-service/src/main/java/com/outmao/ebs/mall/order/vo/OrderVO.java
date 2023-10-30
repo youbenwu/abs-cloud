@@ -61,6 +61,12 @@ public class OrderVO implements SimpleShopSetter , SimpleUserSetter {
     @ApiModelProperty(name = "lookId", value = "关联带看ID")
     private Long lookId;
 
+    @ApiModelProperty(name = "hotelId", value = "酒店ID")
+    private Long hotelId;
+
+    @ApiModelProperty(name = "roomNo", value = "房间号")
+    private String roomNo;
+
     @ApiModelProperty(name = "orderNo", value = "订单编号")
     private String orderNo;
 

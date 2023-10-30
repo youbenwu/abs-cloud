@@ -15,6 +15,14 @@ public class ShopProductCategoryDTO {
     @ApiModelProperty(name = "shopId", value = "店铺ID")
     private Long shopId;
 
+    /**
+     *
+     * 酒店ID，酒店中商品
+     *
+     */
+    @ApiModelProperty(name = "hotelId", value = "酒店ID")
+    private Long hotelId;
+
     @ApiModelProperty(name = "parentId", value = "上级ID")
     private Long parentId;
 

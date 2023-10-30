@@ -8,6 +8,6 @@ public class GetWalletListDTO {
 
     private Integer type;
 
-    private Integer[] statusIn;
+    private Integer status;
 
 }

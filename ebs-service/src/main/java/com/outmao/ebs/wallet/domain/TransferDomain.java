@@ -42,7 +42,7 @@ public interface TransferDomain {
     /**
      *
      * 预付款
-     * 发起方佘额-->发起方预付款
+     * 发起方佘额-->收款方预付款 或 发起方预付款
      *
      */
     public Transfer transferAdvance(Trade trade);

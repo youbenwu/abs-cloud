@@ -7,7 +7,7 @@ import com.outmao.ebs.mall.order.dto.OrderPayPrepare;
 import com.outmao.ebs.mall.order.entity.Order;
 import com.outmao.ebs.mall.order.service.OrderService;
 import com.outmao.ebs.mall.order.vo.OrderVO;
-import com.outmao.ebs.wallet.entity.Trade;
+import com.outmao.ebs.wallet.vo.TradeVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,7 +61,7 @@ public class OrderAction {
 
     @ApiOperation(value = "获取订单支付信息", notes = "获取订单支付信息")
     @PostMapping("/payPrepare")
-    public Trade payPrepare(OrderPayPrepare request){
+    public TradeVO payPrepare(OrderPayPrepare request){
         return orderService.payPrepare(request);
     }
 

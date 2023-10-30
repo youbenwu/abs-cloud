@@ -33,6 +33,9 @@ public class ProductDTO {
     @ApiModelProperty(name = "storeId", value = "关联门店ID")
     private Long storeId;
 
+    @ApiModelProperty(name = "hotelId", value = "酒店ID，酒店中商品")
+    private Long hotelId;
+
     /**
      *
      * 商品分类ID

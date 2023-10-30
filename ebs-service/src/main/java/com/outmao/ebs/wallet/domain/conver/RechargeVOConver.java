@@ -15,9 +15,8 @@ public class RechargeVOConver implements BeanConver<QRecharge, RechargeVO> {
         vo.setId(t.get(e.id));
         vo.setWalletId(t.get(e.wallet.id));
         vo.setRechargeNo(t.get(e.rechargeNo));
-        vo.setRechargeTradeNo(t.get(e.rechargeTradeNo));
-        vo.setCurrencyId(t.get(e.currencyId));
-        vo.setQuantity(t.get(e.quantity));
+        vo.setOrderNo(t.get(e.orderNo));
+        vo.setRechargeAmount(t.get(e.rechargeAmount));
         vo.setAmount(t.get(e.amount));
         vo.setRemark(t.get(e.remark));
         vo.setStatus(t.get(e.status));
@@ -35,9 +34,8 @@ public class RechargeVOConver implements BeanConver<QRecharge, RechargeVO> {
                 e.id,
                 e.wallet.id,
                 e.rechargeNo,
-                e.rechargeTradeNo,
-                e.currencyId,
-                e.quantity,
+                e.orderNo,
+                e.rechargeAmount,
                 e.amount,
                 e.remark,
                 e.status,

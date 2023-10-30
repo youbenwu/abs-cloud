@@ -3,6 +3,7 @@ package com.outmao.ebs.wallet.domain.impl;
 
 
 import com.outmao.ebs.common.base.BaseDomain;
+import com.outmao.ebs.common.exception.BusinessException;
 import com.outmao.ebs.common.services.eventBus.annotation.ActionEvent;
 import com.outmao.ebs.common.util.OrderNoUtil;
 import com.outmao.ebs.common.util.ServletRequestUtil;
@@ -67,6 +68,7 @@ public class TradeDomainImpl extends BaseDomain implements TradeDomain {
                 l.statusChanged(trade);
             }catch (Exception e){
                 e.printStackTrace();
+                throw new BusinessException("系统繁忙，请稍候再试");
             }
         }
     }
@@ -90,6 +92,10 @@ public class TradeDomainImpl extends BaseDomain implements TradeDomain {
             }
         }
 
+        if(request.getTradeNo()==null){
+            request.setTradeNo(OrderNoUtil.generateOrderNo());
+        }
+
         Wallet from=request.getFromId()==null?null:walletDao.getOne(request.getFromId());
 
         Wallet to=request.getToId()==null?null:walletDao.getOne(request.getToId());
@@ -103,13 +109,9 @@ public class TradeDomainImpl extends BaseDomain implements TradeDomain {
 
         trade.setCreateTime(new Date());
         trade.setStatus(TradeStatus.TRADE_WAIT_PAY.getStatus());
-        trade.setStatusRemark("待支付");
+        trade.setStatusRemark(TradeStatus.TRADE_WAIT_PAY.getStatusRemark());
 
         BeanUtils.copyProperties(request,trade);
-
-        if(trade.getTradeNo()==null){
-            trade.setTradeNo(OrderNoUtil.generateOrderNo());
-        }
 
         checkTrade(trade);
 
@@ -118,23 +120,6 @@ public class TradeDomainImpl extends BaseDomain implements TradeDomain {
         return trade;
     }
 
-    @Transactional
-    @Override
-    public Trade tradePayPrepare(TradePayPrepareDTO request) {
-
-        Trade trade=tradeDao.findByTradeNo(request.getTradeNo());
-
-        if(trade.getStatus()!= TradeStatus.TRADE_WAIT_PAY.getStatus()){
-            throw new TradeStatusException();
-        }
-
-        trade.setPayChannel(request.getPayChannel());
-        trade.setOutPayType(request.getOutPayType());
-
-        tradeDao.save(trade);
-
-        return trade;
-    }
 
     //检查交易是否能进行
     private void checkTrade(Trade trade){
@@ -162,11 +147,6 @@ public class TradeDomainImpl extends BaseDomain implements TradeDomain {
 
         if (trade.getStatus() == TradeStatus.TRADE_SUCCEED.getStatus()) {
             //已经支付成功
-            return trade;
-        }
-
-        if (trade.getStatus() == TradeStatus.TRADE_FINISHED.getStatus()) {
-            //已经交易完成
             return trade;
         }
 
@@ -396,7 +376,7 @@ public class TradeDomainImpl extends BaseDomain implements TradeDomain {
         dto.setBusinessType(WalletConstant.business_type_recharge);
         Trade trade=tradePrepare(dto);
 
-        tradePay(trade.getTradeNo());
+        trade=tradePay(trade.getTradeNo());
 
         return trade;
     }
@@ -408,7 +388,14 @@ public class TradeDomainImpl extends BaseDomain implements TradeDomain {
         return tradeDao.findByTradeNo(tradeNo);
     }
 
+    @Override
+    public TradeVO getTradeVOById(Long id) {
+        QTrade e=QTrade.trade;
 
+        TradeVO vo=queryOne(e,e.id.eq(id),tradeVOConver);
+
+        return vo;
+    }
 
     @Override
     public TradeVO getTradeVOByTradeNo(String tradeNo) {

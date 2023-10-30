@@ -3,6 +3,7 @@ package com.outmao.ebs.wallet.domain.impl;
 
 import com.outmao.ebs.common.base.BaseDomain;
 import com.outmao.ebs.common.exception.BusinessException;
+import com.outmao.ebs.common.util.OrderNoUtil;
 import com.outmao.ebs.wallet.common.constant.TradeStatus;
 import com.outmao.ebs.wallet.dao.RechargeDao;
 import com.outmao.ebs.wallet.dao.WalletDao;
@@ -43,9 +44,6 @@ public class RechargeDomainImpl extends BaseDomain implements RechargeDomain {
     private CurrencyDomain currencyDomain;
 
     @Autowired
-    private TradeDomain tradeDomain;
-
-    @Autowired
     private RechargeVOConver rechargeVOConver;
 
     @Transactional
@@ -56,13 +54,7 @@ public class RechargeDomainImpl extends BaseDomain implements RechargeDomain {
         recharge.setWallet(walletDao.getOne(request.getWalletId()));
         recharge.setCreateTime(new Date());
         BeanUtils.copyProperties(request,recharge);
-
-        Currency currency=currencyDomain.getCurrencyById(recharge.getCurrencyId());
-
-        Long amount=currency.getPar()*recharge.getQuantity();
-
-        recharge.setAmount(amount);
-
+        recharge.setOrderNo(OrderNoUtil.generateOrderNo());
         rechargeDao.save(recharge);
         return recharge;
     }
@@ -70,7 +62,7 @@ public class RechargeDomainImpl extends BaseDomain implements RechargeDomain {
     @Transactional
     @Override
     public Recharge setRechargeStatus(SetRechargeStatusDTO request) {
-        Recharge recharge=rechargeDao.findByRechargeNo(request.getRechargeNo());
+        Recharge recharge=rechargeDao.findByOrderNo(request.getRechargeNo());
 
         if(recharge==null)
             return null;
@@ -100,7 +92,6 @@ public class RechargeDomainImpl extends BaseDomain implements RechargeDomain {
             recharge.setSuccessTime(new Date());
         }else if(recharge.getStatus()==TradeStatus.TRADE_FINISHED.getStatus()){
             recharge.setFinishTime(new Date());
-            recharge(recharge);
         }else if(recharge.getStatus()==TradeStatus.TRADE_CLOSED.getStatus()){
             recharge.setCloseTime(new Date());
         }
@@ -109,14 +100,9 @@ public class RechargeDomainImpl extends BaseDomain implements RechargeDomain {
         return recharge;
     }
 
-
-    private void recharge(Recharge recharge){
-
-        Currency currency=currencyDomain.getCurrencyById(recharge.getCurrencyId());
-
-        tradeDomain.tradeRecharge(
-                new TradeRechargeDTO(recharge.getWallet().getId(),recharge.getCurrencyId(),recharge.getQuantity()*currency.getOneUnit())
-        );
+    @Override
+    public Recharge getRechargeByOrderNo(String orderNo) {
+        return rechargeDao.findByOrderNo(orderNo);
     }
 
     @Override
@@ -125,8 +111,8 @@ public class RechargeDomainImpl extends BaseDomain implements RechargeDomain {
 
         Predicate p=null;
 
-        if(request.getStatusIn()!=null){
-            p=e.status.in(request.getStatusIn());
+        if(request.getStatus()!=null){
+            p=e.status.in(request.getStatus());
         }
 
         if(request.getWalletId()!=null){

@@ -10,6 +10,6 @@ import javax.persistence.LockModeType;
 public interface RechargeDao extends JpaRepository<Recharge,Long> {
 
     @Lock(value = LockModeType.PESSIMISTIC_READ)
-    public Recharge findByRechargeNo(String rechargeNo);
+    public Recharge findByOrderNo(String orderNo);
 
 }

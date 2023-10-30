@@ -29,12 +29,11 @@ public class Recharge implements Serializable {
 
     //订单号
     @Column(unique = true)
-    private String rechargeNo;
+    private String orderNo;
 
     //充值交易号
     @Column(unique = true)
-    private String rechargeTradeNo;
-
+    private String rechargeNo;
 
     //订单状态 0--未支付 1--已支付 2--交易完成 3--交易关闭
     private int status;
@@ -43,13 +42,11 @@ public class Recharge implements Serializable {
     private String statusRemark;
 
     //需要充值的货币
-    private String currencyId;
-
-    //充值数量
-    private long quantity;
+    @Embedded
+    private RechargeAmount rechargeAmount;
 
     //需要支付的金额
-    private long amount;
+    private double amount;
 
     //备注
     private String remark;

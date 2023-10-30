@@ -4,15 +4,15 @@ import com.outmao.ebs.wallet.common.constant.PayChannel;
 import com.outmao.ebs.wallet.common.constant.TradeType;
 import com.outmao.ebs.wallet.common.constant.WalletConstant;
 import com.outmao.ebs.wallet.domain.CashDomain;
-import com.outmao.ebs.wallet.dto.CashDTO;
-import com.outmao.ebs.wallet.dto.GetCashListDTO;
-import com.outmao.ebs.wallet.dto.SetCashStatusDTO;
-import com.outmao.ebs.wallet.dto.TradePrepareDTO;
+import com.outmao.ebs.wallet.dto.*;
 import com.outmao.ebs.wallet.entity.Cash;
+import com.outmao.ebs.wallet.entity.Currency;
 import com.outmao.ebs.wallet.entity.Trade;
 import com.outmao.ebs.wallet.pay.service.PayService;
 import com.outmao.ebs.wallet.service.CashService;
+import com.outmao.ebs.wallet.service.WalletService;
 import com.outmao.ebs.wallet.vo.CashVO;
+import com.outmao.ebs.wallet.vo.TradeVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.data.domain.Page;
@@ -28,6 +28,8 @@ public class CashServiceImpl implements CashService, CommandLineRunner {
     @Autowired
     private CashDomain cashDomain;
 
+    @Autowired
+    private WalletService walletService;
 
     @Autowired
     private PayService payService;
@@ -45,20 +47,28 @@ public class CashServiceImpl implements CashService, CommandLineRunner {
 
         Cash cash= cashDomain.saveCash(request);
 
+        return cash;
+    }
+
+    @Override
+    public TradeVO cashPayPrepare(CashPayPrepare request) {
+        Cash cash = cashDomain.getCashByOrderNo(request.getOrderNo());
+
+        Currency currency=walletService.getCurrencyById("RMB");
+        long amount=(long) (cash.getAmount()*currency.getPar());
+
         TradePrepareDTO dto=new TradePrepareDTO();
-        dto.setTradeNo(cash.getCashNo());
+        dto.setTradeNo(request.getOrderNo());
         dto.setFromId(cash.getWallet().getId());
-        dto.setCurrencyId("RMB");
-        dto.setAmount(cash.getAmount());
+        dto.setCurrencyId(currency.getId());
+        dto.setAmount(amount);
         dto.setRemark(cash.getRemark());
         dto.setType(TradeType.Cash.getType());
         dto.setBusinessType(WalletConstant.business_type_cash);
         dto.setBusiness("用户提现");
         dto.setPayChannel(PayChannel.WalletPay.getType());
 
-        payService.tradePrepare(dto);
-
-        return cash;
+        return payService.tradePrepare(dto);
     }
 
     @Override

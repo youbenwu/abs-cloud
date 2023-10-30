@@ -7,11 +7,35 @@ import com.outmao.ebs.wallet.dto.TradePrepareDTO;
 import com.outmao.ebs.wallet.entity.Trade;
 import com.outmao.ebs.wallet.pay.dto.PayPrepareDTO;
 import com.outmao.ebs.wallet.pay.dto.PayWalletDTO;
+import com.outmao.ebs.wallet.vo.TradeVO;
 
 public interface PayService {
 
 
 	public void addStatusListener(TradeStatusListener listener);
+
+	/**
+     *
+     * 创建交易
+     *
+     * */
+	public TradeVO tradePrepare(TradePrepareDTO request);
+
+
+	/**
+	 *
+	 * 获取APP支付订单信息 直接给客户端请求，无需再做处理
+	 *
+	 * */
+	public Object appPayPrepare(PayPrepareDTO request);
+
+	/**
+	 *
+	 * 钱包方式支付
+	 *
+	 * */
+	public Trade payWallet(PayWalletDTO request);
+
 
 	/**
 	 *
@@ -21,48 +45,27 @@ public interface PayService {
 	public Trade tradePayTo(TradePayToDTO request);
 
 	/**
-     *
-     * 创建交易
-     *
-     * */
-	public Trade tradePrepare(TradePrepareDTO request);
-
-	/**
-	 *
-	 * 获取APP支付订单信息 直接给客户端请求，无需再做处理
-	 *
-	 * */
-	public Object payPrepare(PayPrepareDTO request);
-
-	/**
-	 *
-	 * 钱包方式支付
-	 *
-	 * */
-	public Trade payWallet(PayWalletDTO request);
-
-	/*
 	 *
 	 * 完成交易
 	 *
 	 * */
 	public Trade tradeFinish(String tradeNo);
 
-	/*
+	/**
 	 *
 	 * 退款
 	 *
 	 * */
 	public Trade tradeRefund(String tradeNo);
 
-	/*
+	/**
 	 *
 	 * 关闭交易
 	 *
 	 * */
 	public Trade tradeClose(String tradeNo);
 
-	/*
+	/**
 	 *
 	 * 交易查询
 	 *

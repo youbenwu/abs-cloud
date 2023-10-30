@@ -10,9 +10,9 @@ public class CashDTO {
 
     private Long walletId;
 
-    private long amount;
+    private double amount;
 
-    private CashBankAccount to;
+    private CashBankAccount bankAccount;
 
     private String remark;
 

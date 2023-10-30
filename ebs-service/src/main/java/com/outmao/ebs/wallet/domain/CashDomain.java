@@ -15,6 +15,8 @@ public interface CashDomain {
 
     public Cash saveCash(CashDTO request);
 
+    public Cash getCashByOrderNo(String orderNo);
+
     public Cash setCashStatus(SetCashStatusDTO request);
 
     public Page<CashVO> getCashVOPage(GetCashListDTO request, Pageable pageable);

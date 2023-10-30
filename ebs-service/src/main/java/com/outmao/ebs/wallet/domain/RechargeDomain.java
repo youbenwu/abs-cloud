@@ -15,6 +15,8 @@ public interface RechargeDomain {
 
     public Recharge setRechargeStatus(SetRechargeStatusDTO request);
 
+    public Recharge getRechargeByOrderNo(String orderNo);
+
     public Page<RechargeVO> getRechargeVOPage(GetRechargeListDTO request, Pageable pageable);
 
 

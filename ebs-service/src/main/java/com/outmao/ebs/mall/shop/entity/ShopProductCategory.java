@@ -72,10 +72,18 @@ public class ShopProductCategory implements Serializable {
 
     /**
      *
+     * 酒店ID，酒店中商品
+     *
+     */
+    private Long hotelId;
+
+    /**
+     *
      * 商品类型
      *
      */
     private Integer productType;
+
 
     /**
      * 分类标题
