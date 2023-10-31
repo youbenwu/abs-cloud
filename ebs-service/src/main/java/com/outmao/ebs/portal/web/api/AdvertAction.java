@@ -1,8 +1,10 @@
 package com.outmao.ebs.portal.web.api;
 
 
+import com.outmao.ebs.portal.dto.AdvertOrderDTO;
 import com.outmao.ebs.portal.dto.GetAdvertListDTO;
 import com.outmao.ebs.portal.entity.Advert;
+import com.outmao.ebs.portal.entity.AdvertOrder;
 import com.outmao.ebs.portal.service.AdvertService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -49,6 +51,12 @@ public class AdvertAction {
             list=advertService.getAdvertList("pad-home-def",size);
         }
         return list;
+    }
+
+    @ApiOperation(value = "广告投放下单", notes = "广告投放下单")
+    @PostMapping("/saveOrder")
+    public AdvertOrder saveAdvertOrder(AdvertOrderDTO request){
+        return advertService.saveAdvertOrder(request);
     }
 
 

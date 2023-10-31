@@ -110,6 +110,9 @@ public class PayServiceImpl implements PayService {
     public Trade tradeQuery(String tradeNo) {
         Trade trade = tradeService.getTradeByTradeNo(tradeNo);
 
+        if(trade==null)
+            return trade;
+
         if (trade.getStatus() == TradeStatus.TRADE_WAIT_PAY.getStatus()) {
 
             //查一下看有没支付成功

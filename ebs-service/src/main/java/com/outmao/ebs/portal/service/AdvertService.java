@@ -1,9 +1,8 @@
 package com.outmao.ebs.portal.service;
 
-import com.outmao.ebs.portal.dto.AdvertDTO;
-import com.outmao.ebs.portal.dto.GetAdvertListDTO;
-import com.outmao.ebs.portal.dto.SetAdvertStatusDTO;
+import com.outmao.ebs.portal.dto.*;
 import com.outmao.ebs.portal.entity.Advert;
+import com.outmao.ebs.portal.entity.AdvertOrder;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -22,6 +21,12 @@ public interface AdvertService {
 
 
     public List<Advert> getAdvertList(String channelCode,int size);
+
+
+    public AdvertOrder saveAdvertOrder(AdvertOrderDTO request);
+
+
+    public AdvertOrder setAdvertOrderStatus(SetAdvertOrderStatusDTO request);
 
 
 }

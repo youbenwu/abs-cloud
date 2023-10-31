@@ -43,8 +43,9 @@ public class AdvertChannelServiceImpl extends BaseService implements AdvertChann
             productDTO.setImage("abc");
             ProductSkuDTO skuDTO=new ProductSkuDTO();
             skuDTO.setPrice(request.getPrice());
-            skuDTO.setName(channel.getTitle());
-            skuDTO.setStock(channel.getMaxNum());
+            skuDTO.setName("1000PV");
+            skuDTO.setStock(1000000000);
+
             productDTO.setSkus(new ArrayList<>());
             productDTO.getSkus().add(skuDTO);
             product=productService.saveProduct(productDTO);
@@ -57,6 +58,12 @@ public class AdvertChannelServiceImpl extends BaseService implements AdvertChann
     @Override
     public void deleteAdvertChannelById(Long id) {
         advertChannelDomain.deleteAdvertChannelById(id);
+    }
+
+
+    @Override
+    public AdvertChannel getAdvertChannelById(Long id) {
+        return advertChannelDomain.getAdvertChannelById(id);
     }
 
     @Override

@@ -82,7 +82,7 @@ public class TradeDomainImpl extends BaseDomain implements TradeDomain {
     @Override
     public Trade tradePrepare(TradePrepareDTO request) {
 
-        Trade trade=request.getTradeNo()==null?null:tradeDao.findByTradeNo(request.getTradeNo());
+        Trade trade=request.getTradeNo()==null?null:tradeDao.findByTradeNoLock(request.getTradeNo());
 
         if(trade==null){
             trade=new Trade();
@@ -139,7 +139,7 @@ public class TradeDomainImpl extends BaseDomain implements TradeDomain {
     @Override
     public Trade tradePay(String tradeNo) {
 
-        Trade trade = tradeDao.findByTradeNo(tradeNo);
+        Trade trade = tradeDao.findByTradeNoLock(tradeNo);
 
         if(trade==null){
             throw new TradeNoFoundException();
@@ -203,7 +203,7 @@ public class TradeDomainImpl extends BaseDomain implements TradeDomain {
     @Override
     public Trade tradePayTo(TradePayToDTO request) {
 
-        Trade trade = tradeDao.findByTradeNo(request.getTradeNo());
+        Trade trade = tradeDao.findByTradeNoLock(request.getTradeNo());
 
         if(trade==null){
             throw new TradeNoFoundException();
@@ -248,7 +248,7 @@ public class TradeDomainImpl extends BaseDomain implements TradeDomain {
     @Transactional
     @Override
     public Trade tradeFinish(String tradeNo) {
-        Trade trade =tradeDao.findByTradeNo(tradeNo);
+        Trade trade =tradeDao.findByTradeNoLock(tradeNo);
         if(trade==null){
             throw new TradeNoFoundException();
         }
@@ -279,7 +279,7 @@ public class TradeDomainImpl extends BaseDomain implements TradeDomain {
     @Override
     public Trade tradeRefund(TradeRefundDTO request) {
 
-        Trade trade =tradeDao.findByTradeNo(request.getTradeNo());
+        Trade trade =tradeDao.findByTradeNoLock(request.getTradeNo());
 
         if(trade==null){
             throw new TradeNoFoundException();
@@ -336,7 +336,7 @@ public class TradeDomainImpl extends BaseDomain implements TradeDomain {
     @Override
     public Trade tradeClose(String tradeNo) {
 
-        Trade trade = tradeDao.findByTradeNo(tradeNo);
+        Trade trade = tradeDao.findByTradeNoLock(tradeNo);
 
         if(trade==null){
             throw new TradeNoFoundException();

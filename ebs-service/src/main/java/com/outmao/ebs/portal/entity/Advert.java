@@ -37,10 +37,10 @@ public class Advert extends SortEntity {
 
     /**
      *
-     * 0--未上架 1--已上架
+     * 0--未上架 1--已上架 2--需缴费
      *
      * */
-    @ApiModelProperty(name = "status", value = "0--未上架 1--已上架")
+    @ApiModelProperty(name = "status", value = "0--未上架 1--已上架 2--需缴费")
     private int status;
 
     /**
@@ -48,7 +48,7 @@ public class Advert extends SortEntity {
      * 广告类型
      *
      * */
-    @ApiModelProperty(name = "type", value = "广告类型 0--系统广告 1--收费广告")
+    @ApiModelProperty(name = "type", value = "广告类型 0--系统广告 1--企业广告 2--个人广告")
     private int type;
 
     /**
@@ -87,6 +87,22 @@ public class Advert extends SortEntity {
 
     @ApiModelProperty(name = "endTime", value = "广告展示结束时间")
     private Date endTime;
+
+
+    @ApiModelProperty(name = "buyPv", value = "广告主购买的PV数")
+    private long buyPv;
+
+    @ApiModelProperty(name = "buyAmount", value = "广告主购买的总金额")
+    private double buyAmount;
+
+
+    @ApiModelProperty(name = "pv", value = "流量")
+    private long pv;
+
+    @ApiModelProperty(name = "uv", value = "独立访客，一台电脑24小时以内访问N次计为1次")
+    private long uv;
+
+
 
 
 

@@ -99,7 +99,9 @@ public class RechargeServiceImpl extends BaseService implements RechargeService,
     public Recharge setRechargeStatus(SetRechargeStatusDTO request) {
         Recharge recharge= rechargeDomain.setRechargeStatus(request);
         if(recharge.getStatus()== TradeStatus.TRADE_FINISHED.getStatus()){
-            recharge(recharge);
+            if(recharge.getRechargeNo()==null) {
+                recharge(recharge);
+            }
         }
         return recharge;
     }
@@ -108,8 +110,8 @@ public class RechargeServiceImpl extends BaseService implements RechargeService,
 
         Currency currency=walletService.getCurrencyById(recharge.getRechargeAmount().getCurrencyId());
         long amount=(long)( recharge.getRechargeAmount().getAmount()*currency.getOneUnit());
-        tradeService.tradeRecharge(new TradeRechargeDTO(recharge.getWallet().getId(), currency.getId(), amount));
-
+        Trade trade=tradeService.tradeRecharge(new TradeRechargeDTO(recharge.getWallet().getId(), currency.getId(), amount));
+        recharge.setRechargeNo(trade.getTradeNo());
     }
 
     @Override
@@ -117,6 +119,8 @@ public class RechargeServiceImpl extends BaseService implements RechargeService,
         return rechargeDomain.getRechargeVOPage(request,pageable);
     }
 
+
+    @Transactional
     @Override
     public void statusChanged(Trade trade) {
         if(trade.getBusinessType()== WalletConstant.business_type_recharge_pay) {

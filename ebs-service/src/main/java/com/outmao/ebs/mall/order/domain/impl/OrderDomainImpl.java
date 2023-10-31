@@ -250,6 +250,9 @@ public class OrderDomainImpl extends BaseDomain implements OrderDomain {
 
         Order order=orderDao.findByOrderNo(request.getOrderNo());
 
+        security.hasPermission(order.getOrgId(),null);
+
+
         if(order.getStatus()==request.getStatus()){
             return order;
         }

@@ -2,19 +2,27 @@ package com.outmao.ebs.portal.service.impl;
 
 import com.outmao.ebs.common.base.BaseService;
 import com.outmao.ebs.common.exception.BusinessException;
+import com.outmao.ebs.mall.order.common.constant.OrderStatus;
+import com.outmao.ebs.mall.order.dto.ToOrderDTO;
+import com.outmao.ebs.mall.order.entity.Order;
+import com.outmao.ebs.mall.order.service.OrderService;
+import com.outmao.ebs.mall.order.service.SettleService;
+import com.outmao.ebs.mall.order.vo.OrderVO;
+import com.outmao.ebs.mall.order.vo.ToOrderVO;
 import com.outmao.ebs.portal.domain.AdvertDomain;
-import com.outmao.ebs.portal.dto.AdvertDTO;
-import com.outmao.ebs.portal.dto.GetAdvertListDTO;
-import com.outmao.ebs.portal.dto.SetAdvertStatusDTO;
+import com.outmao.ebs.portal.dto.*;
 import com.outmao.ebs.portal.entity.Advert;
 import com.outmao.ebs.portal.entity.AdvertChannel;
+import com.outmao.ebs.portal.entity.AdvertOrder;
 import com.outmao.ebs.portal.service.AdvertChannelService;
 import com.outmao.ebs.portal.service.AdvertService;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import java.util.List;
@@ -28,6 +36,12 @@ public class AdvertServiceImpl extends BaseService implements AdvertService {
 
     @Autowired
     private AdvertChannelService advertChannelService;
+
+    @Autowired
+    private OrderService orderService;
+
+    @Autowired
+    private SettleService settleService;
 
 
     @Override
@@ -68,6 +82,50 @@ public class AdvertServiceImpl extends BaseService implements AdvertService {
         Page<Advert> page=getAdvertPage(dto, PageRequest.of(0,size));
         return page.getContent();
     }
+
+
+    @Transactional
+    @Override
+    public AdvertOrder saveAdvertOrder(AdvertOrderDTO request) {
+
+        //用结算ID去下单
+        ToOrderDTO toOrderDTO=new ToOrderDTO();
+        toOrderDTO.setSettleId(request.getSettleId());
+        ToOrderVO toOrderVO=settleService.buy(toOrderDTO);
+        OrderVO order=orderService.getOrderVOByOrderNo(toOrderVO.getOrders().get(0));
+
+
+        AdvertDTO advertDTO=new AdvertDTO();
+        advertDTO.setUserId(order.getUserId());
+        BeanUtils.copyProperties(request,advertDTO);
+        advertDTO.setStatus(2);
+
+        Advert advert=saveAdvert(advertDTO);
+
+
+        AdvertOrder advertOrder=new AdvertOrder();
+        advertOrder.setOrderNo(order.getOrderNo());
+        advertOrder.setAdvertId(advert.getId());
+        advertOrder.setPv(order.getQuantity()*1000);
+        advertOrder.setAmount(order.getTotalAmount());
+
+        advertDomain.saveAdvertOrder(advertOrder);
+
+        return advertOrder;
+    }
+
+
+    @Transactional
+    @Override
+    public AdvertOrder setAdvertOrderStatus(SetAdvertOrderStatusDTO request) {
+        AdvertOrder advertOrder=advertDomain.setAdvertOrderStatus(request);
+        if(advertOrder.getStatus()== OrderStatus.SUCCESSED.getStatus()){
+           advertDomain.buyPv(advertOrder.getAdvertId(),advertOrder.getPv(),advertOrder.getAmount());
+        }
+        advertOrder.setStatus(OrderStatus.FINISHED.getStatus());
+        return advertOrder;
+    }
+
 
 
 }

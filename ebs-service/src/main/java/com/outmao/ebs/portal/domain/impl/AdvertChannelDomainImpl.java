@@ -39,6 +39,7 @@ public class AdvertChannelDomainImpl extends BaseDomain implements AdvertChannel
 
         BeanUtils.copyProperties(request,c,"orgId");
 
+        c.setUpdateTime(new Date());
         advertChannelDao.save(c);
 
         return c;
@@ -49,6 +50,11 @@ public class AdvertChannelDomainImpl extends BaseDomain implements AdvertChannel
     public void deleteAdvertChannelById(Long id) {
         AdvertChannel c=advertChannelDao.getOne(id);
         advertChannelDao.delete(c);
+    }
+
+    @Override
+    public AdvertChannel getAdvertChannelById(Long id) {
+        return advertChannelDao.findById(id).orElse(null);
     }
 
     @Override

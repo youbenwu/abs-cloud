@@ -19,7 +19,7 @@ import java.util.Date;
 @JsonIgnoreProperties(value = {"hibernateLazyInitializer"})
 @Data
 @Entity
-@Table(name = "portal_AdvertStats")
+@Table(name = "portal_AdvertLog")
 public class AdvertLog implements Serializable {
 
     private static final long serialVersionUID = 1L;

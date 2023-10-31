@@ -12,6 +12,8 @@ public interface AdvertChannelDomain {
 
     public void deleteAdvertChannelById(Long id);
 
+    public AdvertChannel getAdvertChannelById(Long id);
+
     public AdvertChannel getAdvertChannelByCode(String code);
 
     public Page<AdvertChannel> getAdvertChannelPage(GetAdvertChannelListDTO request, Pageable pageable);

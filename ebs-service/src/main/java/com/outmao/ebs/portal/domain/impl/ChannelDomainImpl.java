@@ -50,6 +50,8 @@ public class ChannelDomainImpl extends BaseDomain implements ChannelDomain {
         channelDao.delete(c);
     }
 
+
+
     @Override
     public Channel getChannelByCode(String code) {
         return channelDao.findByCode(code);

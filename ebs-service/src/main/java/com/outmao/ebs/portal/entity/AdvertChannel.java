@@ -64,28 +64,10 @@ public class AdvertChannel implements Serializable {
 
     /**
      *
-     * 位置可以显示广告数量
+     * 广告投放价格（1000PV）
      *
      */
-    @ApiModelProperty(name = "num", value = "位置可以显示广告数量")
-    private int num;
-
-
-    /**
-     *
-     * 最多可以投放广告数
-     *
-     */
-    @ApiModelProperty(name = "maxNum", value = "最多可以投放广告数")
-    private int maxNum;
-
-
-    /**
-     *
-     * 广告投放价格（每天）
-     *
-     */
-    @ApiModelProperty(name = "price", value = "广告投放价格（每天）")
+    @ApiModelProperty(name = "price", value = "广告投放价格（1000PV）")
     private double price;
 
 

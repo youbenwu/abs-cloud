@@ -48,6 +48,9 @@ public class OrderDTO {
     @ApiModelProperty(name = "products", value = "订单商品信息",required = true)
     private List<OrderProductDTO> products;
 
+    @ApiModelProperty(name = "quantity", value = "商品总数量")
+    private int quantity;
+
     @ApiModelProperty(name = "amount", value = "商品金额")
     private double amount;
 

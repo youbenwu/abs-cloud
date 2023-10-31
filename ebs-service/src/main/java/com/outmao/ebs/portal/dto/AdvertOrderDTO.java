@@ -1,63 +1,22 @@
 package com.outmao.ebs.portal.dto;
 
 
-import com.outmao.ebs.common.vo.BindingItem;
-import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
-
-import javax.persistence.Embedded;
 import java.util.Date;
 
-@ApiModel(value = "AdvertDTO", description = "保存广告参数")
 @Data
-public class AdvertDTO {
+public class AdvertOrderDTO {
 
     @ApiModelProperty(name = "id", value = "ID")
     private Long id;
 
-    @ApiModelProperty(name = "userId", value = "广告投放的用户ID")
-    private Long userId;
-
-    @ApiModelProperty(name = "orgId", value = "组织ID")
-    private Long orgId;
 
     @ApiModelProperty(name = "channelId", value = "频道ID")
     private Long channelId;
 
-
-    /**
-     *
-     * 排序
-     *
-     * */
-    @ApiModelProperty(name = "sort", value = "排序")
-    private int sort;
-
-    /**
-     *
-     * 0--未上架 1--已上架 2--欠费
-     *
-     * */
-    @ApiModelProperty(name = "status", value = "0--未上架 1--已上架 2--欠费")
-    private int status;
-
-    /**
-     *
-     * 广告类型
-     *
-     * */
     @ApiModelProperty(name = "type", value = "广告类型 0--系统广告 1--企业广告 2--个人广告")
     private int type;
-
-    /**
-     *
-     * 绑定商品 item.id--商品ID item.type--Product
-     *
-     * */
-    @ApiModelProperty(name = "item", value = "绑定商品 item.id--商品ID item.type--Product")
-    @Embedded
-    private BindingItem item;
 
     @ApiModelProperty(name = "advertType", value = "广告类型 PPV--普通图片视频广告 PPC--带广告链接 PPA--带二维码")
     private String advertType;
@@ -85,6 +44,10 @@ public class AdvertDTO {
 
     @ApiModelProperty(name = "endTime", value = "广告展示结束时间")
     private Date endTime;
+
+
+    @ApiModelProperty(name = "settleId", value = "结算ID")
+    private Long settleId;
 
 
 }
