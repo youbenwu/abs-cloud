@@ -140,6 +140,10 @@ public class TradeDomainImpl extends BaseDomain implements TradeDomain {
     public Trade tradePay(String tradeNo) {
 
         Trade trade = tradeDao.findByTradeNoLock(tradeNo);
+        return tradePay(trade);
+    }
+
+    private Trade tradePay(Trade trade) {
 
         if(trade==null){
             throw new TradeNoFoundException();
@@ -197,6 +201,8 @@ public class TradeDomainImpl extends BaseDomain implements TradeDomain {
 
         return trade;
     }
+
+
 
     @ActionEvent(WalletTradeEvent.class)
     @Transactional
@@ -376,7 +382,7 @@ public class TradeDomainImpl extends BaseDomain implements TradeDomain {
         dto.setBusinessType(WalletConstant.business_type_recharge);
         Trade trade=tradePrepare(dto);
 
-        trade=tradePay(trade.getTradeNo());
+        trade=tradePay(trade);
 
         return trade;
     }

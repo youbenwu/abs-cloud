@@ -4,7 +4,6 @@ package com.outmao.ebs.mall.merchant.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.outmao.ebs.user.entity.User;
 import lombok.Data;
-
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;

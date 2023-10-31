@@ -30,7 +30,7 @@ public class HotelDeviceOwnerDomainImpl extends BaseDomain implements HotelDevic
     @Transactional()
     @Override
     public HotelDeviceOwner saveHotelDeviceOwner(HotelDeviceOwnerDTO request) {
-        HotelDeviceOwner owner=hotelDeviceOwnerDao.findByUserId(request.getUserId());
+        HotelDeviceOwner owner=hotelDeviceOwnerDao.findByUserIdLock(request.getUserId());
         if(owner==null){
             owner=new HotelDeviceOwner();
             owner.setCreateTime(new Date());
@@ -79,7 +79,7 @@ public class HotelDeviceOwnerDomainImpl extends BaseDomain implements HotelDevic
     @Transactional()
     @Override
     public HotelDeviceOwner addHotelDeviceOwnerIncome(Long userId, double addIncome) {
-        HotelDeviceOwner owner=hotelDeviceOwnerDao.findByUserId(userId);
+        HotelDeviceOwner owner=hotelDeviceOwnerDao.findByUserIdLock(userId);
         if(owner==null){
             throw new BusinessException("对象不存在");
         }

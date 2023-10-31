@@ -19,9 +19,6 @@ public class UserCommissionCashVOConvert implements BeanConver<QUserCommissionCa
         vo.setStatus(t.get(e.status));
         vo.setStatusRemark(t.get(e.statusRemark));
         vo.setAmount(t.get(e.amount));
-        vo.setBankName(t.get(e.bankName));
-        vo.setBankAccount(t.get(e.bankAccount));
-        vo.setBankCardNumber(t.get(e.bankCardNumber));
         vo.setRemark(t.get(e.remark));
         vo.setCreateTime(t.get(e.createTime));
         vo.setUpdateTime(t.get(e.updateTime));
@@ -38,9 +35,6 @@ public class UserCommissionCashVOConvert implements BeanConver<QUserCommissionCa
                 e.status,
                 e.statusRemark,
                 e.amount,
-                e.bankName,
-                e.bankAccount,
-                e.bankCardNumber,
                 e.remark,
                 e.createTime,
                 e.updateTime

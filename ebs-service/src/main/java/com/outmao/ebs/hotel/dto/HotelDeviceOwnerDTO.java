@@ -16,6 +16,13 @@ public class HotelDeviceOwnerDTO {
 
     private Long userId;
 
+    /**
+     *
+     * 合伙人ID
+     *
+     */
+    private Long partnerId;
+
 
     /**
      *

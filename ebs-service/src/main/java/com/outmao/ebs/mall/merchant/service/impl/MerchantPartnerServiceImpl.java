@@ -5,8 +5,10 @@ import com.outmao.ebs.mall.merchant.domain.MerchantPartnerDomain;
 import com.outmao.ebs.mall.merchant.dto.DeleteMerchantPartnerDTO;
 import com.outmao.ebs.mall.merchant.dto.GetMerchantPartnerListDTO;
 import com.outmao.ebs.mall.merchant.dto.MerchantPartnerDTO;
+import com.outmao.ebs.mall.merchant.entity.Merchant;
 import com.outmao.ebs.mall.merchant.entity.MerchantPartner;
 import com.outmao.ebs.mall.merchant.service.MerchantPartnerService;
+import com.outmao.ebs.mall.merchant.service.MerchantService;
 import com.outmao.ebs.mall.merchant.vo.MerchantPartnerVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -21,8 +23,15 @@ public class MerchantPartnerServiceImpl extends BaseService implements MerchantP
     @Autowired
     private MerchantPartnerDomain merchantPartnerDomain;
 
+    @Autowired
+    private MerchantService merchantService;
+
     @Override
     public MerchantPartner saveMerchantPartner(MerchantPartnerDTO request) {
+        if(request.getMerchantId()==null){
+            Merchant merchant=merchantService.getMerchant();
+            request.setMerchantId(merchant.getId());
+        }
         return merchantPartnerDomain.saveMerchantPartner(request);
     }
 

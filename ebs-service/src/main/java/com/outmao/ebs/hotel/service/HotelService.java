@@ -66,6 +66,8 @@ public interface HotelService {
 
     public long getHotelDeviceCount();
 
+    public long getHotelDeviceCountByPartnerId(Long partnerId);
+
     public HotelDevice getHotelDeviceByUserId(Long userId);
 
     public HotelDeviceVO getHotelDeviceVOById(Long id);

@@ -9,7 +9,6 @@ import lombok.Data;
 @Data
 public class SetUserCommissionCashStatusDTO {
 
-
     /**
      *
      * ID
@@ -17,10 +16,6 @@ public class SetUserCommissionCashStatusDTO {
      */
     @ApiModelProperty(name = "id", value = "ID")
     private Long id;
-
-    @ApiModelProperty(name = "merchantId", value = "商家ID")
-    private Long merchantId;
-
 
     /**
      *

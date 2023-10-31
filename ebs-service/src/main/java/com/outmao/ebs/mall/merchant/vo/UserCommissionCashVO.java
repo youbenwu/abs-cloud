@@ -22,13 +22,11 @@ public class UserCommissionCashVO implements SimpleUserSetter {
     @ApiModelProperty(name = "id", value = "自动编号")
     private Long id;
 
-
     /**
      * 用户
      */
     @ApiModelProperty(name = "commissionId", value = "用户ID")
     private Long userId;
-
 
     private SimpleUserVO user;
 
@@ -41,7 +39,7 @@ public class UserCommissionCashVO implements SimpleUserSetter {
      * 状态 0--未处理 1--处理中 2--已退款 3--不通过
      *
      */
-    @ApiModelProperty(name = "status", value = "状态 0--未处理 1--处理中 2--已汇款 3--不通过")
+    @ApiModelProperty(name = "status", value = "状态 0--未处理 1--处理中 2--已完成 3--审核不通过")
     private int status;
 
 
@@ -63,33 +61,6 @@ public class UserCommissionCashVO implements SimpleUserSetter {
      */
     @ApiModelProperty(name = "amount", value = "提现佣金")
     private double amount;
-
-    /**
-     *
-     *
-     * 开户银行
-     *
-     */
-    @ApiModelProperty(name = "bankName", value = "开户银行")
-    private String bankName;
-
-    /**
-     *
-     *
-     * 开户名
-     *
-     */
-    @ApiModelProperty(name = "bankAccount", value = "开户名")
-    private String bankAccount;
-
-    /**
-     *
-     *
-     * 银行卡号
-     *
-     */
-    @ApiModelProperty(name = "bankCardNumber", value = "银行卡号")
-    private String bankCardNumber;
 
     /**
      *

@@ -65,7 +65,7 @@ public class UserCommissionCash   implements Serializable {
     /**
      *
      *
-     * 状态 0--未处理 1--处理中 2--已汇款 3--不通过
+     * 状态 0--未处理 1--处理中 2--提现成功 3--审核不通过
      *
      */
     private int status;
@@ -80,6 +80,9 @@ public class UserCommissionCash   implements Serializable {
     private String statusRemark;
 
 
+    private String orderNo;
+
+
     /**
      *
      *
@@ -87,30 +90,6 @@ public class UserCommissionCash   implements Serializable {
      *
      */
     private double amount;
-
-    /**
-     *
-     *
-     * 开户银行
-     *
-     */
-    private String bankName;
-
-    /**
-     *
-     *
-     * 开户名
-     *
-     */
-    private String bankAccount;
-
-    /**
-     *
-     *
-     * 银行卡号
-     *
-     */
-    private String bankCardNumber;
 
 
     /**
@@ -120,7 +99,6 @@ public class UserCommissionCash   implements Serializable {
      *
      */
     private String remark;
-
 
 
     /**

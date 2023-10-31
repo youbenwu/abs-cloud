@@ -319,6 +319,12 @@ public class HotelServiceImpl extends BaseService implements HotelService {
         return hotelDeviceDomain.getHotelDeviceCount();
     }
 
+
+    @Override
+    public long getHotelDeviceCountByPartnerId(Long partnerId) {
+        return hotelDeviceDomain.getHotelDeviceCountByPartnerId(partnerId);
+    }
+
     @Override
     public HotelDevice getHotelDeviceByUserId(Long userId) {
         return hotelDeviceDomain.getHotelDeviceByUserId(userId);
@@ -476,7 +482,7 @@ public class HotelServiceImpl extends BaseService implements HotelService {
         if(request.getId()==null){
             //新增
             for (int i=0;i<request.getQuantity();i++){
-                hotelDeviceDomain.saveHotelDevice(new HotelDeviceNewDTO(request.getUserId(),request.getPrice()));
+                hotelDeviceDomain.saveHotelDevice(new HotelDeviceNewDTO(request.getUserId(),request.getPartnerId(),request.getPrice()));
             }
         }
         return owner;

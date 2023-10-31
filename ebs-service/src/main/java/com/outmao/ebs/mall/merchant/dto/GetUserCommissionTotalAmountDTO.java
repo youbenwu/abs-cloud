@@ -11,13 +11,13 @@ import java.util.Date;
 @Data
 public class GetUserCommissionTotalAmountDTO {
 
-    @ApiModelProperty(name = "merchantId", value = "商家ID，商家后台必传，前端不用传")
+    @ApiModelProperty(name = "merchantId", value = "商家ID")
     private Long merchantId;
 
     @ApiModelProperty(name = "commissionId", value = "前端必传")
     private Long commissionId;
 
-    @ApiModelProperty(name = "userId", value = "前端必传")
+    @ApiModelProperty(name = "userId", value = "用户ID")
     private Long userId;
 
     @ApiModelProperty(name = "startTime", value = "开始时间")

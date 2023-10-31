@@ -13,6 +13,8 @@ public interface HotelDeviceOwnerDao extends JpaRepository<HotelDeviceOwner,Long
 
     @Lock(value = LockModeType.PESSIMISTIC_READ)
     @Query("select c from HotelDeviceOwner c where c.userId=?1")
+    public HotelDeviceOwner findByUserIdLock(Long userId);
+
     public HotelDeviceOwner findByUserId(Long userId);
 
 }

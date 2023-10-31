@@ -4,8 +4,10 @@ import com.outmao.ebs.common.base.BaseService;
 import com.outmao.ebs.mall.merchant.domain.MerchantCustomerDomain;
 import com.outmao.ebs.mall.merchant.dto.GetMerchantCustomerListDTO;
 import com.outmao.ebs.mall.merchant.dto.MerchantCustomerDTO;
+import com.outmao.ebs.mall.merchant.entity.Merchant;
 import com.outmao.ebs.mall.merchant.entity.MerchantCustomer;
 import com.outmao.ebs.mall.merchant.service.MerchantCustomerService;
+import com.outmao.ebs.mall.merchant.service.MerchantService;
 import com.outmao.ebs.mall.merchant.vo.MerchantCustomerVO;
 import com.outmao.ebs.mall.merchant.vo.SimpleMerchantCustomerVO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,9 +24,16 @@ public class MerchantCustomerServiceImpl extends BaseService implements Merchant
     @Autowired
     private MerchantCustomerDomain merchantCustomerDomain;
 
+    @Autowired
+    private MerchantService merchantService;
+
     @Override
     public MerchantCustomer saveMerchantCustomer(MerchantCustomerDTO request) {
-        return saveMerchantCustomer(request);
+        if(request.getMerchantId()==null){
+            Merchant merchant=merchantService.getMerchant();
+            request.setMerchantId(merchant.getId());
+        }
+        return merchantCustomerDomain.saveMerchantCustomer(request);
     }
 
     @Override
@@ -51,4 +60,5 @@ public class MerchantCustomerServiceImpl extends BaseService implements Merchant
     public List<SimpleMerchantCustomerVO> getSimpleMerchantCustomerVOByIdIn(Collection<Long> idIn) {
         return merchantCustomerDomain.getSimpleMerchantCustomerVOByIdIn(idIn);
     }
+
 }

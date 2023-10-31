@@ -35,7 +35,7 @@ public class MerchantPartnerStatsDomainImpl extends BaseDomain implements Mercha
         //统计一级客户数量
         QMerchantCustomer c=QMerchantCustomer.merchantCustomer;
 
-        List<Tuple> cs=QF.select(c.partner.id,c.count()).groupBy(c.partner.id).where(c.broker.id.in(partnerIdIn)).fetch();
+        List<Tuple> cs=QF.select(c.partner.id,c.count()).groupBy(c.partner.id).from(c).where(c.broker.id.in(partnerIdIn)).fetch();
 
         cs.forEach(t->{
             MerchantPartnerStatsVO vo=listMap.get(t.get(c.partner.id));
@@ -43,7 +43,7 @@ public class MerchantPartnerStatsDomainImpl extends BaseDomain implements Mercha
         });
 
         //统计二级客户数量
-        cs=QF.select(c.partner.parent.id,c.count()).groupBy(c.partner.parent.id).where(c.partner.parent.id.in(partnerIdIn)).fetch();
+        cs=QF.select(c.partner.parent.id,c.count()).groupBy(c.partner.parent.id).from(c).where(c.partner.parent.id.in(partnerIdIn)).fetch();
 
         cs.forEach(t->{
             MerchantPartnerStatsVO vo=listMap.get(t.get(c.partner.parent.id));
@@ -54,21 +54,25 @@ public class MerchantPartnerStatsDomainImpl extends BaseDomain implements Mercha
         //统计一级订单数量
         QOrder o= QOrder.order;
 
-        List<Tuple> os=QF.select(o.partnerId,o.count(),o.totalAmount.sum()).groupBy(o.partnerId).where(o.partnerId.in(partnerIdIn)).fetch();
+        List<Tuple> os=QF.select(o.partnerId,o.count(),o.totalAmount.sum()).groupBy(o.partnerId).from(o).where(o.partnerId.in(partnerIdIn)).fetch();
 
         os.forEach(t->{
             MerchantPartnerStatsVO vo=listMap.get(t.get(o.partnerId));
-            vo.setOrderCount(t.get(o.count()));
-            vo.setOrderAmount(t.get(o.totalAmount.sum()));
+            if(vo!=null) {
+                vo.setOrderCount(t.get(o.count()));
+                vo.setOrderAmount(t.get(o.totalAmount.sum()));
+            }
         });
 
         //统计二级订单数量
-        os=QF.select(o.partnerParentId,o.count(),o.totalAmount.sum()).groupBy(o.partnerParentId).where(o.partnerParentId.in(partnerIdIn)).fetch();
+        os=QF.select(o.partnerParentId,o.count(),o.totalAmount.sum()).groupBy(o.partnerParentId).from(o).where(o.partnerParentId.in(partnerIdIn)).fetch();
 
         os.forEach(t->{
             MerchantPartnerStatsVO vo=listMap.get(t.get(o.partnerParentId));
-            vo.setChildrenOrderCount(t.get(o.count()));
-            vo.setChildrenOrderAmount(t.get(o.totalAmount.sum()));
+            if(vo!=null) {
+                vo.setChildrenOrderCount(t.get(o.count()));
+                vo.setChildrenOrderAmount(t.get(o.totalAmount.sum()));
+            }
         });
 
 

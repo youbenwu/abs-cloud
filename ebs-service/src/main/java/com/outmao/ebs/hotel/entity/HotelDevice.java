@@ -91,6 +91,13 @@ public class HotelDevice  implements Serializable {
 
     /**
      *
+     * 合伙人ID
+     *
+     */
+    private Long partnerId;
+
+    /**
+     *
      * 购买设备的金额
      *
      */

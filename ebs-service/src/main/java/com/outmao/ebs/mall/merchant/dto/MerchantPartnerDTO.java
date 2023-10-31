@@ -19,7 +19,7 @@ public class MerchantPartnerDTO {
     /**
      * 商家
      */
-    @ApiModelProperty(name = "merchantId", value = "商家",required = true)
+    @ApiModelProperty(name = "merchantId", value = "商家ID")
     private Long merchantId;
 
     /**
@@ -33,7 +33,7 @@ public class MerchantPartnerDTO {
      * 经纪人
      *
      */
-    @ApiModelProperty(name = "brokerId", value = "经纪人ID",required = true)
+    @ApiModelProperty(name = "brokerId", value = "经纪人ID")
     private Long brokerId;
 
     /**

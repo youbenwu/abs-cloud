@@ -12,13 +12,8 @@ public class GetUserCommissionCashListDTO {
 
     private Long userId;
 
-    /**
-     *
-     *
-     * 状态 0--未处理 1--处理中 2--已退款 3--不通过
-     *
-     */
     @ApiModelProperty(name = "status", value = "状态 0--未处理 1--处理中 2--已退款 3--不通过")
     private Integer status;
+
 
 }

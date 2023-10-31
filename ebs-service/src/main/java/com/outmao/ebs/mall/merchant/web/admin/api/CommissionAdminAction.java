@@ -40,7 +40,7 @@ public class CommissionAdminAction {
     private UserCommissionService userCommissionService;
 
 
-    @PreAuthorize("hasPermission(#request.merchantId,'/mall/commission/cash','status')")
+    @PreAuthorize("hasPermission('/mall/commission/cash','status')")
     @ApiOperation(value = "设置佣金提现状态", notes = "设置佣金提现状态")
     @PostMapping("/cash/setStatus")
     public void setUserCommissionCashStatus(SetUserCommissionCashStatusDTO request){
@@ -48,7 +48,7 @@ public class CommissionAdminAction {
     }
 
 
-    @PreAuthorize("hasPermission(#request.merchantId,'/mall/commission/cash','read')")
+    @PreAuthorize("hasPermission('/mall/commission/cash','read')")
     @ApiOperation(value = "获取佣金提现列表", notes = "获取佣金提现列表")
     @PostMapping("/cash/page")
     public Page<UserCommissionCashVO> getUserCommissionCashVOPage(GetUserCommissionCashListDTO request, Pageable pageable){
@@ -56,7 +56,7 @@ public class CommissionAdminAction {
     }
 
 
-    @PreAuthorize("hasPermission(#request.merchantId,'/mall/commission','read')")
+    @PreAuthorize("hasPermission('/mall/commission','read')")
     @ApiOperation(value = "获取佣金收益，按时间段", notes = "获取佣金收益，按时间段")
     @PostMapping("/totalAmount")
     public double getUserCommissionTotalAmount(GetUserCommissionTotalAmountDTO request) {

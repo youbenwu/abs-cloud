@@ -10,13 +10,23 @@ import com.outmao.ebs.mall.merchant.service.UserCommissionService;
 import com.outmao.ebs.mall.merchant.vo.UserCommissionCashVO;
 import com.outmao.ebs.mall.merchant.vo.UserCommissionRecordVO;
 import com.outmao.ebs.mall.merchant.vo.UserCommissionVO;
+import com.outmao.ebs.user.entity.User;
+import com.outmao.ebs.user.service.UserService;
+import com.outmao.ebs.wallet.dto.TradeRechargeDTO;
+import com.outmao.ebs.wallet.entity.Currency;
+import com.outmao.ebs.wallet.entity.Trade;
+import com.outmao.ebs.wallet.service.TradeService;
+import com.outmao.ebs.wallet.service.WalletService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collection;
 import java.util.List;
+
+import static com.outmao.ebs.wallet.entity.QRecharge.recharge;
 
 @Service
 public class UserCommissionServiceImpl extends BaseService implements UserCommissionService {
@@ -24,6 +34,15 @@ public class UserCommissionServiceImpl extends BaseService implements UserCommis
 
     @Autowired
     private UserCommissionDomain userCommissionDomain;
+
+    @Autowired
+    private UserService userService;
+
+    @Autowired
+    private WalletService walletService;
+
+    @Autowired
+    private TradeService tradeService;
 
     @Override
     public UserCommission saveUserCommission(UserCommissionDTO request) {
@@ -50,14 +69,39 @@ public class UserCommissionServiceImpl extends BaseService implements UserCommis
         return userCommissionDomain.getUserCommissionRecordVOPage(request,pageable);
     }
 
+    @Transactional
     @Override
     public UserCommissionCash saveUserCommissionCash(UserCommissionCashDTO request) {
-        return userCommissionDomain.saveUserCommissionCash(request);
+        UserCommissionCash cash= userCommissionDomain.saveUserCommissionCash(request);
+        if(cash.getAmount()<1000){
+            //不用审核
+            SetUserCommissionCashStatusDTO statusDTO=new SetUserCommissionCashStatusDTO();
+            statusDTO.setId(cash.getId());
+            statusDTO.setStatus(2);
+            statusDTO.setStatusRemark("已提现到钱包");
+            setUserCommissionCashStatus(statusDTO);
+        }
+        return cash;
     }
 
+    @Transactional
     @Override
     public UserCommissionCash setUserCommissionCashStatus(SetUserCommissionCashStatusDTO request) {
-        return userCommissionDomain.setUserCommissionCashStatus(request);
+        UserCommissionCash cash= userCommissionDomain.setUserCommissionCashStatus(request);
+        if(cash.getStatus()==2&&cash.getOrderNo()==null){
+          cash(cash);
+        }
+        return cash;
+    }
+
+    private void cash(UserCommissionCash cash){
+
+        User user=userService.getUserById(cash.getUserId());
+        Currency currency=walletService.getCurrencyById("RMB");
+        long amount=(long)( cash.getAmount()*currency.getOneUnit());
+        Trade trade=tradeService.tradeRecharge(new TradeRechargeDTO(user.getWalletId(), currency.getId(), amount));
+        cash.setOrderNo(trade.getTradeNo());
+
     }
 
     @Override

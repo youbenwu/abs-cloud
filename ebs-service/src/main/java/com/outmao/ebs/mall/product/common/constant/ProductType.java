@@ -22,6 +22,8 @@ public enum ProductType {
     HOTEL_WASH_SERVICE(30, "酒店干洗服务"),
     HOTEL_FOOD_SERVICE(31, "酒店送餐服务"),
 
+    HOTEL_DEVICE(40, "酒店投放设备"),
+
     OUT_CTRIP(100, "外部携程旅游商品");
 
     private int type;

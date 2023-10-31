@@ -8,6 +8,7 @@ import com.outmao.ebs.mall.merchant.dto.UserCommissionCashDTO;
 import com.outmao.ebs.mall.merchant.service.UserCommissionService;
 import com.outmao.ebs.mall.merchant.vo.UserCommissionCashVO;
 import com.outmao.ebs.mall.merchant.vo.UserCommissionRecordVO;
+import com.outmao.ebs.mall.merchant.vo.UserCommissionVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +29,13 @@ public class CommissionAction {
 
 	@Autowired
     private UserCommissionService userCommissionService;
+
+
+    @ApiOperation(value = "获取用户佣金信息", notes = "获取用户佣金信息")
+    @PostMapping("/get")
+    public UserCommissionVO getUserCommissionVOById(Long id){
+        return userCommissionService.getUserCommissionVOById(id);
+    }
 
 
     @PreAuthorize("principal.id.equals(#request.userId)")

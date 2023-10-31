@@ -36,31 +36,6 @@ public class UserCommissionCashDTO {
     /**
      *
      *
-     * 开户银行
-     *
-     */
-    private String bankName;
-
-    /**
-     *
-     *
-     * 开户名
-     *
-     */
-    private String bankAccount;
-
-    /**
-     *
-     *
-     * 银行卡号
-     *
-     */
-    private String bankCardNumber;
-
-
-    /**
-     *
-     *
      * 备注
      *
      */

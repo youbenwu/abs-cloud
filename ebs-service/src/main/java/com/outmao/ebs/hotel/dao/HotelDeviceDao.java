@@ -17,4 +17,6 @@ public interface HotelDeviceDao extends JpaRepository<HotelDevice,Long> {
 
     public HotelDevice findByUserId(Long userId);
 
+    public long countByPartnerId(Long partnerId);
+
 }

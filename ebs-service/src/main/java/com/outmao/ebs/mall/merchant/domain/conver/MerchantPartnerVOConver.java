@@ -17,6 +17,7 @@ public class MerchantPartnerVOConver implements BeanConver<QMerchantPartner, Mer
         vo.setUserId(t.get(e.user.id));
         vo.setBrokerId(t.get(e.broker.id));
         vo.setParentId(t.get(e.parent.id));
+        vo.setCommissionId(t.get(e.commissionId));
         vo.setLevel(t.get(e.level));
         vo.setLeaf(t.get(e.leaf));
         vo.setAvatar(t.get(e.avatar));
@@ -42,6 +43,7 @@ public class MerchantPartnerVOConver implements BeanConver<QMerchantPartner, Mer
                 e.user.id,
                 e.broker.id,
                 e.parent.id,
+                e.commissionId,
                 e.level,
                 e.leaf,
                 e.avatar,
