@@ -15,6 +15,7 @@ public class UserCommissionVOConver implements BeanConver<QUserCommission, UserC
         UserCommissionVO vo=new UserCommissionVO();
         vo.setId(t.get(e.id));
         vo.setAmount(t.get(e.amount));
+        vo.setTotalAmount(t.get(e.totalAmount));
         vo.setUpdateTime(t.get(e.updateTime));
         return vo;
     }

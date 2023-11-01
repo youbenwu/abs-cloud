@@ -61,6 +61,11 @@ public class AdvertServiceImpl extends BaseService implements AdvertService {
     }
 
     @Override
+    public Advert pv(Long id) {
+        return advertDomain.pv(id);
+    }
+
+    @Override
     public Page<Advert> getAdvertPage(GetAdvertListDTO request, Pageable pageable) {
         if(!StringUtils.isEmpty(request.getChannelCode())){
           AdvertChannel channel= advertChannelService.getAdvertChannelByCode(request.getChannelCode());

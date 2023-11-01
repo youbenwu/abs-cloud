@@ -15,11 +15,15 @@ public interface MerchantPartnerService {
 
     public void deleteMerchantPartnerById(Long id);
 
+    public List<MerchantPartner> getMerchantPartnerList();
+
     public MerchantPartnerVO getMerchantPartnerVOById(Long id);
 
     public List<MerchantPartnerVO> getMerchantPartnerVOListByUserId(Long userId);
 
     public Page<MerchantPartnerVO> getMerchantPartnerVOPage(GetMerchantPartnerListDTO request, Pageable pageable);
+
+
 
 
 

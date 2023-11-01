@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class AdvertChannelServiceImpl extends BaseService implements AdvertChannelService {
@@ -69,6 +70,11 @@ public class AdvertChannelServiceImpl extends BaseService implements AdvertChann
     @Override
     public AdvertChannel getAdvertChannelByCode(String code) {
         return advertChannelDomain.getAdvertChannelByCode(code);
+    }
+
+    @Override
+    public List<AdvertChannel> getAdvertChannelList(GetAdvertChannelListDTO request) {
+        return advertChannelDomain.getAdvertChannelList(request);
     }
 
     @Override

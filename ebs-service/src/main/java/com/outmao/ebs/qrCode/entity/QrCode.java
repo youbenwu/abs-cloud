@@ -7,7 +7,7 @@ import java.util.Date;
 
 @Data
 @Entity
-@Table(name = "ebs_QrCode",indexes= {@Index(columnList="type")})
+@Table(name = "ebs_QrCode")
 public class QrCode implements Serializable{
 	
 	/**
@@ -21,7 +21,7 @@ public class QrCode implements Serializable{
 	private Long   id;
 
 	//状态 0--未激活；1--已激活
-	private int    status;
+	private int status;
 
 	//状态 0--未激活；1--已激活
 	private String statusRemark;
@@ -32,15 +32,9 @@ public class QrCode implements Serializable{
 	//二维码的值
 	@Column(unique = true)
 	private String code;
-	
-	//自定义的码类型 生成码的时候设置
-	private String type;
-	
-	//绑定业务URL
-	private String url;
 
-	//绑定业务参数
- 	private String business;
+	//目标URL
+	private String url;
 
 	//激活时间
 	private Date   activateTime;
@@ -50,8 +44,6 @@ public class QrCode implements Serializable{
 
 	//更新时间
 	private Date   updateTime;
-
-
 
 
 }

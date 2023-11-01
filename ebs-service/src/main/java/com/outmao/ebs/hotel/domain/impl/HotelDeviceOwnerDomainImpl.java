@@ -1,13 +1,15 @@
 package com.outmao.ebs.hotel.domain.impl;
 
 import com.outmao.ebs.common.base.BaseDomain;
-import com.outmao.ebs.common.exception.BusinessException;
 import com.outmao.ebs.hotel.dao.HotelDeviceOwnerDao;
 import com.outmao.ebs.hotel.domain.HotelDeviceOwnerDomain;
+import com.outmao.ebs.hotel.domain.conver.HotelDeviceOwnerVOConver;
 import com.outmao.ebs.hotel.dto.GetHotelDeviceOwnerListDTO;
 import com.outmao.ebs.hotel.dto.HotelDeviceOwnerDTO;
 import com.outmao.ebs.hotel.entity.HotelDeviceOwner;
 import com.outmao.ebs.hotel.entity.QHotelDeviceOwner;
+import com.outmao.ebs.hotel.vo.HotelDeviceOwnerVO;
+import com.outmao.ebs.mall.merchant.common.annotation.SetUserCommission;
 import com.querydsl.core.types.Predicate;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import java.util.Date;
+import java.util.List;
 
 @Component
 public class HotelDeviceOwnerDomainImpl extends BaseDomain implements HotelDeviceOwnerDomain {
@@ -25,6 +28,9 @@ public class HotelDeviceOwnerDomainImpl extends BaseDomain implements HotelDevic
 
     @Autowired
     private HotelDeviceOwnerDao hotelDeviceOwnerDao;
+
+
+    private HotelDeviceOwnerVOConver hotelDeviceOwnerVOConver=new HotelDeviceOwnerVOConver();
 
 
     @Transactional()
@@ -44,6 +50,8 @@ public class HotelDeviceOwnerDomainImpl extends BaseDomain implements HotelDevic
             owner.setAmount(request.getAmount());
             owner.setQuantity(request.getQuantity());
         }
+
+
 
         BeanUtils.copyProperties(request,owner,"id","userId","quantity","amount");
 
@@ -76,24 +84,17 @@ public class HotelDeviceOwnerDomainImpl extends BaseDomain implements HotelDevic
     }
 
 
-    @Transactional()
-    @Override
-    public HotelDeviceOwner addHotelDeviceOwnerIncome(Long userId, double addIncome) {
-        HotelDeviceOwner owner=hotelDeviceOwnerDao.findByUserIdLock(userId);
-        if(owner==null){
-            throw new BusinessException("对象不存在");
-        }
-
-        owner.setIncome(owner.getIncome()+addIncome);
-
-        hotelDeviceOwnerDao.save(owner);
-
-        return owner;
-    }
 
     @Override
     public HotelDeviceOwner getHotelDeviceOwnerByUserId(Long userId) {
         return hotelDeviceOwnerDao.findByUserId(userId);
+    }
+
+
+
+    @Override
+    public List<HotelDeviceOwner> getHotelDeviceOwnerList() {
+        return hotelDeviceOwnerDao.findAll();
     }
 
     @Override
@@ -111,6 +112,26 @@ public class HotelDeviceOwnerDomainImpl extends BaseDomain implements HotelDevic
         }
 
         return hotelDeviceOwnerDao.findAll(pageable);
+    }
+
+
+    @SetUserCommission
+    @Override
+    public HotelDeviceOwnerVO getHotelDeviceOwnerVOByUserId(Long userId) {
+        QHotelDeviceOwner e=QHotelDeviceOwner.hotelDeviceOwner;
+        return queryOne(e,e.userId.eq(userId),hotelDeviceOwnerVOConver);
+    }
+
+    @SetUserCommission
+    @Override
+    public Page<HotelDeviceOwnerVO> getHotelDeviceOwnerVOPage(GetHotelDeviceOwnerListDTO request, Pageable pageable) {
+        QHotelDeviceOwner e=QHotelDeviceOwner.hotelDeviceOwner;
+
+        Predicate p=null;
+        if(!StringUtils.isEmpty(request.getKeyword())){
+            p=e.keyword.like("%"+request.getKeyword()+"%");
+        }
+        return queryPage(e,p,hotelDeviceOwnerVOConver,pageable);
     }
 
 

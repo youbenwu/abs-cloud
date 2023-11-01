@@ -16,6 +16,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
+import java.util.List;
 
 
 @Component
@@ -60,6 +61,25 @@ public class AdvertChannelDomainImpl extends BaseDomain implements AdvertChannel
     @Override
     public AdvertChannel getAdvertChannelByCode(String code) {
         return advertChannelDao.findByCode(code);
+    }
+
+    @Override
+    public List<AdvertChannel> getAdvertChannelList(GetAdvertChannelListDTO request) {
+        QAdvertChannel e=QAdvertChannel.advertChannel;
+
+        Predicate p=null;
+
+        if(request.getOrgId()!=null){
+            p=e.orgId.eq(request.getOrgId());
+        }
+
+        if(request.getType()!=null){
+            p=e.type.eq(request.getType()).and(p);
+        }
+        if(p==null)
+            return advertChannelDao.findAll();
+
+        return QF.select(e).from(e).where(p).fetch();
     }
 
     @Override

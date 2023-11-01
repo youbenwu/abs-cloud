@@ -1,5 +1,6 @@
 package com.outmao.ebs.qrCode.web.api;
 
+import com.outmao.ebs.qrCode.dto.ActivateQrCodeDTO;
 import com.outmao.ebs.qrCode.entity.QrCode;
 import com.outmao.ebs.qrCode.service.QrCodeService;
 import io.swagger.annotations.Api;
@@ -29,6 +30,13 @@ public class QrCodeAction {
 	@RequestMapping(value = "/getByCode", method = RequestMethod.POST)
 	public QrCode getQrCodeByCode(String code){
 		return qrCodeService.getQrCodeByCode(code);
+	}
+
+
+	@ApiOperation(value = "获取二维吗", notes = "获取二维吗")
+	@RequestMapping(value = "/activate", method = RequestMethod.POST)
+	public QrCode activateQrCode(ActivateQrCodeDTO request){
+		return qrCodeService.activateQrCode(request);
 	}
 
 

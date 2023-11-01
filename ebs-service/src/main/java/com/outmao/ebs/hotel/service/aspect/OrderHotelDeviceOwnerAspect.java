@@ -55,7 +55,7 @@ public class OrderHotelDeviceOwnerAspect {
             return;
         if(order.getType()!=null&&order.getType()== ProductType.HOTEL_DEVICE.getType()){
             if(order.getStatus()== OrderStatus.SUCCESSED.getStatus()){
-                 //购买了设备，支付成功
+                //购买了设备，支付成功
                 //添加机主信息
                 HotelDeviceOwner owner=hotelService.getHotelDeviceOwnerByUserId(order.getUserId());
                 HotelDeviceOwnerDTO ownerDTO=new HotelDeviceOwnerDTO();

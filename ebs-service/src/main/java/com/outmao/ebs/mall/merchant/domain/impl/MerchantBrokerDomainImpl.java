@@ -27,7 +27,9 @@ import com.outmao.ebs.mall.shop.dao.ShopDao;
 import com.outmao.ebs.mall.store.domain.StoreDomain;
 import com.outmao.ebs.mall.store.domain.StoreMemberDomain;
 import com.outmao.ebs.mall.store.entity.Store;
+import com.outmao.ebs.qrCode.dto.ActivateQrCodeDTO;
 import com.outmao.ebs.qrCode.dto.GenerateQrCodeDTO;
+import com.outmao.ebs.qrCode.entity.QrCode;
 import com.outmao.ebs.qrCode.service.QrCodeService;
 import com.outmao.ebs.user.common.annotation.SetSimpleUser;
 import com.outmao.ebs.user.dao.UserDao;
@@ -121,21 +123,21 @@ public class MerchantBrokerDomainImpl extends BaseDomain implements MerchantBrok
 
         if(m.getUrl()==null){
             String url=config.getBaseUrl()+"/merchant/broker?id="+m.getId();
-            String qrCode=qrcodeService.generateQrCode(new GenerateQrCodeDTO(url,500,500));
+            QrCode qrCode=qrcodeService.activateQrCode(new ActivateQrCodeDTO(url));
             m.setUrl(url);
-            m.setQrCode(qrCode);
+            m.setQrCode(qrCode.getPath());
         }
 
         if(m.getBrokerQrCode()==null){
             String url=config.getBaseUrl()+"/merchant/broker/addCustomer?id="+m.getId();
-            String qrCode=qrcodeService.generateQrCode(new GenerateQrCodeDTO(url,500,500));
-            m.setBrokerQrCode(qrCode);
+            QrCode qrCode=qrcodeService.activateQrCode(new ActivateQrCodeDTO(url));
+            m.setBrokerQrCode(qrCode.getPath());
         }
 
         if(m.getPyramidQrCode()==null){
             String url=config.getBaseUrl()+"/merchant/broker/addPartner?id="+m.getId();
-            String qrCode=qrcodeService.generateQrCode(new GenerateQrCodeDTO(url,500,500));
-            m.setPyramidQrCode(qrCode);
+            QrCode qrCode=qrcodeService.activateQrCode(new ActivateQrCodeDTO(url));
+            m.setPyramidQrCode(qrCode.getPath());
         }
 
         m.setCode(m.getId().toString());

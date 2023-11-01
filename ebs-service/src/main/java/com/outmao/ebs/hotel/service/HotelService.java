@@ -74,6 +74,8 @@ public interface HotelService {
 
     public HotelDeviceVO getHotelDeviceVOByDeviceNo(String deviceNo);
 
+    public List<HotelDeviceVO> getHotelDeviceVOList(GetHotelDeviceListDTO request);
+
     public Page<HotelDeviceVO> getHotelDeviceVOPage(GetHotelDeviceListDTO request, Pageable pageable);
 
 
@@ -124,13 +126,14 @@ public interface HotelService {
     public HotelDeviceOwner saveHotelDeviceOwner(HotelDeviceOwnerDTO request);
 
 
-    public HotelDeviceOwner addHotelDeviceOwnerIncome(Long userId,double addIncome);
-
-
     public HotelDeviceOwner getHotelDeviceOwnerByUserId(Long userId);
 
 
     public Page<HotelDeviceOwner> getHotelDeviceOwnerPage(GetHotelDeviceOwnerListDTO request, Pageable pageable);
+
+    public HotelDeviceOwnerVO getHotelDeviceOwnerVOByUserId(Long userId);
+
+    public Page<HotelDeviceOwnerVO> getHotelDeviceOwnerVOPage(GetHotelDeviceOwnerListDTO request, Pageable pageable);
 
 
     public List<StatsHotelDeviceCityVO> getStatsHotelDeviceCityVOList(Integer size);

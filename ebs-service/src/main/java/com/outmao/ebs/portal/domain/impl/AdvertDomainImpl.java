@@ -78,9 +78,24 @@ public class AdvertDomainImpl extends BaseDomain implements AdvertDomain {
         Advert advert=advertDao.findByIdForUpdate(id);
         advert.setBuyPv(buyPv+advert.getBuyPv());
         advert.setBuyAmount(buyAmount+advert.getBuyAmount());
+        advert.setBuyPrice(advert.getBuyAmount()/advert.getBuyPv());
         if(advert.getBuyPv()>advert.getPv()){
             //直接上架
             advert.setStatus(1);
+        }
+        advertDao.save(advert);
+        return advert;
+    }
+
+
+    @Transactional
+    @Override
+    public Advert pv(Long id) {
+        Advert advert=advertDao.findByIdForUpdate(id);
+        advert.setPv(advert.getPv()+1);
+        if(advert.getBuyPv()>0&&advert.getPv()>=advert.getBuyPv()){
+            //欠费
+            advert.setStatus(2);
         }
         advertDao.save(advert);
         return advert;

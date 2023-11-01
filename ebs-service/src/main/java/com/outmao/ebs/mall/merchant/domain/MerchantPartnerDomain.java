@@ -16,6 +16,8 @@ public interface MerchantPartnerDomain {
 
     public void deleteMerchantPartnerById(Long id);
 
+    public List<MerchantPartner> getMerchantPartnerList();
+
     public MerchantPartnerVO getMerchantPartnerVOById(Long id);
 
     public List<MerchantPartnerVO> getMerchantPartnerVOListByUserId(Long userId);

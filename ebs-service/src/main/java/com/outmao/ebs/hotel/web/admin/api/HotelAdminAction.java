@@ -284,6 +284,7 @@ public class HotelAdminAction {
         return hotelService.getHotelDeviceVOByDeviceNo(deviceNo);
     }
 
+
     @PreAuthorize("hasPermission('/hotel/device','read')")
     @ApiOperation(value = "获取设备列表", notes = "获取设备列表")
     @PostMapping("/device/page")

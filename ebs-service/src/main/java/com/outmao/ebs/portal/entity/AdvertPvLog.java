@@ -15,12 +15,12 @@ import java.util.Date;
  * 广告
  *
  */
-@ApiModel(value = "AdvertLog", description = "广告日志")
+@ApiModel(value = "AdvertPvLog", description = "广告PV")
 @JsonIgnoreProperties(value = {"hibernateLazyInitializer"})
 @Data
 @Entity
-@Table(name = "portal_AdvertLog")
-public class AdvertLog implements Serializable {
+@Table(name = "portal_AdvertPvLog")
+public class AdvertPvLog implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -31,13 +31,14 @@ public class AdvertLog implements Serializable {
     @ApiModelProperty(name = "advertId", value = "广告ID")
     private Long advertId;
 
-    @ApiModelProperty(name = "pv", value = "流量")
-    private long pv;
+    @ApiModelProperty(name = "userId", value = "点击用户")
+    private Long userId;
 
-    @ApiModelProperty(name = "uv", value = "独立访客，一台电脑24小时以内访问N次计为1次")
-    private long uv;
+    @ApiModelProperty(name = "pvPrice", value = "用来计算收益")
+    private double pvPrice;
 
-    private Date updateTime;
+
+    private Date createTime;
     
 
 }

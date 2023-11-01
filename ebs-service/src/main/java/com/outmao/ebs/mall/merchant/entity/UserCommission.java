@@ -82,6 +82,14 @@ public class UserCommission  implements Serializable {
 
     /**
      *
+     * 统计时间
+     *
+     */
+    private Date statsTime;
+
+
+    /**
+     *
      * 创建时间
      *
      */

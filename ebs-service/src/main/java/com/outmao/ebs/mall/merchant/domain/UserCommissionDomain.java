@@ -17,6 +17,8 @@ public interface UserCommissionDomain {
 
     public UserCommission saveUserCommission(UserCommissionDTO request);
 
+    public UserCommission getUserCommissionById(Long id);
+
     public UserCommissionVO getUserCommissionVOById(Long id);
 
     public List<UserCommissionVO> getUserCommissionVOListByIdIn(Collection<Long> idIn);

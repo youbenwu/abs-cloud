@@ -50,6 +50,11 @@ public class UserCommissionServiceImpl extends BaseService implements UserCommis
     }
 
     @Override
+    public UserCommission getUserCommissionById(Long id) {
+        return userCommissionDomain.getUserCommissionById(id);
+    }
+
+    @Override
     public UserCommissionVO getUserCommissionVOById(Long id) {
         return userCommissionDomain.getUserCommissionVOById(id);
     }

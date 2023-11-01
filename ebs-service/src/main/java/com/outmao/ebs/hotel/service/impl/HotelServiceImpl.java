@@ -1,6 +1,7 @@
 package com.outmao.ebs.hotel.service.impl;
 
 import com.outmao.ebs.common.base.BaseService;
+import com.outmao.ebs.common.util.DateUtil;
 import com.outmao.ebs.common.vo.Contact;
 import com.outmao.ebs.hotel.common.annotation.SetSimpleHotel;
 import com.outmao.ebs.hotel.domain.*;
@@ -9,14 +10,23 @@ import com.outmao.ebs.hotel.entity.*;
 import com.outmao.ebs.hotel.service.HotelService;
 import com.outmao.ebs.hotel.vo.*;
 import com.outmao.ebs.mall.merchant.dto.MerchantDTO;
+import com.outmao.ebs.mall.merchant.dto.UserCommissionDTO;
+import com.outmao.ebs.mall.merchant.dto.UserCommissionRecordDTO;
 import com.outmao.ebs.mall.merchant.entity.Merchant;
+import com.outmao.ebs.mall.merchant.entity.MerchantPartner;
+import com.outmao.ebs.mall.merchant.entity.UserCommission;
+import com.outmao.ebs.mall.merchant.service.MerchantPartnerService;
 import com.outmao.ebs.mall.merchant.service.MerchantService;
+import com.outmao.ebs.mall.merchant.service.UserCommissionService;
 import com.outmao.ebs.org.common.annotation.BindingOrg;
 import com.outmao.ebs.org.dto.MemberDTO;
 import com.outmao.ebs.org.entity.Member;
 import com.outmao.ebs.org.entity.Org;
 import com.outmao.ebs.org.service.MemberService;
 import com.outmao.ebs.org.service.OrgService;
+import com.outmao.ebs.portal.dto.StatsAdvertPvDTO;
+import com.outmao.ebs.portal.service.AdvertPvLogService;
+import com.outmao.ebs.portal.vo.StatsAdvertPvVO;
 import com.outmao.ebs.user.common.constant.Oauth;
 import com.outmao.ebs.user.dto.RegisterDTO;
 import com.outmao.ebs.user.entity.User;
@@ -24,6 +34,7 @@ import com.outmao.ebs.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
@@ -32,6 +43,7 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -77,6 +89,16 @@ public class HotelServiceImpl extends BaseService implements HotelService {
 
     @Autowired
     private MerchantService merchantService;
+
+
+    @Autowired
+    private UserCommissionService userCommissionService;
+
+    @Autowired
+    private AdvertPvLogService advertPvLogService;
+
+    @Autowired
+    private MerchantPartnerService merchantPartnerService;
 
 
     @Transactional()
@@ -342,6 +364,11 @@ public class HotelServiceImpl extends BaseService implements HotelService {
         return hotelDeviceDomain.getHotelDeviceVOByDeviceNo(deviceNo);
     }
 
+    @Override
+    public List<HotelDeviceVO> getHotelDeviceVOList(GetHotelDeviceListDTO request) {
+        return hotelDeviceDomain.getHotelDeviceVOList(request);
+    }
+
     @SetSimpleHotel
     @Override
     public Page<HotelDeviceVO> getHotelDeviceVOPage(GetHotelDeviceListDTO request, Pageable pageable) {
@@ -479,6 +506,15 @@ public class HotelServiceImpl extends BaseService implements HotelService {
     @Override
     public HotelDeviceOwner saveHotelDeviceOwner(HotelDeviceOwnerDTO request) {
         HotelDeviceOwner owner= hotelDeviceOwnerDomain.saveHotelDeviceOwner(request);
+        if(owner.getCommissionId()==null){
+            UserCommissionDTO commissionDTO=new UserCommissionDTO();
+            commissionDTO.setMerchantId(merchantService.getMerchant().getId());
+            commissionDTO.setTargetId(owner.getId());
+            commissionDTO.setType(2);
+            commissionDTO.setUserId(owner.getUserId());
+            UserCommission commission=userCommissionService.saveUserCommission(commissionDTO);
+            owner.setCommissionId(commission.getId());
+        }
         if(request.getId()==null){
             //新增
             for (int i=0;i<request.getQuantity();i++){
@@ -488,10 +524,6 @@ public class HotelServiceImpl extends BaseService implements HotelService {
         return owner;
     }
 
-    @Override
-    public HotelDeviceOwner addHotelDeviceOwnerIncome(Long userId, double addIncome) {
-        return hotelDeviceOwnerDomain.addHotelDeviceOwnerIncome(userId,addIncome);
-    }
 
     @Override
     public HotelDeviceOwner getHotelDeviceOwnerByUserId(Long userId) {
@@ -503,9 +535,114 @@ public class HotelServiceImpl extends BaseService implements HotelService {
         return hotelDeviceOwnerDomain.getHotelDeviceOwnerPage(request,pageable);
     }
 
+    @Override
+    public HotelDeviceOwnerVO getHotelDeviceOwnerVOByUserId(Long userId) {
+        return hotelDeviceOwnerDomain.getHotelDeviceOwnerVOByUserId(userId);
+    }
+
+    @Override
+    public Page<HotelDeviceOwnerVO> getHotelDeviceOwnerVOPage(GetHotelDeviceOwnerListDTO request, Pageable pageable) {
+        return hotelDeviceOwnerDomain.getHotelDeviceOwnerVOPage(request,pageable);
+    }
 
     @Override
     public List<StatsHotelDeviceProvinceVO> getStatsHotelDeviceProvinceVOList(Integer size) {
         return hotelDeviceDomain.getStatsHotelDeviceProvinceVOList(size);
     }
+
+    /**
+     *
+     * 广告计算佣金
+     *
+     * **/
+    // 秒 分 时 天 月 周几~
+    // 0 * * * * 0-7  每个月的每天每时每分每秒周一到周七都会执行
+
+    /**
+     * 30 15 10 * * ? 每天10点15分30 执行
+     *
+     * 30 0/5 10,18 * * ? 每天10时18时每个五分钟执行
+     * 0 15 10 ? * 1-6 每个月的周一到周六10.15分钟执行一次
+     */
+
+    //每分钟一次
+    //@Scheduled(cron = "0 0/1 * * * *")
+    //每小时一次
+    @Scheduled(cron = "0 0 0/1 * * *")
+    public void commission(){
+
+        List<HotelDeviceOwner> owners=hotelDeviceOwnerDomain.getHotelDeviceOwnerList();
+
+        owners.forEach(owner->{
+            commission(owner);
+        });
+
+
+        List<MerchantPartner> partners= merchantPartnerService.getMerchantPartnerList();
+
+        partners.forEach(partner->{
+            commission(partner);
+        });
+
+
+    }
+
+
+
+    //计算机主广告收益
+    private void commission(HotelDeviceOwner owner){
+        if(owner.getCommissionId()==null)
+            return;
+        UserCommission commission=userCommissionService.getUserCommissionById(owner.getCommissionId());
+        List<HotelDevice> devices=hotelDeviceDomain.getHotelDeviceListByOwnerId(owner.getUserId());
+        commission(commission,devices,0.35);
+
+    }
+
+    //计算推广员广告收益
+    private void commission(MerchantPartner partner){
+        if(partner.getCommissionId()==null)
+            return;
+        UserCommission commission=userCommissionService.getUserCommissionById(partner.getCommissionId());
+        List<HotelDevice> devices=hotelDeviceDomain.getHotelDeviceListByPartnerId(partner.getId());
+        commission(commission,devices,0.05);
+    }
+
+
+    private void commission(UserCommission commission,List<HotelDevice> devices,double rate){
+
+        if(commission==null)
+            return;
+        if(devices.isEmpty())
+            return;
+
+        Date fromTime=commission.getStatsTime();
+        Date toTime=new Date();
+        if(fromTime==null){
+            fromTime=DateUtil.beforeDays(360);
+        }
+
+        StatsAdvertPvDTO dto=new StatsAdvertPvDTO();
+        dto.setUsers(devices.stream().map(t->t.getUserId()).collect(Collectors.toList()));
+        dto.setFromTime(fromTime);
+        dto.setToTime(toTime);
+        StatsAdvertPvVO vo=advertPvLogService.getStatsAdvertPvVO(dto);
+
+        System.out.println("统计广告收益：commissionId="+commission.getId()+"\n收益="+vo.getPvAmount()*rate);
+
+        if(vo.getPvAmount()==0)
+            return;
+
+
+        UserCommissionRecordDTO recordDTO=new UserCommissionRecordDTO();
+        recordDTO.setCommissionId(commission.getId());
+        recordDTO.setAmount(vo.getPvAmount()*rate);
+        recordDTO.setType(0);
+        recordDTO.setStatsTime(toTime);
+        userCommissionService.saveUserCommissionRecord(recordDTO);
+
+    }
+
+
+
 }

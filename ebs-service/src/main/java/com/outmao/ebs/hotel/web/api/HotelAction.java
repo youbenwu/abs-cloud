@@ -1,6 +1,7 @@
 package com.outmao.ebs.hotel.web.api;
 
 
+import com.outmao.ebs.hotel.dto.GetHotelDeviceListDTO;
 import com.outmao.ebs.hotel.dto.PadRegisterHotelDeviceDTO;
 import com.outmao.ebs.hotel.dto.RegisterHotelDTO;
 import com.outmao.ebs.hotel.entity.Hotel;
@@ -67,6 +68,14 @@ public class HotelAction {
     }
 
 
+
+    @ApiOperation(value = "获取设备列表", notes = "获取设备列表")
+    @PostMapping("/device/list")
+    public List<HotelDeviceVO> getHotelDeviceVOList(GetHotelDeviceListDTO request) {
+        return hotelService.getHotelDeviceVOList(request);
+    }
+
+
     @PreAuthorize("permitAll")
     @ApiOperation(value = "设备按城市统计数量和金额", notes = "设备按城市统计数量和金额")
     @PostMapping("/device/stats/city")
@@ -85,8 +94,8 @@ public class HotelAction {
 
     @ApiOperation(value = "获取机主信息", notes = "获取机主信息")
     @PostMapping("/device/owner/get")
-    public HotelDeviceOwner getHotelDeviceOwnerByUserId(Long userId){
-        return hotelService.getHotelDeviceOwnerByUserId(userId);
+    public HotelDeviceOwnerVO getHotelDeviceOwnerByUserId(Long userId){
+        return hotelService.getHotelDeviceOwnerVOByUserId(userId);
     }
 
 

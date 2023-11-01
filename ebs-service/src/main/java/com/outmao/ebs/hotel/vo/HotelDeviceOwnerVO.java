@@ -1,11 +1,10 @@
-package com.outmao.ebs.hotel.entity;
+package com.outmao.ebs.hotel.vo;
 
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.outmao.ebs.mall.merchant.common.data.UserCommissionSetter;
+import com.outmao.ebs.mall.merchant.vo.UserCommissionVO;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
-
-import javax.persistence.*;
-import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -14,39 +13,16 @@ import java.util.Date;
  * 记录购买设备的用户
  *
  */
-@JsonIgnoreProperties(value = {"hibernateLazyInitializer"})
 @Data
-@Entity
-@Table(name = "ebs_HotelDeviceOwner")
-public class HotelDeviceOwner implements Serializable {
-
-    /**
-     *
-     */
-    private static final long serialVersionUID = 1L;
+public class HotelDeviceOwnerVO implements UserCommissionSetter {
 
 
-    /**
-     *
-     * 自动编号
-     *
-     */
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
 
-    @Column(nullable = false,unique = true)
+
     private Long userId;
 
-    /**
-     *
-     * 搜索关键字
-     *
-     */
-    @Lob
-    @Basic(fetch = FetchType.LAZY)
-    private String keyword;
 
 
     /**
@@ -55,6 +31,9 @@ public class HotelDeviceOwner implements Serializable {
      *
      */
     private Long commissionId;
+
+    @ApiModelProperty(name = "commission", value = "佣金信息")
+    private UserCommissionVO commission;
 
 
     /**
@@ -77,6 +56,7 @@ public class HotelDeviceOwner implements Serializable {
      * 拥有设备数量
      *
      */
+    @ApiModelProperty(name = "quantity", value = "拥有设备数量")
     private int quantity;
 
 
@@ -85,6 +65,7 @@ public class HotelDeviceOwner implements Serializable {
      * 购买设备总金额
      *
      */
+    @ApiModelProperty(name = "amount", value = "购买设备总金额")
     private double amount;
 
 

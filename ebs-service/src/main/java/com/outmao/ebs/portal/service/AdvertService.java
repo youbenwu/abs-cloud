@@ -17,6 +17,8 @@ public interface AdvertService {
 
     public void deleteAdvertById(Long id);
 
+    public Advert pv(Long id);
+
     public Page<Advert> getAdvertPage(GetAdvertListDTO request, Pageable pageable);
 
 

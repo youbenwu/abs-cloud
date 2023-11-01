@@ -18,7 +18,9 @@ import com.outmao.ebs.mall.shop.entity.QShop;
 import com.outmao.ebs.mall.shop.entity.Shop;
 import com.outmao.ebs.mall.shop.vo.ShopVO;
 import com.outmao.ebs.mall.shop.vo.SimpleShopVO;
+import com.outmao.ebs.qrCode.dto.ActivateQrCodeDTO;
 import com.outmao.ebs.qrCode.dto.GenerateQrCodeDTO;
+import com.outmao.ebs.qrCode.entity.QrCode;
 import com.outmao.ebs.qrCode.service.QrCodeService;
 import com.outmao.ebs.user.dao.UserDao;
 import com.querydsl.core.types.Predicate;
@@ -84,12 +86,12 @@ public class ShopDomainImpl extends BaseDomain implements ShopDomain {
 
         shopDao.save(shop);
 
-//        if(shop.getUrl()==null){
-//            String url=config.getBaseUrl()+"/shop?id="+shop.getId();
-//            String qrCode=qrcodeService.generateQrCode(new GenerateQrCodeDTO(url,500,500));
-//            shop.setUrl(url);
-//            shop.setQrCode(qrCode);
-//        }
+        if(shop.getUrl()==null){
+            String url=config.getBaseUrl()+"/shop?id="+shop.getId();
+            QrCode qrCode=qrcodeService.activateQrCode(new ActivateQrCodeDTO(url));
+            shop.setUrl(url);
+            shop.setQrCode(qrCode.getPath());
+        }
 
         return shop;
     }

@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.jpa.repository.Query;
 
 import javax.persistence.LockModeType;
+import java.util.List;
 
 public interface HotelDeviceDao extends JpaRepository<HotelDevice,Long> {
 
@@ -18,5 +19,9 @@ public interface HotelDeviceDao extends JpaRepository<HotelDevice,Long> {
     public HotelDevice findByUserId(Long userId);
 
     public long countByPartnerId(Long partnerId);
+
+    public List<HotelDevice> findAllByOwnerId(Long ownerId);
+
+    public List<HotelDevice> findAllByPartnerId(Long partnerId);
 
 }

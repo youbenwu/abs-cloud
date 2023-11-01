@@ -1,17 +1,15 @@
 package com.outmao.ebs.qrCode.dto;
 
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
+@NoArgsConstructor
+@AllArgsConstructor
 @Data
 public class ActivateQrCodeDTO {
 
-    private Long id;
-
-    private String type;
-
     private String url;
-
-    private String business;
 
 }

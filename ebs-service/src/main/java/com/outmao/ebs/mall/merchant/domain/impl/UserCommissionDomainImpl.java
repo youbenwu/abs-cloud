@@ -72,6 +72,11 @@ public class UserCommissionDomainImpl extends BaseDomain implements UserCommissi
     }
 
     @Override
+    public UserCommission getUserCommissionById(Long id) {
+        return userCommissionDao.findById(id).orElse(null);
+    }
+
+    @Override
     public UserCommissionVO getUserCommissionVOById(Long id) {
 
         QUserCommission e=QUserCommission.userCommission;
@@ -150,6 +155,10 @@ public class UserCommissionDomainImpl extends BaseDomain implements UserCommissi
         }
 
         commission.setUpdateTime(new Date());
+
+        if(request.getStatsTime()!=null){
+            commission.setStatsTime(request.getStatsTime());
+        }
 
         userCommissionDao.save(commission);
 

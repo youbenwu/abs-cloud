@@ -5,6 +5,8 @@ package com.outmao.ebs.mall.merchant.dto;
 import io.swagger.annotations.ApiModel;
 import lombok.Data;
 
+import java.util.Date;
+
 /**
  *
  * 用户佣金记录
@@ -65,6 +67,13 @@ public class UserCommissionRecordDTO {
      *
      */
     private String remark;
+
+    /**
+     *
+     * 统计时间
+     *
+     */
+    private Date statsTime;
 
 
 }

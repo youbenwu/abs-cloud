@@ -36,7 +36,7 @@ public class MerchantPartnerAction {
         return merchantPartnerService.saveMerchantPartner(request);
     }
 
-    @PostAuthorize("returnObject.userId.equals(principal.id) or returnObject.broker.userId.equals(principal.id)")
+
     @ApiOperation(value = "获取商家合伙人信息", notes = "获取商家合伙人信息")
     @PostMapping("/get")
     public MerchantPartnerVO getMerchantPartnerVOById(Long id){

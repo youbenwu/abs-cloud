@@ -38,7 +38,7 @@ public class QrCodeDomainImpl extends BaseDomain implements QrCodeDomain {
 	private String baseUrl;
 
 	private String generateCode(){
-		return baseUrl+"/web/qrCode?id=${id}";
+		return baseUrl+"/qrCode?id=${id}";
 	}
 
 
@@ -60,7 +60,7 @@ public class QrCodeDomainImpl extends BaseDomain implements QrCodeDomain {
 	@Transactional
 	@Override
 	public QrCode saveQrCode(QrCodeDTO request) {
-		QrCode qrCode=request.getId()==null?null:qrCodeDao.getOne(request.getId());
+		QrCode qrCode=request.getId()==null?null:qrCodeDao.findByIdForUpdate(request.getId());
 
 		if(qrCode==null){
 			qrCode=new QrCode();
@@ -84,6 +84,7 @@ public class QrCodeDomainImpl extends BaseDomain implements QrCodeDomain {
 		if(qrCode.getCode()==null){
 			String code=generateCode().replace("${id}",qrCode.getId().toString());
 			generateQrCode(qrCode,code);
+			qrCodeDao.save(qrCode);
 		}
 
 		return qrCode;
@@ -127,17 +128,35 @@ public class QrCodeDomainImpl extends BaseDomain implements QrCodeDomain {
 	@Transactional
 	@Override
 	public QrCode activateQrCode(ActivateQrCodeDTO request) {
-		if(request.getId()==null){
-			QQrCode e=QQrCode.qrCode;
-           Long id=QF.select(e.id).from(e).where(e.status.eq(QrCodeStatus.NotActivated.getStatus())).orderBy(e.id.asc()).fetchFirst();
-           request.setId(id);
+
+		QQrCode e=QQrCode.qrCode;
+		Long id=QF.select(e.id).from(e).where(e.status.eq(QrCodeStatus.NotActivated.getStatus())).fetchFirst();
+
+		if(id!=null){
+			QrCode qrCode=qrCodeDao.findByIdForUpdate(id);
+			if(qrCode.getStatus()==QrCodeStatus.NotActivated.getStatus()){
+				qrCode.setUrl(request.getUrl());
+				qrCode.setStatus(QrCodeStatus.Activated.getStatus());
+				qrCode.setStatusRemark(QrCodeStatus.Activated.getStatusRemark());
+				qrCode.setActivateTime(new Date());
+				qrCode.setUpdateTime(new Date());
+				return qrCodeDao.save(qrCode);
+			}
 		}
 
 		QrCodeDTO dto=new QrCodeDTO();
-		BeanUtils.copyProperties(request,dto);
+		dto.setUrl(request.getUrl());
 		dto.setStatus(QrCodeStatus.Activated.getStatus());
 		dto.setStatusRemark(QrCodeStatus.Activated.getStatusRemark());
 		QrCode qrCode=saveQrCode(dto);
+
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				batchGenerateQrCodeAsync(new BatchGenerateQrCodeDTO(100));
+			}
+		}).start();
+
 
 		return qrCode;
 	}
@@ -149,6 +168,11 @@ public class QrCodeDomainImpl extends BaseDomain implements QrCodeDomain {
 		if(request.getStatus()!=null){
 			p=e.status.eq(request.getStatus());
 		}
-		return qrCodeDao.findAll(p,pageable);
+		if(p!=null){
+			return qrCodeDao.findAll(p,pageable);
+		}
+		return qrCodeDao.findAll(pageable);
 	}
+
+
 }

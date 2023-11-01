@@ -18,7 +18,9 @@ import com.outmao.ebs.mall.merchant.dto.MerchantPartnerDTO;
 import com.outmao.ebs.mall.merchant.dto.UserCommissionDTO;
 import com.outmao.ebs.mall.merchant.entity.*;
 import com.outmao.ebs.mall.merchant.vo.MerchantPartnerVO;
+import com.outmao.ebs.qrCode.dto.ActivateQrCodeDTO;
 import com.outmao.ebs.qrCode.dto.GenerateQrCodeDTO;
+import com.outmao.ebs.qrCode.entity.QrCode;
 import com.outmao.ebs.qrCode.service.QrCodeService;
 import com.outmao.ebs.user.common.annotation.SetSimpleUser;
 import com.outmao.ebs.user.dao.UserDao;
@@ -108,21 +110,21 @@ public class MerchantPartnerDomainImpl extends BaseDomain implements MerchantPar
 
         if(partner.getUrl()==null){
             String url=config.getBaseUrl()+"/merchant/partner?id="+partner.getId();
-            String qrCode=qrcodeService.generateQrCode(new GenerateQrCodeDTO(url,500,500));
+            QrCode qrCode=qrcodeService.activateQrCode(new ActivateQrCodeDTO(url));
             partner.setUrl(url);
-            partner.setQrCode(qrCode);
+            partner.setQrCode(qrCode.getPath());
         }
 
         if(partner.getBrokerQrCode()==null){
             String url=config.getBaseUrl()+"/merchant/partner/addCustomer?id="+partner.getId();
-            String qrCode=qrcodeService.generateQrCode(new GenerateQrCodeDTO(url,500,500));
-            partner.setBrokerQrCode(qrCode);
+            QrCode qrCode=qrcodeService.activateQrCode(new ActivateQrCodeDTO(url));
+            partner.setBrokerQrCode(qrCode.getPath());
         }
 
         if(partner.getPyramidQrCode()==null){
             String url=config.getBaseUrl()+"/merchant/partner/addChildren?id="+partner.getId();
-            String qrCode=qrcodeService.generateQrCode(new GenerateQrCodeDTO(url,500,500));
-            partner.setBrokerQrCode(qrCode);
+            QrCode qrCode=qrcodeService.activateQrCode(new ActivateQrCodeDTO(url));
+            partner.setBrokerQrCode(qrCode.getPath());
         }
 
         partner.setCode(partner.getId().toString());
@@ -150,6 +152,12 @@ public class MerchantPartnerDomainImpl extends BaseDomain implements MerchantPar
     public void deleteMerchantPartnerById(Long id) {
         MerchantPartner partner=merchantPartnerDao.findByIdForUpdate(id);
         merchantPartnerDao.delete(partner);
+    }
+
+
+    @Override
+    public List<MerchantPartner> getMerchantPartnerList() {
+        return merchantPartnerDao.findAll();
     }
 
     @SetMerchantPartnerStats

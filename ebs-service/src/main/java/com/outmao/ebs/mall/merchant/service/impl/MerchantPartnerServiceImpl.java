@@ -41,6 +41,11 @@ public class MerchantPartnerServiceImpl extends BaseService implements MerchantP
     }
 
     @Override
+    public List<MerchantPartner> getMerchantPartnerList() {
+        return merchantPartnerDomain.getMerchantPartnerList();
+    }
+
+    @Override
     public MerchantPartnerVO getMerchantPartnerVOById(Long id) {
         return merchantPartnerDomain.getMerchantPartnerVOById(id);
     }

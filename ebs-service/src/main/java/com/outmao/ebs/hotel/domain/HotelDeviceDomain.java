@@ -25,11 +25,18 @@ public interface HotelDeviceDomain {
 
     public long getHotelDeviceCountByPartnerId(Long partnerId);
 
+    public List<HotelDevice> getHotelDeviceListByOwnerId(Long ownerId);
+
+    public List<HotelDevice> getHotelDeviceListByPartnerId(Long partnerId);
+
     public HotelDevice getHotelDeviceByUserId(Long userId);
 
     public HotelDeviceVO getHotelDeviceVOById(Long id);
 
     public HotelDeviceVO getHotelDeviceVOByDeviceNo(String deviceNo);
+
+
+    public List<HotelDeviceVO> getHotelDeviceVOList(GetHotelDeviceListDTO request);
 
     public Page<HotelDeviceVO> getHotelDeviceVOPage(GetHotelDeviceListDTO request, Pageable pageable);
 

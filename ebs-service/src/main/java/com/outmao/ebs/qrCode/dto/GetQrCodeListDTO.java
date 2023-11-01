@@ -10,12 +10,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class GetQrCodeListDTO {
 
-
     //状态 0--未激活；1--已激活
     private Integer status;
-
-
-
 
 
 }

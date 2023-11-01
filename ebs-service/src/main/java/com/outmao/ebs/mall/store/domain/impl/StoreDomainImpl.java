@@ -20,7 +20,9 @@ import com.outmao.ebs.mall.store.entity.*;
 import com.outmao.ebs.mall.store.vo.SimpleStoreVO;
 import com.outmao.ebs.mall.store.vo.StoreVO;
 import com.outmao.ebs.org.common.annotation.BindingOrg;
+import com.outmao.ebs.qrCode.dto.ActivateQrCodeDTO;
 import com.outmao.ebs.qrCode.dto.GenerateQrCodeDTO;
+import com.outmao.ebs.qrCode.entity.QrCode;
 import com.outmao.ebs.qrCode.service.QrCodeService;
 import com.querydsl.core.types.Predicate;
 import org.springframework.beans.BeanUtils;
@@ -88,9 +90,9 @@ public class StoreDomainImpl extends BaseDomain implements StoreDomain {
 
         if(store.getUrl()==null){
             String url=config.getBaseUrl()+"/store?id="+store.getId();
-            String qrCode=qrcodeService.generateQrCode(new GenerateQrCodeDTO(url,500,500));
+            QrCode qrCode=qrcodeService.activateQrCode(new ActivateQrCodeDTO(url));
             store.setUrl(url);
-            store.setQrCode(qrCode);
+            store.setQrCode(qrCode.getPath());
         }
 
         return store;

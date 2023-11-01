@@ -42,10 +42,17 @@ public interface QrCodeDomain {
 	 */
 	public void batchGenerateQrCode(BatchGenerateQrCodeDTO request);
 
+
+
 	public void batchGenerateQrCodeAsync(BatchGenerateQrCodeDTO request);
 
 
+
+
 	public QrCode getQrCodeById(Long id);
+
+
+
 
 	public QrCode getQrCodeByCode(String code);
 
@@ -53,6 +60,7 @@ public interface QrCodeDomain {
 	 * 激活一个码
 	 */
 	public QrCode activateQrCode(ActivateQrCodeDTO request);
+
 
 
 	public Page<QrCode> getQrCodePage(GetQrCodeListDTO request, Pageable pageable);

@@ -151,6 +151,17 @@ public class HotelDeviceDomainImpl extends BaseDomain implements HotelDeviceDoma
         return hotelDeviceDao.findByUserId(userId);
     }
 
+
+    @Override
+    public List<HotelDevice> getHotelDeviceListByOwnerId(Long ownerId) {
+        return hotelDeviceDao.findAllByOwnerId(ownerId);
+    }
+
+    @Override
+    public List<HotelDevice> getHotelDeviceListByPartnerId(Long partnerId) {
+        return hotelDeviceDao.findAllByPartnerId(partnerId);
+    }
+
     @Override
     public HotelDeviceVO getHotelDeviceVOById(Long id) {
         QHotelDevice e=QHotelDevice.hotelDevice;
@@ -170,11 +181,28 @@ public class HotelDeviceDomainImpl extends BaseDomain implements HotelDeviceDoma
     }
 
     @Override
+    public List<HotelDeviceVO> getHotelDeviceVOList(GetHotelDeviceListDTO request) {
+
+        QHotelDevice e=QHotelDevice.hotelDevice;
+
+        Predicate p=e.status.eq(1);
+        if(!StringUtils.isEmpty(request.getKeyword())){
+            p=e.keyword.like("%"+request.getKeyword()+"%");
+        }
+
+        if(request.getHotelId()!=null){
+            p=e.hotelId.eq(request.getHotelId()).and(p);
+        }
+
+        return queryList(e,p,hotelDeviceVOConver);
+    }
+
+    @Override
     public Page<HotelDeviceVO> getHotelDeviceVOPage(GetHotelDeviceListDTO request, Pageable pageable) {
 
         QHotelDevice e=QHotelDevice.hotelDevice;
 
-        Predicate p=null;
+        Predicate p=e.status.eq(1);
         if(!StringUtils.isEmpty(request.getKeyword())){
             p=e.keyword.like("%"+request.getKeyword()+"%");
         }
