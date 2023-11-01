@@ -18,6 +18,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+import org.thymeleaf.util.StringUtils;
+
 import java.util.Date;
 
 
@@ -46,7 +48,17 @@ public class AdvertDomainImpl extends BaseDomain implements AdvertDomain {
         }
 
         BeanUtils.copyProperties(request,advert,"orgId","userId");
+
+        if(StringUtils.isEmpty(advert.getImage())){
+            if(!StringUtils.isEmpty(advert.getImages())){
+                String[] images=advert.getImages().split(",");
+                advert.setImage(images[0]);
+            }
+        }
+
         advert.setUpdateTime(new Date());
+
+
 
         advertDao.save(advert);
 

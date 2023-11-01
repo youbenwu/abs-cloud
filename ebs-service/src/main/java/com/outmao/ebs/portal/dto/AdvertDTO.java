@@ -71,6 +71,9 @@ public class AdvertDTO {
     @ApiModelProperty(name = "image", value = "图片地址")
     private String image;
 
+    @ApiModelProperty(name = "images", value = "多张图片用逗号隔开")
+    private String images;
+
     @ApiModelProperty(name = "url", value = "广告跳转地址")
     private String url;
 
