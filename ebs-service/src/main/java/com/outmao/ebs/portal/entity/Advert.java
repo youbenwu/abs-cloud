@@ -61,7 +61,7 @@ public class Advert extends SortEntity {
     private BindingItem item;
 
 
-    @ApiModelProperty(name = "advertType", value = "广告类型 PPV--普通图片视频广告 PPC--带广告链接 PPA--带二维码")
+    @ApiModelProperty(name = "advertType", value = "广告类型 CPM--普通图片视频广告 CPC--带广告链接 CPA--带二维码")
     private String advertType;
 
     @ApiModelProperty(name = "title", value = "广告名称")
@@ -107,6 +107,7 @@ public class Advert extends SortEntity {
 
     @ApiModelProperty(name = "uv", value = "独立访客，一台电脑24小时以内访问N次计为1次")
     private long uv;
+
 
 
 

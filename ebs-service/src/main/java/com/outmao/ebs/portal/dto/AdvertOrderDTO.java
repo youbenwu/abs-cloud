@@ -18,7 +18,7 @@ public class AdvertOrderDTO {
     @ApiModelProperty(name = "type", value = "广告类型 0--系统广告 1--企业广告 2--个人广告")
     private int type;
 
-    @ApiModelProperty(name = "advertType", value = "广告类型 PPV--普通图片视频广告 PPC--带广告链接 PPA--带二维码")
+    @ApiModelProperty(name = "advertType", value = "广告类型 CPM--普通图片视频广告 CPC--带广告链接 CPA--带二维码")
     private String advertType;
 
     @ApiModelProperty(name = "title", value = "广告名称")
