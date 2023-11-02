@@ -26,7 +26,7 @@ public class RongcloudServiceImpl implements RongcloudService {
         User user = rongCloud.user;
         try {
             TokenResult result=user.register(request);
-            if(result.code==0){
+            if(result.code==200){
                 Token token=new Token();
                 BeanUtils.copyProperties(result,token);
                 return token;
