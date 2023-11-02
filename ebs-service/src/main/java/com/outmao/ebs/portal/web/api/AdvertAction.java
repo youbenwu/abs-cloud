@@ -14,6 +14,8 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -48,7 +50,8 @@ public class AdvertAction {
     @PreAuthorize("permitAll")
     @ApiOperation(value = "获取广告信息列表", notes = "获取广告信息列表")
     @PostMapping("/page")
-    public Page<Advert> getAdvertPage(GetAdvertListDTO request, Pageable pageable) {
+    public Page<Advert> getAdvertPage(GetAdvertListDTO request, @PageableDefault(sort = {"sort"}, direction = Sort.Direction.ASC)Pageable pageable) {
+        request.setStatus(1);
         Page<Advert> page= advertService.getAdvertPage(request,pageable);
         pvLog(page.getContent());
         return page;

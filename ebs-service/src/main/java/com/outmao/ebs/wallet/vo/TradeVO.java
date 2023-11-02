@@ -51,6 +51,10 @@ public class TradeVO {
      */
     private int businessType;
 
+    private String subject;
+
+    private String body;
+
     /**
      *
      * 自定义业务说明

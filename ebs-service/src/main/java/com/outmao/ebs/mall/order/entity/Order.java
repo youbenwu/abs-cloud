@@ -201,6 +201,14 @@ public class Order  implements Serializable{
 	private String business;
 
 
+	/**
+	 *
+	 * 描述
+	 *
+	 */
+	private String description;
+
+
 	//商品信息
 
 	/**

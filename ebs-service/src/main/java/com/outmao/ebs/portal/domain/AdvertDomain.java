@@ -9,6 +9,8 @@ import com.outmao.ebs.portal.entity.AdvertOrder;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.util.List;
+
 public interface AdvertDomain {
 
     public Advert saveAdvert(AdvertDTO request);
@@ -17,9 +19,13 @@ public interface AdvertDomain {
 
     public void deleteAdvertById(Long id);
 
+    public void setAdvertSort(Long id, int sort);
+
     public Advert buyPv(Long id,long buyPv,double buyAmount);
 
     public Advert pv(Long id);
+
+    public List<Advert> getAdvertList();
 
     public Page<Advert> getAdvertPage(GetAdvertListDTO request, Pageable pageable);
 

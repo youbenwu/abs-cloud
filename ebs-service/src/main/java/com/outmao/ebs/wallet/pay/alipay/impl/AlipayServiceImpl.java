@@ -25,13 +25,13 @@ public class AlipayServiceImpl implements AlipayService {
 
 	@Override
 	public AlipayTradeAppPayResponse tradeAppPay(String subject, String body, String outTradeNo, double totalAmount) {
-		String amountS = String.format("%.2f", totalAmount);
+
 		AlipayTradeAppPayRequest request = new AlipayTradeAppPayRequest();
 		AlipayTradeAppPayModel model = new AlipayTradeAppPayModel();
 		model.setBody(body);
 		model.setSubject(subject);
 		model.setOutTradeNo(outTradeNo);
-		model.setTotalAmount(amountS);
+		model.setTotalAmount(String.format("%.2f", totalAmount));
 		// 30分钟后超时
 		model.setTimeoutExpress("30m");
 		model.setProductCode("QUICK_MSECURITY_PAY");
@@ -43,13 +43,16 @@ public class AlipayServiceImpl implements AlipayService {
 			// 这里和普通的接口调用不同，使用的是sdkExecute
 			AlipayTradeAppPayResponse response = alipayClient.sdkExecute(request);
 			if (!response.isSuccess()) {
+				log.error("支付宝获取调起APP支付参数出错",response.getMsg());
 				throw new BusinessException(response.getMsg());
 			}
 			// 就是orderString 可以直接给客户端请求，无需再做处理。
 			return response;
 		} catch (AlipayApiException e) {
+			log.error("支付宝获取调起APP支付参数出错", e);
 			throw new BusinessException(e.getMessage());
 		}
+
 	}
 
 

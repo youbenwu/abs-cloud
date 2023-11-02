@@ -2,6 +2,7 @@ package com.outmao.ebs.portal.domain.impl;
 
 import com.outmao.ebs.common.base.BaseDomain;
 import com.outmao.ebs.common.exception.BusinessException;
+import com.outmao.ebs.common.util.DateUtil;
 import com.outmao.ebs.common.util.StringUtil;
 import com.outmao.ebs.mall.order.common.constant.OrderStatus;
 import com.outmao.ebs.portal.dao.AdvertDao;
@@ -11,6 +12,7 @@ import com.outmao.ebs.portal.dto.*;
 import com.outmao.ebs.portal.entity.Advert;
 import com.outmao.ebs.portal.entity.AdvertOrder;
 import com.outmao.ebs.portal.entity.QAdvert;
+import com.outmao.ebs.security.util.SecurityUtil;
 import com.querydsl.core.types.Predicate;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.thymeleaf.util.StringUtils;
 
 import java.util.Date;
+import java.util.List;
 
 
 @Component
@@ -37,6 +40,14 @@ public class AdvertDomainImpl extends BaseDomain implements AdvertDomain {
     @Transactional
     @Override
     public Advert saveAdvert(AdvertDTO request) {
+
+        if(request.getStartTime()==null){
+            request.setStartTime(new Date());
+        }
+        if(request.getEndTime()==null){
+            request.setEndTime(DateUtil.addDays(request.getStartTime(),360));
+        }
+
         Advert advert=request.getId()==null?null:advertDao.findByIdForUpdate(request.getId());
 
 
@@ -84,6 +95,13 @@ public class AdvertDomainImpl extends BaseDomain implements AdvertDomain {
         advertDao.deleteById(id);
     }
 
+
+    @Transactional
+    @Override
+    public void setAdvertSort(Long id, int sort) {
+        advertDao.setSort(id,sort);
+    }
+
     @Transactional
     @Override
     public Advert buyPv(Long id,long buyPv,double buyAmount) {
@@ -113,6 +131,12 @@ public class AdvertDomainImpl extends BaseDomain implements AdvertDomain {
         return advert;
     }
 
+
+    @Override
+    public List<Advert> getAdvertList() {
+        return advertDao.findAll();
+    }
+
     @Override
     public Page<Advert> getAdvertPage(GetAdvertListDTO request, Pageable pageable) {
         QAdvert e=QAdvert.advert;
@@ -134,11 +158,12 @@ public class AdvertDomainImpl extends BaseDomain implements AdvertDomain {
         if(request.getStatus()!=null){
             p=e.status.eq(request.getStatus()).and(p);
         }
-//        else{
-//            Date now =new Date();
-//            //前端只返回上架的，并且在显示时间之内的
-//            p=e.status.eq(1).and(e.startTime.before(now).and(e.endTime.after(now))).and(p);
-//        }
+
+        if(!SecurityUtil.isAdminApi()){
+            //Date now =new Date();
+            //前端只返回在显示时间之内的
+            //p=e.startTime.before(now).and(e.endTime.after(now)).and(p);
+        }
 
         Page<Advert> page=p==null?advertDao.findAll(pageable):advertDao.findAll(p,pageable);
 

@@ -16,6 +16,8 @@ public class TradeVOConver implements BeanConver<QTrade, TradeVO> {
         vo.setFromId(t.get(e.from.id));
         vo.setToId(t.get(e.to.id));
         vo.setType(t.get(e.type));
+        vo.setSubject(t.get(e.subject));
+        vo.setBody(t.get(e.body));
         vo.setCurrencyId(t.get(e.currency.id));
         vo.setAmount(t.get(e.amount));
         vo.setTotalAmount(t.get(e.totalAmount));
@@ -45,6 +47,8 @@ public class TradeVOConver implements BeanConver<QTrade, TradeVO> {
                 e.to.id,
                 e.type,
                 e.currency.id,
+                e.subject,
+                e.body,
                 e.amount,
                 e.totalAmount,
                 e.payAmount,

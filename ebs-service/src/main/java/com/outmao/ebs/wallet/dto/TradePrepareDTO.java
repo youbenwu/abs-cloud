@@ -8,6 +8,8 @@ public class TradePrepareDTO {
     private String tradeNo;//交易号
     private Long fromId;//发起钱包
     private Long toId;//目标钱包
+    private String subject;
+    private String body;
     private int type;//交易类型
     private int payChannel;//交易矩道
     private int outPayType;

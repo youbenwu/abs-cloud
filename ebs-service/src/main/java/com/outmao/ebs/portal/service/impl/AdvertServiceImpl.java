@@ -21,10 +21,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
+import java.util.Collections;
 import java.util.List;
 
 
@@ -84,7 +87,7 @@ public class AdvertServiceImpl extends BaseService implements AdvertService {
         GetAdvertListDTO dto=new GetAdvertListDTO();
         dto.setChannelCode(channelCode);
         dto.setStatus(1);
-        Page<Advert> page=getAdvertPage(dto, PageRequest.of(0,size));
+        Page<Advert> page=getAdvertPage(dto, PageRequest.of(0,size, Sort.by(Sort.Direction.ASC,"sort")));
         return page.getContent();
     }
 
@@ -131,6 +134,22 @@ public class AdvertServiceImpl extends BaseService implements AdvertService {
         return advertOrder;
     }
 
+
+    //每30分钟一次
+    @Scheduled(cron = "0 0/30 * * * *")
+    //打乱广告顺序
+    public void advert_sort(){
+
+        List<Advert> list=advertDomain.getAdvertList();
+
+        Collections.shuffle(list);
+
+        for (int i=0;i<list.size();i++){
+            Advert advert=list.get(i);
+            advertDomain.setAdvertSort(advert.getId(),i);
+        }
+
+    }
 
 
 }

@@ -151,11 +151,20 @@ public class OrderDomainImpl extends BaseDomain implements OrderDomain {
 
         saveOrderContractList(order,request.getContracts());
 
+        order.setDescription(getDescription(order));
+
         order.setKeyword(getKeyword(order));
 
         return order;
     }
 
+    private String getDescription(Order order){
+        StringBuffer sb=new StringBuffer("");
+        order.getProducts().forEach(t->{
+            sb.append(t.getProductTitle()+" ");
+        });
+        return sb.toString().trim();
+    }
 
     @Override
     public Order getOrderByOrderNo(String orderNo) {

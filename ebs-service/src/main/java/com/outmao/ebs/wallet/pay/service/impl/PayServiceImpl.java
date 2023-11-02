@@ -68,12 +68,12 @@ public class PayServiceImpl implements PayService {
         if (trade.getPayChannel()== PayChannel.WalletPay.getType()) {
             return trade;
         } else if (trade.getPayChannel()== PayChannel.AliPay.getType()) {
-            Object result = alipayService.tradeAppPay(trade.getBusiness(), trade.getRemark(),
+            Object result = alipayService.tradeAppPay(trade.getSubject(), trade.getBody(),
                     trade.getTradeNo(), trade.getTotalAmount()/100.0);
             return result;
         } else if (trade.getPayChannel()== PayChannel.WxPay.getType()) {
             Object result = wechatPayService.prepayApp(trade.getTradeNo(),trade.getTotalAmount(),
-                    trade.getBusiness()!=null?trade.getBusiness():trade.getRemark());
+                    trade.getBody());
             return  result;
 
         }

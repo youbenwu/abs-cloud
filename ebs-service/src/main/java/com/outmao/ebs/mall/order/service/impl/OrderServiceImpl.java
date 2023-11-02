@@ -266,7 +266,9 @@ public class OrderServiceImpl extends BaseService implements OrderService, Trade
         dto.setAmount(amount);
         dto.setType(TradeType.Pay.getType());
         dto.setBusinessType(WalletConstant.business_type_pay);
-        dto.setBusiness("购买商品支付");
+        dto.setBusiness("购买支付");
+        dto.setSubject("购买商品");
+        dto.setBody(order.getDescription());
         dto.setPayChannel(PayChannel.valueOf(request.getPayChannel()).getType());
 
         return payService.tradePrepare(dto);

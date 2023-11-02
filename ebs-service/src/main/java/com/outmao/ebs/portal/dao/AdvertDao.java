@@ -3,9 +3,10 @@ package com.outmao.ebs.portal.dao;
 import com.outmao.ebs.portal.entity.Advert;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Lock;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.querydsl.QuerydslPredicateExecutor;
-
+import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.LockModeType;
 
 public interface AdvertDao extends JpaRepository<Advert,Long> , QuerydslPredicateExecutor<Advert> {
@@ -14,6 +15,11 @@ public interface AdvertDao extends JpaRepository<Advert,Long> , QuerydslPredicat
     @Lock(value = LockModeType.PESSIMISTIC_READ)
     @Query("select a from Advert  a where a.id=?1")
     public Advert findByIdForUpdate(Long id);
+
+    @Transactional
+    @Modifying
+    @Query("update Advert p set p.sort=?2 where p.id=?1")
+    public void setSort(Long id, int sort);
 
 
 }
