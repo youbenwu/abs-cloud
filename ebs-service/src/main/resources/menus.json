@@ -191,7 +191,7 @@
       },
       {
         "name": "组织管理",
-        "path": "/org/orgs"
+        "path": "/org/list"
       },
       {
         "name": "部门管理",
@@ -219,7 +219,7 @@
       },
       {
         "name": "权限管理",
-        "path": "/org/pers"
+        "path": "/org/permissions"
       }
     ]
   },
@@ -233,7 +233,7 @@
       },
       {
         "name": "系统管理",
-        "path": "/sys/syss"
+        "path": "/sys/list"
       },
       {
         "name": "操作日志",
