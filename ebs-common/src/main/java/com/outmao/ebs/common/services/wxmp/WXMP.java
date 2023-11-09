@@ -51,6 +51,34 @@ public class WXMP {
 
 	}
 
+	public WXPhoneResult getWxPhone(String code) throws Exception{
+
+		WXMPTokenResult tokenResult=getToken();
+		if(tokenResult.getErrcode()!=0){
+			System.out.println(tokenResult.getErrmsg());
+			return null;
+		}
+
+		String url = "https://api.weixin.qq.com/wxa/business/getuserphonenumber?access_token="
+				+ tokenResult.getAccess_token() + "&code=" + code ;
+
+		System.out.println(url);
+
+		WXCode wxCode=new WXCode();
+		wxCode.setCode(code);
+
+		String json=JSON.toJSONString(wxCode);
+
+		System.out.println(json);
+
+		String r= Https.httpRequest(url, "POST", json);
+
+		WXPhoneResult result= JsonUtil.fromJson(r, WXPhoneResult.class);
+
+		return result;
+
+	}
+
 	public WXMPTokenResult getToken()throws Exception{
 		String url="https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid="+appid+"&secret="+secret;
 		String r= Https.httpRequest(url, "GET", null);

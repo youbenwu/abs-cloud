@@ -94,6 +94,12 @@ public class UserAction {
 		return securityService.getWeChatPhoneNumber(encryptedData,iv);
 	}
 
+	@PreAuthorize("permitAll")
+	@ApiOperation(value = "获取微信用户绑定的手机号", notes = "获取微信用户绑定的手机号")
+	@PostMapping("/weChatPhoneNumber")
+	public Object getWeChatPhoneNumber(String code) {
+		return securityService.getWeChatPhoneNumber(code);
+	}
 
 	@ApiOperation(value = "帐号注册接口", notes = "帐号注册接口")
 	@ApiImplicitParams({

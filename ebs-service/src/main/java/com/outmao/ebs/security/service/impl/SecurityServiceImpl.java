@@ -164,10 +164,13 @@ public class SecurityServiceImpl extends BaseDomain implements SecurityService {
             if(r.getErrcode()!=0){
                 throw new AuthenticationServiceException(r.getErrmsg());
             }
-            String unionid=r.getUnionid();
+            //String unionid=r.getUnionid();
             String openid=r.getOpenid();
             String sessionKey=r.getSession_key();
-            SecurityUser securityUser=(SecurityUser)loadUserByUsername(openid);
+
+            UserOauth oauth=userService.getUserAuthByPrincipal(openid);
+
+            SecurityUser securityUser=oauth!=null?getUser(oauth):null;
             if(securityUser==null){
                 securityUser=registerUser(Oauth.WECHAT.getName(),openid,code);
             }
@@ -360,4 +363,12 @@ public class SecurityServiceImpl extends BaseDomain implements SecurityService {
     }
 
 
+    @Override
+    public Object getWeChatPhoneNumber(String code) {
+        try {
+            return wxmp.getWxPhone(code);
+        }catch (Exception e){
+            return new BusinessException(e.getMessage());
+        }
+    }
 }

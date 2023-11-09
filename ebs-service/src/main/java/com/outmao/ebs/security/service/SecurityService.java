@@ -45,5 +45,7 @@ public interface SecurityService extends UserDetailsService {
 
 	public Object getWeChatPhoneNumber(String encryptedData, String iv);
 
+	public Object getWeChatPhoneNumber(String code);
+
 
 }
