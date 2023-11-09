@@ -20,4 +20,7 @@ public interface ProductCategoryDomain {
     public Page<ProductCategoryVO> getProductCategoryVOPage(GetProductCategoryListDTO request, Pageable pageable);
 
 
+    public void sort(List<Long> ids);
+
+
 }

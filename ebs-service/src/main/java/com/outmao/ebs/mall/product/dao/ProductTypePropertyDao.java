@@ -12,5 +12,7 @@ public interface ProductTypePropertyDao extends JpaRepository<ProductTypePropert
 
     public boolean existsByTypeIdAndKeyAndIdNot(Long typeId, String key, Long idNot);
 
+    public void deleteAllByTypeId(Long typeId);
+
 
 }

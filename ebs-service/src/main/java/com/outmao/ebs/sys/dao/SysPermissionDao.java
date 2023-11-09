@@ -10,4 +10,6 @@ public interface SysPermissionDao extends JpaRepository<SysPermission,Long> {
     public SysPermission findBySysIdAndPermissionId(Long sysId, Long permissionId);
 
     public List<SysPermission> findAllBySysId(Long sysId);
+
+    public void deleteAllBySysId(Long sysId);
 }

@@ -12,4 +12,6 @@ public interface SysMenuDao extends JpaRepository<SysMenu,Long> {
 
     public List<SysMenu> findAllBySysId(Long sysId);
 
+    public void deleteAllBySysId(Long sysId);
+
 }

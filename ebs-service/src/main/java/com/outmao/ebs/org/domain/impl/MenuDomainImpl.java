@@ -133,5 +133,13 @@ public class MenuDomainImpl extends BaseDomain implements MenuDomain {
         return menuDao.findAllIdByPathIn(pathIn);
     }
 
+    @Transactional
+    @Override
+    public void sort(List<Long> ids) {
+        for(int i=0;i<ids.size();i++){
+            menuDao.setSort(ids.get(i),i);
+        }
+    }
+
 
 }

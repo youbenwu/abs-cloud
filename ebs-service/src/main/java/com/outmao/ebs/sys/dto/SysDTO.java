@@ -24,6 +24,13 @@ public class SysDTO {
     private String name;
 
     /**
+     *
+     * 系统描述
+     *
+     */
+    private String description;
+
+    /**
      * 系统LOGO
      */
     private String logo;

@@ -45,21 +45,6 @@ public class ProductTypeVO {
     @ApiModelProperty(name = "description", value = "类型描述")
     private String description;
 
-    /**
-     *
-     * 属性个数
-     *
-     */
-    @ApiModelProperty(name = "propertyCount", value = "属性个数")
-    private Integer propertyCount;
-
-    /**
-     *
-     * 参数个数
-     *
-     */
-    @ApiModelProperty(name = "attributeCount", value = "参数个数")
-    private Integer attributeCount;
 
     @ApiModelProperty(name = "attributes", value = "参数列表")
     private List<ProductTypeAttributeGroupVO> attributes;

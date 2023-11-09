@@ -49,6 +49,13 @@ public class SysAdminAction {
         return sysService.saveSys(request);
     }
 
+    @PreAuthorize("hasPermission('/sys/sys','delete')")
+    @ApiOperation(value = "删除系统信息", notes = "删除系统信息")
+    @PostMapping("/delete")
+    public void deleteSysById(Long id) {
+        sysService.deleteSysById(id);
+    }
+
     @PreAuthorize("hasPermission('/sys/sys','read')")
     @ApiOperation(value = "获取根系统信息", notes = "获取根系统信息")
     @PostMapping("/get")

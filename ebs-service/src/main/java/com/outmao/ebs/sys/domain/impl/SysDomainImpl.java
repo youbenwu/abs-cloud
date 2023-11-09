@@ -52,9 +52,19 @@ public class SysDomainImpl extends BaseDomain implements SysDomain {
 
         BeanUtils.copyProperties(request,sys);
 
+        sys.setUpdateTime(new Date());
+
         sysDao.save(sys);
 
         return sys;
+    }
+
+    @Transactional
+    @Override
+    public void deleteSysById(Long id) {
+        sysMenuDao.deleteAllBySysId(id);
+        sysPermissionDao.deleteAllBySysId(id);
+        sysDao.deleteById(id);
     }
 
     @Override

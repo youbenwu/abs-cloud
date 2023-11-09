@@ -135,7 +135,7 @@ public class ProductCategoryDomainImpl extends BaseDomain implements ProductCate
 
     private List<ProductCategoryVO> getAll() {
         QProductCategory e=QProductCategory.productCategory;
-        List<ProductCategoryVO> list=queryList(e,e.id.isNotNull(),productCategoryVOConvert);
+        List<ProductCategoryVO> list=queryList(e,e.id.isNotNull(),e.sort.asc(),productCategoryVOConvert);
         return list;
     }
 
@@ -157,6 +157,13 @@ public class ProductCategoryDomainImpl extends BaseDomain implements ProductCate
     }
 
 
+    @Transactional
+    @Override
+    public void sort(List<Long> ids) {
+        for(int i=0;i<ids.size();i++){
+            productCategoryDao.setSort(ids.get(i),i);
+        }
+    }
 
 
 }

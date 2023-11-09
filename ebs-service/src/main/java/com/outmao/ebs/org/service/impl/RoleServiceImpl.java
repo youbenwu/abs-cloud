@@ -14,6 +14,7 @@ import com.outmao.ebs.org.vo.RoleVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Collection;
 import java.util.List;
 
 
@@ -82,4 +83,10 @@ public class RoleServiceImpl extends BaseService implements RoleService {
     public List<RoleMenuVO> getRoleMenuVOList(GetRoleMenuListDTO request) {
         return roleDomain.getRoleMenuVOList(request);
     }
+
+    @Override
+    public List<RoleMenu> getRoleMenuListByRoleIdIn(Collection<Long> roleIdIn) {
+        return roleDomain.getRoleMenuListByRoleIdIn(roleIdIn);
+    }
+
 }

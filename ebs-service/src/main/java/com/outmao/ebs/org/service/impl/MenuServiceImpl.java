@@ -12,9 +12,11 @@ import com.outmao.ebs.org.dto.MenuDTO;
 import com.outmao.ebs.org.entity.Menu;
 import com.outmao.ebs.org.entity.RoleMenu;
 import com.outmao.ebs.org.service.MenuService;
+import com.outmao.ebs.org.service.RoleService;
 import com.outmao.ebs.org.vo.MenuVO;
 import com.outmao.ebs.sys.domain.SysDomain;
 import com.outmao.ebs.sys.entity.SysMenu;
+import com.outmao.ebs.sys.service.SysService;
 import com.outmao.ebs.user.domain.UserDomain;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -36,10 +38,10 @@ public class MenuServiceImpl extends BaseService implements MenuService , Comman
 
 
     @Autowired
-    private SysDomain sysDomain;
+    private SysService sysService;
 
     @Autowired
-    private RoleDomain roleDomain;
+    private RoleService roleService;
 
 
     @Override
@@ -92,21 +94,21 @@ public class MenuServiceImpl extends BaseService implements MenuService , Comman
 
     @Override
     public List<MenuVO> getMenuVOListBySysId(Long sysId) {
-        List<SysMenu> sysMenus=sysDomain.getSysMenuListBySysId(sysId);
+        List<SysMenu> sysMenus=sysService.getSysMenuListBySysId(sysId);
         return menuDomain.getMenuVOListByIdIn(sysMenus.stream().map(t->t.getMenuId()).collect(Collectors.toList()));
     }
 
     @Override
     public List<MenuVO> getMenuVOListBySysIdAndRoleIdIn(Long sysId, Collection<Long> roleIdIn) {
-        List<SysMenu> sysMenus=sysDomain.getSysMenuListBySysId(sysId);
-        List<RoleMenu> roleMenus=roleDomain.getRoleMenuListByRoleIdIn(roleIdIn);
+
+        List<SysMenu> sysMenus=sysService.getSysMenuListBySysId(sysId);
+        List<RoleMenu> roleMenus=roleService.getRoleMenuListByRoleIdIn(roleIdIn);
 
         if(sysMenus.isEmpty()){
             return new ArrayList<>(0);
         }
 
         Collection<Long> ids = sysMenus.stream().map(t->t.getMenuId()).collect(Collectors.toList());
-
 
         if(!roleMenus.isEmpty()){
             Collection<Long> rIds = roleMenus.stream().map(t->t.getMenu().getId()).collect(Collectors.toList());
@@ -115,6 +117,11 @@ public class MenuServiceImpl extends BaseService implements MenuService , Comman
 
         return menuDomain.getMenuVOListByIdIn(ids);
 
+    }
+
+    @Override
+    public void sort(List<Long> ids) {
+        menuDomain.sort(ids);
     }
 
 

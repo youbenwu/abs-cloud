@@ -9,6 +9,7 @@ import com.outmao.ebs.bbs.vo.SubjectBrowseVO;
 import com.outmao.ebs.bbs.vo.SubjectCollectionVO;
 import com.outmao.ebs.mall.merchant.entity.Merchant;
 import com.outmao.ebs.mall.merchant.service.MerchantService;
+import com.outmao.ebs.mall.product.entity.ProductBsType;
 import com.outmao.ebs.portal.dto.GetRecommendListDTO;
 import com.outmao.ebs.portal.service.RecommendService;
 import com.outmao.ebs.portal.vo.RecommendVO;
@@ -31,6 +32,9 @@ import java.util.List;
 public class ProductServiceImpl extends BaseService implements ProductService {
 
     @Autowired
+    private ProductBsTypeDomain productBsTypeDomain;
+
+    @Autowired
     private ProductDomain productDomain;
 
 
@@ -44,6 +48,22 @@ public class ProductServiceImpl extends BaseService implements ProductService {
 
     @Autowired
     private MerchantService merchantService;
+
+
+    @Override
+    public ProductBsType saveProductBsType(ProductBsType request) {
+        return productBsTypeDomain.saveProductBsType(request);
+    }
+
+    @Override
+    public void deleteProductBsType(Integer type) {
+        productBsTypeDomain.deleteProductBsType(type);
+    }
+
+    @Override
+    public List<ProductBsType> getProductBsTypeList() {
+        return productBsTypeDomain.getProductBsTypeList();
+    }
 
 
     @Transactional

@@ -2,9 +2,7 @@ package com.outmao.ebs.mall.promotion.entity;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.outmao.ebs.bbs.common.data.BindingSubjectId;
 import lombok.Data;
-
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;

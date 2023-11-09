@@ -75,6 +75,11 @@ public class ProductCategoryAdminAction {
         return productCategoryService.getProductCategoryVOPage(request,pageable);
     }
 
+    @ApiOperation(value = "商品类别排序", notes = "商品类别排序")
+    @PostMapping("/sort")
+    public void sort(@RequestBody List<Long> ids){
+        productCategoryService.sort(ids);
+    }
 
 
 }

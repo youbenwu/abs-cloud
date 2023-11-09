@@ -19,4 +19,6 @@ public interface MenuService {
 
     public List<MenuVO> getMenuVOListBySysIdAndRoleIdIn(Long sysId, Collection<Long> roleIdIn);
 
+    public void sort(List<Long> ids);
+
 }

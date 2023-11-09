@@ -12,6 +12,7 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -53,6 +54,13 @@ public class MenuAdminAction {
     @PostMapping("/list")
     public List<MenuVO> getMenuVOList(){
         return menuService.getMenuVOList();
+    }
+
+    @PreAuthorize("hasPermission('/org/menu','save')")
+    @ApiOperation(value = "菜单排序", notes = "菜单排序")
+    @PostMapping("/sort")
+    public void sort(@RequestBody List<Long> ids) {
+        menuService.sort(ids);
     }
 
 

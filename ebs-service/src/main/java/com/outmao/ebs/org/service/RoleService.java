@@ -8,6 +8,7 @@ import com.outmao.ebs.org.vo.RoleMenuVO;
 import com.outmao.ebs.org.vo.RolePermissionVO;
 import com.outmao.ebs.org.vo.RoleVO;
 
+import java.util.Collection;
 import java.util.List;
 
 public interface RoleService {
@@ -28,5 +29,6 @@ public interface RoleService {
     public void deleteRoleMenuById(Long id);
     public List<RoleMenuVO> getRoleMenuVOList(GetRoleMenuListDTO request);
 
+    public List<RoleMenu> getRoleMenuListByRoleIdIn(Collection<Long> roleIdIn);
 
 }

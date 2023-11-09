@@ -44,4 +44,8 @@ public class ProductCategoryServiceImpl extends BaseService implements ProductCa
     }
 
 
+    @Override
+    public void sort(List<Long> ids) {
+        productCategoryDomain.sort(ids);
+    }
 }

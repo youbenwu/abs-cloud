@@ -92,7 +92,8 @@ import java.util.List;
 @Api(value = "account-org", tags = "后台-组织")
 @RestController
 @RequestMapping("/api/admin/org")
-public class OrgAdminAction {
+public class
+OrgAdminAction {
 
 	@Autowired
     private OrgService orgService;

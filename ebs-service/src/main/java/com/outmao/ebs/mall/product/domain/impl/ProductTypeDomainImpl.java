@@ -58,20 +58,11 @@ public class ProductTypeDomainImpl extends BaseDomain implements ProductTypeDoma
         ProductType type=request.getId()==null?null:productTypeDao.getOne(request.getId());
 
         if(type==null){
+            if(productTypeDao.existsByName(request.getName())){
+                throw new BusinessException("类型名称重复");
+            }
             type=new ProductType();
             type.setCreateTime(new Date());
-        }
-
-        if(request.getAttributes()!=null) {
-            int attrCount = 0;
-            for (ProductTypeAttributeGroupDTO g : request.getAttributes()) {
-                attrCount += g.getAttributes().size();
-            }
-            type.setAttributeCount(attrCount);
-        }
-
-        if(request.getPropertys()!=null) {
-            type.setPropertyCount(request.getPropertys().size());
         }
 
         BeanUtils.copyProperties(request,type);
@@ -234,13 +225,9 @@ public class ProductTypeDomainImpl extends BaseDomain implements ProductTypeDoma
     public void deleteProductTypeById(Long id) {
         ProductType type=productTypeDao.getOne(id);
 
-        if(type.getAttributeCount()>0){
-            throw new BusinessException("请先删除关联的参数");
-        }
-
-        if(type.getPropertyCount()>0){
-            throw new BusinessException("请先删除关联的属性");
-        }
+        productTypeAttributeGroupDao.deleteAllByTypeId(id);
+        productTypeAttributeDao.deleteAllByTypeId(id);
+        productTypePropertyDao.deleteAllByTypeId(id);
 
         productTypeDao.delete(type);
     }
@@ -308,7 +295,7 @@ public class ProductTypeDomainImpl extends BaseDomain implements ProductTypeDoma
         QProductType e=QProductType.productType;
         Predicate p=null;
 
-        if(request.getKeyword()!=null){
+        if(!StringUtils.isEmpty(request.getKeyword())){
             p=e.keyword.like("%"+request.getKeyword()+"%").and(p);
         }
 
@@ -330,7 +317,6 @@ public class ProductTypeDomainImpl extends BaseDomain implements ProductTypeDoma
             a=new ProductTypeAttribute();
             a.setType(productTypeDao.getOne(request.getTypeId()));
             a.setCreateTime(new Date());
-            a.getType().setAttributeCount(a.getType().getAttributeCount()+1);
         }
         BeanUtils.copyProperties(request,a);
         a.setUpdateTime(new Date());
@@ -342,9 +328,7 @@ public class ProductTypeDomainImpl extends BaseDomain implements ProductTypeDoma
     @Override
     public void deleteProductTypeAttributeById(Long id) {
         ProductTypeAttribute a=productTypeAttributeDao.getOne(id);
-        a.getType().setAttributeCount(a.getType().getAttributeCount()-1);
         productTypeAttributeDao.delete(a);
-
     }
 
     @Transactional
@@ -385,7 +369,6 @@ public class ProductTypeDomainImpl extends BaseDomain implements ProductTypeDoma
             p=new ProductTypeProperty();
             p.setType(productTypeDao.getOne(request.getTypeId()));
             p.setCreateTime(new Date());
-            p.getType().setPropertyCount(p.getType().getPropertyCount()+1);
         }
         BeanUtils.copyProperties(request,p);
         p.setUpdateTime(new Date());
@@ -397,7 +380,6 @@ public class ProductTypeDomainImpl extends BaseDomain implements ProductTypeDoma
     @Override
     public void deleteProductTypePropertyById(Long id) {
         ProductTypeProperty p =productTypePropertyDao.getOne(id);
-        p.getType().setPropertyCount(p.getType().getPropertyCount()-1);
         productTypePropertyDao.delete(p);
     }
 

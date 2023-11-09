@@ -113,6 +113,11 @@ public class SysServiceImpl extends BaseDomain implements SysService , CommandLi
 
 
     @Override
+    public void deleteSysById(Long id) {
+        sysDomain.deleteSysById(id);
+    }
+
+    @Override
     public Sys getSysById(Long id) {
         return sysDomain.getSysById(id);
     }

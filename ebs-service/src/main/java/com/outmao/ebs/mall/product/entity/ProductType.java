@@ -35,7 +35,7 @@ public class ProductType extends SortEntity {
 
 	/**
 	 *
-	 * 商品类型
+	 * 商品业务类型
 	 *
 	 */
 	private int type;
@@ -56,19 +56,7 @@ public class ProductType extends SortEntity {
 	 */
 	private String description;
 
-	/**
-	 * 
-	 * 属性个数
-	 * 
-	 */
-	private int propertyCount;
 
-	/**
-	 * 
-	 * 参数个数
-	 * 
-	 */
-	private int attributeCount;
 
 
 

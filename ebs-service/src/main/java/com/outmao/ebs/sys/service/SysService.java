@@ -16,6 +16,8 @@ public interface SysService {
 
     public Sys saveSys(SysDTO request);
 
+    public void deleteSysById(Long id);
+
     public Sys getSysById(Long id);
 
     public Sys getSysByType(int type);

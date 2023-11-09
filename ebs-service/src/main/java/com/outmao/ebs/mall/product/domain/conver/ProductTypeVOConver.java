@@ -15,8 +15,6 @@ public class ProductTypeVOConver implements BeanConver<QProductType, ProductType
         vo.setType(t.get(e.type));
         vo.setName(t.get(e.name));
         vo.setDescription(t.get(e.description));
-        vo.setAttributeCount(t.get(e.attributeCount));
-        vo.setPropertyCount(t.get(e.propertyCount));
         vo.setSort(t.get(e.sort));
         vo.setCreateTime(t.get(e.createTime));
         vo.setUpdateTime(t.get(e.updateTime));
@@ -30,8 +28,6 @@ public class ProductTypeVOConver implements BeanConver<QProductType, ProductType
                 e.type,
                 e.name,
                 e.description,
-                e.attributeCount,
-                e.propertyCount,
                 e.sort,
                 e.createTime,
                 e.updateTime,

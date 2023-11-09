@@ -23,4 +23,8 @@ public interface MenuDomain {
 
     public List<Long> getMenuIdListByPathIn(Collection<String> pathIn);
 
+
+    public void sort(List<Long> ids);
+
+
 }

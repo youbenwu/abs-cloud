@@ -1,6 +1,9 @@
 package com.outmao.ebs.mall.product.web.admin.api;
 
 
+import com.outmao.ebs.mall.product.common.constant.ProductType;
+import com.outmao.ebs.mall.product.entity.ProductBsType;
+import com.outmao.ebs.mall.product.vo.ProductTypeEnumValueDTO;
 import com.outmao.ebs.org.common.annotation.AccessPermission;
 import com.outmao.ebs.org.common.annotation.AccessPermissionGroup;
 import com.outmao.ebs.org.common.annotation.AccessPermissionParent;
@@ -19,6 +22,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 @AccessPermissionGroup(title="电商",url="/mall",name="",children = {
@@ -94,6 +100,39 @@ public class ProductAdminAction {
     public Page<ProductVO> getProductVOPage(@RequestBody GetProductListDTO request, Pageable pageable){
         return productService.getProductVOPage(request,request.getPageable(pageable));
     }
+
+
+    @ApiOperation(value = "获取商品类型枚举", notes = "获取商品类型枚举")
+    @PostMapping("/type/enum")
+    public List<ProductTypeEnumValueDTO> getProductTypeEnum(){
+        ProductType[] types=ProductType.values();
+        List<ProductTypeEnumValueDTO> values=new ArrayList<>(types.length);
+        for(ProductType type:types){
+            values.add(new ProductTypeEnumValueDTO(type.getType(),type.getDescribe()));
+        }
+        return values;
+    }
+
+    @PreAuthorize("hasPermission('/mall/product/bsType','save')")
+    @ApiOperation(value = "保存商品业务类型", notes = "保存商品业务类型")
+    @PostMapping("/bsType/save")
+    public ProductBsType saveProductBsType(ProductBsType request) {
+        return productService.saveProductBsType(request);
+    }
+
+    @PreAuthorize("hasPermission('/mall/product/bsType','delete')")
+    @ApiOperation(value = "删除商品业务类型", notes = "删除商品业务类型")
+    @PostMapping("/bsType/delete")
+    public void deleteProductBsType(Integer type) {
+        productService.deleteProductBsType(type);
+    }
+
+    @ApiOperation(value = "获取商品业务类型列表", notes = "获取商品业务类型列表")
+    @PostMapping("/bsType/list")
+    public List<ProductBsType> getProductBsTypeList() {
+        return productService.getProductBsTypeList();
+    }
+
 
 
 }
