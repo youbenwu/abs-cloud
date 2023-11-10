@@ -16,21 +16,20 @@ import com.outmao.ebs.portal.entity.AdvertChannel;
 import com.outmao.ebs.portal.entity.AdvertOrder;
 import com.outmao.ebs.portal.service.AdvertChannelService;
 import com.outmao.ebs.portal.service.AdvertService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-
+@Slf4j
 @Service
 public class AdvertServiceImpl extends BaseService implements AdvertService {
 
@@ -75,7 +74,9 @@ public class AdvertServiceImpl extends BaseService implements AdvertService {
           if(channel!=null){
               request.setChannelId(channel.getId());
           }else{
-              throw new BusinessException("广告频道不存在");
+              //throw new BusinessException("广告频道不存在");
+
+              return new PageImpl(new ArrayList<>(),pageable,0);
           }
         }
         return advertDomain.getAdvertPage(request,pageable);

@@ -21,6 +21,7 @@ public enum ProductType {
 
     HOTEL_WASH_SERVICE(30, "酒店干洗服务"),
     HOTEL_FOOD_SERVICE(31, "酒店送餐服务"),
+    HOTEL_MALL(32, "酒店商超"),
 
     HOTEL_DEVICE(40, "酒店投放设备"),
 
