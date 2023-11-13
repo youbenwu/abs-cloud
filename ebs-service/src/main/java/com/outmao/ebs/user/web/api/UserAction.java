@@ -3,6 +3,7 @@ package com.outmao.ebs.user.web.api;
 
 
 import com.outmao.ebs.common.exception.BusinessException;
+import com.outmao.ebs.common.services.wxmp.WXMPSessionResult;
 import com.outmao.ebs.common.util.RequestUtil;
 import com.outmao.ebs.common.util.StringUtil;
 import com.outmao.ebs.security.service.SecurityService;
@@ -71,6 +72,18 @@ public class UserAction {
 	@PostMapping("/login/weChatCode")
 	public void loginUserByWeChatCode(String code) { }
 
+
+	@ApiOperation(value = "小程序登录", notes = "小程序登录")
+	@ApiImplicitParams({
+			@ApiImplicitParam(name = "session_key", value = "小程序登录接口返回", required = true, dataType = "String"),
+			@ApiImplicitParam(name = "unionid", value = "小程序登录接口返回", required = true, dataType = "String"),
+			@ApiImplicitParam(name = "openid", value = "小程序登录接口返回", required = true, dataType = "String"),
+			@ApiImplicitParam(name = "phone", value = "手机号", required = true, dataType = "String"),
+			@ApiImplicitParam(name = "nickname", value = "昵称", required = true, dataType = "String"),
+	})
+	@PostMapping("/login/wx")
+	public void loginUserByWeChat(String session_key,String unionid,String openid,String phone,String nickname) { }
+
 	@ApiOperation(value = "登出接口", notes = "登出接口")
 	@ApiImplicitParams({})
 	@PostMapping("/logout")
@@ -95,10 +108,17 @@ public class UserAction {
 	}
 
 	@PreAuthorize("permitAll")
-	@ApiOperation(value = "获取微信用户绑定的手机号", notes = "获取微信用户绑定的手机号")
-	@PostMapping("/weChatPhoneNumber")
+	@ApiOperation(value = "小程序获取手机号", notes = "小程序获取手机号")
+	@PostMapping("/wxPhoneNumber")
 	public Object getWeChatPhoneNumber(String code) {
 		return securityService.getWeChatPhoneNumber(code);
+	}
+
+	@PreAuthorize("permitAll")
+	@ApiOperation(value = "获取小程序登录信息", notes = "获取小程序登录信息")
+	@PostMapping("/wxSession")
+	public WXMPSessionResult getWeChatSession(String code) {
+		return securityService.getWeChatSession(code);
 	}
 
 	@ApiOperation(value = "帐号注册接口", notes = "帐号注册接口")

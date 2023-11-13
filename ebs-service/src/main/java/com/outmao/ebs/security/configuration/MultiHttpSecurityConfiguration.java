@@ -81,6 +81,11 @@ public class MultiHttpSecurityConfiguration {
 		return new WeixinAuthenticationProvider(securityUserService);
 	}
 
+	@Bean
+	public WxAuthenticationProvider wxAuthenticationProvider() {
+		return new WxAuthenticationProvider(securityUserService);
+	}
+
 	@Autowired
 	public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
 		auth.authenticationProvider(customAuthenticationProvider());
@@ -90,6 +95,8 @@ public class MultiHttpSecurityConfiguration {
 		auth.authenticationProvider(phoneValidateCodeAuthenticationProvider());
 		// weixin登录
 		auth.authenticationProvider(weixinAuthenticationProvider());
+		//
+		auth.authenticationProvider(wxAuthenticationProvider());
 		// 指定密码加密所使用的加密器为passwordEncoder()
 		// 需要将密码加密后写入数据库
 		auth.userDetailsService(securityUserService).passwordEncoder(passwordEncoder());
@@ -152,12 +159,24 @@ public class MultiHttpSecurityConfiguration {
 			return filter;
 		}
 
+		@Bean
+		WxAuthenticationFilter  wxAuthenticationFilter() throws Exception {
+			WxAuthenticationFilter filter = new WxAuthenticationFilter();
+			filter.setFilterProcessesUrl("/api/user/login/wx");
+			filter.setAuthenticationSuccessHandler(authenticationHandler());
+			filter.setAuthenticationFailureHandler(authenticationHandler());
+			// 这句很关键，重用WebSecurityConfigurerAdapter配置的AuthenticationManager，不然要自己组装AuthenticationManager
+			filter.setAuthenticationManager(authenticationManagerBean());
+			return filter;
+		}
+
 		// 注册自定义的UsernamePasswordAuthenticationFilter
 		@Bean
         TokenAuthenticationFilter tokenAuthenticationFilter() throws Exception {
 			TokenAuthenticationFilter filter = new TokenAuthenticationFilter(authenticationManagerBean());
 			return filter;
 		}
+
 
 		// 注册自定义的WeixinAuthenticationFilter
 		@Bean
@@ -245,6 +264,7 @@ public class MultiHttpSecurityConfiguration {
 			http.addFilterBefore(tokenAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
 			http.addFilterBefore(phoneValidateCodeAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
 			http.addFilterBefore(weixinAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
+			http.addFilterBefore(wxAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
 			// 用重写的Filter替换掉原有的UsernamePasswordAuthenticationFilter
 			http.addFilterAt(customAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
 			// 在适当的地方加入

@@ -2,6 +2,7 @@ package com.outmao.ebs.security.service.impl;
 
 
 
+import cn.jiguang.common.utils.StringUtils;
 import com.outmao.ebs.common.base.BaseDomain;
 import com.outmao.ebs.common.exception.BusinessException;
 import com.outmao.ebs.common.services.wxmp.WXMP;
@@ -13,6 +14,7 @@ import com.outmao.ebs.org.service.MemberService;
 import com.outmao.ebs.org.service.OrgService;
 import com.outmao.ebs.org.vo.CacheOrgVO;
 import com.outmao.ebs.org.vo.OrgVO;
+import com.outmao.ebs.security.configuration.SecurityConstants;
 import com.outmao.ebs.security.service.SecurityService;
 import com.outmao.ebs.security.service.conver.*;
 import com.outmao.ebs.security.util.SecurityUtil;
@@ -39,10 +41,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.ServletWebRequest;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -181,6 +180,35 @@ public class SecurityServiceImpl extends BaseDomain implements SecurityService {
         }
     }
 
+
+    @Override
+    public SecurityUser loadUserOrRegisterByWx(String session_key, String unionid, String openid, String phone, String nickname) {
+
+        String uid= StringUtils.isEmpty(unionid)?openid:unionid;
+        UserOauth wxoauth=userService.getUserAuthByPrincipal(uid);
+        UserOauth oauth=userService.getUserAuthByPrincipal(phone);
+        if(wxoauth==null){
+            if(oauth==null){
+                Map<String,Object> params=new HashMap<>();
+                if(nickname!=null) {
+                    params.put(SecurityConstants.PARAMETER_KEY_NICKNAME, nickname);
+                }
+                userService.registerUser(new RegisterDTO(Oauth.PHONE.getName(), phone,session_key,0,params));
+                oauth=userService.getUserAuthByPrincipal(phone);
+            }
+            wxoauth=userService.registerUserOauth(oauth.getUser().getId(),Oauth.WECHAT.getName(),uid,session_key);
+        }else{
+            if(oauth==null){
+                userService.registerUserOauth(wxoauth.getUser().getId(),Oauth.PHONE.getName(),phone,session_key);
+            }
+        }
+
+
+        SecurityUser securityUser=getUser(wxoauth);
+        securityUser.getSession().setSessionKey(session_key);
+
+        return securityUser;
+    }
 
     @Override
     public SecurityUser loadUserOrRegisterByPhone(String phone) {
@@ -350,6 +378,16 @@ public class SecurityServiceImpl extends BaseDomain implements SecurityService {
         ValidateCodeUtil.saveCode(phone,code);
         // 通过短信供应商写出去
         smsCodeSender.send(phone, code.getCode());
+    }
+
+
+    @Override
+    public WXMPSessionResult getWeChatSession(String code) {
+        try {
+            return wxmp.getSession(code);
+        }catch (Exception e){
+            throw new BusinessException(e.getMessage());
+        }
     }
 
     @Override

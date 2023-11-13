@@ -24,6 +24,12 @@ public class SecurityConstants {
      */
     public static String PARAMETER_KEY_WX_CODE = "code";
 
+    public static String PARAMETER_KEY_NICKNAME = "nickname";
+
+    //String session_key,String unionid,String openid,String phone,String nickname
+    public static String PARAMETER_KEY_WX_SESSION_KEY = "session_key";
+    public static String PARAMETER_KEY_WX_UNIONID = "unionid";
+    public static String PARAMETER_KEY_WX_OPENID = "openid";
 
 
 }

@@ -2,6 +2,7 @@ package com.outmao.ebs.security.service;
 
 
 
+import com.outmao.ebs.common.services.wxmp.WXMPSessionResult;
 import com.outmao.ebs.security.vo.SecurityUser;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import javax.servlet.http.HttpServletRequest;
@@ -28,6 +29,13 @@ public interface SecurityService extends UserDetailsService {
 
 	/*
 	 *
+	 * 微信登录码加载用户信息
+	 *
+	 * */
+	public SecurityUser loadUserOrRegisterByWx(String session_key,String unionid,String openid,String phone,String nickname);
+
+	/*
+	 *
 	 * 注册手机用户
 	 *
 	 * */
@@ -42,6 +50,9 @@ public interface SecurityService extends UserDetailsService {
 
 
 	public void sendSmsCode(String phone, String type, HttpServletRequest request);
+
+
+	public WXMPSessionResult getWeChatSession(String code);
 
 	public Object getWeChatPhoneNumber(String encryptedData, String iv);
 
