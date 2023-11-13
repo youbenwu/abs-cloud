@@ -397,6 +397,8 @@ public class SecurityServiceImpl extends BaseDomain implements SecurityService {
     public void sendSmsCode(String phone, String type, HttpServletRequest request) {
         // 生成短信验证码
         ValidateCode code = smsCodeGenerator.generate(new ServletWebRequest(request));
+        //测试用
+        code.setCode("123456");
         // 把短信验证码保存到session中
         //request.getSession().setAttribute(SecurityConstants.SESSION_KEY_VERIFY_CODE, code);
         ValidateCodeUtil.saveCode(phone,code);
