@@ -119,7 +119,7 @@ public class AdvertServiceImpl extends BaseService implements AdvertService {
 
         OrderPayPrepare payPrepare=new OrderPayPrepare();
         payPrepare.setOrderNo(order.getOrderNo());
-        payPrepare.setPayChannel(PayChannel.WxPay.getDescribe());
+        payPrepare.setPayChannel(PayChannel.WxPay.name());
         payPrepare.setCurrency("RMB");
         orderService.payPrepare(payPrepare);
 
