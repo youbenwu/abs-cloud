@@ -9,6 +9,7 @@ import com.outmao.ebs.common.util.StringUtil;
 import com.outmao.ebs.security.service.SecurityService;
 import com.outmao.ebs.security.util.SecurityUtil;
 import com.outmao.ebs.security.validate.ValidateCodeUtil;
+import com.outmao.ebs.security.vo.SecurityUser;
 import com.outmao.ebs.user.common.constant.Oauth;
 import com.outmao.ebs.user.dto.GetUserListDTO;
 import com.outmao.ebs.user.dto.RegisterDTO;
@@ -62,7 +63,7 @@ public class UserAction {
 			@ApiImplicitParam(name = "verifyCode", value = "验证码", required = true, dataType = "String"),
 	})
 	@PostMapping("/login/phone")
-	public void loginUserByPhone(String phone, String verifyCode) { }
+	public SecurityUser loginUserByPhone(String phone, String verifyCode) {return null; }
 
 
 	@ApiOperation(value = "微信码登录接口", notes = "微信码登录接口")
@@ -79,7 +80,7 @@ public class UserAction {
 			@ApiImplicitParam(name = "phone_code", value = "小程序获取手机号CODE", required = true, dataType = "String"),
 	})
 	@PostMapping("/login/wx")
-	public void loginUserByWeChat(String session_code,String phone_code) { }
+	public SecurityUser loginUserByWeChat(String session_code, String phone_code) { return null;}
 
 	@ApiOperation(value = "登出接口", notes = "登出接口")
 	@ApiImplicitParams({})

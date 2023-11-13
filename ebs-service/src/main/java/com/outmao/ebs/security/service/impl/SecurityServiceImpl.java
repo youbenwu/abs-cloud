@@ -232,6 +232,10 @@ public class SecurityServiceImpl extends BaseDomain implements SecurityService {
 
     @Override
     public SecurityUser loadUserOrRegisterByPhone(String phone) {
+        UserOauth oauth=userService.getUserAuthByPrincipal(phone);
+        if(oauth!=null){
+            return getUser(oauth);
+        }
         return registerUser(Oauth.PHONE.getName(),phone,null);
     }
 

@@ -20,7 +20,7 @@ public class SmsCodeGenerator implements ValidateCodeGenerator {
 			String rand = String.valueOf(random.nextInt(10));
 			code += rand;
 		}
-		return new ValidateCode(code, 60);
+		return new ValidateCode(code, 5*60);
 	}
 	
 
