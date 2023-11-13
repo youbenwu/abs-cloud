@@ -57,6 +57,8 @@ public class UserServiceImpl extends BaseService implements UserService, Command
 
 		registerWallet(user);
 
+
+
 		return user;
 	}
 

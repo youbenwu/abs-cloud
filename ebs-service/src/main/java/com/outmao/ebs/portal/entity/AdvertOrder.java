@@ -53,7 +53,7 @@ public class AdvertOrder implements Serializable {
     @ApiModelProperty(name = "pv", value = "购买流量")
     private long pv;
 
-    @ApiModelProperty(name = "amount", value = "金额")
+    @ApiModelProperty(name = "amount", value = "订单金额")
     private double amount;
 
     private Date createTime;

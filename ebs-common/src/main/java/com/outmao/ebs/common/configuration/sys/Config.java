@@ -26,5 +26,8 @@ public class Config {
 	/*上传文件到OSS*/
 	private boolean useOss;
 
+    //http://oss.outmao.cn/media/image/8d04c1791a884e608576b2429ef90b4c.webp
+	private String userAvatar;
+
 
 }

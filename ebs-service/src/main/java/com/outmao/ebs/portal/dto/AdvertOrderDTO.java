@@ -11,7 +11,6 @@ public class AdvertOrderDTO {
     @ApiModelProperty(name = "id", value = "ID")
     private Long id;
 
-
     @ApiModelProperty(name = "channelId", value = "频道ID")
     private Long channelId;
 
@@ -27,8 +26,8 @@ public class AdvertOrderDTO {
     @ApiModelProperty(name = "subtitle", value = "广告副标题")
     private String subtitle;
 
-    @ApiModelProperty(name = "image", value = "图片地址")
-    private String image;
+    @ApiModelProperty(name = "images", value = "图片地址,多张图片用逗号隔开")
+    private String images;
 
     @ApiModelProperty(name = "url", value = "广告跳转地址")
     private String url;
@@ -39,12 +38,14 @@ public class AdvertOrderDTO {
     @ApiModelProperty(name = "qrCode", value = "广告二维码地址")
     private String qrCode;
 
+    @ApiModelProperty(name = "citys", value = "广告投放城市，多个用逗号隔开")
+    private String citys;
+
     @ApiModelProperty(name = "startTime", value = "广告展示开始时间")
     private Date startTime;
 
     @ApiModelProperty(name = "endTime", value = "广告展示结束时间")
     private Date endTime;
-
 
     @ApiModelProperty(name = "settleId", value = "结算ID")
     private Long settleId;

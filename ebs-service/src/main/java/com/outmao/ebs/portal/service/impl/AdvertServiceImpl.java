@@ -3,12 +3,16 @@ package com.outmao.ebs.portal.service.impl;
 import com.outmao.ebs.common.base.BaseService;
 import com.outmao.ebs.common.exception.BusinessException;
 import com.outmao.ebs.mall.order.common.constant.OrderStatus;
-import com.outmao.ebs.mall.order.dto.ToOrderDTO;
+import com.outmao.ebs.mall.order.dto.*;
 import com.outmao.ebs.mall.order.entity.Order;
 import com.outmao.ebs.mall.order.service.OrderService;
 import com.outmao.ebs.mall.order.service.SettleService;
 import com.outmao.ebs.mall.order.vo.OrderVO;
+import com.outmao.ebs.mall.order.vo.SettleVO;
 import com.outmao.ebs.mall.order.vo.ToOrderVO;
+import com.outmao.ebs.mall.product.entity.Product;
+import com.outmao.ebs.mall.product.entity.ProductSku;
+import com.outmao.ebs.mall.product.service.ProductService;
 import com.outmao.ebs.portal.domain.AdvertDomain;
 import com.outmao.ebs.portal.dto.*;
 import com.outmao.ebs.portal.entity.Advert;
@@ -16,6 +20,9 @@ import com.outmao.ebs.portal.entity.AdvertChannel;
 import com.outmao.ebs.portal.entity.AdvertOrder;
 import com.outmao.ebs.portal.service.AdvertChannelService;
 import com.outmao.ebs.portal.service.AdvertService;
+import com.outmao.ebs.security.util.SecurityUtil;
+import com.outmao.ebs.wallet.common.constant.PayChannel;
+import com.outmao.ebs.wallet.pay.service.PayService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,6 +51,12 @@ public class AdvertServiceImpl extends BaseService implements AdvertService {
 
     @Autowired
     private SettleService settleService;
+
+    @Autowired
+    private ProductService productService;
+
+    @Autowired
+    private PayService payService;
 
 
     @Override
@@ -104,6 +117,12 @@ public class AdvertServiceImpl extends BaseService implements AdvertService {
         OrderVO order=orderService.getOrderVOByOrderNo(toOrderVO.getOrders().get(0));
 
 
+        OrderPayPrepare payPrepare=new OrderPayPrepare();
+        payPrepare.setOrderNo(order.getOrderNo());
+        payPrepare.setPayChannel(PayChannel.WxPay.getDescribe());
+        payPrepare.setCurrency("RMB");
+        orderService.payPrepare(payPrepare);
+
         AdvertDTO advertDTO=new AdvertDTO();
         advertDTO.setUserId(order.getUserId());
         BeanUtils.copyProperties(request,advertDTO);
@@ -123,6 +142,22 @@ public class AdvertServiceImpl extends BaseService implements AdvertService {
         return advertOrder;
     }
 
+
+    @Override
+    public SettleVO settleAdvertOrder(AdvertOrderSettleDTO request) {
+        AdvertChannel channel=advertChannelService.getAdvertChannelById(request.getChannelId());
+        Product product=productService.getProductById(channel.getProductId());
+        ProductSku sku=product.getSkus().get(0);
+
+        CreateSettleDTO createSettleDTO=new CreateSettleDTO();
+        createSettleDTO.setUserId(SecurityUtil.currentUserId());
+        createSettleDTO.setType(product.getType());
+        createSettleDTO.setProducts(new ArrayList<>());
+        createSettleDTO.getProducts().add(new CreateSettleProductDTO(sku.getId(),request.getQuantity()));
+
+        SettleVO settleVO=settleService.createSettle(createSettleDTO);
+        return settleVO;
+    }
 
     @Transactional
     @Override

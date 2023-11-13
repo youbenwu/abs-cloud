@@ -2,6 +2,7 @@ package com.outmao.ebs.user.domain.impl;
 
 import com.outmao.ebs.common.base.BaseDomain;
 import com.outmao.ebs.common.exception.BusinessException;
+import com.outmao.ebs.common.kcnamer.KCNamer;
 import com.outmao.ebs.common.util.StringUtil;
 import com.outmao.ebs.common.util.Validation;
 import com.outmao.ebs.user.common.constant.CertificationStatus;
@@ -26,6 +27,7 @@ import com.outmao.ebs.user.vo.UserVO;
 import com.querydsl.core.types.Predicate;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
@@ -56,6 +58,14 @@ public class UserDomainImpl extends BaseDomain implements UserDomain {
 	private UserDetailsVOConver userDetailsVOConver=new UserDetailsVOConver();
 
 	private HuaUserVOConver huaUserVOConver=new HuaUserVOConver();
+
+	@Bean
+	private KCNamer kcNamer(){
+		System.out.println("=====kcNamer====");
+		return new KCNamer();
+	}
+
+
 
 	@Transactional
 	@Override
@@ -95,6 +105,10 @@ public class UserDomainImpl extends BaseDomain implements UserDomain {
 		}
 		details.setUser(user);
 		user.setDetails(details);
+
+		if(StringUtils.isEmpty(user.getNickname())){
+			user.setNickname(kcNamer().getRandomName());
+		}
 
 		user.setKeyword(getUserKeyword(user,user.getDetails()));
 

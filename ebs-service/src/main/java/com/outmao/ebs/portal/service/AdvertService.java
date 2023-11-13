@@ -1,5 +1,6 @@
 package com.outmao.ebs.portal.service;
 
+import com.outmao.ebs.mall.order.vo.SettleVO;
 import com.outmao.ebs.portal.dto.*;
 import com.outmao.ebs.portal.entity.Advert;
 import com.outmao.ebs.portal.entity.AdvertOrder;
@@ -27,8 +28,11 @@ public interface AdvertService {
 
     public AdvertOrder saveAdvertOrder(AdvertOrderDTO request);
 
+    public SettleVO settleAdvertOrder(AdvertOrderSettleDTO request);
+
 
     public AdvertOrder setAdvertOrderStatus(SetAdvertOrderStatusDTO request);
+
 
 
 }

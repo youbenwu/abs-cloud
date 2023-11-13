@@ -1,6 +1,7 @@
 package com.outmao.ebs.portal.web.api;
 
 
+import com.outmao.ebs.mall.order.vo.SettleVO;
 import com.outmao.ebs.portal.dto.*;
 import com.outmao.ebs.portal.entity.Advert;
 import com.outmao.ebs.portal.entity.AdvertChannel;
@@ -93,7 +94,11 @@ public class AdvertAction {
         return advertService.saveAdvertOrder(request);
     }
 
-
+    @ApiOperation(value = "获取广告投放结算金额", notes = "获取广告投放结算金额")
+    @PostMapping("/settleOrder")
+    public SettleVO settleAdvertOrder(AdvertOrderSettleDTO request){
+        return advertService.settleAdvertOrder(request);
+    }
 
 
 }
