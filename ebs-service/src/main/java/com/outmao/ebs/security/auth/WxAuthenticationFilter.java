@@ -21,38 +21,25 @@ public class WxAuthenticationFilter extends UsernamePasswordAuthenticationFilter
 			throw new AuthenticationServiceException("Authentication method not supported: " + request.getMethod());
 		}
 
-		String session_key = obtainSessionKey(request);
-		String unionid = obtainUnionid(request);
-		String openid = obtainOpenid(request);
-		String phone = obtainPhone(request);
-		String nickname = obtainNickname(request);
+		//String session_code,String phone_code
+		String session_code = obtainSessionCode(request);
+		String phone_code = obtainPhoneCode(request);
 
-		WxAuthenticationToken authRequest = new WxAuthenticationToken(session_key,unionid,openid,phone,nickname);
+		WxAuthenticationToken authRequest = new WxAuthenticationToken(session_code,phone_code);
 		setDetails(request, authRequest);
 
 		return this.getAuthenticationManager().authenticate(authRequest);
 	}
 
-	//String session_key,String unionid,String openid,String phone,String nickname
-	protected String obtainSessionKey(HttpServletRequest request) {
-		return request.getParameter(SecurityConstants.PARAMETER_KEY_WX_SESSION_KEY);
+	protected String obtainSessionCode(HttpServletRequest request) {
+		return request.getParameter("session_code");
 	}
 
-	protected String obtainUnionid(HttpServletRequest request) {
-		return request.getParameter(SecurityConstants.PARAMETER_KEY_WX_UNIONID);
+	protected String obtainPhoneCode(HttpServletRequest request) {
+		return request.getParameter("phone_code");
 	}
 
-	protected String obtainOpenid(HttpServletRequest request) {
-		return request.getParameter(SecurityConstants.PARAMETER_KEY_WX_OPENID);
-	}
 
-	protected String obtainPhone(HttpServletRequest request) {
-		return request.getParameter(SecurityConstants.PARAMETER_KEY_MOBILE);
-	}
-
-	protected String obtainNickname(HttpServletRequest request) {
-		return request.getParameter(SecurityConstants.PARAMETER_KEY_NICKNAME);
-	}
 
 
 }

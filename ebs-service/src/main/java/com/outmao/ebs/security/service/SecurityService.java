@@ -32,7 +32,7 @@ public interface SecurityService extends UserDetailsService {
 	 * 微信登录码加载用户信息
 	 *
 	 * */
-	public SecurityUser loadUserOrRegisterByWx(String session_key,String unionid,String openid,String phone,String nickname);
+	public SecurityUser loadUserOrRegisterByWx(String session_code,String phone_code);
 
 	/*
 	 *

@@ -3,6 +3,7 @@ package com.outmao.ebs.security.auth;
 
 import org.springframework.security.core.GrantedAuthority;
 
+import javax.security.auth.Subject;
 import java.util.Collection;
 
 public class WxAuthenticationToken extends CustomAuthenticationToken {
@@ -11,20 +12,14 @@ public class WxAuthenticationToken extends CustomAuthenticationToken {
 	 */
 	private static final long serialVersionUID = 1L;
 
-	//String session_key,String unionid,String openid,String phone,String nickname
-	private String session_key;
-	private String unionid;
-	private String openid;
-	private String phone;
-	private String nickname;
+	//String session_code,String phone_code
+	private String session_code;
+	private String phone_code;
 
-	public WxAuthenticationToken(String session_key,String unionid,String openid,String phone,String nickname) {
+	public WxAuthenticationToken(String session_code,String phone_code) {
 		super(null, null);
-		this.session_key=session_key;
-		this.unionid=unionid;
-		this.openid=openid;
-		this.phone=phone;
-		this.nickname=nickname;
+		this.session_code=session_code;
+		this.phone_code=phone_code;
 	}
 
 	public WxAuthenticationToken(Object principal, Object credentials,
@@ -33,23 +28,11 @@ public class WxAuthenticationToken extends CustomAuthenticationToken {
 	}
 
 
-	public String getSession_key() {
-		return session_key;
+	public String getSession_code() {
+		return session_code;
 	}
 
-	public String getUnionid() {
-		return unionid;
-	}
-
-	public String getOpenid() {
-		return openid;
-	}
-
-	public String getPhone() {
-		return phone;
-	}
-
-	public String getNickname() {
-		return nickname;
+	public String getPhone_code() {
+		return phone_code;
 	}
 }

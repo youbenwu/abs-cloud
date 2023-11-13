@@ -33,7 +33,7 @@ public class WxAuthenticationProvider extends AbstractUserDetailsAuthenticationP
 			throws AuthenticationException {
 		try {
 			WxAuthenticationToken token=(WxAuthenticationToken)authentication;
-			UserDetails loadedUser = userDetailsService.loadUserOrRegisterByWx(token.getSession_key(),token.getUnionid(),token.getOpenid(),token.getPhone(),token.getNickname());
+			UserDetails loadedUser = userDetailsService.loadUserOrRegisterByWx(token.getSession_code(),token.getPhone_code());
 			if (loadedUser == null) {
 				throw new InternalAuthenticationServiceException(
 						"UserDetailsService returned null, which is an interface contract violation");

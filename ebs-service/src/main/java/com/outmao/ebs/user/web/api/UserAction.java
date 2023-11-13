@@ -75,14 +75,11 @@ public class UserAction {
 
 	@ApiOperation(value = "小程序登录", notes = "小程序登录")
 	@ApiImplicitParams({
-			@ApiImplicitParam(name = "session_key", value = "小程序登录接口返回", required = true, dataType = "String"),
-			@ApiImplicitParam(name = "unionid", value = "小程序登录接口返回", required = true, dataType = "String"),
-			@ApiImplicitParam(name = "openid", value = "小程序登录接口返回", required = true, dataType = "String"),
-			@ApiImplicitParam(name = "phone", value = "手机号", required = true, dataType = "String"),
-			@ApiImplicitParam(name = "nickname", value = "昵称", required = true, dataType = "String"),
+			@ApiImplicitParam(name = "session_code", value = "小程序登录CODE", required = true, dataType = "String"),
+			@ApiImplicitParam(name = "phone_code", value = "小程序获取手机号CODE", required = true, dataType = "String"),
 	})
 	@PostMapping("/login/wx")
-	public void loginUserByWeChat(String session_key,String unionid,String openid,String phone,String nickname) { }
+	public void loginUserByWeChat(String session_code,String phone_code) { }
 
 	@ApiOperation(value = "登出接口", notes = "登出接口")
 	@ApiImplicitParams({})

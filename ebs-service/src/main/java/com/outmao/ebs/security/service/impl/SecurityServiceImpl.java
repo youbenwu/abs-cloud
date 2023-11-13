@@ -7,6 +7,7 @@ import com.outmao.ebs.common.base.BaseDomain;
 import com.outmao.ebs.common.exception.BusinessException;
 import com.outmao.ebs.common.services.wxmp.WXMP;
 import com.outmao.ebs.common.services.wxmp.WXMPSessionResult;
+import com.outmao.ebs.common.services.wxmp.WXPhoneResult;
 import com.outmao.ebs.common.util.RequestUtil;
 import com.outmao.ebs.org.entity.*;
 import com.outmao.ebs.org.service.AccountService;
@@ -182,32 +183,51 @@ public class SecurityServiceImpl extends BaseDomain implements SecurityService {
 
 
     @Override
-    public SecurityUser loadUserOrRegisterByWx(String session_key, String unionid, String openid, String phone, String nickname) {
+    public SecurityUser loadUserOrRegisterByWx(String session_code,String phone_code) {
+        try {
+            WXMPSessionResult r= wxmp.getSession(session_code);
+            if(r.getErrcode()!=0){
+                throw new AuthenticationServiceException(r.getErrmsg());
+            }
+            WXPhoneResult phoneResult=wxmp.getWxPhone(phone_code);
 
-        String uid= StringUtils.isEmpty(unionid)?openid:unionid;
-        UserOauth wxoauth=userService.getUserAuthByPrincipal(uid);
-        UserOauth oauth=userService.getUserAuthByPrincipal(phone);
-        if(wxoauth==null){
-            if(oauth==null){
-                Map<String,Object> params=new HashMap<>();
-                if(nickname!=null) {
-                    params.put(SecurityConstants.PARAMETER_KEY_NICKNAME, nickname);
+            if(phoneResult.getErrcode()!=0){
+                throw new AuthenticationServiceException(r.getErrmsg());
+            }
+
+            String session_key=r.getSession_key();
+            String unionid=r.getUnionid();
+            String openid=r.getOpenid();
+            String phone=phoneResult.getPhone_info().getPhoneNumber();
+            String nickname=null;
+
+            String uid= StringUtils.isEmpty(unionid)?openid:unionid;
+            UserOauth wxoauth=userService.getUserAuthByPrincipal(uid);
+            UserOauth oauth=userService.getUserAuthByPrincipal(phone);
+            if(wxoauth==null){
+                if(oauth==null){
+                    Map<String,Object> params=new HashMap<>();
+                    if(nickname!=null) {
+                        params.put(SecurityConstants.PARAMETER_KEY_NICKNAME, nickname);
+                    }
+                    userService.registerUser(new RegisterDTO(Oauth.PHONE.getName(), phone,session_key,0,params));
+                    oauth=userService.getUserAuthByPrincipal(phone);
                 }
-                userService.registerUser(new RegisterDTO(Oauth.PHONE.getName(), phone,session_key,0,params));
-                oauth=userService.getUserAuthByPrincipal(phone);
+                wxoauth=userService.registerUserOauth(oauth.getUser().getId(),Oauth.WECHAT.getName(),uid,session_key);
+            }else{
+                if(oauth==null){
+                    userService.registerUserOauth(wxoauth.getUser().getId(),Oauth.PHONE.getName(),phone,session_key);
+                }
             }
-            wxoauth=userService.registerUserOauth(oauth.getUser().getId(),Oauth.WECHAT.getName(),uid,session_key);
-        }else{
-            if(oauth==null){
-                userService.registerUserOauth(wxoauth.getUser().getId(),Oauth.PHONE.getName(),phone,session_key);
-            }
+
+
+            SecurityUser securityUser=getUser(wxoauth);
+            securityUser.getSession().setSessionKey(session_key);
+
+            return securityUser;
+        }catch (Exception e){
+            throw new AuthenticationServiceException(e.getMessage());
         }
-
-
-        SecurityUser securityUser=getUser(wxoauth);
-        securityUser.getSession().setSessionKey(session_key);
-
-        return securityUser;
     }
 
     @Override
