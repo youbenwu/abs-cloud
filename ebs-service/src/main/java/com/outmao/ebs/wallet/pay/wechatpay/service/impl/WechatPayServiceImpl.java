@@ -1,6 +1,6 @@
-package com.outmao.ebs.wallet.pay.wechatpay.impl;
+package com.outmao.ebs.wallet.pay.wechatpay.service.impl;
 
-import com.outmao.ebs.wallet.pay.wechatpay.WechatPayService;
+import com.outmao.ebs.wallet.pay.wechatpay.service.*;
 import com.outmao.ebs.wallet.pay.wechatpay.config.WechatPayConfiguration;
 import com.outmao.ebs.wallet.pay.wechatpay.config.WechatPayProperties;
 import com.wechat.pay.java.core.exception.HttpException;
@@ -13,11 +13,11 @@ import com.wechat.pay.java.service.refund.model.CreateRequest;
 import com.wechat.pay.java.service.refund.model.Refund;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 
 @Slf4j
-@Component
+@Service
 public class WechatPayServiceImpl implements WechatPayService {
 
 
@@ -27,24 +27,37 @@ public class WechatPayServiceImpl implements WechatPayService {
     @Autowired
     private WechatPayConfiguration configuration;
 
+    @Autowired
+    private AppWechatPayService appWechatPayService;
 
+    @Autowired
+    private JsapiWechatPayService jsapiWechatPayService;
+
+    @Autowired
+    private NativeWechatPayService nativeWechatPayService;
+
+    @Autowired
+    private H5WechatPayService h5WechatPayService;
 
     @Override
-    public PrepayWithRequestPaymentResponse prepayApp(String outTradeNo, long amount, String description) {
-        PrepayRequest request = new PrepayRequest();
-        Amount a = new Amount();
-        a.setTotal((int)amount);
-        request.setAmount(a);
-        request.setAppid(properties.getAppId());
-        request.setMchid(properties.getMchId());
-        request.setDescription(description);
-        request.setNotifyUrl(properties.getNotifyUrl());
-        request.setOutTradeNo(outTradeNo);
-        // response包含了调起支付所需的所有参数，可直接用于前端调起支付
-        PrepayWithRequestPaymentResponse response = configuration.appServiceExtension().prepayWithRequestPayment(request);
-        return response;
+    public Object prepayApp(String outTradeNo, long amount, String description) {
+        return appWechatPayService.prepay(outTradeNo,amount,description);
     }
 
+    @Override
+    public Object prepayJsapi(String outTradeNo, long amount, String description,String openId) {
+        return jsapiWechatPayService.prepay(outTradeNo,amount,description,openId);
+    }
+
+    @Override
+    public Object prepayNative(String outTradeNo, long amount, String description) {
+        return nativeWechatPayService.prepay(outTradeNo,amount,description);
+    }
+
+    @Override
+    public Object prepayH5(String outTradeNo, long amount, String description) {
+        return h5WechatPayService.prepay(outTradeNo,amount,description);
+    }
 
     @Override
     public Refund refund(String outTradeNo,String outRefundNo,long amount,String reason) {
@@ -53,7 +66,7 @@ public class WechatPayServiceImpl implements WechatPayService {
         AmountReq a = new AmountReq();
         a.setTotal(amount);
         request.setAmount(a);
-        request.setSubMchid(properties.getMchId());
+        request.setSubMchid(properties.getMerchantId());
         request.setOutTradeNo(outTradeNo);
         request.setOutRefundNo(outRefundNo);
         request.setNotifyUrl(properties.getNotifyUrl());
@@ -63,15 +76,14 @@ public class WechatPayServiceImpl implements WechatPayService {
         try {
             Refund response = configuration.refundService().create(request);
             return response;
-
         } catch (HttpException e) { // 发送HTTP请求失败
-            log.error("发送HTTP请求失败",e);
+            log.error("微信退款失败：发送HTTP请求失败",e);
             // 调用e.getHttpRequest()获取请求打印日志或上报监控，更多方法见HttpException定义
         } catch (ServiceException e) { // 服务返回状态小于200或大于等于300，例如500
-            log.error("服务返回失败",e);
+            log.error("微信退款失败：服务返回失败",e);
             // 调用e.getResponseBody()获取返回体打印日志或上报监控，更多方法见ServiceException定义
         } catch (MalformedMessageException e) { // 服务返回成功，返回体类型不合法，或者解析返回体失败
-            log.error("服务返回成功，返回体类型不合法，或者解析返回体失败",e);
+            log.error("微信退款失败：服务返回成功，返回体类型不合法，或者解析返回体失败",e);
             // 调用e.getMessage()获取信息打印日志或上报监控，更多方法见MalformedMessageException定义
         }
         return null;
@@ -79,20 +91,29 @@ public class WechatPayServiceImpl implements WechatPayService {
 
     @Override
     public Transaction queryOrder(String outTradeNo) {
-        QueryOrderByOutTradeNoRequest request=new QueryOrderByOutTradeNoRequest();
-        request.setMchid(properties.getMchId());
-        request.setOutTradeNo(outTradeNo);
-        Transaction transaction= configuration.appServiceExtension().queryOrderByOutTradeNo(request);
-        return transaction;
+        try {
+            QueryOrderByOutTradeNoRequest request=new QueryOrderByOutTradeNoRequest();
+            request.setMchid(properties.getMerchantId());
+            request.setOutTradeNo(outTradeNo);
+            Transaction transaction= configuration.appServiceExtension().queryOrderByOutTradeNo(request);
+            log.info("/*微信支付订单查询*/\n{}",transaction);
+            return transaction;
+        }catch (ServiceException e){
+            if(e.getErrorCode().equals("ORDER_NOT_EXIST")){
+                return null;
+            }
+            throw e;
+        }
     }
 
     @Override
     public void closeOrder(String outTradeNo) {
         CloseOrderRequest request=new CloseOrderRequest();
-        request.setMchid(properties.getMchId());
+        request.setMchid(properties.getMerchantId());
         request.setOutTradeNo(outTradeNo);
         configuration.appServiceExtension().closeOrder(request);
     }
+
 
 
 }

@@ -4,10 +4,10 @@ package com.outmao.ebs.wallet.common.constant;
 public enum OutPayType {
 
 
-    App(0, "APP支付"),
-    H5(1, "H5支付"),
-    Jsapi(2, "JSAPI支付"),
-    Nativepay(3, "当面付");
+    WxPayApp(1, "微信APP支付"),
+    WxPayH5(2, "微信H5支付"),
+    WxPayJsapi(3, "微信JSAPI支付"),
+    WxPayNativepay(4, "微信当面付");
 
     private int type;
 

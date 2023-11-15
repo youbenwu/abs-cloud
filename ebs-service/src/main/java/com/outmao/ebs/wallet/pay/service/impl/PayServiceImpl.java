@@ -2,6 +2,8 @@ package com.outmao.ebs.wallet.pay.service.impl;
 
 import cn.jiguang.common.utils.StringUtils;
 import com.outmao.ebs.common.exception.BusinessException;
+import com.outmao.ebs.user.service.UserService;
+import com.outmao.ebs.wallet.common.constant.OutPayType;
 import com.outmao.ebs.wallet.common.constant.PayChannel;
 import com.outmao.ebs.wallet.common.constant.TradeStatus;
 import com.outmao.ebs.wallet.common.exception.WalletPasswordErrorException;
@@ -15,7 +17,7 @@ import com.outmao.ebs.wallet.pay.alipay.AlipayService;
 import com.outmao.ebs.wallet.pay.dto.PayPrepareDTO;
 import com.outmao.ebs.wallet.pay.dto.PayWalletDTO;
 import com.outmao.ebs.wallet.pay.service.PayService;
-import com.outmao.ebs.wallet.pay.wechatpay.WechatPayService;
+import com.outmao.ebs.wallet.pay.wechatpay.service.WechatPayService;
 import com.outmao.ebs.wallet.service.TradeService;
 import com.outmao.ebs.wallet.vo.TradeVO;
 import com.wechat.pay.java.service.payments.model.Transaction;
@@ -34,6 +36,9 @@ public class PayServiceImpl implements PayService {
 
 	@Autowired
     private AlipayService alipayService;
+
+    @Autowired
+    private UserService userService;
 
 
     @Autowired
@@ -61,9 +66,15 @@ public class PayServiceImpl implements PayService {
     @Override
     public Object appPayPrepare(PayPrepareDTO request) {
 
-        tradeQuery(request.getTradeNo());
+        Trade trade =tradeQuery(request.getTradeNo());
 
-        Trade trade =tradeService.getTradeByTradeNo(request.getTradeNo());
+        if(trade==null){
+            throw new BusinessException("订单不存在");
+        }
+
+        if(trade.getStatus()!=TradeStatus.TRADE_WAIT_PAY.getStatus()){
+            throw new BusinessException("订单状态异常");
+        }
 
         if (trade.getPayChannel()== PayChannel.WalletPay.getType()) {
             return trade;
@@ -72,10 +83,31 @@ public class PayServiceImpl implements PayService {
                     trade.getTradeNo(), trade.getTotalAmount()/100.0);
             return result;
         } else if (trade.getPayChannel()== PayChannel.WxPay.getType()) {
-            Object result = wechatPayService.prepayApp(trade.getTradeNo(),trade.getTotalAmount(),
-                    trade.getBody());
-            return  result;
-
+            if(trade.getOutPayType()== OutPayType.WxPayApp.getType()){
+                Object result = wechatPayService.prepayApp(trade.getTradeNo(),trade.getTotalAmount(),
+                        trade.getBody());
+                return  result;
+            }else if(trade.getOutPayType()== OutPayType.WxPayJsapi.getType()){
+                String openId=userService.getWeChatOpenId();
+                if(openId==null){
+                    throw new BusinessException("请用微信支付");
+                }
+                Object result = wechatPayService.prepayJsapi(trade.getTradeNo(),trade.getTotalAmount(),
+                        trade.getBody(),openId);
+                return  result;
+            }else if(trade.getOutPayType()== OutPayType.WxPayNativepay.getType()){
+                Object result = wechatPayService.prepayNative(trade.getTradeNo(),trade.getTotalAmount(),
+                        trade.getBody());
+                return  result;
+            }else if(trade.getOutPayType()== OutPayType.WxPayH5.getType()){
+                Object result = wechatPayService.prepayH5(trade.getTradeNo(),trade.getTotalAmount(),
+                        trade.getBody());
+                return  result;
+            }else{
+                Object result = wechatPayService.prepayApp(trade.getTradeNo(),trade.getTotalAmount(),
+                        trade.getBody());
+                return  result;
+            }
         }
         return null;
     }
@@ -89,6 +121,10 @@ public class PayServiceImpl implements PayService {
         tradeQuery(request.getTradeNo());
 
         Trade trade =tradeService.getTradeByTradeNo(request.getTradeNo());
+
+        if(trade.getPayChannel()!=PayChannel.WalletPay.getType()){
+            throw new BusinessException("支付方式异常");
+        }
 
         Wallet wallet=trade.getFrom();
 
@@ -105,9 +141,9 @@ public class PayServiceImpl implements PayService {
 
 
 
-    @Transactional
     @Override
     public Trade tradeQuery(String tradeNo) {
+
         Trade trade = tradeService.getTradeByTradeNo(tradeNo);
 
         if(trade==null)
@@ -129,14 +165,39 @@ public class PayServiceImpl implements PayService {
                 }
             } else if (trade.getPayChannel()== PayChannel.WxPay.getType()) {
 
+                //微信支付
                 Transaction transaction = wechatPayService.queryOrder(tradeNo);
 
-                switch(transaction.getTradeState()){
-                    case SUCCESS:
-                        trade =  tradeService.tradePay(tradeNo);
-                        break;
-                    case CLOSED:
-                        break;
+                if(transaction!=null) {
+                    /**
+                     *
+                     * 【交易状态】 交易状态，枚举值：
+                     * * SUCCESS：支付成功
+                     * * REFUND：转入退款
+                     * * NOTPAY：未支付
+                     * * CLOSED：已关闭
+                     * * REVOKED：已撤销（仅付款码支付会返回）
+                     * * USERPAYING：用户支付中（仅付款码支付会返回）
+                     * * PAYERROR：支付失败（仅付款码支付会返回）
+                     *
+                     **/
+                    switch (transaction.getTradeState()) {
+                        case SUCCESS:
+                            trade = tradeService.tradePay(tradeNo);
+                            break;
+                        case REFUND:
+                            break;
+                        case NOTPAY:
+                            break;
+                        case CLOSED:
+                            break;
+                        case REVOKED:
+                            break;
+                        case USERPAYING:
+                            break;
+                        case PAYERROR:
+                            break;
+                    }
                 }
 
             }
@@ -144,6 +205,8 @@ public class PayServiceImpl implements PayService {
 
         return trade;
     }
+
+
 
     @Override
     public Trade tradePayTo(TradePayToDTO request) {

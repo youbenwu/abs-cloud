@@ -1,6 +1,7 @@
 package com.outmao.ebs.user.service;
 
 
+import com.outmao.ebs.user.common.constant.Oauth;
 import com.outmao.ebs.user.dto.*;
 import com.outmao.ebs.user.entity.*;
 import com.outmao.ebs.user.vo.*;
@@ -59,6 +60,14 @@ public interface UserService {
 	// UserOauth
 	public UserOauth registerUserOauth(Long userId, String oauth, String principal, String credentials);
 	public UserOauth getUserAuthByPrincipal(String principal);
+	public List<UserOauth> getUserOauth(Long userId, Oauth oauth);
+
+	/**
+	 *
+	 * 获取用户微信OpenId
+	 *
+	 **/
+	public String getWeChatOpenId();
 
 	/**
 	 *

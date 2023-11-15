@@ -22,10 +22,7 @@ import com.outmao.ebs.mall.store.dto.StoreSkuStockOutItemDTO;
 import com.outmao.ebs.mall.store.service.StoreSkuService;
 import com.outmao.ebs.user.entity.User;
 import com.outmao.ebs.user.service.UserService;
-import com.outmao.ebs.wallet.common.constant.PayChannel;
-import com.outmao.ebs.wallet.common.constant.TradeStatus;
-import com.outmao.ebs.wallet.common.constant.TradeType;
-import com.outmao.ebs.wallet.common.constant.WalletConstant;
+import com.outmao.ebs.wallet.common.constant.*;
 import com.outmao.ebs.wallet.common.listener.TradeStatusListener;
 import com.outmao.ebs.wallet.dto.TradePrepareDTO;
 import com.outmao.ebs.wallet.entity.Currency;
@@ -229,6 +226,12 @@ public class OrderServiceImpl extends BaseService implements OrderService, Trade
             request.setPayChannel(PayChannel.WalletPay.name());
         }
 
+        if(request.getPayChannel().equals(PayChannel.WxPay.name())){
+            if(StringUtils.isEmpty(request.getOutPayType())){
+                request.setOutPayType(OutPayType.WxPayApp.name());
+            }
+        }
+
         if(StringUtils.isEmpty(request.getCurrency())){
             request.setCurrency("RMB");
         }
@@ -270,6 +273,9 @@ public class OrderServiceImpl extends BaseService implements OrderService, Trade
         dto.setSubject("购买商品");
         dto.setBody(order.getDescription());
         dto.setPayChannel(PayChannel.valueOf(request.getPayChannel()).getType());
+        if(!StringUtils.isEmpty(request.getOutPayType())) {
+            dto.setOutPayType(OutPayType.valueOf(request.getOutPayType()).getType());
+        }
 
         return payService.tradePrepare(dto);
 

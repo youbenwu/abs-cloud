@@ -3,6 +3,7 @@ package com.outmao.ebs.user.domain.impl;
 import com.outmao.ebs.common.base.BaseDomain;
 import com.outmao.ebs.common.exception.BusinessException;
 import com.outmao.ebs.user.common.constant.ClientType;
+import com.outmao.ebs.user.common.constant.Oauth;
 import com.outmao.ebs.user.dao.UserDao;
 import com.outmao.ebs.user.dao.UserOauthDao;
 import com.outmao.ebs.user.dao.UserOauthSessionDao;
@@ -17,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 @Component
@@ -54,6 +56,11 @@ public class UserOauthDomainImpl extends BaseDomain implements UserOauthDomain {
         return userOauthDao.findByPrincipal(principal);
     }
 
+
+    @Override
+    public List<UserOauth> getUserOauth(Long userId, Oauth oauth) {
+        return userOauthDao.findAllByUserIdAndOauth(userId,oauth.getName());
+    }
 
     @Transactional
     @Override

@@ -12,7 +12,7 @@ public class TradePrepareDTO {
     private String body;
     private int type;//交易类型
     private int payChannel;//交易矩道
-    private int outPayType;
+    private int outPayType;//外部支付方式
     private String currencyId;//交易货币
     private long amount;//交易额
     private long fee;//手续费

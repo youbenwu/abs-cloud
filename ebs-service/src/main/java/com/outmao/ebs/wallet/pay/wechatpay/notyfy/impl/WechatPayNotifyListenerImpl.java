@@ -1,6 +1,6 @@
-package com.outmao.ebs.wallet.pay.wechatpay.impl;
+package com.outmao.ebs.wallet.pay.wechatpay.notyfy.impl;
 
-import com.outmao.ebs.wallet.pay.wechatpay.WechatPayNotifyListener;
+import com.outmao.ebs.wallet.pay.wechatpay.notyfy.WechatPayNotifyListener;
 import com.outmao.ebs.wallet.service.TradeService;
 import com.wechat.pay.java.service.payments.model.Transaction;
 import com.wechat.pay.java.service.refund.model.RefundNotification;

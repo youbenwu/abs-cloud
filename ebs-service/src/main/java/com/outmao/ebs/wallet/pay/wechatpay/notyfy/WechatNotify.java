@@ -1,4 +1,4 @@
-package com.outmao.ebs.wallet.pay.wechatpay;
+package com.outmao.ebs.wallet.pay.wechatpay.notyfy;
 
 
 import com.alibaba.fastjson.JSON;
@@ -6,7 +6,6 @@ import com.outmao.ebs.common.util.RequestUtil;
 import com.outmao.ebs.wallet.pay.wechatpay.common.VerdureRequestWrapper;
 import com.outmao.ebs.wallet.pay.wechatpay.config.WechatPayConfiguration;
 import com.outmao.ebs.wallet.pay.wechatpay.vo.WechatNotifyResult;
-import com.wechat.pay.java.core.Config;
 import com.wechat.pay.java.core.exception.ValidationException;
 import com.wechat.pay.java.core.notification.NotificationConfig;
 import com.wechat.pay.java.core.notification.NotificationParser;
@@ -39,20 +38,23 @@ public class WechatNotify {
 
 	@PostMapping("/notify")
 	public ResponseEntity nation(HttpServletRequest request) throws IOException {
+
 		VerdureRequestWrapper requestWrapper = new VerdureRequestWrapper(request);
-		log.info("接收微信通知：");
+		log.info("/****************************** 接收微信支付通知 ******************************/");
 		log.info(requestWrapper.getRequestParams());
+		Enumeration<String> headerNames = request.getHeaderNames();
+		while(headerNames.hasMoreElements()){
+			String element = headerNames.nextElement();
+			log.info(element+":"+request.getHeader(element));
+		}
+
+
 		String signature = RequestUtil.getHeader(request, "Wechatpay-Signature");
 		String timestamp = RequestUtil.getHeader(request, "Wechatpay-Timestamp");
 		String signType = RequestUtil.getHeader(request, "Wechatpay-Signature-Type");
 		String serial = RequestUtil.getHeader(request, "Wechatpay-Serial");
 		String nonce = RequestUtil.getHeader(request, "Wechatpay-Nonce");
-		log.info("===================================================：");
-		Enumeration<String> headerNames = request.getHeaderNames();
-		while(headerNames.hasMoreElements()){
-			String element = headerNames.nextElement();
-			System.out.println(element+":"+request.getHeader(element));
-		}
+
 
 		WechatNotifyResult notifyResult = JSON.parseObject(requestWrapper.getRequestParams(), WechatNotifyResult.class);
 
@@ -76,11 +78,15 @@ public class WechatNotify {
 			if(notifyResult.getEvent_type().startsWith("TRANSACTION.")){
 				// 验签、解密并转换成 Transaction
 				Transaction transaction = parser.parse(requestParam, Transaction.class);
+				log.info("/****************************** Transaction ******************************/");
+				log.info(transaction.toString());
 				// 业务处理
 				listener.notify(transaction);
 			}else if(notifyResult.getEvent_type().startsWith("REFUND.")){
 				// 验签、解密并转换成 Transaction
 				RefundNotification transaction = parser.parse(requestParam, RefundNotification.class);
+				log.info("/****************************** RefundNotification ******************************/");
+				log.info(transaction.toString());
 				// 业务处理
 				listener.notifyRefund(transaction);
 			}

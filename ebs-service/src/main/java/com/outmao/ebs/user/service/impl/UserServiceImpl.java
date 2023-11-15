@@ -2,6 +2,8 @@ package com.outmao.ebs.user.service.impl;
 
 
 import com.outmao.ebs.common.base.BaseService;
+import com.outmao.ebs.security.util.SecurityUtil;
+import com.outmao.ebs.security.vo.SecurityUser;
 import com.outmao.ebs.user.common.constant.Oauth;
 import com.outmao.ebs.user.domain.*;
 import com.outmao.ebs.user.dto.*;
@@ -161,6 +163,24 @@ public class UserServiceImpl extends BaseService implements UserService, Command
 	@Override
 	public UserOauth getUserAuthByPrincipal(String principal) {
 		return userOauthDomain.getUserAuthByPrincipal(principal);
+	}
+
+	@Override
+	public List<UserOauth> getUserOauth(Long userId, Oauth oauth) {
+		return userOauthDomain.getUserOauth(userId,oauth);
+	}
+
+	@Override
+	public String getWeChatOpenId() {
+		SecurityUser user= SecurityUtil.currentUser();
+		if(user.getSession().getSessionKey()!=null){
+			return user.getUsername();
+		}
+		List<UserOauth> oauths=getUserOauth(user.getId(),Oauth.WECHAT);
+		if(oauths.size()>0){
+			return oauths.get(0).getPrincipal();
+		}
+		return null;
 	}
 
 	@Override

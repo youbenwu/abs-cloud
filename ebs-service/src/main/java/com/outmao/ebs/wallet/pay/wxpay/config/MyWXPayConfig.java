@@ -39,7 +39,7 @@ public class MyWXPayConfig extends WXPayConfig {
 	/** API证书绝对路径 */
 	private String certPath;
 
-	/** 退款异步通知地址 */
+	/** 异步通知地址 */
 	private String notifyUrl;
 	
 	/** 退款异步通知地址 */

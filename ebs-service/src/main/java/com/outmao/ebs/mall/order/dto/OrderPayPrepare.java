@@ -10,6 +10,8 @@ public class OrderPayPrepare {
 
     private String payChannel= PayChannel.WalletPay.name();
 
+    private String outPayType;
+
     private String currency="RMB";
 
 }
