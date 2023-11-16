@@ -47,6 +47,9 @@ public class AdvertOrderDTO {
     @ApiModelProperty(name = "endTime", value = "广告展示结束时间")
     private Date endTime;
 
+    @ApiModelProperty(name = "quantity", value = "PV数量")
+    private int quantity;
+
     @ApiModelProperty(name = "settleId", value = "结算ID")
     private Long settleId;
 

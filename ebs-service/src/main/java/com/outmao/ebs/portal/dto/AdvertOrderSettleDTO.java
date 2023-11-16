@@ -16,14 +16,8 @@ public class AdvertOrderSettleDTO {
     @ApiModelProperty(name = "type", value = "广告类型 1--企业广告 2--个人广告")
     private int type;
 
-    @ApiModelProperty(name = "url", value = "广告跳转地址")
-    private String url;
-
-    @ApiModelProperty(name = "video", value = "广告视频地址")
-    private String video;
-
-    @ApiModelProperty(name = "qrCode", value = "广告二维码地址")
-    private String qrCode;
+    @ApiModelProperty(name = "contentType", value = "0--图文 1--图文视频 2--图文视频链接 3--图文视频二维码 4--图文视频链接二维码")
+    private int contentType;
 
     @ApiModelProperty(name = "startTime", value = "广告展示开始时间")
     private Date startTime;
