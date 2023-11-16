@@ -24,7 +24,7 @@ public class AlipayServiceImpl implements AlipayService {
 
 
 	@Override
-	public AlipayTradeAppPayResponse tradeAppPay(String subject, String body, String outTradeNo, double totalAmount) {
+	public AlipayTradeAppPayResponse tradeAppPay(String outTradeNo, double totalAmount,String subject, String body) {
 
 		AlipayTradeAppPayRequest request = new AlipayTradeAppPayRequest();
 		AlipayTradeAppPayModel model = new AlipayTradeAppPayModel();
@@ -53,6 +53,37 @@ public class AlipayServiceImpl implements AlipayService {
 			throw new BusinessException(e.getMessage());
 		}
 
+	}
+
+
+
+	@Override
+	public AlipayTradePrecreateResponse tradePrecreate(String outTradeNo, double totalAmount,String subject, String body) {
+
+		try {
+
+			AlipayTradePrecreateRequest request = new AlipayTradePrecreateRequest();
+			AlipayTradePrecreateModel model = new AlipayTradePrecreateModel();
+			model.setOutTradeNo(outTradeNo);
+			model.setTotalAmount(String.format("%.2f", totalAmount));
+			model.setSubject(subject);
+			model.setBody(body);
+			request.setBizModel(model);
+			AlipayTradePrecreateResponse response = alipayClient.execute(request);
+			System.out.println(response.getBody());
+			if (response.isSuccess()) {
+				System.out.println("调用成功");
+			} else {
+				System.out.println("调用失败");
+				// sdk版本是"4.38.0.ALL"及以上,可以参考下面的示例获取诊断链接
+				// String diagnosisUrl = DiagnosisUtils.getDiagnosisUrl(response);
+				// System.out.println(diagnosisUrl);
+			}
+			return response;
+		} catch (AlipayApiException e) {
+			log.error("支付宝获取调起APP支付参数出错", e);
+			throw new BusinessException(e.getMessage());
+		}
 	}
 
 
@@ -121,6 +152,9 @@ public class AlipayServiceImpl implements AlipayService {
 			AlipayTradeQueryResponse alipayResponse = alipayClient.execute(alipayRequest);
 
 			if (!alipayResponse.isSuccess()) {
+				if(alipayResponse.getSubCode().equals("ACQ.TRADE_NOT_EXIST")){
+					return null;
+				}
 				log.error("查询支付宝交易状态失败\n" + "订单号：" + outTradeNo + "\n" + alipayResponse.toString());
 				throw new BusinessException(alipayResponse.getMsg());
 			}
@@ -133,6 +167,7 @@ public class AlipayServiceImpl implements AlipayService {
 			 */
 			return alipayResponse;
 		} catch (AlipayApiException e) {
+
 			log.error("查询支付宝交易状态失败\n" + "订单号：" + outTradeNo + "\n" + e.getMessage());
 			throw new BusinessException(e.getMessage());
 		}

@@ -7,7 +7,9 @@ public enum OutPayType {
     WxPayApp(1, "微信APP支付"),
     WxPayH5(2, "微信H5支付"),
     WxPayJsapi(3, "微信JSAPI支付"),
-    WxPayNativepay(4, "微信当面付");
+    WxPayNativepay(4, "微信当面付"),
+    AliPayAPP(11, "支付宝APP支付"),
+    AliPayPrecreate(12, "支付宝当面付:扫码支付");
 
     private int type;
 

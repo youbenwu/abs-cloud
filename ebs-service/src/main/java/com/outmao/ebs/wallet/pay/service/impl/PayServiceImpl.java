@@ -1,6 +1,7 @@
 package com.outmao.ebs.wallet.pay.service.impl;
 
 import cn.jiguang.common.utils.StringUtils;
+import com.alipay.api.response.AlipayTradeQueryResponse;
 import com.outmao.ebs.common.exception.BusinessException;
 import com.outmao.ebs.user.service.UserService;
 import com.outmao.ebs.wallet.common.constant.OutPayType;
@@ -64,7 +65,7 @@ public class PayServiceImpl implements PayService {
 
 
     @Override
-    public Object appPayPrepare(PayPrepareDTO request) {
+    public Object payPrepare(PayPrepareDTO request) {
 
         Trade trade =tradeQuery(request.getTradeNo());
 
@@ -79,9 +80,20 @@ public class PayServiceImpl implements PayService {
         if (trade.getPayChannel()== PayChannel.WalletPay.getType()) {
             return trade;
         } else if (trade.getPayChannel()== PayChannel.AliPay.getType()) {
-            Object result = alipayService.tradeAppPay(trade.getSubject(), trade.getBody(),
-                    trade.getTradeNo(), trade.getTotalAmount()/100.0);
-            return result;
+            if(trade.getOutPayType()==OutPayType.AliPayAPP.getType()){
+                Object result = alipayService.tradeAppPay(trade.getTradeNo(), trade.getTotalAmount()/100.0
+                        ,trade.getSubject(), trade.getBody());
+                return result;
+            }else if(trade.getOutPayType()==OutPayType.AliPayPrecreate.getType()){
+                Object result = alipayService.tradePrecreate(trade.getTradeNo(), trade.getTotalAmount()/100.0
+                        ,trade.getSubject(), trade.getBody());
+                return result;
+            }else{
+                Object result = alipayService.tradeAppPay(trade.getTradeNo(), trade.getTotalAmount()/100.0
+                        ,trade.getSubject(), trade.getBody());
+                return result;
+            }
+
         } else if (trade.getPayChannel()== PayChannel.WxPay.getType()) {
             if(trade.getOutPayType()== OutPayType.WxPayApp.getType()){
                 Object result = wechatPayService.prepayApp(trade.getTradeNo(),trade.getTotalAmount(),
@@ -153,13 +165,13 @@ public class PayServiceImpl implements PayService {
 
             //查一下看有没支付成功
             if (trade.getPayChannel()== PayChannel.AliPay.getType()) {
-                String status = alipayService.tradeQuery(tradeNo).getTradeStatus();
-                if(status!=null) {
-                    if (status.equals("TRADE_SUCCESS")) {
+                AlipayTradeQueryResponse response = alipayService.tradeQuery(tradeNo);
+                if(response!=null) {
+                    if (response.getTradeStatus().equals("TRADE_SUCCESS")) {
                         trade = tradeService.tradePay(tradeNo);
-                    } else if (status.equals("TRADE_FINISHED")) {
+                    } else if (response.getTradeStatus().equals("TRADE_FINISHED")) {
                         trade = tradeService.tradePay(tradeNo);
-                    } else if (status.equals("TRADE_CLOSED")) {
+                    } else if (response.getTradeStatus().equals("TRADE_CLOSED")) {
 
                     }
                 }

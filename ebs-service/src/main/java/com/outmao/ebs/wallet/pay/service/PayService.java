@@ -27,7 +27,7 @@ public interface PayService {
 	 * 获取APP支付订单信息 直接给客户端请求，无需再做处理
 	 *
 	 * */
-	public Object appPayPrepare(PayPrepareDTO request);
+	public Object payPrepare(PayPrepareDTO request);
 
 	/**
 	 *

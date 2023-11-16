@@ -11,7 +11,16 @@ public interface AlipayService {
 	 * 生成APP支付订单信息 直接给客户端请求，无需再做处理。
 	 * 
 	 */
-	public AlipayTradeAppPayResponse tradeAppPay(String subject, String body, String outTradeNo, double totalAmount);
+	public AlipayTradeAppPayResponse tradeAppPay(String outTradeNo, double totalAmount,String subject, String body);
+
+
+	/**
+	 *
+	 * 当面付:收银员通过收银台或商户后台调用支付宝接口，生成二维码后，展示给用户，由用户扫描二维码完成订单支付。
+	 *
+	 */
+	public AlipayTradePrecreateResponse tradePrecreate(String outTradeNo, double totalAmount,String subject, String body);
+
 
 	/**
 	 *
