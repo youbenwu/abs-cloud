@@ -23,15 +23,15 @@ public class PayAction {
 	@Autowired
     private PayService payService;
 
-	/*
+	/**
 	 *
-	 * 获取APP支付订单信息 直接给客户端请求，无需再做处理
+	 * 获取支付订单信息 直接给客户端请求，无需再做处理
 	 *
 	 * */
-	@ApiOperation(value = "APP支付", notes = "获取APP支付订单信息 直接给客户端请求，无需再做处理")
-	@RequestMapping(value = "/appPayPrepare", method = RequestMethod.POST)
-	public Object appPayPrepare(PayPrepareDTO request){
-		return Result.successResult(payService.appPayPrepare(request));
+	@ApiOperation(value = "APP支付", notes = "获取支付订单信息 直接给客户端请求，无需再做处理")
+	@RequestMapping(value = "/payPrepare", method = RequestMethod.POST)
+	public Object payPrepare(PayPrepareDTO request){
+		return Result.successResult(payService.payPrepare(request));
 	}
 
 
