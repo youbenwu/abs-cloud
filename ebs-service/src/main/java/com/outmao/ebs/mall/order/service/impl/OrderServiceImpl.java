@@ -7,7 +7,7 @@ import com.outmao.ebs.mall.order.domain.OrderDomain;
 import com.outmao.ebs.mall.order.domain.OrderStatsDomain;
 import com.outmao.ebs.mall.order.dto.GetOrderListDTO;
 import com.outmao.ebs.mall.order.dto.OrderDTO;
-import com.outmao.ebs.mall.order.dto.OrderPayPrepare;
+import com.outmao.ebs.mall.order.dto.OrderPayPrepareDTO;
 import com.outmao.ebs.mall.order.dto.SetOrderStatusDTO;
 import com.outmao.ebs.mall.order.entity.Order;
 import com.outmao.ebs.mall.order.service.OrderService;
@@ -220,7 +220,7 @@ public class OrderServiceImpl extends BaseService implements OrderService, Trade
 
     @Transactional
     @Override
-    public TradeVO payPrepare(OrderPayPrepare request) {
+    public TradeVO payPrepare(OrderPayPrepareDTO request) {
 
         if(StringUtils.isEmpty(request.getPayChannel())){
             request.setPayChannel(PayChannel.WalletPay.name());

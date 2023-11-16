@@ -1,10 +1,8 @@
 package com.outmao.ebs.portal.service.impl;
 
 import com.outmao.ebs.common.base.BaseService;
-import com.outmao.ebs.common.exception.BusinessException;
 import com.outmao.ebs.mall.order.common.constant.OrderStatus;
 import com.outmao.ebs.mall.order.dto.*;
-import com.outmao.ebs.mall.order.entity.Order;
 import com.outmao.ebs.mall.order.service.OrderService;
 import com.outmao.ebs.mall.order.service.SettleService;
 import com.outmao.ebs.mall.order.vo.OrderVO;
@@ -117,7 +115,7 @@ public class AdvertServiceImpl extends BaseService implements AdvertService {
         OrderVO order=orderService.getOrderVOByOrderNo(toOrderVO.getOrders().get(0));
 
 
-        OrderPayPrepare payPrepare=new OrderPayPrepare();
+        OrderPayPrepareDTO payPrepare=new OrderPayPrepareDTO();
         payPrepare.setOrderNo(order.getOrderNo());
         payPrepare.setPayChannel(PayChannel.WxPay.name());
         payPrepare.setCurrency("RMB");

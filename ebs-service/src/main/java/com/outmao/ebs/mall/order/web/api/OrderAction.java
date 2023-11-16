@@ -3,7 +3,7 @@ package com.outmao.ebs.mall.order.web.api;
 
 import com.outmao.ebs.mall.order.dto.GetOrderListDTO;
 import com.outmao.ebs.mall.order.dto.OrderDTO;
-import com.outmao.ebs.mall.order.dto.OrderPayPrepare;
+import com.outmao.ebs.mall.order.dto.OrderPayPrepareDTO;
 import com.outmao.ebs.mall.order.entity.Order;
 import com.outmao.ebs.mall.order.service.OrderService;
 import com.outmao.ebs.mall.order.vo.OrderVO;
@@ -59,9 +59,9 @@ public class OrderAction {
         return orderService.getOrderVOPage(request,pageable);
     }
 
-    @ApiOperation(value = "获取订单支付信息", notes = "获取订单支付信息")
-    @PostMapping("/payPrepare")
-    public TradeVO payPrepare(OrderPayPrepare request){
+    @ApiOperation(value = "创建交易", notes = "创建交易")
+    @PostMapping("/tradeCreate")
+    public TradeVO payPrepare(OrderPayPrepareDTO request){
         return orderService.payPrepare(request);
     }
 
