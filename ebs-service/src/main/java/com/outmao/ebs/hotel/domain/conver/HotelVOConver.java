@@ -23,6 +23,9 @@ public class HotelVOConver implements BeanConver<QHotel, HotelVO> {
         vo.setLogo(t.get(e.logo));
         vo.setImage(t.get(e.image));
         vo.setLicense(t.get(e.license));
+        vo.setIdCardNo(t.get(e.idCardNo));
+        vo.setIdCardFront(t.get(e.idCardFront));
+        vo.setIdCardBack(t.get(e.idCardBack));
         vo.setCreateTime(t.get(e.createTime));
         vo.setUpdateTime(t.get(e.updateTime));
         return vo;
@@ -44,6 +47,9 @@ public class HotelVOConver implements BeanConver<QHotel, HotelVO> {
                 e.logo,
                 e.image,
                 e.license,
+                e.idCardNo,
+                e.idCardFront,
+                e.idCardBack,
                 e.createTime,
                 e.updateTime,
 

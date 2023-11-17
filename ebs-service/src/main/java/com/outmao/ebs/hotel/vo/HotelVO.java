@@ -51,7 +51,7 @@ public class HotelVO {
      * 酒店状态 0--正常 1--禁用 2--未审核 5--审核失败 7--欠费
      *
      */
-    @ApiModelProperty(name = "status", value = "酒店状态 0--正常 1--禁用 2--未审核 5--审核失败 7--欠费")
+    @ApiModelProperty(name = "status", value = "酒店状态 0--正常 1--禁用 2--未审核 3--审核中 4--审核失败")
     private int status;
 
     /**
@@ -103,6 +103,30 @@ public class HotelVO {
      */
     @ApiModelProperty(name = "license", value = "营业执照")
     private String license;
+
+    /**
+     *
+     * 身份证号码
+     *
+     */
+    @ApiModelProperty(name = "idCardNo", value = "身份证号码")
+    private String idCardNo;
+
+    /**
+     *
+     * 身份证正面
+     *
+     */
+    @ApiModelProperty(name = "idCardFront", value = "身份证正面")
+    private String idCardFront;
+
+    /**
+     *
+     * 身份证反面
+     *
+     */
+    @ApiModelProperty(name = "idCardBack", value = "身份证反面")
+    private String idCardBack;
 
 
     /**
