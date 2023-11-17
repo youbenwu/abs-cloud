@@ -16,7 +16,7 @@ public class AdvertOrderSettleDTO {
     @ApiModelProperty(name = "type", value = "广告类型 1--企业广告 2--个人广告")
     private int type;
 
-    @ApiModelProperty(name = "contentType", value = "0--图文 1--图文视频 2--图文视频链接 3--图文视频二维码 4--图文视频链接二维码")
+    @ApiModelProperty(name = "contentType", value = "0--图文 1--图文视频 2--图文视频链接 3--图文视频二维码 4--图文视频链接二维码 5--图文链接 6--图文二维码")
     private int contentType;
 
     @ApiModelProperty(name = "startTime", value = "广告展示开始时间")
