@@ -56,7 +56,7 @@ public class Hotel implements Serializable ,BindingOrg {
 
     /**
      *
-     * 酒店状态  0--正常 1--禁用 2--未审核 3--审核中 4--审核失败 6--欠费
+     * 酒店状态  0--正常 1--禁用 2--未审核 3--审核中 4--审核失败
      *
      */
     private int status;
