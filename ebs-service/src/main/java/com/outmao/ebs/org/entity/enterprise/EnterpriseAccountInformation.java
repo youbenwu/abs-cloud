@@ -1,4 +1,4 @@
-package com.outmao.ebs.data.entity.enterprise;
+package com.outmao.ebs.org.entity.enterprise;
 
 
 

@@ -50,7 +50,6 @@ public class Merchant implements Serializable , BindingOrg {
     @JoinColumn(name = "userId")
     private User user;
 
-
     /**
      *
      * 店铺ID
@@ -95,7 +94,6 @@ public class Merchant implements Serializable , BindingOrg {
     @Lob
     @Basic(fetch = FetchType.LAZY)
     private String keyword;
-
 
     /**
      *
@@ -162,7 +160,7 @@ public class Merchant implements Serializable , BindingOrg {
 
     /**
      *
-     * 商家H5地址
+     * 商家首页H5地址
      *
      */
     private String url;

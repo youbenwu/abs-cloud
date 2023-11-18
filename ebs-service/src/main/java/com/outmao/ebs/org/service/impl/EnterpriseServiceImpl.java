@@ -1,14 +1,14 @@
-package com.outmao.ebs.data.service.impl;
+package com.outmao.ebs.org.service.impl;
 
 
 
 import com.outmao.ebs.common.base.BaseService;
-import com.outmao.ebs.data.domain.EnterpriseDomain;
-import com.outmao.ebs.data.dto.EnterpriseDTO;
+import com.outmao.ebs.org.domain.EnterpriseDomain;
+import com.outmao.ebs.org.dto.EnterpriseDTO;
 import com.outmao.ebs.data.dto.GetEnterpriseListDTO;
-import com.outmao.ebs.data.entity.enterprise.Enterprise;
-import com.outmao.ebs.data.service.EnterpriseService;
-import com.outmao.ebs.data.vo.EnterpriseVO;
+import com.outmao.ebs.org.entity.enterprise.Enterprise;
+import com.outmao.ebs.org.service.EnterpriseService;
+import com.outmao.ebs.org.vo.EnterpriseVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

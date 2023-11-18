@@ -1,6 +1,6 @@
-package com.outmao.ebs.data.dao.enterprise;
+package com.outmao.ebs.org.dao;
 
-import com.outmao.ebs.data.entity.enterprise.EnterpriseAccountInformation;
+import com.outmao.ebs.org.entity.enterprise.EnterpriseAccountInformation;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 

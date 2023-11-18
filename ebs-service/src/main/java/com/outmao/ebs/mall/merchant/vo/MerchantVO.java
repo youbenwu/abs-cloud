@@ -3,7 +3,7 @@ package com.outmao.ebs.mall.merchant.vo;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.outmao.ebs.common.vo.Contact;
-import com.outmao.ebs.data.vo.EnterpriseVO;
+import com.outmao.ebs.org.vo.EnterpriseVO;
 import com.outmao.ebs.mall.merchant.common.data.MerchantStatsSetter;
 import com.outmao.ebs.user.common.data.SimpleUserSetter;
 import com.outmao.ebs.user.vo.SimpleUserVO;

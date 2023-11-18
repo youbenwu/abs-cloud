@@ -58,9 +58,23 @@
     ]
   },
   {
-    "name": "电商",
+    "name": "电商平台",
     "path": "/mall",
     "children":[
+      {
+        "name": "商家",
+        "path": "/mall/product",
+        "children":[
+          {
+            "name": "商品分类",
+            "path": "/mall/product/category/list"
+          },
+          {
+            "name": "商品管理",
+            "path": "/mall/product/list"
+          }
+        ]
+      },
       {
         "name": "商品",
         "path": "/mall/product",
@@ -76,20 +90,6 @@
         ]
       },
       {
-        "name": "店铺",
-        "path": "/mall/shop",
-        "children":[
-          {
-            "name": "商品分类",
-            "path": "/mall/shop/product/category/list"
-          },
-          {
-            "name": "商品管理",
-            "path": "/mall/shop/product/list"
-          }
-        ]
-      },
-      {
         "name": "订单",
         "path": "/mall/order",
         "children":[
@@ -98,6 +98,20 @@
             "path": "/mall/order/list"
           }
         ]
+      }
+    ]
+  },
+  {
+    "name": "店铺",
+    "path": "/mall/shop",
+    "children":[
+      {
+        "name": "商品分类",
+        "path": "/mall/shop/product/category/list"
+      },
+      {
+        "name": "商品管理",
+        "path": "/mall/shop/product/list"
       }
     ]
   },

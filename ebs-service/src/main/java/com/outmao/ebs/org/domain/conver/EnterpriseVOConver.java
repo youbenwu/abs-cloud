@@ -1,8 +1,8 @@
-package com.outmao.ebs.data.domain.conver;
+package com.outmao.ebs.org.domain.conver;
 
 import com.outmao.ebs.common.dsl.BeanConver;
-import com.outmao.ebs.data.entity.enterprise.QEnterprise;
-import com.outmao.ebs.data.vo.EnterpriseVO;
+import com.outmao.ebs.org.entity.enterprise.QEnterprise;
+import com.outmao.ebs.org.vo.EnterpriseVO;
 import com.querydsl.core.Tuple;
 import com.querydsl.core.types.Expression;
 

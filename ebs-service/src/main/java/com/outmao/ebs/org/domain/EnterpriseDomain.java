@@ -1,13 +1,12 @@
-package com.outmao.ebs.data.domain;
+package com.outmao.ebs.org.domain;
 
 
-import com.outmao.ebs.data.dto.EnterpriseDTO;
+import com.outmao.ebs.org.dto.EnterpriseDTO;
 import com.outmao.ebs.data.dto.GetEnterpriseListDTO;
-import com.outmao.ebs.data.entity.enterprise.Enterprise;
-import com.outmao.ebs.data.vo.EnterpriseVO;
+import com.outmao.ebs.org.entity.enterprise.Enterprise;
+import com.outmao.ebs.org.vo.EnterpriseVO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-
 import java.util.List;
 
 public interface EnterpriseDomain {

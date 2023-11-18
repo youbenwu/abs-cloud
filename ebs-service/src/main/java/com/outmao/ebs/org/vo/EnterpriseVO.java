@@ -1,13 +1,16 @@
-package com.outmao.ebs.data.dto;
+package com.outmao.ebs.org.vo;
 
 
-import com.outmao.ebs.data.entity.enterprise.EnterpriseBasicInformation;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.outmao.ebs.org.entity.enterprise.EnterpriseBasicInformation;
+import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
-
+@ApiModel(value = "EnterpriseVO", description = "企业信息")
+@JsonInclude(value = JsonInclude.Include.NON_NULL)
 @Data
-public class EnterpriseDTO extends EnterpriseBasicInformation {
+public class EnterpriseVO extends EnterpriseBasicInformation {
 
     @ApiModelProperty(name = "id", value = "ID")
     private Long id;
@@ -35,6 +38,7 @@ public class EnterpriseDTO extends EnterpriseBasicInformation {
      */
     @ApiModelProperty(name = "statusRemark", value = "状态")
     private String statusRemark;
+
 
 
 

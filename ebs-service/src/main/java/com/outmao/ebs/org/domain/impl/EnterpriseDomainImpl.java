@@ -1,4 +1,4 @@
-package com.outmao.ebs.data.domain.impl;
+package com.outmao.ebs.org.domain.impl;
 
 
 
@@ -7,18 +7,18 @@ import com.outmao.ebs.common.base.BaseDomain;
 import com.outmao.ebs.common.configuration.constant.Status;
 import com.outmao.ebs.common.exception.BusinessException;
 import com.outmao.ebs.common.util.StringUtil;
-import com.outmao.ebs.data.dao.enterprise.EnterpriseAccountInformationDao;
-import com.outmao.ebs.data.dao.enterprise.EnterpriseBrandInformationDao;
-import com.outmao.ebs.data.dao.enterprise.EnterpriseDao;
-import com.outmao.ebs.data.domain.EnterpriseDomain;
-import com.outmao.ebs.data.domain.conver.EnterpriseVOConver;
-import com.outmao.ebs.data.dto.EnterpriseDTO;
+import com.outmao.ebs.org.dao.EnterpriseAccountInformationDao;
+import com.outmao.ebs.org.dao.EnterpriseBrandInformationDao;
+import com.outmao.ebs.org.dao.EnterpriseDao;
+import com.outmao.ebs.org.domain.EnterpriseDomain;
+import com.outmao.ebs.org.domain.conver.EnterpriseVOConver;
+import com.outmao.ebs.org.dto.EnterpriseDTO;
 import com.outmao.ebs.data.dto.GetEnterpriseListDTO;
-import com.outmao.ebs.data.entity.enterprise.Enterprise;
-import com.outmao.ebs.data.entity.enterprise.EnterpriseAccountInformation;
-import com.outmao.ebs.data.entity.enterprise.EnterpriseBrandInformation;
-import com.outmao.ebs.data.entity.enterprise.QEnterprise;
-import com.outmao.ebs.data.vo.EnterpriseVO;
+import com.outmao.ebs.org.entity.enterprise.Enterprise;
+import com.outmao.ebs.org.entity.enterprise.EnterpriseAccountInformation;
+import com.outmao.ebs.org.entity.enterprise.EnterpriseBrandInformation;
+import com.outmao.ebs.org.entity.enterprise.QEnterprise;
+import com.outmao.ebs.org.vo.EnterpriseVO;
 import com.outmao.ebs.user.dao.UserDao;
 import com.querydsl.core.types.Predicate;
 import org.springframework.beans.BeanUtils;

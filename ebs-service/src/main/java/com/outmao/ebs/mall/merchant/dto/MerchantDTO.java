@@ -2,7 +2,7 @@ package com.outmao.ebs.mall.merchant.dto;
 
 
 import com.outmao.ebs.common.vo.Contact;
-import com.outmao.ebs.data.dto.EnterpriseDTO;
+import com.outmao.ebs.org.dto.EnterpriseDTO;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;

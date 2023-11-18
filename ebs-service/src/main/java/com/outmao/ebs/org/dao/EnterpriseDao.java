@@ -1,7 +1,7 @@
-package com.outmao.ebs.data.dao.enterprise;
+package com.outmao.ebs.org.dao;
 
 
-import com.outmao.ebs.data.entity.enterprise.Enterprise;
+import com.outmao.ebs.org.entity.enterprise.Enterprise;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.querydsl.QuerydslPredicateExecutor;
 import java.util.List;
