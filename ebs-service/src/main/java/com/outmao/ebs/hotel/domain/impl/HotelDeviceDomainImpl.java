@@ -226,9 +226,10 @@ public class HotelDeviceDomainImpl extends BaseDomain implements HotelDeviceDoma
 
         list.forEach(t->{
             StatsHotelDeviceCityVO vo=new StatsHotelDeviceCityVO();
+            Double amount=t.get(e.amount.sum());
             vo.setCity(t.get(e.city));
             vo.setCount(t.get(e.count()));
-            vo.setAmount(t.get(e.amount.sum()));
+            vo.setAmount(amount==null?0:amount);
             vos.add(vo);
         });
         return vos;
