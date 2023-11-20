@@ -14,10 +14,10 @@ import java.util.Date;
 
 /**
  *
- * 广告
+ * 广告投放记录
  *
  */
-@ApiModel(value = "AdvertOrder", description = "广告购买记录")
+@ApiModel(value = "AdvertOrder", description = "广告投放记录")
 @JsonIgnoreProperties(value = {"hibernateLazyInitializer"})
 @Data
 @Entity
