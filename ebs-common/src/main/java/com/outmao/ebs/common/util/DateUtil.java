@@ -56,6 +56,7 @@ public class DateUtil {
         return sdf.format(date);
     }
 
+
     public static String getDateString(Date date){
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
         return sdf.format(date);

@@ -17,14 +17,14 @@ import java.util.Date;
  * 广告
  *
  */
-@ApiModel(value = "AdvertPvLog", description = "广告PV")
+@ApiModel(value = "AdvertUvLog", description = "广告UV")
 @JsonIgnoreProperties(value = {"hibernateLazyInitializer"})
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
 @Entity
-@Table(name = "portal_AdvertPvLog")
-public class AdvertPvLog implements Serializable {
+@Table(name = "portal_AdvertUvLog")
+public class AdvertUvLog implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -44,10 +44,9 @@ public class AdvertPvLog implements Serializable {
     @ApiModelProperty(name = "date", value = "日期")
     private String date;
 
-    public AdvertPvLog(Long userId,Long advertId){
-        this.advertId=advertId;
-        this.userId=userId;
-    }
+    @ApiModelProperty(name = "key", value = "KEY:userId_advertId_date")
+    @Column(unique = true)
+    private String key;
 
 
 }

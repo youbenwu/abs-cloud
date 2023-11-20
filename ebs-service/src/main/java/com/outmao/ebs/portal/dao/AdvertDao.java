@@ -12,6 +12,14 @@ import javax.persistence.LockModeType;
 public interface AdvertDao extends JpaRepository<Advert,Long> , QuerydslPredicateExecutor<Advert> {
 
 
+    @Modifying
+    @Query("update Advert a set a.pv=a.pv+1 where a.id=?1")
+    public void pv(Long id);
+
+    @Modifying
+    @Query("update Advert a set a.uv=a.uv+1 where a.id=?1")
+    public void uv(Long id);
+
     @Lock(value = LockModeType.PESSIMISTIC_READ)
     @Query("select a from Advert  a where a.id=?1")
     public Advert findByIdForUpdate(Long id);
