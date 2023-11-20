@@ -30,6 +30,24 @@ public class GetOrderListDTO {
     @ApiModelProperty(name = "keyword", value = "关键字")
     private String keyword;
 
+    /**
+     * 商品类型
+     * ADVERT_CHANNEL(20, "广告频道"),
+     *
+     *     HOTEL_WASH_SERVICE(30, "酒店干洗服务"),
+     *     HOTEL_FOOD_SERVICE(31, "酒店送餐服务"),
+     *     HOTEL_MALL(32, "酒店商超"),
+     *
+     *     HOTEL_DEVICE(40, "酒店投放设备"),
+     */
+    @ApiModelProperty(name = "type", value = "类型\n" +
+            "\t * 20 广告投放\n" +
+            "\t * 30 酒店干洗服务\n" +
+            "\t * 31 酒店送餐服务\n" +
+            "\t * 32 酒店商超\n" +
+            "\t * 40 酒店投放设备")
+    private Integer type;
+
     @ApiModelProperty(name = "status", value = "订单状态订单状态\n" +
             "\t * 00 待付款：用户下单未付款状态\n" +
             "\t * 10 待发货：用户付款商家未发货状态\n" +

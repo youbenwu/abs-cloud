@@ -40,6 +40,8 @@ public class OrderVOConver implements BeanConver<QOrder, OrderVO> {
         vo.setQuantity(t.get(e.quantity));
         vo.setAmount(t.get(e.amount));
         vo.setRemark(t.get(e.remark));
+        vo.setDescription(t.get(e.description));
+        vo.setData(t.get(e.data));
         vo.setFreight(t.get(e.freight));
         vo.setTotalAmount(t.get(e.totalAmount));
         vo.setPayChannel(t.get(e.payChannel));
@@ -79,6 +81,8 @@ public class OrderVOConver implements BeanConver<QOrder, OrderVO> {
                 e.quantity,
                 e.amount,
                 e.remark,
+                e.description,
+                e.data,
                 e.freight,
                 e.totalAmount,
                 e.payChannel,

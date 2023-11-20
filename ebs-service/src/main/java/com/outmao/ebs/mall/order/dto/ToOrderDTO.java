@@ -11,6 +11,8 @@ public class ToOrderDTO {
 
     private List<ToOrderShopDTO> shops;
 
+    private String data;
+
     public ToOrderShopDTO getShopByShopId(Long shopId){
         if(shops==null){
             return null;

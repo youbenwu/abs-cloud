@@ -66,6 +66,9 @@ public class OrderDTO {
     @ApiModelProperty(name = "remark", value = "客户备注")
     private String remark;
 
+    @ApiModelProperty(name = "data", value = "下单内容JSON")
+    private String data;
+
     @ApiModelProperty(name = "payChannel", value = "订单支付渠道")
     private String payChannel;
 

@@ -208,6 +208,15 @@ public class Order  implements Serializable{
 	 */
 	private String description;
 
+	/**
+	 *
+	 * 订单内容JSON
+	 *
+	 */
+	@Lob
+	@Basic(fetch = FetchType.LAZY)
+	private String data;
+
 
 	//商品信息
 

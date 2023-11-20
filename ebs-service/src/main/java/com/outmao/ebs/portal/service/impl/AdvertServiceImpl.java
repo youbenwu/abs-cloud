@@ -1,5 +1,6 @@
 package com.outmao.ebs.portal.service.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.outmao.ebs.common.base.BaseService;
 import com.outmao.ebs.mall.order.common.constant.OrderStatus;
 import com.outmao.ebs.mall.order.dto.*;
@@ -108,9 +109,21 @@ public class AdvertServiceImpl extends BaseService implements AdvertService {
     @Override
     public AdvertOrder saveAdvertOrder(AdvertOrderDTO request) {
 
+
+        AdvertDTO advertDTO=new AdvertDTO();
+        advertDTO.setUserId(SecurityUtil.currentUserId());
+        BeanUtils.copyProperties(request,advertDTO);
+        advertDTO.setStatus(2);
+
+        Advert advert=saveAdvert(advertDTO);
+
+        String data= JSON.toJSONString(advert);
+
+        
         //用结算ID去下单
         ToOrderDTO toOrderDTO=new ToOrderDTO();
         toOrderDTO.setSettleId(request.getSettleId());
+        toOrderDTO.setData(data);
         ToOrderVO toOrderVO=settleService.buy(toOrderDTO);
         OrderVO order=orderService.getOrderVOByOrderNo(toOrderVO.getOrders().get(0));
 
@@ -121,12 +134,6 @@ public class AdvertServiceImpl extends BaseService implements AdvertService {
         payPrepare.setCurrency("RMB");
         orderService.payPrepare(payPrepare);
 
-        AdvertDTO advertDTO=new AdvertDTO();
-        advertDTO.setUserId(order.getUserId());
-        BeanUtils.copyProperties(request,advertDTO);
-        advertDTO.setStatus(2);
-
-        Advert advert=saveAdvert(advertDTO);
 
 
         AdvertOrder advertOrder=new AdvertOrder();

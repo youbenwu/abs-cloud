@@ -197,6 +197,20 @@ public class OrderVO implements SimpleShopSetter , SimpleUserSetter {
     @ApiModelProperty(name = "remark", value = "客户备注")
     private String remark;
 
+    /**
+     *
+     * 描述
+     *
+     */
+    private String description;
+
+    /**
+     *
+     * 订单内容JSON
+     *
+     */
+    private String data;
+
     //支付信息
 
     /**

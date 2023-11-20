@@ -277,7 +277,7 @@ public class SettleDomainImpl extends BaseDomain implements SettleDomain {
 
         List<Order> orders=new ArrayList<>(settle.getShops().size());
         for (SettleShopVO shop:settle.getShops()){
-            OrderDTO dto=getOrderDTO(settle,shop,request.getShopByShopId(shop.getShopId()));
+            OrderDTO dto=getOrderDTO(settle,shop,request.getShopByShopId(shop.getShopId()),request.getData());
             Order order=orderDomain.saveOrder(dto);
             orders.add(order);
         }
@@ -291,9 +291,10 @@ public class SettleDomainImpl extends BaseDomain implements SettleDomain {
     }
 
 
-    private OrderDTO getOrderDTO(SettleVO settle,SettleShopVO shop,ToOrderShopDTO request){
+    private OrderDTO getOrderDTO(SettleVO settle,SettleShopVO shop,ToOrderShopDTO request,String data){
 
         OrderDTO dto=new OrderDTO();
+        dto.setData(data);
 
         BeanUtils.copyProperties(settle,dto,"address");
 

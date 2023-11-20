@@ -384,6 +384,10 @@ public class OrderDomainImpl extends BaseDomain implements OrderDomain {
             p=e.keyword.like("%"+request.getKeyword()+"%");
         }
 
+        if(request.getType()!=null){
+            p=e.type.eq(request.getType()).and(p);
+        }
+
         if(request.getShopId()!=null){
             p=e.shopId.eq(request.getShopId()).and(p);
         }
