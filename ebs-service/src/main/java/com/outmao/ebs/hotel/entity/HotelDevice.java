@@ -25,7 +25,6 @@ public class HotelDevice  implements Serializable {
 
     public static final String APP_TYPE_QY_PAD="HOTEL_PAD";
 
-
     /**
      *
      * 自动编号
@@ -35,13 +34,11 @@ public class HotelDevice  implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-
     /**
      * 0--未激活
      * 1--已激活
      */
     private int status;
-
 
     /**
      * 酒店对应组织ID
