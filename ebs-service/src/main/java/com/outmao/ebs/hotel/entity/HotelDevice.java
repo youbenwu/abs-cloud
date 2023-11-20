@@ -124,7 +124,6 @@ public class HotelDevice  implements Serializable {
      */
     private String os;
 
-
     /**
      * 应用类型
      */
