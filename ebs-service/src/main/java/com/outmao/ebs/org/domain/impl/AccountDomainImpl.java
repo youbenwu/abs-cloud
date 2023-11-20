@@ -113,6 +113,10 @@ public class AccountDomainImpl extends BaseDomain implements AccountDomain {
 
     }
 
+    @Override
+    public List<Account> getAccountListByUserId(Long userId) {
+        return accountDao.findAllByUserId(userId);
+    }
 
     @Override
     public AccountVO getAccountVOById(Long id) {

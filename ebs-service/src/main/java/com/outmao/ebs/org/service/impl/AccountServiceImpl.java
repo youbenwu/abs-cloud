@@ -76,6 +76,12 @@ public class AccountServiceImpl extends BaseService implements AccountService {
         accountDomain.deleteAccountById(id);
     }
 
+
+    @Override
+    public List<Account> getAccountListByUserId(Long userId) {
+        return accountDomain.getAccountListByUserId(userId);
+    }
+
     @Override
     public AccountVO getAccountVOById(Long id) {
         return accountDomain.getAccountVOById(id);

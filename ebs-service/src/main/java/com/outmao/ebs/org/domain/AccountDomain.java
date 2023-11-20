@@ -18,6 +18,7 @@ public interface AccountDomain {
 
     public Account saveAccount(AccountDTO request);
     public void deleteAccountById(Long id);
+    public List<Account> getAccountListByUserId(Long userId);
     public AccountVO getAccountVOById(Long id);
     public Page<AccountVO> getAccountVOPage(GetAccountListDTO request, Pageable pageable);
 

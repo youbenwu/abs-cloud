@@ -13,6 +13,8 @@ import com.outmao.ebs.hotel.vo.*;
 import com.outmao.ebs.org.common.annotation.AccessPermission;
 import com.outmao.ebs.org.common.annotation.AccessPermissionGroup;
 import com.outmao.ebs.org.common.annotation.AccessPermissionParent;
+import com.outmao.ebs.org.entity.Account;
+import com.outmao.ebs.org.service.AccountService;
 import com.outmao.ebs.security.util.SecurityUtil;
 import com.outmao.ebs.security.vo.SecurityUser;
 import io.swagger.annotations.Api;
@@ -86,6 +88,9 @@ public class HotelAdminAction {
 	@Autowired
     private HotelService hotelService;
 
+    @Autowired
+	private AccountService accountService;
+
 
     @PreAuthorize("permitAll")
     @ApiOperation(value = "注册酒店", notes = "注册酒店")
@@ -140,12 +145,13 @@ public class HotelAdminAction {
         return hotelService.getHotelVOPage(request,pageable);
     }
 
-    @ApiOperation(value = "获取登陆用户的酒店信息列表", notes = "获取登陆用户的酒店信息列表")
+    @ApiOperation(value = "获取登陆用户管理的酒店信息列表", notes = "获取登陆用户管理的酒店信息列表")
     @PostMapping("/list")
     public List<HotelVO> getHotelVOListByOrgIdIn() {
         SecurityUser user=SecurityUtil.currentUser();
-        if(user.getMembers()!=null){
-            return hotelService.getHotelVOListByOrgIdIn(user.getMembers().stream().map(t->t.getOrgId()).collect(Collectors.toList()));
+        List<Account> accounts=accountService.getAccountListByUserId(user.getId());
+        if(accounts.size()>0){
+            return hotelService.getHotelVOListByOrgIdIn(accounts.stream().map(t->t.getOrg().getId()).collect(Collectors.toList()));
         }
         return new ArrayList<>(0);
     }
