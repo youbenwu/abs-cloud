@@ -119,7 +119,7 @@ public class AdvertServiceImpl extends BaseService implements AdvertService {
 
         String data= JSON.toJSONString(advert);
 
-        
+
         //用结算ID去下单
         ToOrderDTO toOrderDTO=new ToOrderDTO();
         toOrderDTO.setSettleId(request.getSettleId());
