@@ -1,6 +1,7 @@
 package com.outmao.ebs.mall.order.domain.impl;
 
 import com.outmao.ebs.common.exception.BusinessException;
+import com.outmao.ebs.common.exception.IdempotentException;
 import com.outmao.ebs.common.vo.SimpleContact;
 import com.outmao.ebs.common.base.BaseDomain;
 import com.outmao.ebs.common.util.OrderNoUtil;
@@ -261,9 +262,8 @@ public class OrderDomainImpl extends BaseDomain implements OrderDomain {
 
         security.hasPermission(order.getOrgId(),null);
 
-
         if(order.getStatus()==request.getStatus()){
-            return order;
+            throw new IdempotentException(order);
         }
 
         if(order.getStatus()==OrderStatus.WAIT_PAY.getStatus()){
@@ -295,6 +295,8 @@ public class OrderDomainImpl extends BaseDomain implements OrderDomain {
         BeanUtils.copyProperties(request,order);
 
         orderDao.save(order);
+
+
 
         return order;
     }

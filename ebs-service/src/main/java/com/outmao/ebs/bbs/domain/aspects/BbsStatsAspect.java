@@ -59,6 +59,8 @@ public class BbsStatsAspect {
 	@Transactional
 	@AfterReturning(returning = "item",value = "SubjectBrowsesAdd() && @annotation(add)")
 	public void afterSubjectBrowsesAdd(JoinPoint jp, SubjectItem item, SubjectBrowsesAdd add) {
+		if(item==null)
+			return;
 		subjectStatsDao.browsesAdd(item.getSubjectId(),add.add(),new Date());
 		if (SecurityUtil.isAuthenticated()) {
 			SecurityUser user = SecurityUtil.currentUser();

@@ -2,6 +2,7 @@ package com.outmao.ebs.mall.order.service.impl;
 
 import com.outmao.ebs.common.base.BaseService;
 import com.outmao.ebs.common.exception.BusinessException;
+import com.outmao.ebs.common.exception.IdempotentException;
 import com.outmao.ebs.mall.order.common.constant.OrderStatus;
 import com.outmao.ebs.mall.order.domain.OrderDomain;
 import com.outmao.ebs.mall.order.domain.OrderStatsDomain;
@@ -30,6 +31,7 @@ import com.outmao.ebs.wallet.entity.Trade;
 import com.outmao.ebs.wallet.pay.service.PayService;
 import com.outmao.ebs.wallet.service.WalletService;
 import com.outmao.ebs.wallet.vo.TradeVO;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.data.domain.Page;
@@ -43,7 +45,7 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
-
+@Slf4j
 @Service
 public class OrderServiceImpl extends BaseService implements OrderService, TradeStatusListener, CommandLineRunner {
 
@@ -77,7 +79,7 @@ public class OrderServiceImpl extends BaseService implements OrderService, Trade
         payService.addStatusListener(this);
     }
 
-    @Transactional
+
     @Override
     public void statusChanged(Trade trade) {
         if(trade.getBusinessType()== WalletConstant.business_type_pay) {
@@ -93,18 +95,24 @@ public class OrderServiceImpl extends BaseService implements OrderService, Trade
             SetOrderStatusDTO setOrderStatusDTO=new SetOrderStatusDTO();
             setOrderStatusDTO.setOrderNo(trade.getTradeNo());
             if(trade.getStatus()== TradeStatus.TRADE_WAIT_PAY.getStatus()){
+
             }else if(trade.getStatus()== TradeStatus.TRADE_SUCCEED.getStatus()){
                 //支付成功修改订单状态
                 setOrderStatusDTO.setStatus(OrderStatus.SUCCESSED.getStatus());
                 setOrderStatusDTO.setStatusRemark(OrderStatus.SUCCESSED.getStatusRemark());
             }else if(trade.getStatus()== TradeStatus.TRADE_FINISHED.getStatus()){
+
             }else if(trade.getStatus()== TradeStatus.TRADE_CLOSED.getStatus()){
                 //交易关闭修改订单状态
                 setOrderStatusDTO.setStatus(OrderStatus.CLOSED.getStatus());
                 setOrderStatusDTO.setStatusRemark(OrderStatus.CLOSED.getStatusRemark());
             }
 
-            setOrderStatus(setOrderStatusDTO);
+            try{
+                setOrderStatus(setOrderStatusDTO);
+            }catch (IdempotentException e){
+                log.info("/**{}**/",e.getMessage());
+            }
 
         }
     }
@@ -156,6 +164,7 @@ public class OrderServiceImpl extends BaseService implements OrderService, Trade
 
     }
 
+    @Transactional
     @Override
     public Order setOrderStatus(SetOrderStatusDTO request) {
 

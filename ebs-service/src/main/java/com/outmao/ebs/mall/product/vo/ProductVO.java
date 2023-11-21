@@ -432,6 +432,14 @@ public class ProductVO extends SubjectItemVO implements IItem {
 
     /**
      *
+     * 销售量
+     *
+     */
+    @ApiModelProperty(name = "sales", value = "销售量")
+    private int sales;
+
+    /**
+     *
      * 开盘时间
      *
      */

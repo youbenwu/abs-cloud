@@ -4,6 +4,7 @@ package com.outmao.ebs.mall.product.dao;
 import com.outmao.ebs.mall.product.entity.Product;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Lock;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import javax.persistence.LockModeType;
 import java.util.Collection;
@@ -17,6 +18,10 @@ public interface ProductDao extends JpaRepository<Product,Long> {
 
     @Query("select s.shopId from Product s where s.id=?1")
     public Long findShopIdById(Long id);
+
+    @Modifying
+    @Query("update Product a set a.sales=a.sales+?2 where a.id=?1")
+    public void salesAdd(Long id,int q);
 
 
     public List<Product> findAllByIdIn(Collection<Long> idIn);

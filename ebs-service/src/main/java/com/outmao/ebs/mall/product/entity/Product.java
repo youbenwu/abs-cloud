@@ -448,6 +448,13 @@ public class Product implements Serializable, BindingSubjectId {
 	 */
 	private int salesStatus;
 
+	/**
+	 *
+	 * 销售量
+	 *
+	 */
+	private int sales;
+
 
 	/**
 	 * 
@@ -468,6 +475,8 @@ public class Product implements Serializable, BindingSubjectId {
 	 *
 	 */
 	private boolean useStoreStock;
+
+
 
 
 	@Override

@@ -10,4 +10,6 @@ public class DeleteProductDTO {
 
     private Long id;
 
+
+
 }

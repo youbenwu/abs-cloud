@@ -53,6 +53,7 @@ public class ProductVOConver implements BeanConver<QProduct,ProductVO> {
         vo.setStatusRemark(t.get(e.statusRemark));
         vo.setOnSell(t.get(e.onSell));
         vo.setSalesStatus(t.get(e.salesStatus));
+        vo.setSales(t.get(e.sales));
         vo.setMarketTime(t.get(e.marketTime));
         vo.setDeliveryTime(t.get(e.deliveryTime));
         vo.setCreateTime(t.get(e.createTime));
@@ -105,6 +106,7 @@ public class ProductVOConver implements BeanConver<QProduct,ProductVO> {
                 e.statusRemark,
                 e.onSell,
                 e.salesStatus,
+                e.sales,
                 e.marketTime,
                 e.deliveryTime,
                 e.createTime,
