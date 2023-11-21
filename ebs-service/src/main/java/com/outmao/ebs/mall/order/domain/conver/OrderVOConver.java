@@ -37,6 +37,7 @@ public class OrderVOConver implements BeanConver<QOrder, OrderVO> {
         vo.setDeliveryTime(t.get(e.deliveryTime));
         vo.setFinishTime(t.get(e.finishTime));
         vo.setCloseTime(t.get(e.closeTime));
+        vo.setExpectDeliveryTime(t.get(e.expectDeliveryTime));
         vo.setQuantity(t.get(e.quantity));
         vo.setAmount(t.get(e.amount));
         vo.setRemark(t.get(e.remark));
@@ -78,6 +79,7 @@ public class OrderVOConver implements BeanConver<QOrder, OrderVO> {
                 e.deliveryTime,
                 e.finishTime,
                 e.closeTime,
+                e.expectDeliveryTime,
                 e.quantity,
                 e.amount,
                 e.remark,

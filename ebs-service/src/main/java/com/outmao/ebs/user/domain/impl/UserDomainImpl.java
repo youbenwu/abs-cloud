@@ -11,19 +11,13 @@ import com.outmao.ebs.user.dao.UserDao;
 import com.outmao.ebs.user.dao.UserDetailsDao;
 import com.outmao.ebs.user.domain.UserDomain;
 import com.outmao.ebs.user.domain.UserOauthDomain;
-import com.outmao.ebs.user.domain.conver.HuaUserVOConver;
-import com.outmao.ebs.user.domain.conver.SimpleUserVOConver;
-import com.outmao.ebs.user.domain.conver.UserDetailsVOConver;
-import com.outmao.ebs.user.domain.conver.UserVOConver;
+import com.outmao.ebs.user.domain.conver.*;
 import com.outmao.ebs.user.dto.GetUserListDTO;
 import com.outmao.ebs.user.dto.RegisterDTO;
 import com.outmao.ebs.user.dto.UserDTO;
 import com.outmao.ebs.user.dto.UserDetailsDTO;
 import com.outmao.ebs.user.entity.*;
-import com.outmao.ebs.user.vo.HuaUserVO;
-import com.outmao.ebs.user.vo.SimpleUserVO;
-import com.outmao.ebs.user.vo.UserDetailsVO;
-import com.outmao.ebs.user.vo.UserVO;
+import com.outmao.ebs.user.vo.*;
 import com.querydsl.core.types.Predicate;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,6 +46,8 @@ public class UserDomainImpl extends BaseDomain implements UserDomain {
 
 
 	private SimpleUserVOConver simpleUserVOConver=new SimpleUserVOConver();
+
+	private ContactUserVOConver contactUserVOConver=new ContactUserVOConver();
 
 	private UserVOConver userVOConver=new UserVOConver();
 
@@ -228,6 +224,13 @@ public class UserDomainImpl extends BaseDomain implements UserDomain {
 	public List<SimpleUserVO> getSimpleUserVOListByIdIn(Collection<Long> idIn) {
 		QUser e=QUser.user;
 		List<SimpleUserVO> list=queryList(e,e.id.in(idIn),simpleUserVOConver);
+		return list;
+	}
+
+	@Override
+	public List<ContactUserVO> getContactUserVOListByIdIn(Collection<Long> idIn) {
+		QUser e=QUser.user;
+		List<ContactUserVO> list=queryList(e,e.id.in(idIn),contactUserVOConver);
 		return list;
 	}
 

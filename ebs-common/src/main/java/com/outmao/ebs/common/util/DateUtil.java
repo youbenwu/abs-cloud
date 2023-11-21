@@ -24,6 +24,13 @@ public class DateUtil {
         return calendar.getTime();
     }
 
+    public static Date addMinutes(Date date,int minutes){
+        Calendar calendar=Calendar.getInstance();
+        calendar.setTime(date);
+        calendar.add(MINUTE, minutes);
+        return calendar.getTime();
+    }
+
     public static Date beforeDays(int days){
         Calendar calendar=Calendar.getInstance();
         calendar.add(Calendar.DATE, -days);

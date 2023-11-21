@@ -4,7 +4,9 @@ package com.outmao.ebs.mall.order.vo;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.outmao.ebs.mall.shop.common.data.SimpleShopSetter;
 import com.outmao.ebs.mall.shop.vo.SimpleShopVO;
+import com.outmao.ebs.user.common.data.ContactUserSetter;
 import com.outmao.ebs.user.common.data.SimpleUserSetter;
+import com.outmao.ebs.user.vo.ContactUserVO;
 import com.outmao.ebs.user.vo.SimpleUserVO;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -15,7 +17,7 @@ import java.util.List;
 @ApiModel(value = "OrderVO", description = "订单信息")
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 @Data
-public class OrderVO implements SimpleShopSetter , SimpleUserSetter {
+public class OrderVO implements SimpleShopSetter , ContactUserSetter {
 
 
     /**
@@ -35,7 +37,7 @@ public class OrderVO implements SimpleShopSetter , SimpleUserSetter {
     private Long userId;
 
     @ApiModelProperty(name = "user", value = "买家用户")
-    private SimpleUserVO user;
+    private ContactUserVO user;
 
     @ApiModelProperty(name = "merchantId", value = "组织ID")
     private Long orgId;
@@ -136,6 +138,15 @@ public class OrderVO implements SimpleShopSetter , SimpleUserSetter {
      */
     @ApiModelProperty(name = "closeTime", value = "订单关闭时间")
     private Date closeTime;
+
+
+    /**
+     *
+     * 预计发货时间
+     *
+     */
+    @ApiModelProperty(name = "expectDeliveryTime", value = "预计发货时间")
+    private Date expectDeliveryTime;
 
 
     /**

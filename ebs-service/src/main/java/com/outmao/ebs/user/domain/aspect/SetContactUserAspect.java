@@ -1,10 +1,10 @@
 package com.outmao.ebs.user.domain.aspect;
 
 
-import com.outmao.ebs.user.common.annotation.SetSimpleUser;
-import com.outmao.ebs.user.common.data.SimpleUserSetter;
+import com.outmao.ebs.user.common.annotation.SetContactUser;
+import com.outmao.ebs.user.common.data.ContactUserSetter;
 import com.outmao.ebs.user.domain.UserDomain;
-import com.outmao.ebs.user.vo.SimpleUserVO;
+import com.outmao.ebs.user.vo.ContactUserVO;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Aspect;
@@ -12,6 +12,7 @@ import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -21,19 +22,19 @@ import java.util.stream.Collectors;
 
 @Aspect
 @Component
-public class SetSimpleUserAspect {
+public class SetContactUserAspect {
 
 	@Autowired
 	private UserDomain userDomain;
 
 
-	@Pointcut("@annotation(com.outmao.ebs.user.common.annotation.SetSimpleUser)")
-	public void SetSimpleUser() {
+	@Pointcut("@annotation(com.outmao.ebs.user.common.annotation.SetContactUser)")
+	public void SetContactUser() {
 
 	}
 
-	@AfterReturning(returning = "obj",value = "SetSimpleUser() && @annotation(ann)")
-	public void afterSetSimpleUser(JoinPoint jp, Object obj, SetSimpleUser ann) {
+	@AfterReturning(returning = "obj",value = "SetContactUser() && @annotation(ann)")
+	public void afterSetContactUser(JoinPoint jp, Object obj, SetContactUser ann) {
         if(obj==null)
         	return;
 		if(obj instanceof Page){
@@ -49,14 +50,14 @@ public class SetSimpleUserAspect {
 	}
 
 
-	private void setList(List<? extends SimpleUserSetter> list){
+	private void setList(List<? extends ContactUserSetter> list){
 		if(list==null||list.isEmpty())
 			return;
 		Collection<Long> userIdIn=list.stream().filter(t->t.getUserId()!=null).map(t->t.getUserId()).collect(Collectors.toList());
 		if(userIdIn.isEmpty())
 			return;
-		List<SimpleUserVO> users=userDomain.getSimpleUserVOListByIdIn(userIdIn);
-		Map<Long,SimpleUserVO> usersMap=users.stream().collect(Collectors.toMap(t->t.getId(),t->t));
+		List<ContactUserVO> users=userDomain.getContactUserVOListByIdIn(userIdIn);
+		Map<Long,ContactUserVO> usersMap=users.stream().collect(Collectors.toMap(t->t.getId(),t->t));
 		list.stream().forEach(t->{
 			t.setUser(usersMap.get(t.getUserId()));
 		});

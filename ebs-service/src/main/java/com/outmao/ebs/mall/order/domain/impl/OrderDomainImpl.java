@@ -2,20 +2,19 @@ package com.outmao.ebs.mall.order.domain.impl;
 
 import com.outmao.ebs.common.exception.BusinessException;
 import com.outmao.ebs.common.exception.IdempotentException;
+import com.outmao.ebs.common.util.DateUtil;
 import com.outmao.ebs.common.vo.SimpleContact;
 import com.outmao.ebs.common.base.BaseDomain;
 import com.outmao.ebs.common.util.OrderNoUtil;
 import com.outmao.ebs.common.util.StringUtil;
+import com.outmao.ebs.common.vo.TimeSpan;
 import com.outmao.ebs.mall.merchant.domain.MerchantCustomerDomain;
 import com.outmao.ebs.mall.merchant.entity.MerchantCustomer;
 import com.outmao.ebs.mall.order.common.constant.OrderStatus;
 import com.outmao.ebs.mall.order.domain.OrderContractDomain;
 import com.outmao.ebs.mall.order.domain.OrderLogisticsDomain;
-import com.outmao.ebs.mall.product.common.constant.ProductType;
 import com.outmao.ebs.mall.product.dao.ProductDao;
 import com.outmao.ebs.mall.product.dao.ProductSkuDao;
-import com.outmao.ebs.mall.product.entity.Product;
-import com.outmao.ebs.mall.product.entity.ProductSku;
 import com.outmao.ebs.mall.shop.common.annotation.SetSimpleShop;
 import com.outmao.ebs.mall.order.dao.*;
 import com.outmao.ebs.mall.order.domain.OrderDomain;
@@ -29,16 +28,9 @@ import com.outmao.ebs.mall.product.entity.ProductSnapshot;
 import com.outmao.ebs.mall.product.vo.ProductVO;
 import com.outmao.ebs.mall.shop.dao.ShopDao;
 import com.outmao.ebs.mall.shop.entity.Shop;
-import com.outmao.ebs.mall.store.common.constant.StoreSkuStockOutStatus;
-import com.outmao.ebs.mall.store.domain.StoreSkuDomain;
-import com.outmao.ebs.mall.store.dto.SetStoreSkuStockOutStatusDTO;
-import com.outmao.ebs.mall.store.dto.StoreSkuStockOutDTO;
-import com.outmao.ebs.mall.store.dto.StoreSkuStockOutItemDTO;
-import com.outmao.ebs.mall.store.entity.StoreSkuStockOut;
-import com.outmao.ebs.user.common.annotation.SetSimpleUser;
+import com.outmao.ebs.user.common.annotation.SetContactUser;
 import com.outmao.ebs.user.dao.UserDao;
 import com.outmao.ebs.user.entity.User;
-import com.querydsl.core.Tuple;
 import com.querydsl.core.types.Predicate;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -294,8 +286,21 @@ public class OrderDomainImpl extends BaseDomain implements OrderDomain {
 
         BeanUtils.copyProperties(request,order);
 
-        orderDao.save(order);
+        if(!order.isOut()&&order.getStatus()==OrderStatus.SUCCESSED.getStatus()){
+            //计算预计发货时间
+            int m=0;
+            List<TimeSpan> timeSpans=productDao.findAllExpectDeliveryTimeSpanByIdIn(order.getProducts().stream().map(t->t.getProductId()).collect(Collectors.toList()));
+            for (TimeSpan t:timeSpans){
+                int c=t.getMinutes();
+                if(c>m)
+                    m=c;
+            }
+            if(m>0){
+                order.setExpectDeliveryTime(DateUtil.addMinutes(new Date(),m));
+            }
+        }
 
+        orderDao.save(order);
 
 
         return order;
@@ -316,7 +321,7 @@ public class OrderDomainImpl extends BaseDomain implements OrderDomain {
         orderDao.deleteById(id);
     }
 
-    @SetSimpleUser
+    @SetContactUser
     @SetSimpleShop
     @Override
     public OrderVO getOrderVOById(Long id) {
@@ -342,7 +347,7 @@ public class OrderDomainImpl extends BaseDomain implements OrderDomain {
         vo.setContracts(orderContractDomain.getOrderContractVOListByOrderId(vo.getId()));
     }
 
-    @SetSimpleUser
+    @SetContactUser
     @SetSimpleShop
     @Override
     public OrderVO getOrderVOByOrderNo(String orderNo) {
@@ -373,7 +378,7 @@ public class OrderDomainImpl extends BaseDomain implements OrderDomain {
         return vo;
     }
 
-    @SetSimpleUser
+    @SetContactUser
     @SetSimpleShop
     @Override
     public Page<OrderVO> getOrderVOPage(GetOrderListDTO request, Pageable pageable) {

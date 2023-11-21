@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.outmao.ebs.bbs.common.data.SubjectItemVO;
 import com.outmao.ebs.common.vo.IItem;
 import com.outmao.ebs.common.vo.Location;
+import com.outmao.ebs.common.vo.TimeSpan;
 import com.outmao.ebs.mall.promotion.vo.ProductPromotionVO;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -477,6 +478,14 @@ public class ProductVO extends SubjectItemVO implements IItem {
      */
     @ApiModelProperty(name = "useStoreStock", value = "是否启用仓库库存")
     private boolean useStoreStock;
+
+    /**
+     *
+     * 预计发货时长
+     * 支付成功后的预计发货时长
+     */
+    @ApiModelProperty(name = "expectDeliveryTimeSpan", value = "支付成功后的预计发货时长")
+    private TimeSpan expectDeliveryTimeSpan;
 
 
     @ApiModelProperty(name = "promotion", value = "商品促销信息")

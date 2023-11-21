@@ -1,6 +1,7 @@
 package com.outmao.ebs.mall.product.dao;
 
 
+import com.outmao.ebs.common.vo.TimeSpan;
 import com.outmao.ebs.mall.product.entity.Product;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Lock;
@@ -25,6 +26,9 @@ public interface ProductDao extends JpaRepository<Product,Long> {
 
 
     public List<Product> findAllByIdIn(Collection<Long> idIn);
+
+    @Query("select p.expectDeliveryTimeSpan from Product p where p.id in ?1")
+    public List<TimeSpan> findAllExpectDeliveryTimeSpanByIdIn(Collection<Long> idIn);
 
 
 }

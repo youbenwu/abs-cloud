@@ -85,6 +85,8 @@ public class Order  implements Serializable{
 
 	private Long hotelId;
 
+
+
 	private String roomNo;
 
 
@@ -310,6 +312,13 @@ public class Order  implements Serializable{
 	 *
 	 */
 	private boolean useStoreStock;
+
+	/**
+	 *
+	 * 预计发货时间
+	 *
+	 */
+	private Date expectDeliveryTime;
 
 
 	//是否外部商品

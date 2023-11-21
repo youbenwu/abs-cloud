@@ -7,10 +7,7 @@ import com.outmao.ebs.user.dto.UserDTO;
 import com.outmao.ebs.user.dto.UserDetailsDTO;
 import com.outmao.ebs.user.entity.User;
 import com.outmao.ebs.user.entity.UserDetails;
-import com.outmao.ebs.user.vo.HuaUserVO;
-import com.outmao.ebs.user.vo.SimpleUserVO;
-import com.outmao.ebs.user.vo.UserDetailsVO;
-import com.outmao.ebs.user.vo.UserVO;
+import com.outmao.ebs.user.vo.*;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -39,6 +36,7 @@ public interface UserDomain {
 	public User getUserByUsername(String username);
     //获取用户列表
 	public List<SimpleUserVO> getSimpleUserVOListByIdIn(Collection<Long> idIn);
+	public List<ContactUserVO> getContactUserVOListByIdIn(Collection<Long> idIn);
 
 	//获取用户
 	public UserVO getUserVOById(Long id);

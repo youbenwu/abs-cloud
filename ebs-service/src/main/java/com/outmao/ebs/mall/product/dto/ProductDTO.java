@@ -1,6 +1,7 @@
 package com.outmao.ebs.mall.product.dto;
 
 import com.outmao.ebs.common.vo.Location;
+import com.outmao.ebs.common.vo.TimeSpan;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import java.util.Date;
@@ -350,6 +351,15 @@ public class ProductDTO {
      */
     @ApiModelProperty(name = "useStoreStock", value = "是否启用仓库库存")
     private boolean useStoreStock;
+
+    /**
+     *
+     * 预计发货时长
+     * 支付成功后的预计发货时长
+     */
+    @ApiModelProperty(name = "expectDeliveryTimeSpan", value = "支付成功后的预计发货时长")
+    private TimeSpan expectDeliveryTimeSpan;
+
 
 
 }

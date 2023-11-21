@@ -59,6 +59,7 @@ public class ProductVOConver implements BeanConver<QProduct,ProductVO> {
         vo.setCreateTime(t.get(e.createTime));
         vo.setUpdateTime(t.get(e.updateTime));
         vo.setUseStoreStock(t.get(e.useStoreStock));
+        vo.setExpectDeliveryTimeSpan(t.get(e.expectDeliveryTimeSpan));
         return vo;
     }
 
@@ -111,7 +112,8 @@ public class ProductVOConver implements BeanConver<QProduct,ProductVO> {
                 e.deliveryTime,
                 e.createTime,
                 e.updateTime,
-                e.useStoreStock
+                e.useStoreStock,
+                e.expectDeliveryTimeSpan,
         };
     }
 }

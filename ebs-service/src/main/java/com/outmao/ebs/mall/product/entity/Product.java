@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.outmao.ebs.common.vo.Item;
 import com.outmao.ebs.bbs.common.data.BindingSubjectId;
 import com.outmao.ebs.common.vo.Location;
+import com.outmao.ebs.common.vo.TimeSpan;
 import lombok.Data;
 import javax.persistence.*;
 import java.io.Serializable;
@@ -476,7 +477,18 @@ public class Product implements Serializable, BindingSubjectId {
 	 */
 	private boolean useStoreStock;
 
-
+	/**
+	 *
+	 * 预计发货时长
+	 * 支付成功后的预计发货时长
+	 *
+	 */
+	@Embedded
+	@AttributeOverrides({
+			@AttributeOverride(name="field", column=@Column(name="expect_delivery_time_span_field")),
+			@AttributeOverride(name="value", column=@Column(name="expect_delivery_time_span_value"))
+	})
+	private TimeSpan expectDeliveryTimeSpan;
 
 
 	@Override
