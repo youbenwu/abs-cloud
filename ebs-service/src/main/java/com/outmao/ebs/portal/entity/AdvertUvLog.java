@@ -45,7 +45,7 @@ public class AdvertUvLog implements Serializable {
     private String date;
 
     @ApiModelProperty(name = "key", value = "KEY:userId_advertId_date")
-    @Column(unique = true)
+    @Column(unique = true,name = "_key")
     private String key;
 
 

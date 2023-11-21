@@ -23,8 +23,6 @@ public interface AdvertDomain {
 
     public Advert buyPv(Long id,long buyPv,double buyAmount);
 
-    public Advert pv(Long id);
-
     public List<Advert> getAdvertList();
 
     public Page<Advert> getAdvertPage(GetAdvertListDTO request, Pageable pageable);

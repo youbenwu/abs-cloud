@@ -7,10 +7,12 @@ import com.outmao.ebs.common.util.StringUtil;
 import com.outmao.ebs.mall.order.common.constant.OrderStatus;
 import com.outmao.ebs.portal.dao.AdvertDao;
 import com.outmao.ebs.portal.dao.AdvertOrderDao;
+import com.outmao.ebs.portal.dao.AdvertPlaceDao;
 import com.outmao.ebs.portal.domain.AdvertDomain;
 import com.outmao.ebs.portal.dto.*;
 import com.outmao.ebs.portal.entity.Advert;
 import com.outmao.ebs.portal.entity.AdvertOrder;
+import com.outmao.ebs.portal.entity.AdvertPlace;
 import com.outmao.ebs.portal.entity.QAdvert;
 import com.outmao.ebs.security.util.SecurityUtil;
 import com.querydsl.core.types.Predicate;
@@ -22,8 +24,11 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.thymeleaf.util.StringUtils;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 
 @Component
@@ -32,6 +37,9 @@ public class AdvertDomainImpl extends BaseDomain implements AdvertDomain {
 
     @Autowired
     private AdvertDao advertDao;
+
+    @Autowired
+    private AdvertPlaceDao advertPlaceDao;
 
     @Autowired
     private AdvertOrderDao advertOrderDao;
@@ -60,20 +68,44 @@ public class AdvertDomainImpl extends BaseDomain implements AdvertDomain {
 
         BeanUtils.copyProperties(request,advert,"orgId","userId");
 
-        if(StringUtils.isEmpty(advert.getImage())){
-            if(!StringUtils.isEmpty(advert.getImages())){
-                String[] images=advert.getImages().split(",");
-                advert.setImage(images[0]);
-            }
+        if(StringUtils.isEmpty(advert.getImage())&&!StringUtils.isEmpty(advert.getImages())){
+            String[] images=advert.getImages().split(",");
+            advert.setImage(images[0]);
         }
 
         advert.setUpdateTime(new Date());
 
-
-
         advertDao.save(advert);
 
+        if(request.getPlaces()!=null){
+            //广告投放场所
+            saveAdvertPlaceList(advert,request.getPlaces());
+        }
+
         return advert;
+    }
+
+    private void saveAdvertPlaceList(Advert advert,String places){
+        List<AdvertPlace> list=advertPlaceDao.findByAdvertId(advert.getId());
+        Map<Long,AdvertPlace> listMap=list.stream().collect(Collectors.toMap(t->t.getPlaceId(),t->t));
+        String[] ids=places.split(",");
+        List<AdvertPlace> news=new ArrayList<>(ids.length);
+        for(int i=0;i<ids.length;i++){
+            String id=ids[i];
+            if(id.length()>0){
+                Long placeId=Long.parseLong(id);
+                AdvertPlace place=listMap.get(placeId);
+                if(place==null){
+                    place=new AdvertPlace();
+                    place.setAdvertId(advert.getId());
+                    place.setPlaceId(placeId);
+                }
+                news.add(place);
+            }
+        }
+        advertPlaceDao.saveAll(news);
+        advertPlaceDao.deleteAllByAdvertIdAndIdNotIn(advert.getId(),news.stream().map(t->t.getId()).collect(Collectors.toList()));
+        advert.setPlace(news.size()>0);
     }
 
     @Transactional
@@ -118,18 +150,7 @@ public class AdvertDomainImpl extends BaseDomain implements AdvertDomain {
     }
 
 
-    @Transactional
-    @Override
-    public Advert pv(Long id) {
-        Advert advert=advertDao.findByIdForUpdate(id);
-        advert.setPv(advert.getPv()+1);
-        if(advert.getBuyPv()>0&&advert.getPv()>=advert.getBuyPv()){
-            //欠费
-            advert.setStatus(2);
-        }
-        advertDao.save(advert);
-        return advert;
-    }
+
 
 
     @Override
@@ -143,8 +164,17 @@ public class AdvertDomainImpl extends BaseDomain implements AdvertDomain {
 
         Predicate p=null;
 
+        if(request.getPlaceId()!=null){
+            List<Long> idIn=advertPlaceDao.findAllAdvertIdByPlaceId(request.getPlaceId());
+            p=e.id.in(idIn).or(e.isPlace.isFalse());
+        }
+
+        if(StringUtil.isNotEmpty(request.getCity())){
+            p=e.citys.like("%"+request.getCity()+"%").or(e.citys.isEmpty()).or(e.citys.isNull()).and(p);
+        }
+
         if(StringUtil.isNotEmpty(request.getKeyword())){
-            p=e.title.like("%"+request.getKeyword()+"%");
+            p=e.title.like("%"+request.getKeyword()+"%").and(p);
         }
 
         if(request.getOrgId()!=null){
@@ -158,6 +188,7 @@ public class AdvertDomainImpl extends BaseDomain implements AdvertDomain {
         if(request.getStatus()!=null){
             p=e.status.eq(request.getStatus()).and(p);
         }
+
 
         if(!SecurityUtil.isAdminApi()){
             //Date now =new Date();

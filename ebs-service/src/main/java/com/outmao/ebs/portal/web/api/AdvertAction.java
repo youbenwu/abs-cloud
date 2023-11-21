@@ -21,7 +21,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -61,12 +60,9 @@ public class AdvertAction {
 
     @PreAuthorize("permitAll")
     @ApiOperation(value = "获取广告信息列表", notes = "获取广告信息列表 channelCode--" +
-            "默认首页广告:pad-home-def" +
+            "默认广告:pad-home-def" +
             "首页广告:pad-home" +
-            "客服服务页广告:pad-services" +
-            "迁眼互娱影视页:pad-movies" +
-            "迁眼送页:pad-games" +
-            "智慧旅游页:pad-tours")
+            "副页广告:pad-sub")
     @PostMapping("/list")
     public List<Advert> getAdvertList(String channelCode,int size) {
         List<Advert> list= advertService.getAdvertList(channelCode,size);
@@ -82,7 +78,7 @@ public class AdvertAction {
             return;
         if(SecurityUtil.isAuthenticated()) {
             SaveAdvertPvLogListDTO listDTO = new SaveAdvertPvLogListDTO();
-            listDTO.setAdverts(list.stream().map(t -> new AdvertPvLogDTO(null,t.getId(),t.getBuyPrice())).collect(Collectors.toList()));
+            listDTO.setAdverts(list.stream().map(t -> t.getId()).collect(Collectors.toList()));
             listDTO.setUserId(SecurityUtil.currentUserId());
             advertPvLogService.saveAdvertPvLogListAsync(listDTO);
         }

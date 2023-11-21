@@ -23,7 +23,7 @@ import java.util.Date;
 public class Advert extends SortEntity {
 
 
-    @ApiModelProperty(name = "orgId", value = "组织ID")
+    @ApiModelProperty(name = "orgId", value = "发布广告的组织ID")
     private Long orgId;
 
     @ApiModelProperty(name = "userId", value = "广告投放的用户ID")
@@ -31,6 +31,12 @@ public class Advert extends SortEntity {
 
     @ApiModelProperty(name = "channelId", value = "频道ID")
     private Long channelId;
+
+    @ApiModelProperty(name = "isPlace", value = "固定场所广告,只在特定场所显示")
+    private boolean isPlace;
+
+    @ApiModelProperty(name = "citys", value = "投放城市")
+    private String citys;
 
     @ApiModelProperty(name = "status", value = "0--未上架 1--已上架 2--需缴费")
     private int status;

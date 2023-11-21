@@ -18,21 +18,15 @@ public interface AdvertService {
 
     public void deleteAdvertById(Long id);
 
-    public Advert pv(Long id);
-
     public Page<Advert> getAdvertPage(GetAdvertListDTO request, Pageable pageable);
 
-
     public List<Advert> getAdvertList(String channelCode,int size);
-
 
     public AdvertOrder saveAdvertOrder(AdvertOrderDTO request);
 
     public SettleVO settleAdvertOrder(AdvertOrderSettleDTO request);
 
-
     public AdvertOrder setAdvertOrderStatus(SetAdvertOrderStatusDTO request);
-
 
 
 }

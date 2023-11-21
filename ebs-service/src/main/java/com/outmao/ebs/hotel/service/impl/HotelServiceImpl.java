@@ -611,35 +611,35 @@ public class HotelServiceImpl extends BaseService implements HotelService {
 
     private void commission(UserCommission commission,List<HotelDevice> devices,double rate){
 
-        if(commission==null)
-            return;
-        if(devices.isEmpty())
-            return;
-
-        Date fromTime=commission.getStatsTime();
-        Date toTime=new Date();
-        if(fromTime==null){
-            fromTime=DateUtil.beforeDays(360);
-        }
-
-        StatsAdvertPvDTO dto=new StatsAdvertPvDTO();
-        dto.setUsers(devices.stream().map(t->t.getUserId()).collect(Collectors.toList()));
-        dto.setFromTime(fromTime);
-        dto.setToTime(toTime);
-        StatsAdvertPvVO vo=advertPvLogService.getStatsAdvertPvVO(dto);
-
-        System.out.println("统计广告收益：commissionId="+commission.getId()+"\n收益="+vo.getPvAmount()*rate);
-
-        if(vo.getPvAmount()==0)
-            return;
-
-
-        UserCommissionRecordDTO recordDTO=new UserCommissionRecordDTO();
-        recordDTO.setCommissionId(commission.getId());
-        recordDTO.setAmount(vo.getPvAmount()*rate);
-        recordDTO.setType(0);
-        recordDTO.setStatsTime(toTime);
-        userCommissionService.saveUserCommissionRecord(recordDTO);
+//        if(commission==null)
+//            return;
+//        if(devices.isEmpty())
+//            return;
+//
+//        Date fromTime=commission.getStatsTime();
+//        Date toTime=new Date();
+//        if(fromTime==null){
+//            fromTime=DateUtil.beforeDays(360);
+//        }
+//
+//        StatsAdvertPvDTO dto=new StatsAdvertPvDTO();
+//        dto.setUsers(devices.stream().map(t->t.getUserId()).collect(Collectors.toList()));
+//        dto.setFromTime(fromTime);
+//        dto.setToTime(toTime);
+//        StatsAdvertPvVO vo=advertPvLogService.getStatsAdvertPvVO(dto);
+//
+//        System.out.println("统计广告收益：commissionId="+commission.getId()+"\n收益="+vo.getPvAmount()*rate);
+//
+//        if(vo.getPvAmount()==0)
+//            return;
+//
+//
+//        UserCommissionRecordDTO recordDTO=new UserCommissionRecordDTO();
+//        recordDTO.setCommissionId(commission.getId());
+//        recordDTO.setAmount(vo.getPvAmount()*rate);
+//        recordDTO.setType(0);
+//        recordDTO.setStatsTime(toTime);
+//        userCommissionService.saveUserCommissionRecord(recordDTO);
 
     }
 

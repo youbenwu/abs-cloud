@@ -44,10 +44,6 @@ public class AdvertPvLog implements Serializable {
     @ApiModelProperty(name = "date", value = "日期")
     private String date;
 
-    public AdvertPvLog(Long userId,Long advertId){
-        this.advertId=advertId;
-        this.userId=userId;
-    }
 
 
 }

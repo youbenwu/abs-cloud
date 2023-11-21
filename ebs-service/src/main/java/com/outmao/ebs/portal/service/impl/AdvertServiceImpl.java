@@ -74,10 +74,7 @@ public class AdvertServiceImpl extends BaseService implements AdvertService {
         advertDomain.deleteAdvertById(id);
     }
 
-    @Override
-    public Advert pv(Long id) {
-        return advertDomain.pv(id);
-    }
+
 
     @Override
     public Page<Advert> getAdvertPage(GetAdvertListDTO request, Pageable pageable) {
