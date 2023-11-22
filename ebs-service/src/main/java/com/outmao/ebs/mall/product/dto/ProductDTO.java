@@ -2,6 +2,7 @@ package com.outmao.ebs.mall.product.dto;
 
 import com.outmao.ebs.common.vo.Location;
 import com.outmao.ebs.common.vo.TimeSpan;
+import com.outmao.ebs.mall.product.entity.ProductLease;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import java.util.Date;
@@ -128,6 +129,14 @@ public class ProductDTO {
      */
     @ApiModelProperty(name = "type", value = "商品类型 0--普通商品 10--广告位")
     private int type;
+
+    /**
+     *
+     * 租赁信息
+     *
+     */
+    @ApiModelProperty(name = "lease", value = "租赁信息")
+    private ProductLease lease;
 
 
     /**

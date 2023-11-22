@@ -208,10 +208,16 @@ public class Product implements Serializable, BindingSubjectId {
 
 	/**
 	 *
-	 * 是否租赁
+	 * 租赁信息
 	 *
 	 */
-	private boolean lease;
+	@Embedded
+	@AttributeOverrides({
+			@AttributeOverride(name="lease", column=@Column(name="is_lease")),
+			@AttributeOverride(name="field", column=@Column(name="lease_field")),
+			@AttributeOverride(name="min", column=@Column(name="lease_min"))
+	})
+	private ProductLease lease;
 
 	/**
 	 *

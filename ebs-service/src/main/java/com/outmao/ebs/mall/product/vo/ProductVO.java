@@ -6,6 +6,7 @@ import com.outmao.ebs.bbs.common.data.SubjectItemVO;
 import com.outmao.ebs.common.vo.IItem;
 import com.outmao.ebs.common.vo.Location;
 import com.outmao.ebs.common.vo.TimeSpan;
+import com.outmao.ebs.mall.product.entity.ProductLease;
 import com.outmao.ebs.mall.promotion.vo.ProductPromotionVO;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -164,6 +165,14 @@ public class ProductVO extends SubjectItemVO implements IItem {
      */
     @ApiModelProperty(name = "type", value = "商品类型")
     private Integer type;
+
+    /**
+     *
+     * 租赁信息
+     *
+     */
+    @ApiModelProperty(name = "lease", value = "租赁信息")
+    private ProductLease lease;
 
 
     /**

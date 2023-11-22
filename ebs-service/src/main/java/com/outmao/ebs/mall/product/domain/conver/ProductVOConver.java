@@ -24,6 +24,7 @@ public class ProductVOConver implements BeanConver<QProduct,ProductVO> {
         vo.setSalesAddressId(t.get(e.salesAddressId));
         vo.setLocation(t.get(e.location));
         vo.setType(t.get(e.type));
+        vo.setLease(t.get(e.lease));
         vo.setQrCode(t.get(e.qrCode));
         vo.setUrl(t.get(e.url));
         vo.setLetter(t.get(e.letter));
@@ -78,6 +79,7 @@ public class ProductVOConver implements BeanConver<QProduct,ProductVO> {
                 e.addressId,
                 e.salesAddressId,
                 e.type,
+                e.lease,
                 e.qrCode,
                 e.url,
                 e.letter,
