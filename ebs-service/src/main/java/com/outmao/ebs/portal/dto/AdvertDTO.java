@@ -89,8 +89,8 @@ public class AdvertDTO {
     @ApiModelProperty(name = "endTime", value = "广告展示结束时间")
     private Date endTime;
 
-
     @ApiModelProperty(name = "places", value = "广告投放场所（酒店）ID，多个用逗号隔开")
     private String places;
+
 
 }

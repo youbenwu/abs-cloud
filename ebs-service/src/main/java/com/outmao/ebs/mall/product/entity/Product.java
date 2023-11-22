@@ -208,6 +208,13 @@ public class Product implements Serializable, BindingSubjectId {
 
 	/**
 	 *
+	 * 是否租赁
+	 *
+	 */
+	private boolean lease;
+
+	/**
+	 *
 	 * 商品类型
 	 *
 	 */
