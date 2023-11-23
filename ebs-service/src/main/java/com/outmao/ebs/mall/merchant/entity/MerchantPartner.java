@@ -142,6 +142,27 @@ public class MerchantPartner implements Serializable {
      */
     private String email;
 
+    /**
+     *
+     * 身份证号码
+     *
+     */
+    private String idCardNo;
+
+    /**
+     *
+     * 身份证正面
+     *
+     */
+    private String idCardFront;
+
+    /**
+     *
+     * 身份证反面
+     *
+     */
+    private String idCardBack;
+
 
     /**
      *

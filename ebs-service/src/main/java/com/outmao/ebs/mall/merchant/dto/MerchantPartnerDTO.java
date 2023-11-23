@@ -76,5 +76,30 @@ public class MerchantPartnerDTO {
     private String email;
 
 
+    /**
+     *
+     * 身份证号码
+     *
+     */
+    @ApiModelProperty(name = "idCardNo", value = "身份证号码")
+    private String idCardNo;
+
+    /**
+     *
+     * 身份证正面
+     *
+     */
+    @ApiModelProperty(name = "idCardFront", value = "身份证正面")
+    private String idCardFront;
+
+    /**
+     *
+     * 身份证反面
+     *
+     */
+    @ApiModelProperty(name = "idCardBack", value = "身份证反面")
+    private String idCardBack;
+
+
 
 }
