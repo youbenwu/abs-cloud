@@ -24,6 +24,9 @@ public class MerchantPartnerVOConver implements BeanConver<QMerchantPartner, Mer
         vo.setName(t.get(e.name));
         vo.setPhone(t.get(e.phone));
         vo.setEmail(t.get(e.email));
+        vo.setIdCardNo(t.get(e.idCardNo));
+        vo.setIdCardBack(t.get(e.idCardBack));
+        vo.setIdCardFront(t.get(e.idCardFront));
         vo.setUrl(t.get(e.url));
         vo.setQrCode(t.get(e.qrCode));
         vo.setCode(t.get(e.code));
@@ -50,6 +53,9 @@ public class MerchantPartnerVOConver implements BeanConver<QMerchantPartner, Mer
                 e.name,
                 e.phone,
                 e.email,
+                e.idCardNo,
+                e.idCardFront,
+                e.idCardBack,
                 e.url,
                 e.qrCode,
                 e.code,
