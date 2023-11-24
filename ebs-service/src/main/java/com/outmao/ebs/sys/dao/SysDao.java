@@ -12,4 +12,6 @@ public interface SysDao extends JpaRepository<Sys,Long> {
 
     public Sys findByType(int type);
 
+    public Sys findBySysNo(String sysNo);
+
 }

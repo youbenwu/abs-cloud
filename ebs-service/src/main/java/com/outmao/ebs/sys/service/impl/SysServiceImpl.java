@@ -5,9 +5,7 @@ import com.outmao.ebs.common.base.BaseDomain;
 import com.outmao.ebs.common.util.JsonUtil;
 import com.outmao.ebs.common.util.ResourceUtil;
 import com.outmao.ebs.org.domain.MenuDomain;
-import com.outmao.ebs.org.domain.PermissionDomain;
 import com.outmao.ebs.org.vo.MenuVO;
-import com.outmao.ebs.org.vo.PermissionVO;
 import com.outmao.ebs.sys.domain.SysDomain;
 import com.outmao.ebs.sys.dto.SetSysMenuDTO;
 import com.outmao.ebs.sys.dto.SetSysPermissionDTO;
@@ -21,7 +19,6 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
 import java.util.*;
 
 @Service
@@ -35,8 +32,6 @@ public class SysServiceImpl extends BaseDomain implements SysService , CommandLi
     @Autowired
     private MenuDomain menuDomain;
 
-    @Autowired
-    private PermissionDomain permissionDomain;
 
     @Override
     public void run(String... args) throws Exception {
@@ -50,40 +45,14 @@ public class SysServiceImpl extends BaseDomain implements SysService , CommandLi
 
         for(SysDTO dto:list){
             Sys sys=saveSys(dto);
-            loadMenus(sys);
-            //loadPers(sys);
+            loadMenus(sys,active.get("active"));
         }
 
     }
 
-    private void loadPers(Sys sys){
-        String pers_file="pers_sys_"+sys.getSysNo()+".json";
-        String pers_json= ResourceUtil.getResourceString(pers_file);
-        List<PermissionVO> pers= (List<PermissionVO>)JsonUtil.fromJson(pers_json,List.class,PermissionVO.class);
-        List<Long> ids=new ArrayList<>();
-        getIds(pers,ids);
-        if(!ids.isEmpty()){
-            SetSysPermissionDTO setSysPermissionDTO=new SetSysPermissionDTO();
-            setSysPermissionDTO.setSysId(sys.getId());
-            setSysPermissionDTO.setPermissions(ids);
-            setSysPermission(setSysPermissionDTO);
-        }
-    }
 
-    private void getIds(List<PermissionVO> pers, Collection<Long> ids){
-        for (PermissionVO vo:pers){
-            Long id=permissionDomain.getIdByUrlAndName(vo.getUrl(),vo.getName());
-            if(id!=null){
-                ids.add(id);
-            }
-            if(vo.getChildren()!=null&&vo.getChildren().size()>0){
-                getIds(vo.getChildren(),ids);
-            }
-        }
-    }
-
-    private void loadMenus(Sys sys){
-        String menus_file="menus_sys_"+sys.getSysNo()+".json";
+    private void loadMenus(Sys sys,String active){
+        String menus_file="menus_sys_"+active+"_"+sys.getSysNo()+".json";
         String menus_json= ResourceUtil.getResourceString(menus_file);
         List<MenuVO> menus= (List<MenuVO>)JsonUtil.fromJson(menus_json,List.class,MenuVO.class);
         List<String> menu_paths=new ArrayList<>();
@@ -96,6 +65,7 @@ public class SysServiceImpl extends BaseDomain implements SysService , CommandLi
             setSysMenu(setSysMenuDTO);
         }
     }
+
 
     private void getPaths(List<MenuVO> menus,List<String> menu_paths){
         for (MenuVO vo:menus){
@@ -127,6 +97,10 @@ public class SysServiceImpl extends BaseDomain implements SysService , CommandLi
         return sysDomain.getSysByType(type);
     }
 
+    @Override
+    public Sys getSysBySysNo(String sysNo) {
+        return sysDomain.getSysBySysNo(sysNo);
+    }
 
     @Override
     public Page<Sys> getSysPage(Pageable pageable) {

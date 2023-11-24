@@ -22,8 +22,9 @@ public interface SysService {
 
     public Sys getSysByType(int type);
 
-    public Page<Sys> getSysPage(Pageable pageable);
+    public Sys getSysBySysNo(String sysNo);
 
+    public Page<Sys> getSysPage(Pageable pageable);
 
     public List<SysMenu> setSysMenu(SetSysMenuDTO request);
 

@@ -78,6 +78,11 @@ public class SysDomainImpl extends BaseDomain implements SysDomain {
     }
 
     @Override
+    public Sys getSysBySysNo(String sysNo) {
+        return sysDao.findBySysNo(sysNo);
+    }
+
+    @Override
     public long getCount() {
         return sysDao.count();
     }

@@ -22,15 +22,15 @@ public interface SysDomain {
 
     public Sys getSysByType(int type);
 
+    public Sys getSysBySysNo(String sysNo);
+
     public long getCount();
 
     public Page<Sys> getSysPage(Pageable pageable);
 
-
     public List<SysMenu> setSysMenu(SetSysMenuDTO request);
 
     public List<SysMenu> getSysMenuListBySysId(Long sysId);
-
 
     public List<SysPermission> setSysPermission(SetSysPermissionDTO request);
 

@@ -63,6 +63,12 @@ public class MerchantServiceImpl extends BaseService implements MerchantService,
         return null;
     }
 
+
+    @Override
+    public Merchant getMerchantByOrgId(Long orgId) {
+        return merchantDomain.getMerchantByOrgId(orgId);
+    }
+
     @Override
     public Merchant getMerchantByUserId(Long userId) {
         return merchantDomain.getMerchantByUserId(userId);

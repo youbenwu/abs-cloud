@@ -199,6 +199,12 @@ public class MerchantDomainImpl extends BaseDomain implements MerchantDomain {
         return vo;
     }
 
+
+    @Override
+    public MerchantVO getMerchantVOByOrgId(Long orgId) {
+        return null;
+    }
+
     @SetMerchantStats
     @Override
     public MerchantVO getMerchantVOByUserId(Long userId) {

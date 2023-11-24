@@ -14,9 +14,11 @@ public class ToOrderShopDTO {
     private List<ToOrderProductDTO> products;
 
     public ToOrderProductDTO getProductBySkuId(Long skuId){
-        for(ToOrderProductDTO p:products){
-            if(p.getSkuId().equals(skuId))
-                return p;
+        if(products!=null) {
+            for (ToOrderProductDTO p : products) {
+                if (p.getSkuId().equals(skuId))
+                    return p;
+            }
         }
         return null;
     }

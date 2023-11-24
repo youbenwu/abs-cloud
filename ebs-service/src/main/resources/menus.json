@@ -103,15 +103,19 @@
   },
   {
     "name": "店铺",
-    "path": "/mall/shop",
+    "path": "/shop",
     "children":[
       {
-        "name": "商品分类",
-        "path": "/mall/shop/product/category/list"
+        "name": "分类管理",
+        "path": "/shop/categorys"
       },
       {
         "name": "商品管理",
-        "path": "/mall/shop/product/list"
+        "path": "/shop/products"
+      },
+      {
+        "name": "订单管理",
+        "path": "/shop/orders"
       }
     ]
   },
@@ -163,7 +167,7 @@
         "children":[
           {
             "name": "案情列表",
-            "path": "/lawe/case/cases"
+            "path": "/lawe/case/list"
           },
           {
             "name": "立案审核",
@@ -185,7 +189,7 @@
         "children":[
           {
             "name": "法律法规",
-            "path": "/lawe/law/laws"
+            "path": "/lawe/law/list"
           },
           {
             "name": "法律条款",
@@ -255,6 +259,5 @@
       }
     ]
   }
-
 
 ]

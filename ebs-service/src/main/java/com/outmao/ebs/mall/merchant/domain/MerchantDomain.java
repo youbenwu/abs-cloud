@@ -26,6 +26,8 @@ public interface MerchantDomain {
 
     public MerchantVO getMerchantVOById(Long id);
 
+    public MerchantVO getMerchantVOByOrgId(Long orgId);
+
     public MerchantVO getMerchantVOByUserId(Long userId);
 
     public MerchantVO getMerchantVOByShopId(Long shopId);

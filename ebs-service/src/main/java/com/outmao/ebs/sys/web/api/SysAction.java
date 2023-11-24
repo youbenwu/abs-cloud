@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 
-
 @Api(value = "sys", tags = "系统")
 @RestController
 @RequestMapping("/api/sys")
