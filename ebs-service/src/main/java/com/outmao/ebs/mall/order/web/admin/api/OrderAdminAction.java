@@ -101,14 +101,14 @@ public class OrderAdminAction {
 
     @PreAuthorize("hasPermission('/mall/order','read')")
     @ApiOperation(value = "获取订单数量和金额按天统计", notes = "获取订单数量和金额按天统计")
-    @PostMapping("/statsOrder/days")
+    @PostMapping("/stats/days")
     public List<StatsOrderVO> getStatsOrderVOListByDays(Date fromTime, Date toTime) {
         return orderService.getStatsOrderVOListByDays(fromTime,toTime);
     }
 
     @PreAuthorize("hasPermission('/mall/order','read')")
     @ApiOperation(value = "获取订单数量和金额按状态统计", notes = "获取订单数量和金额按状态统计")
-    @PostMapping("/statsOrderStatus/list")
+    @PostMapping("/stats/status")
     public List<StatsOrderStatusVO> getStatsOrderStatusVOList(GetStatsOrderStatusListDTO request) {
         return orderService.getStatsOrderStatusVOList(request);
     }

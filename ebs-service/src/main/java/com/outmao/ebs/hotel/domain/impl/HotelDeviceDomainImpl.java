@@ -185,14 +185,7 @@ public class HotelDeviceDomainImpl extends BaseDomain implements HotelDeviceDoma
 
         QHotelDevice e=QHotelDevice.hotelDevice;
 
-        Predicate p=e.status.eq(1);
-        if(!StringUtils.isEmpty(request.getKeyword())){
-            p=e.keyword.like("%"+request.getKeyword()+"%");
-        }
-
-        if(request.getHotelId()!=null){
-            p=e.hotelId.eq(request.getHotelId()).and(p);
-        }
+        Predicate p=getPredicate(request);
 
         return queryList(e,p,hotelDeviceVOConver);
     }
@@ -202,19 +195,28 @@ public class HotelDeviceDomainImpl extends BaseDomain implements HotelDeviceDoma
 
         QHotelDevice e=QHotelDevice.hotelDevice;
 
-        Predicate p=e.status.eq(1);
-        if(!StringUtils.isEmpty(request.getKeyword())){
-            p=e.keyword.like("%"+request.getKeyword()+"%");
-        }
-
-        if(request.getHotelId()!=null){
-            p=e.hotelId.eq(request.getHotelId()).and(p);
-        }
+        Predicate p=getPredicate(request);
 
         Page<HotelDeviceVO> page=queryPage(e,p,hotelDeviceVOConver,pageable);
 
 
         return page;
+    }
+
+    private Predicate getPredicate(GetHotelDeviceListDTO request){
+        QHotelDevice e=QHotelDevice.hotelDevice;
+        Predicate p=null;
+        if(request.getStatus()!=null){
+            p=e.status.eq(1);
+        }
+        if(!StringUtils.isEmpty(request.getKeyword())){
+            p=e.keyword.like("%"+request.getKeyword()+"%").and(p);
+        }
+
+        if(request.getHotelId()!=null){
+            p=e.hotelId.eq(request.getHotelId()).and(p);
+        }
+        return p;
     }
 
     @Override

@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @Data
 public class SetCashStatusDTO {
 
-    private String cashNo;
+    private String orderNo;
 
     private int status;
 

@@ -28,6 +28,15 @@ public class Cash implements Serializable {
     @JoinColumn(name = "walletId")
     private Wallet wallet;
 
+    /**
+     *
+     * 搜索关键字
+     *
+     */
+    @Lob
+    @Basic(fetch = FetchType.LAZY)
+    private String keyword;
+
     //订单号
     @Column(unique = true)
     private String orderNo;

@@ -11,6 +11,7 @@ import com.outmao.ebs.wallet.pay.service.PayService;
 import com.outmao.ebs.wallet.service.CashService;
 import com.outmao.ebs.wallet.service.WalletService;
 import com.outmao.ebs.wallet.vo.CashVO;
+import com.outmao.ebs.wallet.vo.StatsCashStatusVO;
 import com.outmao.ebs.wallet.vo.StatsCashVO;
 import com.outmao.ebs.wallet.vo.TradeVO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 
 @Service
@@ -62,8 +65,12 @@ public class CashServiceImpl implements CashService, CommandLineRunner {
         return cash;
     }
 
+    @Override
+    public void deleteCashById(Long id) {
+        cashDomain.deleteCashById(id);
+    }
 
-    private TradeVO cashPayPrepare( Cash cash) {
+    private TradeVO cashPayPrepare(Cash cash) {
 
         Currency currency=walletService.getCurrencyById("RMB");
 
@@ -91,17 +98,20 @@ public class CashServiceImpl implements CashService, CommandLineRunner {
     public Cash setCashStatus(SetCashStatusDTO request) {
         Cash cash= cashDomain.setCashStatus(request);
         if(cash.getStatus()== CashStatus.FINISHED.getStatus()){
-            payService.tradeFinish(cash.getOrderNo());
             if(cash.getOutStatus()== CashOutStatus.UNKNOWN.getStatus()){
-                try {
-                    payService.fundTransToaccountTransfer(cash.getOrderNo(),cash.getAmount(),cash.getAlipayAccount().getAccount(),cash.getAlipayAccount().getName(),cash.getRemark());
-                    cash.setOutStatus(CashOutStatus.SUCCEED.getStatus());
-                    cash.setOutStatusRemark(CashOutStatus.SUCCEED.getStatusRemark());
-                }catch (Exception e){
-                    cash.setOutStatus(CashOutStatus.FAIL.getStatus());
-                    cash.setOutStatusRemark(e.getMessage());
-                }
+                payService.fundTransToaccountTransfer(cash.getOrderNo(),cash.getAmount(),cash.getAlipayAccount().getAccount(),cash.getAlipayAccount().getName(),cash.getRemark());
+                cash.setOutStatus(CashOutStatus.SUCCEED.getStatus());
+                cash.setOutStatusRemark(CashOutStatus.SUCCEED.getStatusRemark());
+//                try {
+//                    payService.fundTransToaccountTransfer(cash.getOrderNo(),cash.getAmount(),cash.getAlipayAccount().getAccount(),cash.getAlipayAccount().getName(),cash.getRemark());
+//                    cash.setOutStatus(CashOutStatus.SUCCEED.getStatus());
+//                    cash.setOutStatusRemark(CashOutStatus.SUCCEED.getStatusRemark());
+//                }catch (Exception e){
+//                    cash.setOutStatus(CashOutStatus.FAIL.getStatus());
+//                    cash.setOutStatusRemark(e.getMessage());
+//                }
             }
+            payService.tradeFinish(cash.getOrderNo());
         }else if(cash.getStatus()== CashStatus.CLOSED.getStatus()){
             payService.tradeClose(cash.getOrderNo());
         }
@@ -127,4 +137,9 @@ public class CashServiceImpl implements CashService, CommandLineRunner {
         return cashDomain.getStatsCashVO(request);
     }
 
+
+    @Override
+    public List<StatsCashStatusVO> getStatsCashStatusVOList() {
+        return cashDomain.getStatsCashStatusVOList();
+    }
 }

@@ -477,13 +477,13 @@ public class OrderDomainImpl extends BaseDomain implements OrderDomain {
     public List<StatsOrderStatusVO> getStatsOrderStatusVOList(GetStatsOrderStatusListDTO request) {
         QOrder e=QOrder.order;
         Predicate p=getPredicate(request);
-        List<Tuple> tuples= QF.select(e.count(),e.totalAmount.sum(),e.status).where(p).groupBy(e.status).fetch();
+        List<Tuple> tuples= QF.select(e.count(),e.totalAmount.sum(),e.status).from(e).where(p).groupBy(e.status).fetch();
         List<StatsOrderStatusVO> list=new ArrayList<>(tuples.size());
         for (Tuple t:tuples){
             StatsOrderStatusVO vo=new StatsOrderStatusVO();
             vo.setStatus(t.get(e.status));
             vo.setCount(t.get(e.count()));
-            vo.setAmount(t.get(e.amount));
+            vo.setAmount(t.get(e.totalAmount.sum()));
             list.add(vo);
         }
         return list;

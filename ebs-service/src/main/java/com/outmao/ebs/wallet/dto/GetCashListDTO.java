@@ -11,6 +11,7 @@ public class GetCashListDTO {
 
     private Integer status;
 
+    private String keyword;
 
 
 }

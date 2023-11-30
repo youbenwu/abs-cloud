@@ -290,6 +290,12 @@ public class HotelAdminAction {
         return hotelService.getHotelDeviceVOByDeviceNo(deviceNo);
     }
 
+    @PreAuthorize("hasPermission('/hotel/device','read')")
+    @ApiOperation(value = "获取设备列表", notes = "获取设备列表")
+    @PostMapping("/device/list")
+    public List<HotelDeviceVO> getHotelDeviceVOList(GetHotelDeviceListDTO request){
+        return hotelService.getHotelDeviceVOList(request);
+    }
 
     @PreAuthorize("hasPermission('/hotel/device','read')")
     @ApiOperation(value = "获取设备列表", notes = "获取设备列表")

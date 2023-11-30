@@ -267,7 +267,10 @@ public class PayServiceImpl implements PayService {
 
     @Override
     public Trade tradeClose(String tradeNo) {
-       tradeQuery(tradeNo);
+        Trade trade=tradeQuery(tradeNo);
+        if(trade.getStatus()==TradeStatus.TRADE_SUCCEED.getStatus()){
+            return tradeRefund(tradeNo);
+        }
        return tradeService.tradeClose(tradeNo);
     }
 

@@ -2,15 +2,10 @@ package com.outmao.ebs.wallet.web.admin.api;
 
 
 import com.outmao.ebs.wallet.dto.*;
-import com.outmao.ebs.wallet.entity.BankAccount;
 import com.outmao.ebs.wallet.entity.Cash;
-import com.outmao.ebs.wallet.entity.Currency;
 import com.outmao.ebs.wallet.service.CashService;
-import com.outmao.ebs.wallet.service.WalletService;
-import com.outmao.ebs.wallet.vo.AssetVO;
 import com.outmao.ebs.wallet.vo.CashVO;
-import com.outmao.ebs.wallet.vo.TransferVO;
-import com.outmao.ebs.wallet.vo.WalletVO;
+import com.outmao.ebs.wallet.vo.StatsCashStatusVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,7 +29,12 @@ public class CashAdminAction {
 
 
 	//Currency
-
+	@PreAuthorize("hasPermission('wallet/cash','delete')")
+	@ApiOperation(value = "删除提现", notes = "删除提现")
+	@PostMapping("/delete")
+	public void deleteCashById(Long id) {
+		cashService.deleteCashById(id);
+	}
 
 	@PreAuthorize("hasPermission('wallet/cash','status')")
 	@ApiOperation(value = "设置提现状态", notes = "设置提现状态")
@@ -50,5 +50,11 @@ public class CashAdminAction {
 		return cashService.getCashVOPage(request,pageable);
 	}
 
+	@PreAuthorize("hasPermission('wallet/cash','read')")
+	@ApiOperation(value = "提现按状态统计", notes = "提现按状态统计")
+	@PostMapping("/stats/status")
+	public List<StatsCashStatusVO> getStatsCashStatusVOList() {
+		return cashService.getStatsCashStatusVOList();
+	}
 
 }
