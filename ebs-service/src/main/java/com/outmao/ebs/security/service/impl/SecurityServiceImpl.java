@@ -77,7 +77,6 @@ public class SecurityServiceImpl extends BaseDomain implements SecurityService {
     private SecurityAccountRoleConver securityAccountRoleConver=new SecurityAccountRoleConver();
     private SecurityMemberConver securityMemberConver=new SecurityMemberConver();
     private SecurityMemberRoleConver securityMemberRoleConver=new SecurityMemberRoleConver();
-    private SecurityOrgConver securityOrgConver=new SecurityOrgConver();
     private SecurityRolePermissionConver securityRolePermissionConver=new SecurityRolePermissionConver();
 
 
@@ -263,55 +262,17 @@ public class SecurityServiceImpl extends BaseDomain implements SecurityService {
         securityUser.getSession().setSessionKey(session.getSessionKey());
         securityUser.getSession().setExpireTime(session.getExpireTime());
         loadMembers(securityUser);
-        if(session.getClientType().equals(ClientType.PC_ADMIN.getName())){
-            if(securityUser.getOrgs()==null||securityUser.getOrgs().isEmpty()){
-                throw new InternalAuthenticationServiceException("您无权登录,请联系管理员");
-            }
-        }
+
         return securityUser;
     }
 
     private void loadMembers(SecurityUser user){
         user.setMembers(getSecurityMemberListByUserId(user.getId()));
         user.getMembers().addAll(getSecurityAcccountListByUserId(user.getId()));
-        if(!user.getMembers().isEmpty()) {
-            Long sysId=RequestUtil.getHeaderLong("sysId");
-            user.setOrgs(getSecurityOrgList(user.getMembers().stream().map(t->t.getOrgId()).collect(Collectors.toList()),sysId));
-        }
+
     }
 
-    private List<SecurityOrg> getSecurityOrgList(Collection<Long> orgIdIn, Long sysId) {
-        QOrg e=QOrg.org;
-        List<SecurityOrg> list=queryList(e,e.id.in(orgIdIn),securityOrgConver);
 
-        if(list.isEmpty())
-            return list;
-
-
-        QSys s=QSys.sys;
-
-        if(sysId!=null){
-            Tuple t=QF.select(s.id,s.name,s.type).from(s).where(s.id.eq(sysId)).fetchOne();
-            list.forEach(org->{
-                if(t.get(s.type).equals(org.getOrgType())){
-                    org.setSysId(t.get(s.id));
-                    org.setSysName(t.get(s.name));
-                }
-            });
-        }else {
-            List<Tuple> ss = QF.select(s.id, s.name, s.type).from(s).where(s.type.in(list.stream().map(t -> t.getOrgType()).collect(Collectors.toList()))).fetch();
-            Map<Integer, Tuple> sMap = ss.stream().collect(Collectors.toMap(t -> t.get(s.type), t -> t));
-            list.forEach(org -> {
-                Tuple t = sMap.get(org.getOrgType());
-                if (t != null) {
-                    org.setSysId(t.get(s.id));
-                    org.setSysName(t.get(s.name));
-                }
-            });
-        }
-
-        return list.stream().filter(t->t.getSysId()!=null).collect(Collectors.toList());
-    }
 
     private List<SecurityMember> getSecurityMemberListByUserId(Long userId) {
         QMember e=QMember.member;

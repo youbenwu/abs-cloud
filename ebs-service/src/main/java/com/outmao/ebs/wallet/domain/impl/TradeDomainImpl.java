@@ -188,7 +188,7 @@ public class TradeDomainImpl extends BaseDomain implements TradeDomain {
 
             //提现支付
             transferDomain.transferAdvance(trade);
-            transferDomain.transferFee(trade);
+            //transferDomain.transferFee(trade);
             trade.setSuccessTime(new Date());
             trade.setStatus(TradeStatus.TRADE_SUCCEED.getStatus());
             trade.setStatusRemark(TradeStatus.TRADE_SUCCEED.getStatusRemark());

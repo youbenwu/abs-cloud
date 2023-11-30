@@ -61,10 +61,10 @@ public class UserOauthSession implements Serializable {
 
     /**
      *
-     * 设备唯一标识
+     * 前端标识
      *
      */
-    private String imei;
+    private String client;
 
     /**
      *

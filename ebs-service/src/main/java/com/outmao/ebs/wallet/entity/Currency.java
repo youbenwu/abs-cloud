@@ -89,6 +89,12 @@ public class Currency implements Serializable {
 		return cashFee.getFee(amount);
 	}
 
+	public double getAmountValue(long amount){
+		double value=(double) amount/(double)par;
+		String v=String.format("%.2f", value);
+		return Double.parseDouble(v);
+	}
+
 	@Override
 	public String toString() {
 		return id;

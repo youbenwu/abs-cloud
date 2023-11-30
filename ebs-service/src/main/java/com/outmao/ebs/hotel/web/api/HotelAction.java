@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 @Api(value = "hotel", tags = "酒店")
@@ -48,6 +49,20 @@ public class HotelAction {
         }catch (Exception e){
             e.printStackTrace();
         }
+    }
+
+
+    @ApiOperation(value = "获取酒店信息", notes = "获取酒店信息")
+    @PostMapping("/getByOrg")
+    public HotelVO getHotelVOByOrgId(Long orgId) {
+        return hotelService.getHotelVOByOrgId(orgId);
+    }
+
+
+    @ApiOperation(value = "获取酒店信息列表", notes = "获取酒店信息列表")
+    @PostMapping("/list")
+    public List<HotelVO> getHotelVOList() {
+        return hotelService.getHotelVOListByOrgIdIn(SecurityUtil.currentUser().getMembers().stream().map(t->t.getOrgId()).collect(Collectors.toList()));
     }
 
 

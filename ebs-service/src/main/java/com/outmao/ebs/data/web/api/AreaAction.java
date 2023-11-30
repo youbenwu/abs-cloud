@@ -22,7 +22,7 @@ public class AreaAction {
 	private AreaService areaService;
 
 	@PreAuthorize("permitAll")
-	@ApiOperation(value = "获取（国家、省、市）列表", notes = "获取（国家、省、市）列表")
+	@ApiOperation(value = "获取（省、市、区）列表", notes = "获取（省、市、区）列表")
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
 	public List<AreaVO> getAreaVOList() {
 		List<AreaVO> list = areaService.getAreaVOList();

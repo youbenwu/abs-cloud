@@ -31,6 +31,7 @@ import com.outmao.ebs.mall.shop.entity.Shop;
 import com.outmao.ebs.user.common.annotation.SetContactUser;
 import com.outmao.ebs.user.dao.UserDao;
 import com.outmao.ebs.user.entity.User;
+import com.querydsl.core.Tuple;
 import com.querydsl.core.types.Predicate;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -385,6 +386,19 @@ public class OrderDomainImpl extends BaseDomain implements OrderDomain {
 
         QOrder e=QOrder.order;
 
+        Page<OrderVO> page=queryPage(e,getPredicate(request),orderVOConver,pageable);
+
+        getOrderProductVOList(page.getContent());
+        getOrderLogisticsVOList(page.getContent());
+        getOrderAddressVOList(page.getContent());
+
+        return page;
+    }
+
+    private Predicate getPredicate(GetOrderListDTO request){
+
+        QOrder e=QOrder.order;
+
         Predicate p=null;
 
         if(StringUtil.isNotEmpty(request.getKeyword())){
@@ -418,14 +432,61 @@ public class OrderDomainImpl extends BaseDomain implements OrderDomain {
         if(request.getStatus()!=null){
             p=e.status.eq(request.getStatus()).and(p);
         }
+        return p;
+    }
 
-        Page<OrderVO> page=queryPage(e,p,orderVOConver,pageable);
+    private Predicate getPredicate(GetStatsOrderStatusListDTO request){
 
-        getOrderProductVOList(page.getContent());
-        getOrderLogisticsVOList(page.getContent());
-        getOrderAddressVOList(page.getContent());
+        QOrder e=QOrder.order;
 
-        return page;
+        Predicate p=null;
+
+        if(StringUtil.isNotEmpty(request.getKeyword())){
+            p=e.keyword.like("%"+request.getKeyword()+"%");
+        }
+
+        if(request.getType()!=null){
+            p=e.type.eq(request.getType()).and(p);
+        }
+
+        if(request.getShopId()!=null){
+            p=e.shopId.eq(request.getShopId()).and(p);
+        }
+
+        if(request.getHotelId()!=null){
+            p=e.hotelId.eq(request.getHotelId()).and(p);
+        }
+
+        if(request.getUserId()!=null){
+            p=e.userId.eq(request.getUserId()).and(p);
+        }
+
+        if(request.getBrokerId()!=null){
+            p=e.brokerId.eq(request.getBrokerId()).and(p);
+        }
+
+        if(request.getPartnerId()!=null){
+            p=e.partnerId.eq(request.getPartnerId()).and(p);
+        }
+
+
+        return p;
+    }
+
+    @Override
+    public List<StatsOrderStatusVO> getStatsOrderStatusVOList(GetStatsOrderStatusListDTO request) {
+        QOrder e=QOrder.order;
+        Predicate p=getPredicate(request);
+        List<Tuple> tuples= QF.select(e.count(),e.totalAmount.sum(),e.status).where(p).groupBy(e.status).fetch();
+        List<StatsOrderStatusVO> list=new ArrayList<>(tuples.size());
+        for (Tuple t:tuples){
+            StatsOrderStatusVO vo=new StatsOrderStatusVO();
+            vo.setStatus(t.get(e.status));
+            vo.setCount(t.get(e.count()));
+            vo.setAmount(t.get(e.amount));
+            list.add(vo);
+        }
+        return list;
     }
 
     private void getOrderProductVOList(List<OrderVO> list){

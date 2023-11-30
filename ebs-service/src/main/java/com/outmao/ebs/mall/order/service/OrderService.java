@@ -1,10 +1,8 @@
 package com.outmao.ebs.mall.order.service;
 
-import com.outmao.ebs.mall.order.dto.GetOrderListDTO;
-import com.outmao.ebs.mall.order.dto.OrderDTO;
-import com.outmao.ebs.mall.order.dto.OrderPayPrepareDTO;
-import com.outmao.ebs.mall.order.dto.SetOrderStatusDTO;
+import com.outmao.ebs.mall.order.dto.*;
 import com.outmao.ebs.mall.order.entity.Order;
+import com.outmao.ebs.mall.order.vo.StatsOrderStatusVO;
 import com.outmao.ebs.mall.order.vo.StatsOrderVO;
 import com.outmao.ebs.mall.order.vo.OrderVO;
 import com.outmao.ebs.wallet.vo.TradeVO;
@@ -39,6 +37,9 @@ public interface OrderService {
     public List<StatsOrderVO> getStatsOrderVOListByUserIdIn(Collection<Long> userIdIn);
 
     public TradeVO payPrepare(OrderPayPrepareDTO request);
+
+
+    public List<StatsOrderStatusVO> getStatsOrderStatusVOList(GetStatsOrderStatusListDTO request);
 
 
 

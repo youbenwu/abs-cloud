@@ -9,6 +9,7 @@ import com.outmao.ebs.wallet.entity.Fee;
 import com.outmao.ebs.wallet.entity.Wallet;
 import com.outmao.ebs.wallet.service.WalletService;
 import com.outmao.ebs.wallet.vo.AssetVO;
+import com.outmao.ebs.wallet.vo.StatsTransferVO;
 import com.outmao.ebs.wallet.vo.TransferVO;
 import com.outmao.ebs.wallet.vo.WalletVO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -174,5 +175,8 @@ public class WalletServiceImpl implements WalletService , CommandLineRunner {
 		return transferDomain.getTransferVOPage(request,pageable);
 	}
 
-
+	@Override
+	public StatsTransferVO getStatsTransferVO(GetTransferListDTO request) {
+		return transferDomain.getStatsTransferVO(request);
+	}
 }

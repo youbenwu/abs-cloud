@@ -17,10 +17,15 @@ public class CashVOConver implements BeanConver<QCash, CashVO> {
         vo.setWalletId(t.get(e.wallet.id));
         vo.setOrderNo(t.get(e.orderNo));
         vo.setBankAccount(t.get(e.bankAccount));
+        vo.setAlipayAccount(t.get(e.alipayAccount));
         vo.setAmount(t.get(e.amount));
+        vo.setTotalAmount(t.get(e.totalAmount));
+        vo.setFee(t.get(e.fee));
         vo.setRemark(t.get(e.remark));
         vo.setStatus(t.get(e.status));
         vo.setStatusRemark(t.get(e.statusRemark));
+        vo.setOutStatus(t.get(e.outStatus));
+        vo.setOutStatusRemark(t.get(e.outStatusRemark));
         vo.setCreateTime(t.get(e.createTime));
         vo.setSuccessTime(t.get(e.successTime));
         vo.setFinishTime(t.get(e.finishTime));
@@ -36,9 +41,14 @@ public class CashVOConver implements BeanConver<QCash, CashVO> {
                 e.orderNo,
                 e.bankAccount,
                 e.amount,
+                e.totalAmount,
+                e.fee,
+                e.alipayAccount,
                 e.remark,
                 e.status,
                 e.statusRemark,
+                e.outStatus,
+                e.outStatusRemark,
                 e.createTime,
                 e.successTime,
                 e.finishTime,

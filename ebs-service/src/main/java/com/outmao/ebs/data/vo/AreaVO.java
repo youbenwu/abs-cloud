@@ -3,6 +3,8 @@ package com.outmao.ebs.data.vo;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import lombok.Data;
+
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
@@ -10,7 +12,7 @@ import java.util.List;
 
 @JsonInclude(value = Include.NON_NULL)
 @Data
-public class AreaVO {
+public class AreaVO implements Serializable {
 
 	private Long id;
 

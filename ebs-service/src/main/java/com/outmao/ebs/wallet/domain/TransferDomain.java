@@ -5,6 +5,7 @@ import com.outmao.ebs.wallet.dto.GetTransferListDTO;
 import com.outmao.ebs.wallet.entity.Trade;
 import com.outmao.ebs.wallet.entity.Transfer;
 import com.outmao.ebs.wallet.entity.Wallet;
+import com.outmao.ebs.wallet.vo.StatsTransferVO;
 import com.outmao.ebs.wallet.vo.TransferVO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -103,6 +104,7 @@ public interface TransferDomain {
     public Page<TransferVO> getTransferVOPage(GetTransferListDTO request, Pageable pageable);
 
 
+    public StatsTransferVO getStatsTransferVO(GetTransferListDTO request);
 
 
 }

@@ -38,13 +38,28 @@ public class Cash implements Serializable {
     //订单状态备注
     private String statusRemark;
 
+    //外部状态 0--未处理 1--已打款 2--打款中 3--打款出错
+    private int outStatus;
+
+    //外部状态
+    private String outStatusRemark;
+
+    //支付宝帐号
+    @Embedded
+    private CashAlipayAccount alipayAccount;
 
     //提现到银行卡
     @Embedded
     private CashBankAccount bankAccount;
 
-    //需要提现的金额
+    //支出的金额
+    private double totalAmount;
+
+    //实际拿到的金额
     private double amount;
+
+    //手续费
+    private double fee;
 
     //备注
     private String remark;

@@ -59,6 +59,9 @@ public class AdvertDTO {
     @Embedded
     private BindingItem item;
 
+    @ApiModelProperty(name = "citys", value = "广告投放城市，多个用逗号隔开")
+    private String citys;
+
     @ApiModelProperty(name = "advertType", value = "广告类型 CPM--普通图片视频广告 CPC--带广告链接 CPA--带二维码")
     private String advertType;
 

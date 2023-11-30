@@ -25,12 +25,7 @@ public class SecurityUtil {
 
 	public static Long currentOrgId(){
 		Long orgId=RequestUtil.getHeaderLong("orgId");
-		if(orgId==null){
-			SecurityUser user=currentUser();
-			if(user.getOrgs()!=null&&!user.getOrgs().isEmpty()){
-				orgId=user.getOrgs().get(0).getOrgId();
-			}
-		}
+
 		return orgId;
 	}
 

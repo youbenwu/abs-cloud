@@ -3,6 +3,8 @@ package com.outmao.ebs.wallet.dto;
 
 import lombok.Data;
 
+import java.util.Date;
+
 @Data
 public class GetTransferListDTO {
 
@@ -10,5 +12,8 @@ public class GetTransferListDTO {
 
     private String currencyId;
 
+    private Date fromTime;
+
+    private Date toTime;
 
 }

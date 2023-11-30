@@ -7,13 +7,17 @@ import com.outmao.ebs.data.dto.AreaDTO;
 import com.outmao.ebs.data.dto.GetAreaListDTO;
 import com.outmao.ebs.data.entity.Area;
 import com.outmao.ebs.data.service.AreaService;
+import com.outmao.ebs.data.service.JisuAreaService;
 import com.outmao.ebs.data.vo.AreaVO;
+import com.outmao.ebs.data.vo.JisuAreaVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.core.annotation.Order;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.util.List;
 
 @Order(10)
@@ -27,10 +31,35 @@ public class AreaServiceImpl extends BaseService implements AreaService, Command
    // @Autowired
     //private AreaSpider areaSpider;
 
+    @Autowired
+    private JisuAreaService jisuAreaService;
 
+
+    @Transactional
     @Override
     public void run(String... args) throws Exception {
         //areaSpider.spider();
+        if(areaDomain.getAreaCount()==0){
+            List<JisuAreaVO> list=jisuAreaService.getJisuAreaVOList();
+            saveFromJisu(list,null);
+        }
+    }
+
+    private void saveFromJisu(List<JisuAreaVO> list,Area parent){
+        list.forEach(t->{
+            if(t.getName().equals("国外"))
+                return;
+            AreaDTO areaDTO=new AreaDTO();
+            areaDTO.setName(t.getName());
+            areaDTO.setZipCode(t.getZipcode());
+            areaDTO.setAreaCode(t.getAreacode());
+            areaDTO.setType(parent==null?1:(parent.getType()+1));
+            areaDTO.setParentId(parent==null?null:parent.getId());
+            Area area=saveArea(areaDTO);
+            if(t.getChildren()!=null&&t.getChildren().size()>0){
+                saveFromJisu(t.getChildren(),area);
+            }
+        });
     }
 
     @Override
@@ -73,4 +102,6 @@ public class AreaServiceImpl extends BaseService implements AreaService, Command
     public Page<AreaVO> getAreaVOPage(GetAreaListDTO request, Pageable pageable) {
         return areaDomain.getAreaVOPage(request,pageable);
     }
+
+
 }

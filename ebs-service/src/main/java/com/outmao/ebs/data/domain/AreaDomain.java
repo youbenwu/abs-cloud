@@ -13,6 +13,8 @@ public interface AreaDomain {
 
     public Area saveArea(AreaDTO request);
 
+    public long getAreaCount();
+
     public void deleteAreaById(Long id);
 
     public List<Area> getAreaList();

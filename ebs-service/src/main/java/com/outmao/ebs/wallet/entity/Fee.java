@@ -13,7 +13,7 @@ import java.io.Serializable;
 @Embeddable
 public class Fee implements Serializable {
 
-	//0-100
+	//0-1000
 	private int rate;
 
 	private long max;
@@ -24,7 +24,7 @@ public class Fee implements Serializable {
 	public long getFee(long amount) {
 		if (amount == 0)
 			return 0;
-		long fee = amount*rate/100;
+		long fee = amount*rate/1000;
 		if (min > 0) {
 			fee = Math.max(min, fee);
 		}

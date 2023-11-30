@@ -88,10 +88,10 @@ public class MerchantDomainImpl extends BaseDomain implements MerchantDomain {
             merchant.setEnterpriseId(enterprise.getId());
         }
 
+        if(merchant.getContact()==null){
+            merchant.setContact(new MerchantContact());
+        }
         if(request.getContact()!=null){
-            if(merchant.getContact()==null){
-                merchant.setContact(new MerchantContact());
-            }
             BeanUtils.copyProperties(request.getContact(),merchant.getContact());
         }
 
@@ -193,16 +193,25 @@ public class MerchantDomainImpl extends BaseDomain implements MerchantDomain {
         QMerchant e=QMerchant.merchant;
 
         MerchantVO vo=queryOne(e,e.id.eq(id),merchantVOConver);
-        if(vo.getEnterpriseId()!=null){
+
+
+        if(vo!=null&&vo.getEnterpriseId()!=null){
             vo.setEnterprise(enterpriseDomain.getEnterpriseVOById(vo.getEnterpriseId()));
         }
         return vo;
     }
 
-
+    @SetSimpleUser
     @Override
     public MerchantVO getMerchantVOByOrgId(Long orgId) {
-        return null;
+        QMerchant e=QMerchant.merchant;
+
+        MerchantVO vo=queryOne(e,e.orgId.eq(orgId),merchantVOConver);
+
+        if(vo!=null&&vo.getEnterpriseId()!=null){
+            vo.setEnterprise(enterpriseDomain.getEnterpriseVOById(vo.getEnterpriseId()));
+        }
+        return vo;
     }
 
     @SetMerchantStats

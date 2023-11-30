@@ -1,6 +1,7 @@
 package com.outmao.ebs.wallet.pay.service.impl;
 
 import cn.jiguang.common.utils.StringUtils;
+import com.alipay.api.response.AlipayFundTransToaccountTransferResponse;
 import com.alipay.api.response.AlipayTradeQueryResponse;
 import com.outmao.ebs.common.exception.BusinessException;
 import com.outmao.ebs.user.service.UserService;
@@ -271,6 +272,10 @@ public class PayServiceImpl implements PayService {
     }
 
 
+    @Override
+    public AlipayFundTransToaccountTransferResponse fundTransToaccountTransfer(String outBizNo, double amount, String payeeAccount, String payeeRealName, String remark) {
+        return alipayService.fundTransToaccountTransfer(outBizNo,amount,payeeAccount,payeeRealName,remark);
+    }
 
 
 }

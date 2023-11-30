@@ -72,6 +72,12 @@ public class AreaDomainImpl extends BaseDomain implements AreaDomain {
         return area;
     }
 
+
+    @Override
+    public long getAreaCount() {
+        return areaDao.count();
+    }
+
     @CacheEvict(value = "cache_areas", allEntries = true)
     @Transactional
     @Override
@@ -94,7 +100,7 @@ public class AreaDomainImpl extends BaseDomain implements AreaDomain {
     public List<AreaVO> getAreaVOList() {
         QArea e=QArea.area;
 
-        Predicate p=e.type.lt(3);
+        Predicate p=e.type.lt(4);
 
         List<AreaVO> all=queryList(e,p,areaVOConver);
 

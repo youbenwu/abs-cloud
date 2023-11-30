@@ -1,12 +1,16 @@
 package com.outmao.ebs.mall.order.domain;
 
 import com.outmao.ebs.mall.order.dto.GetOrderListDTO;
+import com.outmao.ebs.mall.order.dto.GetStatsOrderStatusListDTO;
 import com.outmao.ebs.mall.order.dto.OrderDTO;
 import com.outmao.ebs.mall.order.dto.SetOrderStatusDTO;
 import com.outmao.ebs.mall.order.entity.Order;
 import com.outmao.ebs.mall.order.vo.OrderVO;
+import com.outmao.ebs.mall.order.vo.StatsOrderStatusVO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+
+import java.util.List;
 
 public interface OrderDomain {
 
@@ -28,6 +32,7 @@ public interface OrderDomain {
 
     public Page<OrderVO> getOrderVOPage(GetOrderListDTO request, Pageable pageable);
 
+    public List<StatsOrderStatusVO> getStatsOrderStatusVOList(GetStatsOrderStatusListDTO request);
 
 
 }

@@ -10,4 +10,6 @@ public interface AreaDao extends JpaRepository<Area,Long> {
 
     public Area findByCode(String code);
 
+
+
 }

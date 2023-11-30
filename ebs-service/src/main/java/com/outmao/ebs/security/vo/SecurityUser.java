@@ -29,8 +29,6 @@ public class SecurityUser implements UserDetails {
 
 	private List<SecurityMember> members;
 
-	private List<SecurityOrg> orgs;
-
     private SecurityUserSession session=new SecurityUserSession();
 
 

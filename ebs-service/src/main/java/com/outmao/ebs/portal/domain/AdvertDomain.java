@@ -6,6 +6,7 @@ import com.outmao.ebs.portal.dto.SetAdvertOrderStatusDTO;
 import com.outmao.ebs.portal.dto.SetAdvertStatusDTO;
 import com.outmao.ebs.portal.entity.Advert;
 import com.outmao.ebs.portal.entity.AdvertOrder;
+import com.outmao.ebs.portal.vo.AdvertVO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -22,6 +23,8 @@ public interface AdvertDomain {
     public void setAdvertSort(Long id, int sort);
 
     public Advert buyPv(Long id,long buyPv,double buyAmount);
+
+    public AdvertVO getAdvertVOById(Long id);
 
     public List<Advert> getAdvertList();
 

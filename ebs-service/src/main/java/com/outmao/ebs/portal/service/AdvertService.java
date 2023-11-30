@@ -4,6 +4,7 @@ import com.outmao.ebs.mall.order.vo.SettleVO;
 import com.outmao.ebs.portal.dto.*;
 import com.outmao.ebs.portal.entity.Advert;
 import com.outmao.ebs.portal.entity.AdvertOrder;
+import com.outmao.ebs.portal.vo.AdvertVO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -17,6 +18,8 @@ public interface AdvertService {
     public Advert setAdvertStatus(SetAdvertStatusDTO request);
 
     public void deleteAdvertById(Long id);
+
+    public AdvertVO getAdvertVOById(Long id);
 
     public Page<Advert> getAdvertPage(GetAdvertListDTO request, Pageable pageable);
 

@@ -6,6 +6,7 @@ import com.outmao.ebs.wallet.entity.BankAccount;
 import com.outmao.ebs.wallet.entity.Currency;
 import com.outmao.ebs.wallet.entity.Wallet;
 import com.outmao.ebs.wallet.vo.AssetVO;
+import com.outmao.ebs.wallet.vo.StatsTransferVO;
 import com.outmao.ebs.wallet.vo.TransferVO;
 import com.outmao.ebs.wallet.vo.WalletVO;
 import org.springframework.data.domain.Page;
@@ -144,7 +145,12 @@ public interface WalletService {
 	 */
 	public Page<TransferVO> getTransferVOPage(GetTransferListDTO request, Pageable pageable);
 
-
+	/**
+	 *
+	 * 获取交易明细统计
+	 *
+	 */
+	public StatsTransferVO getStatsTransferVO(GetTransferListDTO request);
 
 
 }

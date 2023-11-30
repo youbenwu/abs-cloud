@@ -56,11 +56,11 @@ public class User implements Serializable {
 	 */
 	private int status;
 
+
 	/**
 	 * 用户类型 0--普通用户 1--机器人 2--设备绑定的用户
 	 */
 	private int type;
-
 
 	@JsonIgnore
 	@OneToOne(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)

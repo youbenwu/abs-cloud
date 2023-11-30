@@ -7,6 +7,7 @@ import com.outmao.ebs.org.dto.RegisterOrgDTO;
 import com.outmao.ebs.org.entity.Org;
 import com.outmao.ebs.org.service.OrgService;
 import com.outmao.ebs.org.vo.OrgVO;
+import com.outmao.ebs.security.util.SecurityUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 @Api(value = "org", tags = "组织")
@@ -80,6 +82,15 @@ public class OrgAction {
     @PostMapping("/listByIdIn")
     public List<OrgVO> getOrgVOListByIdIn(@RequestBody Collection<Long> idIn){
         return orgService.getOrgVOListByIdIn(idIn);
+    }
+
+    @ApiOperation(value = "获取用户管理的组织列表", notes = "获取用户管理的组织列表")
+    @PostMapping("/list")
+    public List<OrgVO> getOrgVOList(Integer type) {
+        List<OrgVO> list=orgService.getOrgVOListByIdIn(SecurityUtil.currentUser().getMembers().stream().map(t->t.getOrgId()).collect(Collectors.toList()));
+        if(type==null)
+            return list;
+        return list.stream().filter(t->t.getType()==type).collect(Collectors.toList());
     }
 
 

@@ -5,6 +5,7 @@ import com.alipay.api.internal.util.AlipaySignature;
 import com.outmao.ebs.wallet.pay.alipay.config.AlipayProperties;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import javax.servlet.http.HttpServletRequest;
@@ -24,7 +25,7 @@ import java.util.Map;
  */
 @Slf4j
 @RestController
-@RequestMapping("/alipay")
+@RequestMapping("/api/alipay")
 public class AlipayNotify {
 
 	@Autowired
@@ -43,6 +44,7 @@ public class AlipayNotify {
 	 *
 	 * https://docs.open.alipay.com/194/103296
 	 */
+	@PreAuthorize("permitAll")
 	@RequestMapping("/notify")
 	public String notify(HttpServletRequest request) throws AlipayApiException, UnsupportedEncodingException {
 

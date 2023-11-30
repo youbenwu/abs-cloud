@@ -3,12 +3,12 @@ package com.outmao.ebs.wallet.service;
 
 import com.outmao.ebs.wallet.common.listener.TradeStatusListener;
 import com.outmao.ebs.wallet.dto.CashDTO;
-import com.outmao.ebs.wallet.dto.CashPayPrepare;
 import com.outmao.ebs.wallet.dto.GetCashListDTO;
+import com.outmao.ebs.wallet.dto.GetStatsCashDTO;
 import com.outmao.ebs.wallet.dto.SetCashStatusDTO;
 import com.outmao.ebs.wallet.entity.Cash;
 import com.outmao.ebs.wallet.vo.CashVO;
-import com.outmao.ebs.wallet.vo.TradeVO;
+import com.outmao.ebs.wallet.vo.StatsCashVO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -20,7 +20,6 @@ public interface CashService extends TradeStatusListener {
 
     public Page<CashVO> getCashVOPage(GetCashListDTO request, Pageable pageable);
 
-    public TradeVO cashPayPrepare(CashPayPrepare request);
-
+    public StatsCashVO getStatsCashVO(GetStatsCashDTO request);
 
 }

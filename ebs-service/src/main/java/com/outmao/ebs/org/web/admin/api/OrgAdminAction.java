@@ -9,6 +9,7 @@ import com.outmao.ebs.org.dto.OrgDTO;
 import com.outmao.ebs.org.entity.Org;
 import com.outmao.ebs.org.service.OrgService;
 import com.outmao.ebs.org.vo.OrgVO;
+import com.outmao.ebs.security.util.SecurityUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 @AccessPermissionGroup(title="组织管理",url="/org",name="",children = {
@@ -135,6 +137,7 @@ OrgAdminAction {
     public Page<OrgVO> getOrgVOPage(GetOrgListDTO request, Pageable pageable){
         return orgService.getOrgVOPage(request,pageable);
     }
+
 
 
 }

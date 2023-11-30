@@ -63,15 +63,15 @@
     "children":[
       {
         "name": "商家",
-        "path": "/mall/product",
+        "path": "/mall/merchant",
         "children":[
           {
-            "name": "商品分类",
-            "path": "/mall/product/category/list"
+            "name": "商家管理",
+            "path": "/mall/merchant/list"
           },
           {
-            "name": "商品管理",
-            "path": "/mall/product/list"
+            "name": "店铺管理",
+            "path": "/mall/merchant/shops"
           }
         ]
       },
@@ -80,8 +80,8 @@
         "path": "/mall/product",
         "children":[
           {
-            "name": "商品分类",
-            "path": "/mall/product/category/list"
+            "name": "分类管理",
+            "path": "/mall/product/categorys"
           },
           {
             "name": "商品管理",

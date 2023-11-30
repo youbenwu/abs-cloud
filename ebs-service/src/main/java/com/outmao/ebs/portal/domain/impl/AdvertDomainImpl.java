@@ -9,12 +9,12 @@ import com.outmao.ebs.portal.dao.AdvertDao;
 import com.outmao.ebs.portal.dao.AdvertOrderDao;
 import com.outmao.ebs.portal.dao.AdvertPlaceDao;
 import com.outmao.ebs.portal.domain.AdvertDomain;
+import com.outmao.ebs.portal.domain.conver.AdvertVOConver;
 import com.outmao.ebs.portal.dto.*;
-import com.outmao.ebs.portal.entity.Advert;
-import com.outmao.ebs.portal.entity.AdvertOrder;
-import com.outmao.ebs.portal.entity.AdvertPlace;
-import com.outmao.ebs.portal.entity.QAdvert;
+import com.outmao.ebs.portal.entity.*;
+import com.outmao.ebs.portal.vo.AdvertVO;
 import com.outmao.ebs.security.util.SecurityUtil;
+import com.querydsl.core.Tuple;
 import com.querydsl.core.types.Predicate;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,6 +44,7 @@ public class AdvertDomainImpl extends BaseDomain implements AdvertDomain {
     @Autowired
     private AdvertOrderDao advertOrderDao;
 
+    private AdvertVOConver advertVOConver=new AdvertVOConver();
 
     @Transactional
     @Override
@@ -149,8 +150,22 @@ public class AdvertDomainImpl extends BaseDomain implements AdvertDomain {
         return advert;
     }
 
+    @Override
+    public AdvertVO getAdvertVOById(Long id) {
+        QAdvert e=QAdvert.advert;
+        AdvertVO vo=queryOne(e,e.id.eq(id),advertVOConver);
+        if(vo!=null) {
+            setChannelData(vo);
+        }
+        return vo;
+    }
 
 
+    private void setChannelData(AdvertVO vo){
+        QAdvertChannel c = QAdvertChannel.advertChannel;
+        String channel = QF.select(c.title).from(c).where(c.id.eq(vo.getChannelId())).fetchOne();
+        vo.setChannelTitle(channel);
+    }
 
 
     @Override

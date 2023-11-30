@@ -127,6 +127,7 @@ public class SysDomainImpl extends BaseDomain implements SysDomain {
         return sysMenuDao.findAllBySysId(sysId);
     }
 
+    @Transactional
     @Override
     public List<SysPermission> setSysPermission(SetSysPermissionDTO request) {
         List<SysPermission> list=sysPermissionDao.findAllBySysId(request.getSysId());

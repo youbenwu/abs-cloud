@@ -6,12 +6,10 @@ import com.outmao.ebs.common.exception.IdempotentException;
 import com.outmao.ebs.mall.order.common.constant.OrderStatus;
 import com.outmao.ebs.mall.order.domain.OrderDomain;
 import com.outmao.ebs.mall.order.domain.OrderStatsDomain;
-import com.outmao.ebs.mall.order.dto.GetOrderListDTO;
-import com.outmao.ebs.mall.order.dto.OrderDTO;
-import com.outmao.ebs.mall.order.dto.OrderPayPrepareDTO;
-import com.outmao.ebs.mall.order.dto.SetOrderStatusDTO;
+import com.outmao.ebs.mall.order.dto.*;
 import com.outmao.ebs.mall.order.entity.Order;
 import com.outmao.ebs.mall.order.service.OrderService;
+import com.outmao.ebs.mall.order.vo.StatsOrderStatusVO;
 import com.outmao.ebs.mall.order.vo.StatsOrderVO;
 import com.outmao.ebs.mall.order.vo.OrderVO;
 import com.outmao.ebs.mall.product.dto.ProductSkuStockOutDTO;
@@ -288,6 +286,11 @@ public class OrderServiceImpl extends BaseService implements OrderService, Trade
 
         return payService.tradePrepare(dto);
 
+    }
+
+    @Override
+    public List<StatsOrderStatusVO> getStatsOrderStatusVOList(GetStatsOrderStatusListDTO request) {
+        return orderDomain.getStatsOrderStatusVOList(request);
     }
 
 

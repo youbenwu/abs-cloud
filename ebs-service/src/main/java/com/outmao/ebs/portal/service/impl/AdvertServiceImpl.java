@@ -19,6 +19,7 @@ import com.outmao.ebs.portal.entity.AdvertChannel;
 import com.outmao.ebs.portal.entity.AdvertOrder;
 import com.outmao.ebs.portal.service.AdvertChannelService;
 import com.outmao.ebs.portal.service.AdvertService;
+import com.outmao.ebs.portal.vo.AdvertVO;
 import com.outmao.ebs.security.util.SecurityUtil;
 import com.outmao.ebs.wallet.common.constant.PayChannel;
 import com.outmao.ebs.wallet.pay.service.PayService;
@@ -74,7 +75,10 @@ public class AdvertServiceImpl extends BaseService implements AdvertService {
         advertDomain.deleteAdvertById(id);
     }
 
-
+    @Override
+    public AdvertVO getAdvertVOById(Long id) {
+        return advertDomain.getAdvertVOById(id);
+    }
 
     @Override
     public Page<Advert> getAdvertPage(GetAdvertListDTO request, Pageable pageable) {
@@ -114,7 +118,9 @@ public class AdvertServiceImpl extends BaseService implements AdvertService {
 
         Advert advert=saveAdvert(advertDTO);
 
-        String data= JSON.toJSONString(advert);
+        AdvertVO vo=getAdvertVOById(advert.getId());
+
+        String data= JSON.toJSONStringWithDateFormat(vo,"yyyy-MM-dd");
 
 
         //用结算ID去下单
@@ -130,7 +136,6 @@ public class AdvertServiceImpl extends BaseService implements AdvertService {
         payPrepare.setPayChannel(PayChannel.WxPay.name());
         payPrepare.setCurrency("RMB");
         orderService.payPrepare(payPrepare);
-
 
 
         AdvertOrder advertOrder=new AdvertOrder();

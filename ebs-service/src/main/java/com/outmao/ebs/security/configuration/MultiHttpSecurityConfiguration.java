@@ -26,12 +26,17 @@ import org.springframework.security.config.annotation.web.configurers.Expression
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.access.expression.DefaultWebSecurityExpressionHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.filter.CorsFilter;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.mvc.method.RequestMappingInfo;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -203,6 +208,37 @@ public class MultiHttpSecurityConfiguration {
 			}
 		}
 
+		/**     * 允许跨域调用的过滤器     */
+		@Bean
+		CorsConfigurationSource corsConfigurationSource(){
+			CorsConfiguration corsConfiguration = new CorsConfiguration();
+			corsConfiguration.setAllowCredentials(true);
+			corsConfiguration.addAllowedHeader("*");
+			corsConfiguration.addAllowedMethod("*");
+			corsConfiguration.addAllowedOrigin("*");
+			corsConfiguration.setMaxAge(3600L);
+			UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+			source.registerCorsConfiguration("/**",corsConfiguration);
+			return source;
+		}
+
+		/**     * 允许跨域调用的过滤器     */
+		@Bean
+		public CorsFilter corsFilter() {
+			CorsConfiguration config = new CorsConfiguration();
+			//允许所有域名进行跨域调用
+			config.addAllowedOrigin("*");
+			//允许跨域发送cookie
+			config.setAllowCredentials(true);
+			//放行全部原始头信息
+			config.addAllowedHeader("*");
+			//允许所有请求方法跨域调用
+			config.addAllowedMethod("*");
+			UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+			source.registerCorsConfiguration("/**", config);
+			return new CorsFilter(source);
+		}
+
 		protected void configure(HttpSecurity http) throws Exception {
 			this.initPermitAll();
 			ExpressionUrlAuthorizationConfigurer<HttpSecurity>.ExpressionInterceptUrlRegistry exp = http
@@ -211,8 +247,6 @@ public class MultiHttpSecurityConfiguration {
 					.accessDeniedHandler(accessDeniedHandler())
 					// 未登入用户的权限错误
 					.authenticationEntryPoint(accessDeniedHandler())
-
-					.and().cors()
 					// 配置访问权限
 					.and().authorizeRequests();
 			for (String api : permitAllPaths) {
@@ -258,6 +292,8 @@ public class MultiHttpSecurityConfiguration {
 					// 用来标记存放token的cookie
 					// .key("token_key")
 					.and().httpBasic()
+					//启用跨域配置并禁用CSRF保护
+					.and().cors().configurationSource(corsConfigurationSource())
 					// 关闭CSRF
 					.and().csrf().disable();
 
@@ -274,6 +310,9 @@ public class MultiHttpSecurityConfiguration {
 		}
 
 	}
+
+
+
 
 	@Configuration
 	public static class FormLoginWebSecurityConfigurerAdapter extends WebSecurityConfigurerAdapter {

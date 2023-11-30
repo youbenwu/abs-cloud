@@ -46,10 +46,11 @@ public interface AlipayService {
 
 
 	/**
+	 *
 	 * 单笔转账到支付宝账户，用于用户提现
 	 *
 	 * */
-	public AlipayFundTransToaccountTransferResponse fundTransToaccountTransfer(String outBizNo, double amount, String payerShowName, String payeeAccount, String payeeRealName, String remark) ;
+	public AlipayFundTransToaccountTransferResponse fundTransToaccountTransfer(String outBizNo, double amount,  String payeeAccount, String payeeRealName, String remark) ;
 
 	/**
 	 *

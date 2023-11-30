@@ -10,6 +10,7 @@ import com.outmao.ebs.wallet.pay.alipay.AlipayService;
 import com.outmao.ebs.wallet.pay.alipay.config.AlipayProperties;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 @Slf4j
@@ -21,6 +22,7 @@ public class AlipayServiceImpl implements AlipayService {
 
 	@Autowired
 	private AlipayProperties alipayProperties;
+
 
 
 	@Override
@@ -175,11 +177,11 @@ public class AlipayServiceImpl implements AlipayService {
 	}
 
 	@Override
-	public AlipayFundTransToaccountTransferResponse fundTransToaccountTransfer(String outBizNo, double amount, String payerShowName, String payeeAccount, String payeeRealName, String remark) {
+	public AlipayFundTransToaccountTransferResponse fundTransToaccountTransfer(String outBizNo, double amount,  String payeeAccount, String payeeRealName, String remark) {
 		String amountS = String.format("%.2f", amount);
 		AlipayFundTransToaccountTransferRequest request = new AlipayFundTransToaccountTransferRequest();
 		AlipayFundTransToaccountTransferModel model = new AlipayFundTransToaccountTransferModel();
-		model.setPayerShowName(payerShowName);
+		model.setPayerShowName(alipayProperties.getShowName());
 		model.setAmount(amountS);
 		model.setOutBizNo(outBizNo);
 		model.setPayeeType("ALIPAY_LOGONID");

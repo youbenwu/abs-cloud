@@ -4,6 +4,7 @@ package com.outmao.ebs.wallet.domain.impl;
 import com.outmao.ebs.common.base.BaseDomain;
 import com.outmao.ebs.common.exception.BusinessException;
 import com.outmao.ebs.common.util.OrderNoUtil;
+import com.outmao.ebs.wallet.common.constant.CashStatus;
 import com.outmao.ebs.wallet.common.constant.TradeStatus;
 import com.outmao.ebs.wallet.dao.CashDao;
 import com.outmao.ebs.wallet.dao.WalletDao;
@@ -11,10 +12,12 @@ import com.outmao.ebs.wallet.domain.CashDomain;
 import com.outmao.ebs.wallet.domain.conver.CashVOConver;
 import com.outmao.ebs.wallet.dto.CashDTO;
 import com.outmao.ebs.wallet.dto.GetCashListDTO;
+import com.outmao.ebs.wallet.dto.GetStatsCashDTO;
 import com.outmao.ebs.wallet.dto.SetCashStatusDTO;
 import com.outmao.ebs.wallet.entity.Cash;
 import com.outmao.ebs.wallet.entity.QCash;
 import com.outmao.ebs.wallet.vo.CashVO;
+import com.outmao.ebs.wallet.vo.StatsCashVO;
 import com.querydsl.core.types.Predicate;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -68,14 +71,14 @@ public class CashDomainImpl extends BaseDomain implements CashDomain {
             return cash;
         }
 
-        if(cash.getStatus()== TradeStatus.TRADE_WAIT_PAY.getStatus()){
-            if(request.getStatus()!=TradeStatus.TRADE_SUCCEED.getStatus()
-                    ||request.getStatus()!=TradeStatus.TRADE_CLOSED.getStatus()){
+        if(cash.getStatus()== CashStatus.WAIT_PAY.getStatus()){
+            if(request.getStatus()!=CashStatus.SUCCEED.getStatus()
+                    &&request.getStatus()!=CashStatus.CLOSED.getStatus()){
                 throw new BusinessException("状态异常");
             }
-        }else if(cash.getStatus()== TradeStatus.TRADE_SUCCEED.getStatus()){
-            if(request.getStatus()!=TradeStatus.TRADE_FINISHED.getStatus()
-                    ||request.getStatus()!=TradeStatus.TRADE_CLOSED.getStatus()){
+        }else if(cash.getStatus()== CashStatus.SUCCEED.getStatus()){
+            if(request.getStatus()!=CashStatus.FINISHED.getStatus()
+                    &&request.getStatus()!=CashStatus.CLOSED.getStatus()){
                 throw new BusinessException("状态异常");
             }
         }else{
@@ -117,5 +120,12 @@ public class CashDomainImpl extends BaseDomain implements CashDomain {
         return page;
     }
 
-
+    @Override
+    public StatsCashVO getStatsCashVO(GetStatsCashDTO request) {
+        QCash e=QCash.cash;
+        Double amount=QF.select(e.totalAmount.sum()).from(e).where(e.wallet.id.eq(request.getWalletId()).and(e.status.in(1,2))).fetchOne();
+        StatsCashVO vo=new StatsCashVO();
+        vo.setAmount(amount==null?0:amount);
+        return vo;
+    }
 }

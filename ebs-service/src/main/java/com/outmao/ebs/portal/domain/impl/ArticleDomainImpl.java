@@ -57,6 +57,7 @@ public class ArticleDomainImpl extends BaseDomain implements ArticleDomain {
 
 
 
+
     private ArticleVOConver articleVOConver=new ArticleVOConver();
     private SimpleArticleVOConver simpleArticleVOConver=new SimpleArticleVOConver();
     private ArticleMediaVOConver articleMediaVOConver=new ArticleMediaVOConver();

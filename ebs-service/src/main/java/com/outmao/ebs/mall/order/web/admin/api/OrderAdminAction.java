@@ -1,6 +1,8 @@
 package com.outmao.ebs.mall.order.web.admin.api;
 
 
+import com.outmao.ebs.mall.order.dto.GetStatsOrderStatusListDTO;
+import com.outmao.ebs.mall.order.vo.StatsOrderStatusVO;
 import com.outmao.ebs.mall.order.vo.StatsOrderVO;
 import com.outmao.ebs.org.common.annotation.AccessPermission;
 import com.outmao.ebs.org.common.annotation.AccessPermissionGroup;
@@ -104,5 +106,11 @@ public class OrderAdminAction {
         return orderService.getStatsOrderVOListByDays(fromTime,toTime);
     }
 
+    @PreAuthorize("hasPermission('/mall/order','read')")
+    @ApiOperation(value = "获取订单数量和金额按状态统计", notes = "获取订单数量和金额按状态统计")
+    @PostMapping("/statsOrderStatus/list")
+    public List<StatsOrderStatusVO> getStatsOrderStatusVOList(GetStatsOrderStatusListDTO request) {
+        return orderService.getStatsOrderStatusVOList(request);
+    }
 
 }

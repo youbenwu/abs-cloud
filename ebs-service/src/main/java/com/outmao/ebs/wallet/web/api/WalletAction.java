@@ -9,6 +9,7 @@ import com.outmao.ebs.wallet.entity.BankAccount;
 import com.outmao.ebs.wallet.entity.Currency;
 import com.outmao.ebs.wallet.entity.Wallet;
 import com.outmao.ebs.wallet.service.WalletService;
+import com.outmao.ebs.wallet.vo.StatsTransferVO;
 import com.outmao.ebs.wallet.vo.TransferVO;
 import com.outmao.ebs.wallet.vo.WalletVO;
 import io.swagger.annotations.Api;
@@ -60,7 +61,7 @@ public class WalletAction {
 		walletService.deleteBankAccountById(id);
 	}
 
-	@PostAuthorize("principal.id.equals(#returnObject.user.id)")
+	@PostAuthorize("principal.id.equals(returnObject.user.id)")
 	@ApiOperation(value = "获取银行账户信息", notes = "获取银行账户信息")
 	@PostMapping("/bankAccount/get")
 	public BankAccount getBankAccountById(Long id) {
@@ -83,7 +84,7 @@ public class WalletAction {
 		 return walletService.saveWallet(request);
 	}
 
-	@PostAuthorize("principal.id.equals(#returnObject.user.id)")
+	@PostAuthorize("principal.id.equals(returnObject.user.id)")
 	@ApiOperation(value = "设置钱包密码", notes = "设置钱包密码")
 	@PostMapping("/setPassword")
 	public Wallet setWalletPassword(SetWalletPasswordDTO request) {
@@ -91,7 +92,7 @@ public class WalletAction {
 	}
 
 
-	@PostAuthorize("principal.id.equals(#returnObject.userId)")
+	@PostAuthorize("principal.id.equals(returnObject.userId)")
 	@ApiOperation(value = "获取钱包信息", notes = "获取钱包信息")
 	@PostMapping("/get")
 	public WalletVO getWalletVOById(Long id) {
@@ -111,6 +112,14 @@ public class WalletAction {
 	public Page<TransferVO> getTransferVOPage(GetTransferListDTO request, Pageable pageable) {
 		return walletService.getTransferVOPage(request,pageable);
 	}
+
+	@ApiOperation(value = "获取交易明细统计", notes = "获取交易明细统计")
+	@PostMapping("/transfer/stats")
+	public StatsTransferVO getStatsTransferVO(GetTransferListDTO request) {
+		return walletService.getStatsTransferVO(request);
+	}
+
+
 
 
 }

@@ -15,7 +15,9 @@ import com.outmao.ebs.wallet.domain.TransferDomain;
 import com.outmao.ebs.wallet.domain.conver.TransferVOConver;
 import com.outmao.ebs.wallet.dto.GetTransferListDTO;
 import com.outmao.ebs.wallet.entity.*;
+import com.outmao.ebs.wallet.vo.StatsTransferVO;
 import com.outmao.ebs.wallet.vo.TransferVO;
+import com.querydsl.core.Tuple;
 import com.querydsl.core.types.Predicate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -303,11 +305,45 @@ public class TransferDomainImpl extends BaseDomain implements TransferDomain {
     public Page<TransferVO> getTransferVOPage(GetTransferListDTO request, Pageable pageable) {
         QTransfer e=QTransfer.transfer;
 
-        Predicate p=e.currency.id.eq(request.getCurrencyId()).and(e.from.id.eq(request.getWalletId()).or(e.to.id.eq(request.getWalletId())));
+        Predicate p=getPredicate(request);
 
         Page<TransferVO> page=queryPage(e,p,transferVOConver,pageable);
 
         return page;
+    }
+
+    private Predicate getPredicate(GetTransferListDTO request){
+        QTransfer e=QTransfer.transfer;
+
+        Predicate p=e.currency.id.eq(request.getCurrencyId()).and(e.from.id.eq(request.getWalletId()).or(e.to.id.eq(request.getWalletId())));
+
+        if(request.getFromTime()!=null&&request.getToTime()!=null){
+            p=e.createTime.between(request.getFromTime(),request.getToTime()).and(p);
+        }
+        return p;
+    }
+
+    @Override
+    public StatsTransferVO getStatsTransferVO(GetTransferListDTO request) {
+        QTransfer e=QTransfer.transfer;
+
+        Predicate p=e.currency.id.eq(request.getCurrencyId());
+
+        if(request.getFromTime()!=null&&request.getToTime()!=null){
+            p=e.createTime.between(request.getFromTime(),request.getToTime()).and(p);
+        }
+
+        Long fromAmount=QF.select(e.amount.sum()).from(e).where(e.from.id.eq(request.getWalletId()).and(p)).fetchOne();
+
+        Long toAmount=QF.select(e.amount.sum()).from(e).where(e.to.id.eq(request.getWalletId()).and(p)).fetchOne();
+
+        StatsTransferVO vo=new StatsTransferVO();
+
+        vo.setFromAmount(fromAmount==null?0:fromAmount);
+        vo.setToAmount(toAmount==null?0:toAmount);
+        vo.setAmount(vo.getToAmount()-vo.getFromAmount());
+
+        return vo;
     }
 
 

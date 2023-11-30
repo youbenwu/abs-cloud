@@ -21,12 +21,18 @@ public class SysAction {
     private SysService sysService;
 
     @PreAuthorize("permitAll")
-    @ApiOperation(value = "获取根系统信息", notes = "获取根系统信息")
+    @ApiOperation(value = "获取系统信息", notes = "获取系统信息")
     @PostMapping("/get")
     public Sys getSysById(Long id) {
         return sysService.getSysById(id);
     }
 
+    @PreAuthorize("permitAll")
+    @ApiOperation(value = "获取系统信息", notes = "获取系统信息")
+    @PostMapping("/getBySysNo")
+    public Sys getSysBySysNo(String sysNo){
+        return sysService.getSysBySysNo(sysNo);
+    }
 
 
 }

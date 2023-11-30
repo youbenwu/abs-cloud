@@ -107,7 +107,7 @@ public class UserOauthDomainImpl extends BaseDomain implements UserOauthDomain {
         }
 
         session.setOauth(userOauthDao.getOne(request.getOauthId()));
-        session.setImei(request.getImei());
+        //session.setImei(request.getImei());
         session.setSessionKey(request.getSessionKey());
         session.setOauthTime(LocalDateTime.now());
         //7天后过期

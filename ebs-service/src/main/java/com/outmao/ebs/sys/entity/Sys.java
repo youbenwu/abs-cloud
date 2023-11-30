@@ -47,6 +47,11 @@ public class Sys implements Serializable
     private String description;
 
     /**
+     * 首页路径
+     */
+    private String homePath;
+
+    /**
      * 系统LOGO
      */
     private String logo;

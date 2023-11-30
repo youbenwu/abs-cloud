@@ -207,7 +207,7 @@ public class UserAction {
 
 	//UserDetails
 	// 修改用户详细信息
-	@PreAuthorize("principal.id.equals(#request.userId)")
+	@PreAuthorize("principal.id.equals(#request.id)")
 	@ApiOperation(value = "修改用户详细信息", notes = "修改用户详细信息")
 	@PostMapping("/details/modify")
 	public void modifyUserDetails(UserDetailsDTO request){

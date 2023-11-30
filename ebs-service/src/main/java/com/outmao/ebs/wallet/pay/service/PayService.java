@@ -1,6 +1,7 @@
 package com.outmao.ebs.wallet.pay.service;
 
 
+import com.alipay.api.response.AlipayFundTransToaccountTransferResponse;
 import com.outmao.ebs.wallet.common.listener.TradeStatusListener;
 import com.outmao.ebs.wallet.dto.TradePayToDTO;
 import com.outmao.ebs.wallet.dto.TradePrepareDTO;
@@ -73,6 +74,13 @@ public interface PayService {
 	public Trade tradeQuery(String tradeNo);
 
 
-	
+	/**
+	 *
+	 * 单笔转账到支付宝账户，用于用户提现
+	 *
+	 * */
+	public AlipayFundTransToaccountTransferResponse fundTransToaccountTransfer(String outBizNo, double amount, String payeeAccount, String payeeRealName, String remark) ;
+
+
 
 }

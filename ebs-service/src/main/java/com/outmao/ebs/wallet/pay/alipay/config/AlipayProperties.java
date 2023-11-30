@@ -36,6 +36,9 @@ public class AlipayProperties {
 	/** 异步地址 */
 	private String notifyUrl;
 
+	/** 商户显示名称 */
+	private String showName;
+
 	/** 最大查询次数 */
 	private static int maxQueryRetry = 5;
 	/** 查询间隔（毫秒） */
@@ -151,6 +154,14 @@ public class AlipayProperties {
 
 	public void setNotifyUrl(String notifyUrl) {
 		this.notifyUrl = notifyUrl;
+	}
+
+	public String getShowName() {
+		return showName;
+	}
+
+	public void setShowName(String showName) {
+		this.showName = showName;
 	}
 
 }
