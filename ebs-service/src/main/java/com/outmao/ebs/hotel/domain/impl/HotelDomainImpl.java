@@ -58,25 +58,27 @@ public class HotelDomainImpl extends BaseDomain implements HotelDomain {
 //            throw new BusinessException("操作无效");
 //        }
 
-        Hotel hotel=new Hotel();
+        Hotel hotel=request.getId()==null?null:hotelDao.getOne(request.getId());
 
-        BeanUtils.copyProperties(request,hotel);
+        if(hotel==null){
+            hotel=new Hotel();
+            hotel.setContact(new HotelContact());
+            hotel.setCreateTime(new Date());
+        }
+
+        BeanUtils.copyProperties(request,hotel,"contact");
 
         if(request.getContact()!=null){
-            hotel.setContact(new HotelContact());
             BeanUtils.copyProperties(request.getContact(),hotel.getContact());
         }
 
-        hotel.setCreateTime(new Date());
         hotel.setUpdateTime(new Date());
 
         hotel.setStatus(Status.NotAudit.getStatus());
 
         hotel.setKeyword(getKeyword(hotel));
 
-
         hotelDao.save(hotel);
-
 
         return hotel;
     }
@@ -86,7 +88,6 @@ public class HotelDomainImpl extends BaseDomain implements HotelDomain {
     public Hotel saveHotel(HotelDTO request) {
 
         Assert.notNull(request.getName(),"酒店名称不能为空");
-
 
         Hotel hotel=hotelDao.getOne(request.getId());
 

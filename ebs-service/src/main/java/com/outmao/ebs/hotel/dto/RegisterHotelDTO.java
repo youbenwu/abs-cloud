@@ -16,6 +16,7 @@ import lombok.NoArgsConstructor;
 public class RegisterHotelDTO extends BaseDTO {
 
 
+    private Long id;
     /**
      *
      * 酒店所有者用户ID
