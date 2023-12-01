@@ -315,9 +315,13 @@ public class TransferDomainImpl extends BaseDomain implements TransferDomain {
     private Predicate getPredicate(GetTransferListDTO request){
         QTransfer e=QTransfer.transfer;
 
-        Predicate p=e.currency.id.eq(request.getCurrencyId()).and(e.from.id.eq(request.getWalletId()).or(e.to.id.eq(request.getWalletId())));
+        Predicate p=(e.to.id.eq(request.getWalletId()).and(e.toType.eq(Transfer.TransferType.Balance)))
+                .or(e.from.id.eq(request.getWalletId()).and(e.fromType.eq(Transfer.TransferType.Balance)));
+
+        p=e.currency.id.eq(request.getCurrencyId()).and(p);
 
         if(request.getFromTime()!=null&&request.getToTime()!=null){
+            System.out.println(request.getFromTime().toLocaleString()+" " +request.getToTime().toLocaleString());
             p=e.createTime.between(request.getFromTime(),request.getToTime()).and(p);
         }
         return p;
@@ -333,9 +337,9 @@ public class TransferDomainImpl extends BaseDomain implements TransferDomain {
             p=e.createTime.between(request.getFromTime(),request.getToTime()).and(p);
         }
 
-        Long fromAmount=QF.select(e.amount.sum()).from(e).where(e.from.id.eq(request.getWalletId()).and(p)).fetchOne();
+        Long fromAmount=QF.select(e.amount.sum()).from(e).where(e.from.id.eq(request.getWalletId()).and(e.fromType.eq(Transfer.TransferType.Balance)).and(p)).fetchOne();
 
-        Long toAmount=QF.select(e.amount.sum()).from(e).where(e.to.id.eq(request.getWalletId()).and(p)).fetchOne();
+        Long toAmount=QF.select(e.amount.sum()).from(e).where(e.to.id.eq(request.getWalletId()).and(e.toType.eq(Transfer.TransferType.Balance)).and(p)).fetchOne();
 
         StatsTransferVO vo=new StatsTransferVO();
 

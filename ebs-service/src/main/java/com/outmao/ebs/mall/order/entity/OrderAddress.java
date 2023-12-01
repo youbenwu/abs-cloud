@@ -1,7 +1,6 @@
 package com.outmao.ebs.mall.order.entity;
 
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.outmao.ebs.common.vo.Address;
 import lombok.Data;
@@ -31,18 +30,12 @@ public class OrderAddress extends Address implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-//    /**
-//     * 订单编号
-//     */
-//    @JsonIgnore
-//    @OneToOne(cascade = CascadeType.REFRESH, optional = false, fetch = FetchType.LAZY)
-//    @JoinColumn(name = "orderId")
-//    private Order order;
 
     @Column(updatable = false)
     private Long orderId;
 
     /**
+     *
      * Name
      * 联系人姓名
      *
@@ -55,13 +48,6 @@ public class OrderAddress extends Address implements Serializable {
      *
      */
     private String phone;
-
-    /**
-     * Telephone Number
-     * 联系人电话号码
-     *
-     */
-    private String phone2;
 
 
 }

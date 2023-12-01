@@ -3,22 +3,20 @@ package com.outmao.ebs.wallet.service.impl;
 
 import com.outmao.ebs.wallet.domain.*;
 import com.outmao.ebs.wallet.dto.*;
-import com.outmao.ebs.wallet.entity.BankAccount;
-import com.outmao.ebs.wallet.entity.Currency;
-import com.outmao.ebs.wallet.entity.Fee;
-import com.outmao.ebs.wallet.entity.Wallet;
+import com.outmao.ebs.wallet.entity.*;
 import com.outmao.ebs.wallet.service.WalletService;
-import com.outmao.ebs.wallet.vo.AssetVO;
-import com.outmao.ebs.wallet.vo.StatsTransferVO;
-import com.outmao.ebs.wallet.vo.TransferVO;
-import com.outmao.ebs.wallet.vo.WalletVO;
+import com.outmao.ebs.wallet.vo.*;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.core.annotation.Order;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -173,6 +171,26 @@ public class WalletServiceImpl implements WalletService , CommandLineRunner {
 	@Override
 	public Page<TransferVO> getTransferVOPage(GetTransferListDTO request, Pageable pageable) {
 		return transferDomain.getTransferVOPage(request,pageable);
+	}
+
+	@Override
+	public Page<SimpleTransferVO> getSimpleTransferVOPage(GetTransferListDTO request, Pageable pageable) {
+		Page<TransferVO> page=getTransferVOPage(request,pageable);
+		List<SimpleTransferVO> list=new ArrayList<>(page.getContent().size());
+		for (TransferVO t:page.getContent()){
+			SimpleTransferVO vo=new SimpleTransferVO();
+			BeanUtils.copyProperties(t,vo);
+			if(request.getWalletId().equals(t.getFromId())&&t.getFromType()== Transfer.TransferType.Balance){
+				vo.setBalance(t.getFromBalance());
+				vo.setType(0);
+			}else{
+				vo.setBalance(t.getToBalance());
+				vo.setType(1);
+			}
+			list.add(vo);
+		}
+		Page<SimpleTransferVO> spage= new PageImpl(list,pageable,page.getTotalElements());
+		return spage;
 	}
 
 	@Override

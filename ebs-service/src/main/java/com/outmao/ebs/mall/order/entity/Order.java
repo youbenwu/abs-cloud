@@ -3,8 +3,6 @@ package com.outmao.ebs.mall.order.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.outmao.ebs.mall.product.common.constant.ProductType;
-import com.outmao.ebs.mall.shop.entity.Shop;
-import com.outmao.ebs.user.entity.User;
 import lombok.Data;
 import javax.persistence.*;
 import java.io.Serializable;
@@ -48,22 +46,14 @@ public class Order  implements Serializable{
 	private Long merchantId;
 
 	/**
-	 * 商家店铺
+	 * 店铺ID
 	 */
-//	@ManyToOne(cascade = CascadeType.REFRESH, optional = false, fetch = FetchType.LAZY)
-//	@JoinColumn(name = "shopId")
-//	private Shop shop;
-
 	@Column(nullable = false,updatable = false)
 	private Long shopId;
 
 	/**
-	 * 买家用户
+	 * 买家用户ID
 	 */
-//	@ManyToOne(cascade = CascadeType.REFRESH, optional = false, fetch = FetchType.LAZY)
-//	@JoinColumn(name = "userId")
-//	private User user;
-
 	@Column(nullable = false,updatable = false)
 	private Long userId;
 
@@ -84,7 +74,6 @@ public class Order  implements Serializable{
 
 
 	private Long hotelId;
-
 
 
 	private String roomNo;
@@ -170,42 +159,27 @@ public class Order  implements Serializable{
 	private String keyword;
 
 
-//	/**
-//	 * 收货地址
-//	 */
-//	@OneToOne(cascade = CascadeType.PERSIST, optional = true, fetch = FetchType.LAZY)
-//	@JoinColumn(name = "addressId")
-//	private OrderAddress address;
-
+	/**
+	 * 收货地址
+	 */
 	private Long addressId;
 
-//	/**
-//	 * 物流信息
-//	 */
-//	@OneToOne(cascade = CascadeType.PERSIST, optional = true, fetch = FetchType.LAZY)
-//	@JoinColumn(name = "logistics")
-//	private OrderLogistics logistics;
-
-
+	/**
+	 * 物流信息ID
+	 */
 	private Long logisticsId;
 
 
 	/**
-	 * 商品类型
+	 *
+	 * 商品业务类型
+	 *
 	 */
 	private Integer type;
 
 	/**
 	 *
-	 * 自定义业务参数
-	 *
-	 */
-	private String business;
-
-
-	/**
-	 *
-	 * 描述
+	 * 商品描述
 	 *
 	 */
 	private String description;
@@ -271,6 +245,7 @@ public class Order  implements Serializable{
 	private String tradeNo;
 
 
+
 	//各种时间节点
 
 	/**
@@ -305,6 +280,13 @@ public class Order  implements Serializable{
 	 */
 	private Date closeTime;
 
+	/**
+	 *
+	 * 预计发货时间
+	 *
+	 */
+	private Date expectDeliveryTime;
+
 
 	/**
 	 *
@@ -312,13 +294,6 @@ public class Order  implements Serializable{
 	 *
 	 */
 	private boolean useStoreStock;
-
-	/**
-	 *
-	 * 预计发货时间
-	 *
-	 */
-	private Date expectDeliveryTime;
 
 
 	//是否外部商品

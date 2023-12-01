@@ -9,6 +9,7 @@ import com.outmao.ebs.wallet.entity.BankAccount;
 import com.outmao.ebs.wallet.entity.Currency;
 import com.outmao.ebs.wallet.entity.Wallet;
 import com.outmao.ebs.wallet.service.WalletService;
+import com.outmao.ebs.wallet.vo.SimpleTransferVO;
 import com.outmao.ebs.wallet.vo.StatsTransferVO;
 import com.outmao.ebs.wallet.vo.TransferVO;
 import com.outmao.ebs.wallet.vo.WalletVO;
@@ -112,6 +113,13 @@ public class WalletAction {
 	public Page<TransferVO> getTransferVOPage(GetTransferListDTO request, Pageable pageable) {
 		return walletService.getTransferVOPage(request,pageable);
 	}
+
+	@ApiOperation(value = "获取交易明细列表", notes = "获取交易明细列表")
+	@PostMapping("/transfer/simple/page")
+	public Page<SimpleTransferVO> getSimpleTransferVOPage(GetTransferListDTO request, Pageable pageable){
+		return walletService.getSimpleTransferVOPage(request,pageable);
+	}
+
 
 	@ApiOperation(value = "获取交易明细统计", notes = "获取交易明细统计")
 	@PostMapping("/transfer/stats")

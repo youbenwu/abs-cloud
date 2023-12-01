@@ -19,7 +19,6 @@ public class OrderAddressVOConver implements BeanConver<QOrderAddress, OrderAddr
         vo.setId(t.get(e.id));
         vo.setName(t.get(e.name));
         vo.setPhone(t.get(e.phone));
-        vo.setPhone2(t.get(e.phone2));
         vo.setProvince(t.get(e.province));
         vo.setCity(t.get(e.city));
         vo.setDistrict(t.get(e.district));
@@ -37,7 +36,6 @@ public class OrderAddressVOConver implements BeanConver<QOrderAddress, OrderAddr
                 e.id,
                 e.name,
                 e.phone,
-                e.phone2,
                 e.latitude,
                 e.longitude,
                 e.province,
