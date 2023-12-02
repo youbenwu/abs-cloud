@@ -64,7 +64,7 @@ public interface BbsService {
 	 * 保存主题信息
 	 *
 	 * */
-	public Subject saveSubject(Long userId, Item item);
+	public Subject saveSubject(Long userId, Item item,int type);
 	/*
 	 *
 	 * 获取主题信息

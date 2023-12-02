@@ -17,6 +17,9 @@ public class PostDTO  {
 	@ApiModelProperty(name = "subjectId", value = "主题ID")
 	private Long subjectId;
 
+	@ApiModelProperty(name = "type", value = "0--论坛 1--朋友圈 2--商品评价")
+	private int type;
+
 	@ApiModelProperty(name = "title", value = "标题")
 	private String title;
 

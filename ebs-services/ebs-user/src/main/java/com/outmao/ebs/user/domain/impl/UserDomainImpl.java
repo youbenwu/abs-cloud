@@ -298,13 +298,13 @@ public class UserDomainImpl extends BaseDomain implements UserDomain {
 		if(StringUtil.isNotEmpty(request.getCompany())){
 			details.setCompany(request.getCompany());
 		}
-		if(StringUtil.isNotEmpty(request.getRealname())){
+		if(StringUtil.isNotEmpty(request.getRealName())){
 			if(user.isCertified()){
-				if(!details.getRealName().equals(request.getRealname())){
+				if(!details.getRealName().equals(request.getRealName())){
 					throw new BusinessException("已实名，不能修改姓名");
 				}
 			}
-			details.setRealName(request.getRealname());
+			details.setRealName(request.getRealName());
 		}
 		if(StringUtil.isNotEmpty(request.getJob())){
 			details.setJob(request.getJob());
@@ -332,7 +332,7 @@ public class UserDomainImpl extends BaseDomain implements UserDomain {
 		UserDetails details = userDetailsDao.findByUserId(user.getId());
 
 		if(user.isCertified()){
-           if(!details.getRealName().equals(request.getRealname())){
+           if(!details.getRealName().equals(request.getRealName())){
            	  throw new BusinessException("已实名，不能修改姓名");
 		   }
 		}

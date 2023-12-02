@@ -38,6 +38,8 @@ public interface UserDomain {
 	public List<SimpleUserVO> getSimpleUserVOListByIdIn(Collection<Long> idIn);
 	public List<ContactUserVO> getContactUserVOListByIdIn(Collection<Long> idIn);
 
+	public Page<User> getUserPageByType(int type,Pageable pageable);
+
 	//获取用户
 	public UserVO getUserVOById(Long id);
     //获取用户列表

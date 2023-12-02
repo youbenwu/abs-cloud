@@ -20,6 +20,9 @@ public class UserVO extends SimpleUserVO{
 	@ApiModelProperty(name = "walletId", value = "钱包ID")
 	private Long    walletId;
 
+	@ApiModelProperty(name = "subjectId", value = "朋友圈主题ID")
+	private Long subjectId;
+
 	@ApiModelProperty(name = "username", value = "帐号")
 	private String  username;
 

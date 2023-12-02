@@ -55,6 +55,13 @@ public class Post implements Serializable {
 
 	/**
 	 *
+	 * 0--论坛 1--朋友圈 2--商品评价
+	 *
+	 */
+	private int type;
+
+	/**
+	 *
 	 * 状态
 	 *
 	 */

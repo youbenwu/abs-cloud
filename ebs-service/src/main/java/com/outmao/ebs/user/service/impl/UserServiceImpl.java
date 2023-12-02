@@ -121,6 +121,11 @@ public class UserServiceImpl extends BaseService implements UserService, Command
 	}
 
 	@Override
+	public List<ContactUserVO> getContactUserVOListByIdIn(Collection<Long> idIn) {
+		return userDomain.getContactUserVOListByIdIn(idIn);
+	}
+
+	@Override
 	public UserVO getUserVOById(Long id) {
 		return userDomain.getUserVOById(id);
 	}
@@ -198,4 +203,8 @@ public class UserServiceImpl extends BaseService implements UserService, Command
 		return userOauthDomain.setAuthenticatedNot(sessionId);
 	}
 
+	@Override
+	public Page<User> getUserPageByType(int type, Pageable pageable) {
+		return userDomain.getUserPageByType(type,pageable);
+	}
 }

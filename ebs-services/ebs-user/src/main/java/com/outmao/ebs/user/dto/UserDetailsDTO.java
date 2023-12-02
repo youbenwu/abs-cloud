@@ -25,7 +25,7 @@ public class UserDetailsDTO {
     @ApiModelProperty(name = "email", value = "电子邮箱")
 	private String  email;
     @ApiModelProperty(name = "realName", value = "姓名")
-	private String  realname;
+	private String  realName;
     @ApiModelProperty(name = "sex", value = "姓别0--未知 1--男 2--女")
 	private Integer sex;
 	@ApiModelProperty(name = "area", value = "所在地区")

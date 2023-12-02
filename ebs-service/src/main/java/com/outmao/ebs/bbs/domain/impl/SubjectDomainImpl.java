@@ -77,13 +77,15 @@ public class SubjectDomainImpl extends BaseDomain implements SubjectDomain {
                 s.setCategory(categoryDao.getOne(request.getCategoryId()));
             }
             s.setUser(userDao.getOne(request.getUserId()));
-            s.setCreateTime(new Date());
             SubjectStats stats=new SubjectStats();
             stats.setSubject(s);
             s.setStats(stats);
+            s.setCreateTime(new Date());
+            s.setType(request.getType());
+            s.setItem(request.getItem());
         }
 
-        BeanUtils.copyProperties(request,s);
+        BeanUtils.copyProperties(request,s,"type","item");
         s.setUpdateTime(new Date());
         subjectDao.save(s);
 
@@ -92,8 +94,9 @@ public class SubjectDomainImpl extends BaseDomain implements SubjectDomain {
 
     @Transactional
     @Override
-    public Subject saveSubject(Long userId, Item item) {
+    public Subject saveSubject(Long userId, Item item,int type) {
         SubjectDTO request =new SubjectDTO();
+        request.setType(type);
         request.setUserId(userId);
         request.setTitle(item.getTitle());
         BindingItem bindingItem=new BindingItem();

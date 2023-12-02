@@ -16,6 +16,8 @@ public class SubjectVOConver implements BeanConver<QSubject, SubjectVO> {
         vo.setUserId(t.get(e.user.id));
         vo.setItem(t.get(e.item));
         vo.setTitle(t.get(e.title));
+        vo.setType(t.get(e.type));
+        vo.setImage(t.get(e.image));
         vo.setContent(t.get(e.content));
         vo.setCreateTime(t.get(e.createTime));
         vo.setUpdateTime(t.get(e.updateTime));
@@ -30,6 +32,8 @@ public class SubjectVOConver implements BeanConver<QSubject, SubjectVO> {
                 e.user.id,
                 e.item,
                 e.title,
+                e.image,
+                e.type,
                 e.content,
                 e.createTime,
                 e.updateTime,

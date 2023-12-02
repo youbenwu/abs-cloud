@@ -57,6 +57,14 @@ public class Subject implements Serializable {
 	@JoinColumn(name = "statsId")
 	private SubjectStats stats;
 
+
+	/**
+	 *
+	 * 0--论坛 1--朋友圈 2--商品评价
+	 *
+	 */
+	private int type;
+
 	/**
 	 * 可以绑定业务对像
 	 */
@@ -81,6 +89,13 @@ public class Subject implements Serializable {
 	@Lob
 	@Basic(fetch = FetchType.LAZY)
 	private String content;
+
+	/**
+	 *
+	 * 主题图片
+	 *
+	 */
+	private String image;
 
 	/**
 	 * 创建时间

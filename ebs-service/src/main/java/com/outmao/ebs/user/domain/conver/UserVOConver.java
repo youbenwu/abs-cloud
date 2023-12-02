@@ -14,6 +14,7 @@ public class UserVOConver implements BeanConver<QUser, UserVO> {
         UserVO vo=new UserVO();
         vo.setId(t.get(e.id));
         vo.setWalletId(t.get(e.walletId));
+        vo.setSubjectId(t.get(e.subjectId));
         vo.setStatus(t.get(e.status));
         vo.setType(t.get(e.type));
         vo.setUsername(t.get(e.username));
@@ -40,6 +41,7 @@ public class UserVOConver implements BeanConver<QUser, UserVO> {
         return new Expression[]{
                 e.id,
                 e.walletId,
+                e.subjectId,
                 e.status,
                 e.type,
                 e.username,

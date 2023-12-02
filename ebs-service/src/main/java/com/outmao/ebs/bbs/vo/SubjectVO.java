@@ -36,6 +36,9 @@ public class SubjectVO implements SimpleUserSetter {
 	@ApiModelProperty(name = "item", value = "绑定业务对像")
 	private BindingItem item;
 
+	@ApiModelProperty(name = "type", value = "0--论坛 1--朋友圈 2--商品评价")
+	private int type;
+
 	/**
 	 * 标题
 	 */
@@ -47,6 +50,14 @@ public class SubjectVO implements SimpleUserSetter {
 	 */
 	@ApiModelProperty(name = "content", value = "内容")
 	private String content;
+
+	/**
+	 *
+	 * 主题图片
+	 *
+	 */
+	@ApiModelProperty(name = "image", value = "主题图片")
+	private String image;
 
 	/**
 	 * 创建时间

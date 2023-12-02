@@ -31,6 +31,9 @@ public class PostVO implements SimpleUserSetter {
 	@ApiModelProperty(name = "subjectId", value = "主题ID")
 	private Long subjectId;
 
+	@ApiModelProperty(name = "type", value = "0--论坛 1--朋友圈 2--商品评价")
+	private int type;
+
 	/**
 	 * 绑定业务对像
 	 */

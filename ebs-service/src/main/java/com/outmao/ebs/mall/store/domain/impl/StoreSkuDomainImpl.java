@@ -329,6 +329,9 @@ public class StoreSkuDomainImpl extends BaseDomain implements StoreSkuDomain {
         StoreSkuStockOut stockOut=request.getId()!=null?storeSkuStockOutDao.findByIdForUpdate(request.getId())
                 :storeSkuStockOutDao.findByOrderIdForUpdate(request.getOrderId());
 
+        if(stockOut==null)
+            return null;
+
         if(stockOut.getStatus()==request.getStatus()){
             return stockOut;
         }

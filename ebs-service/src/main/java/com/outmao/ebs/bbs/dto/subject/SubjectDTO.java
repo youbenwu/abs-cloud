@@ -19,11 +19,22 @@ public class SubjectDTO {
 	@ApiModelProperty(name = "userId", value = "用户ID")
 	private Long userId;
 
+	/**
+	 *
+	 * 0--论坛 1--朋友圈 2--商品评价
+	 *
+	 */
+	@ApiModelProperty(name = "type", value = "0--论坛 1--朋友圈 2--商品评价")
+	private int type;
+
 	@ApiModelProperty(name = "title", value = "标题")
 	private String title;
 
 	@ApiModelProperty(name = "content", value = "内容")
 	private String content;
+
+	@ApiModelProperty(name = "image", value = "主题图片")
+	private String image;
 
 	@ApiModelProperty(name = "item", value = "绑定的业务对象")
 	private BindingItem item;

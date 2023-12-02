@@ -28,6 +28,7 @@ public class UserDetailsVOConver  implements BeanConver<QUser, UserDetailsVO> {
         vo.setUpdateTime(t.get(e.details.updateTime));
         vo.setId(t.get(e.id));
         vo.setWalletId(t.get(e.walletId));
+        vo.setSubjectId(t.get(e.subjectId));
         vo.setStatus(t.get(e.status));
         vo.setType(t.get(e.type));
         vo.setUsername(t.get(e.username));
@@ -67,6 +68,7 @@ public class UserDetailsVOConver  implements BeanConver<QUser, UserDetailsVO> {
                 e.details.updateTime,
                 e.id,
                 e.walletId,
+                e.subjectId,
                 e.status,
                 e.type,
                 e.username,

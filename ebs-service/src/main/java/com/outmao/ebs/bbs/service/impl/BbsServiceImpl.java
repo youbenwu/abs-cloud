@@ -82,8 +82,8 @@ public class BbsServiceImpl extends BaseService implements BbsService {
 	}
 
 	@Override
-	public Subject saveSubject(Long userId, Item item) {
-		return subjectDomain.saveSubject(userId,item);
+	public Subject saveSubject(Long userId, Item item,int type) {
+		return subjectDomain.saveSubject(userId,item,type);
 	}
 
 

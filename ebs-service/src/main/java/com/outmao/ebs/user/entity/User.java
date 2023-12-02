@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.outmao.ebs.bbs.common.data.BindingSubjectId;
+import com.outmao.ebs.common.vo.Item;
 import lombok.Data;
 import javax.persistence.*;
 import java.io.Serializable;
@@ -18,7 +20,7 @@ import java.util.Date;
 @Data
 @Entity
 @Table(name = "ebs_User")
-public class User implements Serializable {
+public class User implements Serializable, BindingSubjectId {
 
 	/**
 	 * 
@@ -33,6 +35,9 @@ public class User implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
+
+	@Column(unique = true)
+	private Long subjectId;
 
 	/**
 	 *
@@ -176,6 +181,15 @@ public class User implements Serializable {
 	 */
 	private Date loginTime;
 
+	@Override
+	public Long getUserId() {
+		return id;
+	}
+
+	@Override
+	public Item toItem() {
+		return new Item(id,"User",nickname);
+	}
 
 	public int hashCode() {
 		return (this.getId() == null) ? 0 : this.getId().hashCode();

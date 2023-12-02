@@ -34,6 +34,7 @@ public interface UserService {
 	public User getUserByUsername(String username);
 	//获取用户列表
 	public List<SimpleUserVO> getSimpleUserVOListByIdIn(Collection<Long> idIn);
+	public List<ContactUserVO> getContactUserVOListByIdIn(Collection<Long> idIn);
 
 	//获取用户
 	public UserVO getUserVOById(Long id);
@@ -93,7 +94,7 @@ public interface UserService {
 	public UserOauthSession setAuthenticatedNot(Long sessionId);
 
 
-
+	public Page<User> getUserPageByType(int type, Pageable pageable);
 
 
 

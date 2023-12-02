@@ -1,5 +1,6 @@
 package com.outmao.ebs.user.domain.impl;
 
+import com.outmao.ebs.bbs.common.annotation.BindingSubjectId;
 import com.outmao.ebs.common.base.BaseDomain;
 import com.outmao.ebs.common.exception.BusinessException;
 import com.outmao.ebs.common.kcnamer.KCNamer;
@@ -64,6 +65,7 @@ public class UserDomainImpl extends BaseDomain implements UserDomain {
 
 
 	@Transactional
+	@BindingSubjectId
 	@Override
 	public User registerUser(RegisterDTO request) {
 
@@ -158,7 +160,10 @@ public class UserDomainImpl extends BaseDomain implements UserDomain {
 		return user;
 	}
 
-
+	@Override
+	public Page<User> getUserPageByType(int type, Pageable pageable) {
+		return userDao.findAllByType(type,pageable);
+	}
 
 	@Transactional
 	@Override
@@ -315,13 +320,13 @@ public class UserDomainImpl extends BaseDomain implements UserDomain {
 		if(StringUtil.isNotEmpty(request.getCompany())){
 			details.setCompany(request.getCompany());
 		}
-		if(StringUtil.isNotEmpty(request.getRealname())){
+		if(StringUtil.isNotEmpty(request.getRealName())){
 			if(user.isCertified()){
-				if(!details.getRealName().equals(request.getRealname())){
+				if(!details.getRealName().equals(request.getRealName())){
 					throw new BusinessException("已实名，不能修改姓名");
 				}
 			}
-			details.setRealName(request.getRealname());
+			details.setRealName(request.getRealName());
 		}
 		if(StringUtil.isNotEmpty(request.getJob())){
 			details.setJob(request.getJob());
@@ -349,7 +354,7 @@ public class UserDomainImpl extends BaseDomain implements UserDomain {
 		UserDetails details = userDetailsDao.findByUserId(user.getId());
 
 		if(user.isCertified()){
-           if(!details.getRealName().equals(request.getRealname())){
+           if(!details.getRealName().equals(request.getRealName())){
            	  throw new BusinessException("已实名，不能修改姓名");
 		   }
 		}

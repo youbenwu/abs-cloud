@@ -15,6 +15,7 @@ public class PostVOConver implements BeanConver<QPost, PostVO> {
         vo.setUserId(t.get(e.user.id));
         vo.setSubjectId(t.get(e.subject.id));
         vo.setItem(t.get(e.item));
+        vo.setType(t.get(e.type));
         vo.setTitle(t.get(e.title));
         vo.setContent(t.get(e.content));
         vo.setImages(t.get(e.images));
@@ -35,6 +36,7 @@ public class PostVOConver implements BeanConver<QPost, PostVO> {
                 e.user.id,
                 e.subject.id,
                 e.item,
+                e.type,
                 e.title,
                 e.content,
                 e.images,
