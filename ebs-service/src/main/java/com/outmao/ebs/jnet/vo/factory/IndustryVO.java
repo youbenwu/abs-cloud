@@ -33,9 +33,9 @@ public class IndustryVO  implements Serializable {
     @ApiModelProperty(name = "updateTime", value = "更新时间")
     private Date updateTime;
     @ApiModelProperty(name = "productionTechnologies", value = "行业分类下的生产工艺列表")
-    private List<ProductionTechnology> productionTechnologies;
+    private List<ProductionTechnologyVO> productionTechnologies;
     @ApiModelProperty(name = "productionTechnologies", value = "行业分类下的生产品类列表")
-    private List<ProductionCategory> productionCategories;
+    private List<ProductionCategoryVO> productionCategories;
 
 
     public IndustryVO(){}
@@ -115,20 +115,20 @@ public class IndustryVO  implements Serializable {
 //        this.children = children;
 //    }
 
-    public List<ProductionTechnology> getProductionTechnologies() {
+
+    public List<ProductionTechnologyVO> getProductionTechnologies() {
         return productionTechnologies;
     }
 
-    public void setProductionTechnologies(List<ProductionTechnology> productionTechnologies) {
+    public void setProductionTechnologies(List<ProductionTechnologyVO> productionTechnologies) {
         this.productionTechnologies = productionTechnologies;
     }
 
-    public List<ProductionCategory> getProductionCategories() {
+    public List<ProductionCategoryVO> getProductionCategories() {
         return productionCategories;
     }
 
-    public void setProductionCategories(List<ProductionCategory> productionCategories) {
+    public void setProductionCategories(List<ProductionCategoryVO> productionCategories) {
         this.productionCategories = productionCategories;
     }
-
 }

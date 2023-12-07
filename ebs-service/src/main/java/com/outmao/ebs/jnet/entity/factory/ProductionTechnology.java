@@ -1,6 +1,7 @@
 package com.outmao.ebs.jnet.entity.factory;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -10,6 +11,7 @@ import java.util.List;
 /*
  * 生产工艺
  * */
+@JsonIgnoreProperties(value = {"hibernateLazyInitializer"})
 @Entity
 @Table(name = "z_ProductionTechnology")
 public class ProductionTechnology   implements Serializable {

@@ -1,31 +1,30 @@
 package com.outmao.ebs.hotel.domain.impl;
 
 import com.outmao.ebs.common.base.BaseDomain;
-import com.outmao.ebs.common.exception.BusinessException;
+import com.outmao.ebs.common.util.DateUtil;
+import com.outmao.ebs.hotel.common.constant.LeaseStatus;
 import com.outmao.ebs.hotel.dao.HotelDao;
 import com.outmao.ebs.hotel.dao.HotelDeviceDao;
 import com.outmao.ebs.hotel.domain.HotelDeviceDomain;
 import com.outmao.ebs.hotel.domain.conver.HotelDeviceVOConver;
+import com.outmao.ebs.hotel.dto.HotelDeviceLeaseDTO;
 import com.outmao.ebs.hotel.dto.GetHotelDeviceListDTO;
 import com.outmao.ebs.hotel.dto.HotelDeviceDTO;
-import com.outmao.ebs.hotel.dto.HotelDeviceNewDTO;
-import com.outmao.ebs.hotel.entity.Hotel;
-import com.outmao.ebs.hotel.entity.HotelDevice;
-import com.outmao.ebs.hotel.entity.QHotelDevice;
+import com.outmao.ebs.hotel.dto.HotelDeviceBuyDTO;
+import com.outmao.ebs.hotel.entity.*;
 import com.outmao.ebs.hotel.vo.HotelDeviceVO;
 import com.outmao.ebs.hotel.vo.StatsHotelDeviceCityVO;
 import com.outmao.ebs.hotel.vo.StatsHotelDeviceProvinceVO;
 import com.querydsl.core.Tuple;
 import com.querydsl.core.types.Predicate;
-import com.querydsl.jpa.impl.JPAQuery;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
-
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -44,20 +43,17 @@ public class HotelDeviceDomainImpl extends BaseDomain implements HotelDeviceDoma
     private HotelDeviceVOConver hotelDeviceVOConver=new HotelDeviceVOConver();
 
 
+
     @Transactional()
     @Override
     public HotelDevice saveHotelDevice(HotelDeviceDTO request) {
-        HotelDevice device=request.getId()==null?hotelDeviceDao.findByDeviceNo(request.getDeviceNo())
-                :hotelDeviceDao.getOne(request.getId());
 
+        HotelDevice device=request.getId()==null?hotelDeviceDao.findByDeviceNoLock(request.getDeviceNo())
+                :hotelDeviceDao.findByIdLock(request.getId());
 
         if(device==null){
             Hotel hotel=hotelDao.getOne(request.getHotelId());
             device=getHotelDeviceByNew();
-            if(device==null) {
-                device = new HotelDevice();
-                device.setCreateTime(new Date());
-            }
             device.setHotelId(request.getHotelId());
             device.setOrgId(hotel.getOrgId());
             device.setStatus(1);
@@ -68,44 +64,31 @@ public class HotelDeviceDomainImpl extends BaseDomain implements HotelDeviceDoma
         }
 
         BeanUtils.copyProperties(request,device,"id","hotelId");
-        device.setUpdateTime(new Date());
-
         device.setKeyword(getKeyword(device));
+        device.setUpdateTime(new Date());
 
         hotelDeviceDao.save(device);
 
+        return device;
+    }
+
+    private HotelDevice newHotelDevice(){
+        HotelDevice device = new HotelDevice();
+        device.setBuy(new HotelDeviceBuy());
+        device.setLease(new HotelDeviceLease());
+        device.setCreateTime(new Date());
+        device.setUpdateTime(new Date());
         return device;
     }
 
 
     private HotelDevice getHotelDeviceByNew(){
-        try{
-            QHotelDevice e=QHotelDevice.hotelDevice;
-            HotelDevice device=QF.select(e).from(e).where(e.status.eq(0)).fetchFirst();
-            if(device!=null){
-                device=hotelDeviceDao.findByIdForUpdate(device.getId());
-                if(device.getStatus()!=0){
-                    Thread.sleep(100);
-                    return getHotelDeviceByNew();
-                }
-            }
-            return device;
-        }catch (Exception e){
-            e.printStackTrace();
-            throw new BusinessException("服务器繁忙，请稍候再试！");
-        }
+        List<HotelDevice> list=hotelDeviceDao.findAllByNoActivateLock(PageRequest.of(0,1));
+        if(list.isEmpty())
+            return newHotelDevice();
+        return list.get(0);
     }
 
-    @Transactional()
-    @Override
-    public HotelDevice saveHotelDevice(HotelDeviceNewDTO request) {
-        HotelDevice device=new HotelDevice();
-        device.setCreateTime(new Date());
-        device.setUpdateTime(new Date());
-        BeanUtils.copyProperties(request,device);
-        hotelDeviceDao.save(device);
-        return device;
-    }
 
     private String getKeyword(HotelDevice device){
         StringBuffer s=new StringBuffer();
@@ -136,7 +119,13 @@ public class HotelDeviceDomainImpl extends BaseDomain implements HotelDeviceDoma
 
     @Override
     public long getHotelDeviceCountByPartnerId(Long partnerId) {
-        return hotelDeviceDao.countByPartnerId(partnerId);
+        return hotelDeviceDao.countByBuyPartnerId(partnerId);
+    }
+
+
+    @Override
+    public long getHotelDeviceCountByLeaseRenterId(Long leaseRenterId) {
+        return hotelDeviceDao.countByLeaseRenterId(leaseRenterId);
     }
 
     @Transactional()
@@ -154,12 +143,12 @@ public class HotelDeviceDomainImpl extends BaseDomain implements HotelDeviceDoma
 
     @Override
     public List<HotelDevice> getHotelDeviceListByOwnerId(Long ownerId) {
-        return hotelDeviceDao.findAllByOwnerId(ownerId);
+        return hotelDeviceDao.findAllByBuyOwnerId(ownerId);
     }
 
     @Override
     public List<HotelDevice> getHotelDeviceListByPartnerId(Long partnerId) {
-        return hotelDeviceDao.findAllByPartnerId(partnerId);
+        return hotelDeviceDao.findAllByBuyPartnerId(partnerId);
     }
 
     @Override
@@ -216,19 +205,24 @@ public class HotelDeviceDomainImpl extends BaseDomain implements HotelDeviceDoma
         if(request.getHotelId()!=null){
             p=e.hotelId.eq(request.getHotelId()).and(p);
         }
+
+        if(request.getRenterId()!=null){
+            p=e.lease.renterId.eq(request.getRenterId()).and(p);
+        }
+
         return p;
     }
 
     @Override
     public List<StatsHotelDeviceCityVO> getStatsHotelDeviceCityVOList(Integer size) {
         QHotelDevice e=QHotelDevice.hotelDevice;
-        List<Tuple> list=QF.select(e.amount.sum(),e.count(),e.city).groupBy(e.city).from(e).where(e.city.isNotEmpty()).limit(size==null?10000:size).orderBy(e.count().desc()).fetch();
+        List<Tuple> list=QF.select(e.buy.amount.sum(),e.count(),e.city).groupBy(e.city).from(e).where(e.city.isNotEmpty()).limit(size==null?10000:size).orderBy(e.count().desc()).fetch();
 
         List<StatsHotelDeviceCityVO> vos=new ArrayList<>(list.size());
 
         list.forEach(t->{
             StatsHotelDeviceCityVO vo=new StatsHotelDeviceCityVO();
-            Double amount=t.get(e.amount.sum());
+            Double amount=t.get(e.buy.amount.sum());
             vo.setCity(t.get(e.city));
             vo.setCount(t.get(e.count()));
             vo.setAmount(amount==null?0:amount);
@@ -240,7 +234,7 @@ public class HotelDeviceDomainImpl extends BaseDomain implements HotelDeviceDoma
     @Override
     public List<StatsHotelDeviceProvinceVO> getStatsHotelDeviceProvinceVOList(Integer size) {
         QHotelDevice e=QHotelDevice.hotelDevice;
-        List<Tuple> list=QF.select(e.amount.sum(),e.count(),e.province).groupBy(e.province).from(e).where(e.province.isNotEmpty()).limit(size==null?10000:size).orderBy(e.count().desc()).fetch();
+        List<Tuple> list=QF.select(e.buy.amount.sum(),e.count(),e.province).groupBy(e.province).from(e).where(e.province.isNotEmpty()).limit(size==null?10000:size).orderBy(e.count().desc()).fetch();
 
         List<StatsHotelDeviceProvinceVO> vos=new ArrayList<>(list.size());
 
@@ -248,12 +242,84 @@ public class HotelDeviceDomainImpl extends BaseDomain implements HotelDeviceDoma
             StatsHotelDeviceProvinceVO vo=new StatsHotelDeviceProvinceVO();
             vo.setProvince(t.get(e.province));
             vo.setCount(t.get(e.count()));
-            vo.setAmount(t.get(e.amount.sum()));
+            vo.setAmount(t.get(e.buy.amount.sum()));
             vos.add(vo);
         });
         return vos;
     }
 
+    @Transactional()
+    @Override
+    public List<HotelDevice> buy(HotelDeviceBuyDTO request) {
+        List<HotelDevice> devices=newHotelDeviceList(request.getQuantity());
+
+        devices.forEach(d->{
+            if(d.getBuy()==null){
+                d.setBuy(new HotelDeviceBuy());
+            }
+            d.getBuy().setOwnerId(request.getUserId());
+            d.getBuy().setPartnerId(request.getPartnerId());
+            d.getBuy().setAmount(request.getPrice());
+        });
+
+        hotelDeviceDao.saveAll(devices);
+
+        return devices;
+    }
+
+    @Transactional()
+    @Override
+    public List<HotelDevice> lease(HotelDeviceLeaseDTO request) {
+        List<HotelDevice> devices=getHotelDeviceListByNoLeaseLock(request.getQuantity());
+
+        devices.forEach(d->{
+            if(d.getLease()==null){
+                d.setLease(new HotelDeviceLease());
+            }
+            d.getLease().setStatus(LeaseStatus.LeaseIng.getStatus());
+            d.getLease().setRenterId(request.getUserId());
+            d.getLease().setPartnerId(request.getPartnerId());
+            d.getLease().setStartTime(request.getStartTime());
+            d.getLease().setEndTime(request.getEndTime());
+            d.getLease().setTotalRent(d.getLease().getTotalRent()+request.getPrice());
+        });
+
+        hotelDeviceDao.saveAll(devices);
+
+        return devices;
+    }
+
+
+    private List<HotelDevice> getHotelDeviceListByNoLeaseLock(int size){
+        List<HotelDevice> devices=hotelDeviceDao.findAllByLeaseStatusInLock(new Integer[]{LeaseStatus.NoLease.getStatus(),LeaseStatus.LeaseExpire.getStatus()},PageRequest.of(0,size));
+        if(devices.size()<size){
+            devices.addAll(newHotelDeviceList(size-devices.size()));
+        }
+        return devices;
+    }
+
+
+    private List<HotelDevice> newHotelDeviceList(int size) {
+        List<HotelDevice> list=new ArrayList<>(size);
+        for (int i=0;i<size;i++){
+            HotelDevice device=new HotelDevice();
+            list.add(device);
+        }
+        return list;
+    }
+
+
+    @Transactional()
+    @Override
+    public List<HotelDevice> checkLeaseExpire() {
+        Date time=DateUtil.addDays(new Date(),-1);
+        List<HotelDevice> list=hotelDeviceDao.findAllByLeaseExpireLock(time);
+        list.forEach(d->{
+            d.getLease().setStatus(LeaseStatus.LeaseExpire.getStatus());
+        });
+        hotelDeviceDao.saveAll(list);
+        return list;
+    }
 
 
 

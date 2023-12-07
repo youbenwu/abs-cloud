@@ -25,8 +25,6 @@ public class HotelDeviceDTO {
     @ApiModelProperty(name = "hotelId", value = "酒店ID")
     private Long hotelId;
 
-
-
     /**
      * 房间号
      */
@@ -57,14 +55,6 @@ public class HotelDeviceDTO {
      */
     @ApiModelProperty(name = "os", value = "设备系统")
     private String os;
-
-
-    /**
-     * 应用类型
-     */
-    @ApiModelProperty(name = "appType", value = "应用类型 传HOTEL_PAD")
-    private String appType;
-
 
 
 }

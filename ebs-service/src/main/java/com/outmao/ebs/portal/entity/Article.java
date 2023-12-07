@@ -88,6 +88,23 @@ public class Article implements Serializable,BindingSubject {
 
     /**
      *
+     * 类型 0--普通文章 20--协义
+     *
+     */
+    private int type;
+
+
+    /**
+     *
+     * 类型 about--关于我们 agree--用户协议 privacy--隐私政策
+     *
+     */
+    @Column(unique = true)
+    private String code;
+
+
+    /**
+     *
      * 文章图片视频
      *
      */
@@ -114,6 +131,13 @@ public class Article implements Serializable,BindingSubject {
     @Basic(fetch = FetchType.LAZY)
     @Column(nullable = false)
     private String content;
+
+    /**
+     *
+     * H5地址
+     *
+     */
+    private String url;
 
     /**
      *

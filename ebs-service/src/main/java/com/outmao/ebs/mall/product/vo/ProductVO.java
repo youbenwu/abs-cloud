@@ -263,6 +263,16 @@ public class ProductVO extends SubjectItemVO implements IItem {
     @ApiModelProperty(name = "marks", value = "商品标签，逗号隔开")
     private String marks;
 
+
+    /**
+     *
+     * 是否启用分销
+     *
+     * */
+    @ApiModelProperty(name = "distribution", value = "是否启用分销")
+    private boolean distribution;
+
+
     /**
      *
      * 佣金类型 0固定/1按比例
@@ -499,6 +509,22 @@ public class ProductVO extends SubjectItemVO implements IItem {
 
     @ApiModelProperty(name = "promotion", value = "商品促销信息")
     private ProductPromotionVO promotion;
+
+    /**
+     *
+     * 是否无需发货
+     *
+     */
+    @ApiModelProperty(name = "noDelivery", value = "是否无需发货")
+    private boolean noDelivery;
+
+    /**
+     *
+     * 是否允许商家标记签收
+     *
+     */
+    private boolean sellerFinish;
+
 
 
 

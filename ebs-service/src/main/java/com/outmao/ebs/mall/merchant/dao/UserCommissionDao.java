@@ -17,5 +17,7 @@ public interface UserCommissionDao extends JpaRepository<UserCommission,Long> {
     @Query("select o from UserCommission o where o.id=?1")
     public UserCommission findByIdForUpdate(Long id);
 
+
+
 }
 

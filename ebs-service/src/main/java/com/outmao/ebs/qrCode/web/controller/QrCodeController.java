@@ -1,4 +1,4 @@
-package com.outmao.ebs.qrCode.web;
+package com.outmao.ebs.qrCode.web.controller;
 
 
 import com.outmao.ebs.qrCode.entity.QrCode;
@@ -24,7 +24,6 @@ public class QrCodeController {
 		QrCode qrCode=qrCodeService.getQrCodeById(id);
         response.sendRedirect(qrCode.getUrl());
 	}
-
 
 
 

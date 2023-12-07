@@ -103,4 +103,7 @@ public class RegisterHotelDTO extends BaseDTO {
     private String password;
 
 
+
+
+
 }

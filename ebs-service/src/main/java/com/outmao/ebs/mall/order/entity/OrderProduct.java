@@ -39,11 +39,19 @@ public class OrderProduct implements Serializable {
 	 */
 	private Long snapshotId;
 
+
 	/**
 	 * 商品
 	 */
     @Column(nullable = false)
 	private Long productId;
+
+	/**
+	 *
+	 * 商品类型
+	 *
+	 */
+	private Integer productType;
 
 	/**
 	 * 商品名称
@@ -58,6 +66,7 @@ public class OrderProduct implements Serializable {
 	/**
 	 * 商品SKU ID
 	 */
+	@Column(nullable = false)
 	private Long skuId;
 
 	/**
@@ -103,6 +112,44 @@ public class OrderProduct implements Serializable {
 	 *
 	 */
 	private String remark;
+
+
+	/**
+	 *
+	 * 租赁信息
+	 *
+	 *
+	 */
+	@Embedded
+	@AttributeOverrides({
+			@AttributeOverride(name="lease", column=@Column(name="is_lease")),
+			@AttributeOverride(name="field", column=@Column(name="lease_field")),
+			@AttributeOverride(name="min", column=@Column(name="lease_min"))
+	})
+	private OrderProductLease lease;
+
+
+	/**
+	 *
+	 * 订单分销中的佣金
+	 *
+	 */
+	private double commissionAmount;
+
+
+	/**
+	 *
+	 * 是否无需发货
+	 *
+	 */
+	private boolean noDelivery;
+
+	/**
+	 *
+	 * 是否允许商家标记签收
+	 *
+	 */
+	private boolean sellerFinish;
 
 
 }

@@ -32,7 +32,7 @@ public class AdvertPvLogDomainImpl extends BaseDomain implements AdvertPvLogDoma
     public AdvertPvLog saveAdvertPvLog(AdvertPvLog request) {
 
         request.setCreateTime(new Date());
-        request.setDate(DateUtil.getDateShortString(request.getCreateTime()));
+        request.setDate(DateUtil.yyyy_MM_dd.format(request.getCreateTime()));
 
         advertDao.pv(request.getAdvertId());
 

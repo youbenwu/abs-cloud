@@ -9,9 +9,6 @@ import lombok.Data;
 @Data
 public class OrderProductDTO {
 
-    @ApiModelProperty(name = "productType", value = "商品类型")
-    private Integer productType;
-
     @ApiModelProperty(name = "productId", value = "商品ID")
     private Long productId;
 

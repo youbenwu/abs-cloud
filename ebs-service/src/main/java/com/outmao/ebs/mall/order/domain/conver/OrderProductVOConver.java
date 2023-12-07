@@ -24,9 +24,13 @@ public class OrderProductVOConver implements BeanConver<QOrderProduct, OrderProd
         vo.setPrice(t.get(e.price));
         vo.setQuantity(t.get(e.quantity));
         vo.setAmount(t.get(e.amount));
+        vo.setCommissionAmount(t.get(e.commissionAmount));
         vo.setVolume(t.get(e.volume));
         vo.setWeight(t.get(e.weight));
         vo.setRemark(t.get(e.remark));
+        vo.setNoDelivery(t.get(e.noDelivery));
+        vo.setLease(t.get(e.lease));
+        vo.setSellerFinish(t.get(e.sellerFinish));
         return vo;
     }
 
@@ -44,9 +48,14 @@ public class OrderProductVOConver implements BeanConver<QOrderProduct, OrderProd
                 e.price,
                 e.quantity,
                 e.amount,
+                e.commissionAmount,
                 e.volume,
                 e.weight,
-                e.remark
+                e.remark,
+                e.noDelivery,
+                e.lease,
+                e.sellerFinish,
+
         };
     }
 }

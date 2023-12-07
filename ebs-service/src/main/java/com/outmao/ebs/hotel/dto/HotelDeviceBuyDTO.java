@@ -14,29 +14,37 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-public class HotelDeviceNewDTO {
+public class HotelDeviceBuyDTO {
 
 
     /**
      *
-     * 设备所有者用户ID
+     * 购买设备数量
      *
      */
-    private Long ownerId;
+    private int quantity;
 
     /**
      *
-     * 合伙人ID
+     * 购买单价
+     *
+     */
+    private double price;
+
+
+    /**
+     *
+     * 购买用户ID
+     *
+     */
+    private Long userId;
+
+    /**
+     *
+     * 绑定合伙人ID
      *
      */
     private Long partnerId;
-
-    /**
-     *
-     * 购买设备的金额
-     *
-     */
-    private Double amount;
 
 
 }

@@ -1,5 +1,7 @@
 package com.outmao.ebs.common.util;
 
+import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -8,12 +10,51 @@ import static java.util.Calendar.*;
 
 public class DateUtil {
 
+    public static DateFormat yyyy_MM=new SimpleDateFormat("yyyy-MM");
+    public static DateFormat yyyy_MM_dd=new SimpleDateFormat("yyyy-MM-dd");
+    public static DateFormat yyyy_MM_dd_HH_mm=new SimpleDateFormat("yyyy-MM-dd HH:mm");
+    public static DateFormat yyyy_MM_dd_HH_mm_ss=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+
+    public static Date format_yyyy_MM(Date date){
+        String s=yyyy_MM.format(date);
+        try {
+            return yyyy_MM.parse(s);
+        } catch (ParseException e) {
+            throw new IllegalArgumentException(e);
+        }
+    }
+
+    public static Date format_yyyy_MM_dd(Date date){
+        String s=yyyy_MM_dd.format(date);
+        try {
+            return yyyy_MM_dd.parse(s);
+        } catch (ParseException e) {
+            throw new IllegalArgumentException(e);
+        }
+    }
+
+
     public static Date maxTime(Date date){
         Calendar calendar=Calendar.getInstance();
         calendar.setTime(date);
         calendar.set(Calendar.HOUR_OF_DAY, 23);
         calendar.set(Calendar.MINUTE, 59);
         calendar.set(Calendar.SECOND, 59);
+        return calendar.getTime();
+    }
+
+    public static Date addMonths(Date date,int months){
+        Calendar calendar=Calendar.getInstance();
+        calendar.setTime(date);
+        calendar.add(MONTH, months);
+        return calendar.getTime();
+    }
+
+    public static Date addYears(Date date,int years){
+        Calendar calendar=Calendar.getInstance();
+        calendar.setTime(date);
+        calendar.add(YEAR, years);
         return calendar.getTime();
     }
 

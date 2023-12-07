@@ -15,7 +15,8 @@ import java.util.Date;
  */
 @Data
 @Entity
-@Table(name = "ebs_Hotel")
+@Table(name = "ebs_Hotel",uniqueConstraints = {
+        @UniqueConstraint(columnNames = { "name", "area" }) })
 public class Hotel implements Serializable ,BindingOrg {
 
     /**
@@ -41,7 +42,7 @@ public class Hotel implements Serializable ,BindingOrg {
     /**
      * 用户ID
      */
-    @Column(nullable = false)
+    @Column(nullable = false,unique = true)
     private Long userId;
 
     /**
@@ -107,7 +108,6 @@ public class Hotel implements Serializable ,BindingOrg {
      */
     private String image;
 
-
     /**
      *
      * 营业执照
@@ -145,6 +145,13 @@ public class Hotel implements Serializable ,BindingOrg {
     @OneToOne(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
     @JoinColumn(name = "contactId")
     private HotelContact contact;
+
+    /**
+     *
+     * 地区 省市区
+     *
+     */
+    private String area;
 
     /**
      *

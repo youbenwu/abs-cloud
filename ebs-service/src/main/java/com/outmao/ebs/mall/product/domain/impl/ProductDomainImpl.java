@@ -55,6 +55,9 @@ public class ProductDomainImpl extends BaseDomain implements ProductDomain {
     private QrCodeService qrcodeService;
 
     @Autowired
+    private ProductCategoryDao productCategoryDao;
+
+    @Autowired
     private ProductDao productDao;
 
     @Autowired
@@ -155,6 +158,14 @@ public class ProductDomainImpl extends BaseDomain implements ProductDomain {
         security.hasPermission(product.getOrgId(),null);
 
         BeanUtils.copyProperties(request,product,"shopId","attributes","properties","skus","images","medias");
+
+        if(product.getCategoryId()>0){
+            ProductCategory category=productCategoryDao.getOne(product.getCategoryId());
+            product.setType(category.getProductType());
+            product.setNoDelivery(category.isNoDelivery());
+            product.setLease(category.getLease());
+            product.setSellerFinish(category.isSellerFinish());
+        }
 
         product.setLetter(StringUtil.toPinyin(product.getTitle()));
 

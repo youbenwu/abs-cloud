@@ -116,6 +116,34 @@ public class ProductCategory implements Serializable {
 	private int productType;
 
 	/**
+	 *
+	 * 是否无需发货
+	 *
+	 */
+	private boolean noDelivery;
+
+
+	/**
+	 *
+	 * 租赁信息
+	 *
+	 */
+	@Embedded
+	@AttributeOverrides({
+			@AttributeOverride(name="lease", column=@Column(name="is_lease")),
+			@AttributeOverride(name="field", column=@Column(name="lease_field")),
+			@AttributeOverride(name="min", column=@Column(name="lease_min"))
+	})
+	private ProductLease lease;
+
+	/**
+	 *
+	 * 是否允许商家标记签收
+	 *
+	 */
+	private boolean sellerFinish;
+
+	/**
 	 * 
 	 * 创建时间
 	 * 

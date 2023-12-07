@@ -10,6 +10,8 @@ import com.outmao.ebs.common.util.DateUtil;
 import com.outmao.ebs.common.vo.Address;
 import com.outmao.ebs.common.vo.BindingItem;
 import com.outmao.ebs.common.vo.Item;
+import com.outmao.ebs.jnet.vo.factory.ProductionCategoryVO;
+import com.outmao.ebs.jnet.vo.factory.ProductionTechnologyVO;
 import com.outmao.ebs.user.dao.UserDao;
 import com.outmao.ebs.user.dto.UserDetailsDTO;
 import com.outmao.ebs.user.entity.UserDetails;
@@ -30,10 +32,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Transactional
 @Component
@@ -66,6 +66,10 @@ public class FactoryDomainImpl extends BaseDomain implements FactoryDomain {
 
     @Autowired
     BbsService bbsService;
+
+    private ProductionTechnologyVOConver productionTechnologyVOConver=new ProductionTechnologyVOConver();
+
+    private ProductionCategoryVOConver productionCategoryVOConver=new ProductionCategoryVOConver();
 
     @Override
     public Factory saveFactory(FactoryParamsDTO params) {
@@ -362,14 +366,65 @@ public class FactoryDomainImpl extends BaseDomain implements FactoryDomain {
 
         for (Industry sub : list){
             IndustryVO vo=new IndustryVO(sub);
-            List<ProductionTechnology> productionTechnologies=getProductionTechnologyListByIndustryId(sub.getId());
-            List<ProductionCategory> productionCategories=getProductionCategoryListByIndustryId(sub.getId());
+            List<ProductionTechnologyVO> productionTechnologies=getProductionTechnologyVOListByIndustryId(sub.getId());
+
+            List<ProductionCategoryVO> productionCategories=getProductionCategoryVOListIndustryId(sub.getId());
             vo.setProductionTechnologies(productionTechnologies);
             vo.setProductionCategories(productionCategories);
             vos.add(vo);
         }
 
         return vos;
+    }
+
+    private List<ProductionCategoryVO> getProductionCategoryVOListIndustryId(Long industryId){
+        QProductionCategory e=QProductionCategory.productionCategory;
+        List<ProductionCategoryVO> list=queryList(e,e.industry.id.eq(industryId),productionCategoryVOConver);
+
+        return toLevel2(list);
+    }
+
+    private List<ProductionCategoryVO> toLevel2(List<ProductionCategoryVO> all){
+        Map<Long,ProductionCategoryVO> map=all.stream().collect(Collectors.toMap(t->t.getId(), t->t));
+        List<ProductionCategoryVO> list=new ArrayList<>();
+        for(ProductionCategoryVO vo:all){
+            if(vo.getParentId()!=null){
+                ProductionCategoryVO parent=map.get(vo.getParentId());
+                if(parent.getChildren()==null){
+                    parent.setChildren(new ArrayList<>());
+                }
+                parent.getChildren().add(vo);
+            }else{
+                list.add(vo);
+            }
+        }
+        return list;
+    }
+
+    private List<ProductionTechnologyVO> getProductionTechnologyVOListByIndustryId(Long industryId){
+        QProductionTechnology e=QProductionTechnology.productionTechnology;
+
+        List<ProductionTechnologyVO> list=queryList(e,e.industry.id.eq(industryId),productionTechnologyVOConver);
+
+        return toLevel(list);
+
+    }
+
+    private List<ProductionTechnologyVO> toLevel(List<ProductionTechnologyVO> all){
+        Map<Long,ProductionTechnologyVO> map=all.stream().collect(Collectors.toMap(t->t.getId(), t->t));
+        List<ProductionTechnologyVO> list=new ArrayList<>();
+        for(ProductionTechnologyVO vo:all){
+            if(vo.getParentId()!=null){
+                ProductionTechnologyVO parent=map.get(vo.getParentId());
+                if(parent.getChildren()==null){
+                    parent.setChildren(new ArrayList<>());
+                }
+                parent.getChildren().add(vo);
+            }else{
+                list.add(vo);
+            }
+        }
+        return list;
     }
 
     @CacheEvict(value = "cache_industrys", allEntries = true)

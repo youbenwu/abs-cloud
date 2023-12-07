@@ -38,7 +38,6 @@ public class ArticleAction {
         return articleService.getArticleCategoryVOList(request);
     }
 
-
     @PreAuthorize("principal.id.equals(#request.userId)")
     @ApiOperation(value = "保存文章", notes = "保存文章")
     @PostMapping("/save")
@@ -56,7 +55,7 @@ public class ArticleAction {
     @PreAuthorize("permitAll")
     @ApiOperation(value = "获取文章列表", notes = "获取文章列表")
     @PostMapping("/page")
-    public Page<ArticleVO> getArticleVOPage(@RequestBody GetArticleListDTO request, Pageable pageable){
+    public Page<ArticleVO> getArticleVOPage(GetArticleListDTO request, Pageable pageable){
         return articleService.getArticleVOPage(request,pageable);
     }
 

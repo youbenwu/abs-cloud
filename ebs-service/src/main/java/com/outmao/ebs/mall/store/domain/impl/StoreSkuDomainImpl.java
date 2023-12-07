@@ -162,8 +162,8 @@ public class StoreSkuDomainImpl extends BaseDomain implements StoreSkuDomain {
 
 
 //    private StoreSku saveStoreSku(Store store, StoreSkuStockInItemDTO dto){
-//        ProductSku productSku=productSkuDao.findByIdForUpdate(dto.getSkuId());
-//        Product product=productDao.findByIdForUpdate(productSku.getProduct().getId());
+//        ProductSku productSku=productSkuDao.findByIdLock(dto.getSkuId());
+//        Product product=productDao.findByIdLock(productSku.getProduct().getId());
 //        StoreSku storeSku=storeSkuDao.findByStoreIdAndSkuId(store.getId(),dto.getSkuId());
 //
 //        if(storeSku==null){
@@ -300,9 +300,9 @@ public class StoreSkuDomainImpl extends BaseDomain implements StoreSkuDomain {
 //    private StoreSku saveStoreSku(Store store, StoreSkuStockOutItemDTO dto){
 //
 //
-//        ProductSku productSku=productSkuDao.findByIdForUpdate(dto.getSkuId());
+//        ProductSku productSku=productSkuDao.findByIdLock(dto.getSkuId());
 //
-//        Product product=productDao.findByIdForUpdate(productSku.getProduct().getId());
+//        Product product=productDao.findByIdLock(productSku.getProduct().getId());
 //
 //        StoreSku storeSku=storeSkuDao.findByStoreIdAndSkuId(store.getId(),dto.getSkuId());
 //
@@ -382,9 +382,9 @@ public class StoreSkuDomainImpl extends BaseDomain implements StoreSkuDomain {
 
 //    private void backStoreSkuStockOutItem(Store store, StoreSkuStockOutItem item){
 //
-//        Product product=productDao.findByIdForUpdate(item.getProductId());
+//        Product product=productDao.findByIdLock(item.getProductId());
 //
-//        ProductSku productSku=productSkuDao.findByIdForUpdate(item.getSkuId());
+//        ProductSku productSku=productSkuDao.findByIdLock(item.getSkuId());
 //
 //        StoreSku storeSku=storeSkuDao.findByStoreIdAndSkuId(store.getId(),item.getSkuId());
 //

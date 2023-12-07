@@ -1,18 +1,13 @@
 package com.outmao.ebs.hotel.dto;
 
+import com.outmao.ebs.mall.merchant.common.data.UserCommissionSaverRequest;
 import lombok.Data;
 
 @Data
-public class HotelDeviceOwnerDTO {
-
-    /**
-     *
-     * 自动编号
-     *
-     */
-    private Long id;
+public class HotelDeviceOwnerDTO implements UserCommissionSaverRequest {
 
 
+    private Long merchantId;
 
     private Long userId;
 
@@ -39,28 +34,8 @@ public class HotelDeviceOwnerDTO {
     private String phone;
 
 
-    /**
-     *
-     * 设备数量
-     *
-     */
-    private int quantity;
-
-
-    /**
-     *
-     * 设备单价
-     *
-     */
-    private Double price;
-
-
-    /**
-     *
-     * 设备总价
-     *
-     */
-    private Double amount;
-
-
+    @Override
+    public int getCommissionType() {
+        return 2;
+    }
 }

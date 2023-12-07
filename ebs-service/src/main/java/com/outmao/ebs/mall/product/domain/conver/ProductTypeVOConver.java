@@ -18,6 +18,9 @@ public class ProductTypeVOConver implements BeanConver<QProductType, ProductType
         vo.setSort(t.get(e.sort));
         vo.setCreateTime(t.get(e.createTime));
         vo.setUpdateTime(t.get(e.updateTime));
+        vo.setNoDelivery(t.get(e.noDelivery));
+        vo.setLease(t.get(e.lease));
+        vo.setSellerFinish(t.get(e.sellerFinish));
         return vo;
     }
 
@@ -31,6 +34,9 @@ public class ProductTypeVOConver implements BeanConver<QProductType, ProductType
                 e.sort,
                 e.createTime,
                 e.updateTime,
+                e.noDelivery,
+                e.lease,
+                e.sellerFinish,
         };
     }
 }

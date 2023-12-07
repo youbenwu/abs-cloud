@@ -20,8 +20,13 @@ public class ArticleDTO {
     @ApiModelProperty(name = "id", value = "文章ID")
     private Long id;
 
-    @ApiModelProperty(name = "orgId", value = "组织ID")
-    private Long orgId;
+    /**
+     *
+     * 类型 about--关于我们 agree--用户协议 privacy--隐私政策
+     *
+     */
+    @ApiModelProperty(name = "code", value = "类型 about--关于我们 agree--用户协议 privacy--隐私政策")
+    private String code;
 
     @ApiModelProperty(name = "userId", value = "用户的ID")
     private Long userId;

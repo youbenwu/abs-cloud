@@ -13,6 +13,7 @@ public class ArticleVOConver implements BeanConver<QArticle, ArticleVO> {
     public ArticleVO fromTuple(Tuple t, QArticle e) {
         ArticleVO vo=new ArticleVO();
         vo.setId(t.get(e.id));
+        vo.setType(t.get(e.type));
         vo.setSubjectId(t.get(e.subject.id));
         vo.setOrgId(t.get(e.orgId));
         vo.setUserId(t.get(e.user.id));
@@ -24,7 +25,7 @@ public class ArticleVOConver implements BeanConver<QArticle, ArticleVO> {
         vo.setContent(t.get(e.content));
         vo.setCreateTime(t.get(e.createTime));
         vo.setUpdateTime(t.get(e.updateTime));
-
+        vo.setUrl(t.get(e.url));
         return vo;
     }
 
@@ -32,6 +33,7 @@ public class ArticleVOConver implements BeanConver<QArticle, ArticleVO> {
     public Expression<?>[] select(QArticle e) {
         return new Expression[]{
                 e.id,
+                e.type,
                 e.subject.id,
                 e.orgId,
                 e.user.id,
@@ -42,7 +44,8 @@ public class ArticleVOConver implements BeanConver<QArticle, ArticleVO> {
                 e.title,
                 e.content,
                 e.createTime,
-                e.updateTime
+                e.updateTime,
+                e.url,
         };
     }
 }

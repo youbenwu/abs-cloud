@@ -77,6 +77,14 @@ public class ArticleCategoryVO {
 
     /**
      *
+     * 类型 0--普通文章 10--公告 20--关于
+     *
+     */
+    @ApiModelProperty(name = "type", value = "类型 0--普通文章 10--公告 20--关于")
+    private int type;
+
+    /**
+     *
      * 分类图片,分类的图片地址
      *
      */

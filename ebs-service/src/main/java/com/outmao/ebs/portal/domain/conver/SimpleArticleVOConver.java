@@ -23,7 +23,7 @@ public class SimpleArticleVOConver implements BeanConver<QArticle, ArticleVO> {
         vo.setAuthor(t.get(e.author));
         vo.setTitle(t.get(e.title));
         vo.setUpdateTime(t.get(e.updateTime));
-
+        vo.setUrl(t.get(e.url));
         return vo;
     }
 
@@ -39,7 +39,8 @@ public class SimpleArticleVOConver implements BeanConver<QArticle, ArticleVO> {
                 e.status,
                 e.author,
                 e.title,
-                e.updateTime
+                e.updateTime,
+                e.url,
         };
     }
 }

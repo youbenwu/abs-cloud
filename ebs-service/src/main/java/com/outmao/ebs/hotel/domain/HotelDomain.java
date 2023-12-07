@@ -21,11 +21,11 @@ public interface HotelDomain {
 
     public Hotel saveHotel(HotelDTO request);
 
+    public Hotel getHotelByUserId(Long userId);
+
     public Hotel setHotelStatus(SetHotelStatusDTO request);
 
     public long getHotelCount();
-
-    public Hotel getHotelByUserIdAndName(Long userId,String name);
 
     public HotelVO getHotelVOById(Long id);
 

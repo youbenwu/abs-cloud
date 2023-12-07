@@ -5,18 +5,13 @@ package com.outmao.ebs.hotel.web.admin.api;
 import com.outmao.ebs.common.exception.BusinessException;
 import com.outmao.ebs.hotel.common.constant.HotelRoomStatus;
 import com.outmao.ebs.hotel.dto.*;
-import com.outmao.ebs.hotel.entity.HotelDeviceOwner;
-import com.outmao.ebs.hotel.entity.HotelRoom;
-import com.outmao.ebs.hotel.entity.HotelRoomType;
 import com.outmao.ebs.hotel.service.HotelService;
 import com.outmao.ebs.hotel.vo.*;
 import com.outmao.ebs.org.common.annotation.AccessPermission;
 import com.outmao.ebs.org.common.annotation.AccessPermissionGroup;
 import com.outmao.ebs.org.common.annotation.AccessPermissionParent;
-import com.outmao.ebs.org.entity.Account;
 import com.outmao.ebs.org.service.AccountService;
 import com.outmao.ebs.security.util.SecurityUtil;
-import com.outmao.ebs.security.vo.SecurityUser;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,8 +23,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -147,13 +140,8 @@ public class HotelAdminAction {
 
     @ApiOperation(value = "获取登陆用户管理的酒店信息列表", notes = "获取登陆用户管理的酒店信息列表")
     @PostMapping("/list")
-    public List<HotelVO> getHotelVOListByOrgIdIn() {
-        SecurityUser user=SecurityUtil.currentUser();
-        List<Account> accounts=accountService.getAccountListByUserId(user.getId());
-        if(accounts.size()>0){
-            return hotelService.getHotelVOListByOrgIdIn(accounts.stream().map(t->t.getOrg().getId()).collect(Collectors.toList()));
-        }
-        return new ArrayList<>(0);
+    public List<HotelVO> getHotelVOList() {
+        return hotelService.getHotelVOListByOrgIdIn(SecurityUtil.currentUser().getMembers().stream().map(t->t.getOrgId()).collect(Collectors.toList()));
     }
 
 
@@ -237,8 +225,6 @@ public class HotelAdminAction {
     }
 
 
-
-
     @PreAuthorize("hasPermission('/hotel/room','read')")
     @ApiOperation(value = "获取酒店房间", notes = "获取酒店房间")
     @PostMapping("/room/getByRoomNo")
@@ -253,57 +239,6 @@ public class HotelAdminAction {
     public Page<HotelRoomVO> getHotelRoomVOPage(GetHotelRoomListDTO request, Pageable pageable){
         return  hotelService.getHotelRoomVOPage(request,pageable);
     }
-
-
-    @PreAuthorize("hasPermission('/hotel/device','save')")
-    @ApiOperation(value = "保存设备", notes = "保存设备")
-    @PostMapping("/device/save")
-    public void saveHotelDevice(HotelDeviceDTO request){
-         hotelService.saveHotelDevice(request);
-    }
-
-    @PreAuthorize("hasPermission('/hotel/device','delete')")
-    @ApiOperation(value = "删除设备", notes = "删除设备")
-    @PostMapping("/device/delete")
-    public void deleteHotelDeviceById(Long id){
-        hotelService.deleteHotelDeviceById(id);
-    }
-
-
-    @ApiOperation(value = "获取设备数量", notes = "获取设备数量")
-    @PostMapping("/device/count")
-    public long getHotelDeviceCount() {
-        return hotelService.getHotelDeviceCount();
-    }
-
-    @PreAuthorize("hasPermission('/hotel/device','read')")
-    @ApiOperation(value = "获取设备", notes = "获取设备")
-    @PostMapping("/device/get")
-    public HotelDeviceVO getHotelDeviceVOById(Long id){
-        return hotelService.getHotelDeviceVOById(id);
-    }
-
-    @PreAuthorize("hasPermission('/hotel/device','read')")
-    @ApiOperation(value = "获取设备", notes = "获取设备")
-    @PostMapping("/device/getByDeviceNo")
-    public HotelDeviceVO getHotelDeviceVOByDeviceNo(String deviceNo){
-        return hotelService.getHotelDeviceVOByDeviceNo(deviceNo);
-    }
-
-    @PreAuthorize("hasPermission('/hotel/device','read')")
-    @ApiOperation(value = "获取设备列表", notes = "获取设备列表")
-    @PostMapping("/device/list")
-    public List<HotelDeviceVO> getHotelDeviceVOList(GetHotelDeviceListDTO request){
-        return hotelService.getHotelDeviceVOList(request);
-    }
-
-    @PreAuthorize("hasPermission('/hotel/device','read')")
-    @ApiOperation(value = "获取设备列表", notes = "获取设备列表")
-    @PostMapping("/device/page")
-    public Page<HotelDeviceVO> getHotelDeviceVOPage(GetHotelDeviceListDTO request, Pageable pageable){
-        return hotelService.getHotelDeviceVOPage(request,pageable);
-    }
-
 
 
     @PreAuthorize("hasPermission('/hotel/workOrder','save')")
@@ -398,19 +333,7 @@ public class HotelAdminAction {
         return hotelService.getHotelCustomerStayVOPage(request,pageable);
     }
 
-    @PreAuthorize("hasPermission('/hotel/device/owner','save')")
-    @ApiOperation(value = "保存用户投放的设备信息", notes = "保存用户投放的设备信息")
-    @PostMapping("/device/owner/save")
-    public HotelDeviceOwner saveHotelDeviceOwner(HotelDeviceOwnerDTO request){
-        return hotelService.saveHotelDeviceOwner(request);
-    }
 
-    @PreAuthorize("hasPermission('/hotel/device/owner','read')")
-    @ApiOperation(value = "获取用户投放的设备信息", notes = "获取用户投放的设备信息")
-    @PostMapping("/device/owner/page")
-    public Page<HotelDeviceOwner> getHotelDeviceOwnerPage(GetHotelDeviceOwnerListDTO request, Pageable pageable){
-        return hotelService.getHotelDeviceOwnerPage(request,pageable);
-    }
 
 
 

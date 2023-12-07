@@ -1,6 +1,7 @@
 package com.outmao.ebs.mall.product.dto;
 
 
+import com.outmao.ebs.mall.product.entity.ProductLease;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -50,5 +51,26 @@ public class ProductTypeDTO {
     @ApiModelProperty(name = "attributes", value = "属性列表")
     private List<ProductTypePropertyDTO> propertys;
 
+    /**
+     *
+     * 是否无需发货
+     *
+     */
+    private boolean noDelivery;
+
+
+    /**
+     *
+     * 租赁信息
+     *
+     */
+    private ProductLease lease;
+
+    /**
+     *
+     * 是否允许商家标记签收
+     *
+     */
+    private boolean sellerFinish;
 
 }

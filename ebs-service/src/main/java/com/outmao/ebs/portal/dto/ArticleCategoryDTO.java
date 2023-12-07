@@ -13,6 +13,14 @@ public class ArticleCategoryDTO {
     @ApiModelProperty(name = "id", value = "分类ID")
     private Long id;
 
+    /**
+     *
+     * 类型 0--文章 20--协议
+     *
+     */
+    @ApiModelProperty(name = "type", value = "类型 0--普通文章 10--公告 20--关于")
+    private int type;
+
     @ApiModelProperty(name = "orgId", value = "组织ID")
     private Long orgId;
 

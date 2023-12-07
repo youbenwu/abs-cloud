@@ -1,5 +1,6 @@
 package com.outmao.ebs.mall.product.dto;
 
+import com.outmao.ebs.mall.product.entity.ProductLease;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -30,10 +31,6 @@ public class ProductCategoryDTO {
 
     @ApiModelProperty(name = "description", value = "分类描述")
     private String description;
-
-
-    @ApiModelProperty(name = "productType", value = "商品类型")
-    private int productType;
 
 
 

@@ -47,13 +47,12 @@ public class OrderUserCommissionAspect {
             return;
         if(order.getStatus()!= OrderStatus.FINISHED.getStatus())
             return;
+        if(order.getCommissionAmount()==0)
+            return;
         if(order.getBrokerId()==null&&order.getPartnerId()==null)
             return;
 
-        if(order.getTotalAmount()==0)
-            return;
-
-        Merchant merchant=merchantDao.findByShopId(order.getShopId());
+        Merchant merchant=merchantDao.getOne(order.getMerchantId());
 
         if(order.getBrokerId()!=null&&merchant.getCommission()>0){
             saveUserCommissionRecord(merchant,order);
@@ -70,7 +69,7 @@ public class OrderUserCommissionAspect {
 
         MerchantBroker broker=merchantMemberDao.getOne(order.getBrokerId());
 
-        double amount=order.getTotalAmount()*merchant.getCommission();
+        double amount=order.getCommissionAmount()*merchant.getCommission();
 
         UserCommissionRecordDTO recordDTO=new UserCommissionRecordDTO();
         recordDTO.setOrderId(order.getId());
@@ -92,7 +91,7 @@ public class OrderUserCommissionAspect {
 
         double rate=level==0?merchant.getPartnerCommission():merchant.getPartnerParentCommission();
 
-        double amount=order.getTotalAmount()*rate;
+        double amount=order.getCommissionAmount()*rate;
 
         UserCommissionRecordDTO recordDTO=new UserCommissionRecordDTO();
         recordDTO.setLevel(level);

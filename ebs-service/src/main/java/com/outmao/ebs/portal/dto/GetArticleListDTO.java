@@ -19,11 +19,19 @@ public class GetArticleListDTO  {
     @ApiModelProperty(name = "keyword", value = "关键字")
     private String keyword;
 
-    @ApiModelProperty(name = "statusIn", value = "状态 0--正常 1--禁用 2--未审核 3--审核中 4--审核成功 5--审核失败 6--删除")
-    private List<Integer> statusIn;
+    @ApiModelProperty(name = "status", value = "状态 0--正常 1--禁用 2--未审核 3--审核中 4--审核失败")
+    private Integer status;
 
     @ApiModelProperty(name = "userId", value = "发表用户的ID")
     private Long userId;
+
+    /**
+     *
+     * 类型 0--文章 20--协议
+     *
+     */
+    @ApiModelProperty(name = "type", value = "类型 0--普通文章 10--公告 20--关于")
+    private Integer type;
 
 
 }

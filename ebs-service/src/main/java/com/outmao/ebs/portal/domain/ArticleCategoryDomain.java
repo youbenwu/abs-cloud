@@ -19,5 +19,4 @@ public interface ArticleCategoryDomain {
     public List<ArticleCategoryVO> getArticleCategoryVOList(GetArticleCategoryListDTO request);
 
 
-
 }

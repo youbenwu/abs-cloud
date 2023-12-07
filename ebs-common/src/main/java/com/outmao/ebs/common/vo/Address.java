@@ -54,5 +54,9 @@ public class Address implements Serializable {
 		return toFullAddress();
 	}
 
+	public String toShortAddress(){
+		return province + ("市辖区".equals(city)?"":city) + (district == null ? "" : district);
+	}
+
 
 }

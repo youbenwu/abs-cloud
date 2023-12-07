@@ -16,6 +16,8 @@ public interface HotelService {
 
     public Hotel saveHotel(HotelDTO request);
 
+    public Hotel getHotelByUserId(Long userId);
+
     public Hotel setHotelStatus(SetHotelStatusDTO request);
 
     public long getHotelCount();
@@ -55,28 +57,6 @@ public interface HotelService {
 
     public Page<HotelRoomVO> getHotelRoomVOPage(GetHotelRoomListDTO request, Pageable pageable);
 
-
-    public HotelDevice saveHotelDevice(HotelDeviceDTO request);
-
-    public HotelDevice saveHotelDevice(HotelDeviceNewDTO request);
-
-    public HotelDevice saveHotelDevice(PadRegisterHotelDeviceDTO request);
-
-    public void deleteHotelDeviceById(Long id);
-
-    public long getHotelDeviceCount();
-
-    public long getHotelDeviceCountByPartnerId(Long partnerId);
-
-    public HotelDevice getHotelDeviceByUserId(Long userId);
-
-    public HotelDeviceVO getHotelDeviceVOById(Long id);
-
-    public HotelDeviceVO getHotelDeviceVOByDeviceNo(String deviceNo);
-
-    public List<HotelDeviceVO> getHotelDeviceVOList(GetHotelDeviceListDTO request);
-
-    public Page<HotelDeviceVO> getHotelDeviceVOPage(GetHotelDeviceListDTO request, Pageable pageable);
 
 
     public HotelWorkOrder saveHotelWorkOrder(HotelWorkOrderDTO request);
@@ -121,25 +101,6 @@ public interface HotelService {
 
 
     public Page<HotelCustomerStayVO> getHotelCustomerStayVOPage(GetHotelCustomerStayListDTO request,Pageable pageable);
-
-
-    public HotelDeviceOwner saveHotelDeviceOwner(HotelDeviceOwnerDTO request);
-
-
-    public HotelDeviceOwner getHotelDeviceOwnerByUserId(Long userId);
-
-
-    public Page<HotelDeviceOwner> getHotelDeviceOwnerPage(GetHotelDeviceOwnerListDTO request, Pageable pageable);
-
-    public HotelDeviceOwnerVO getHotelDeviceOwnerVOByUserId(Long userId);
-
-    public Page<HotelDeviceOwnerVO> getHotelDeviceOwnerVOPage(GetHotelDeviceOwnerListDTO request, Pageable pageable);
-
-
-    public List<StatsHotelDeviceCityVO> getStatsHotelDeviceCityVOList(Integer size);
-
-    public List<StatsHotelDeviceProvinceVO> getStatsHotelDeviceProvinceVOList(Integer size);
-
 
 
 

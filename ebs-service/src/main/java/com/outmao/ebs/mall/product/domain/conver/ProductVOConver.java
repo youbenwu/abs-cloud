@@ -36,6 +36,7 @@ public class ProductVOConver implements BeanConver<QProduct,ProductVO> {
         vo.setDescription(t.get(e.description));
         vo.setDetails(t.get(e.details));
         vo.setMarks(t.get(e.marks));
+        vo.setDistribution(t.get(e.distribution));
         vo.setCommissionType(t.get(e.commissionType));
         vo.setCommissionRate(t.get(e.commissionRate));
         vo.setCommissionAmount(t.get(e.commissionAmount));
@@ -61,6 +62,8 @@ public class ProductVOConver implements BeanConver<QProduct,ProductVO> {
         vo.setUpdateTime(t.get(e.updateTime));
         vo.setUseStoreStock(t.get(e.useStoreStock));
         vo.setExpectDeliveryTimeSpan(t.get(e.expectDeliveryTimeSpan));
+        vo.setNoDelivery(t.get(e.noDelivery));
+        vo.setSellerFinish(t.get(e.sellerFinish));
         return vo;
     }
 
@@ -91,6 +94,7 @@ public class ProductVOConver implements BeanConver<QProduct,ProductVO> {
                 e.description,
                 e.details,
                 e.marks,
+                e.distribution,
                 e.commissionType,
                 e.commissionRate,
                 e.commissionAmount,
@@ -116,6 +120,8 @@ public class ProductVOConver implements BeanConver<QProduct,ProductVO> {
                 e.updateTime,
                 e.useStoreStock,
                 e.expectDeliveryTimeSpan,
+                e.noDelivery,
+                e.sellerFinish,
         };
     }
 }

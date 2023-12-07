@@ -5,10 +5,12 @@ import com.outmao.ebs.hotel.dao.HotelDeviceOwnerDao;
 import com.outmao.ebs.hotel.domain.HotelDeviceOwnerDomain;
 import com.outmao.ebs.hotel.domain.conver.HotelDeviceOwnerVOConver;
 import com.outmao.ebs.hotel.dto.GetHotelDeviceOwnerListDTO;
+import com.outmao.ebs.hotel.dto.HotelDeviceOwnerBuyDTO;
 import com.outmao.ebs.hotel.dto.HotelDeviceOwnerDTO;
 import com.outmao.ebs.hotel.entity.HotelDeviceOwner;
 import com.outmao.ebs.hotel.entity.QHotelDeviceOwner;
 import com.outmao.ebs.hotel.vo.HotelDeviceOwnerVO;
+import com.outmao.ebs.mall.merchant.common.annotation.SaveUserCommission;
 import com.outmao.ebs.mall.merchant.common.annotation.SetUserCommission;
 import com.querydsl.core.types.Predicate;
 import org.springframework.beans.BeanUtils;
@@ -34,26 +36,16 @@ public class HotelDeviceOwnerDomainImpl extends BaseDomain implements HotelDevic
 
 
     @Transactional()
+    @SaveUserCommission
     @Override
     public HotelDeviceOwner saveHotelDeviceOwner(HotelDeviceOwnerDTO request) {
         HotelDeviceOwner owner=hotelDeviceOwnerDao.findByUserIdLock(request.getUserId());
         if(owner==null){
             owner=new HotelDeviceOwner();
             owner.setCreateTime(new Date());
-            owner.setUserId(request.getUserId());
         }
 
-        if(request.getId()==null){
-            owner.setAmount(owner.getAmount()+request.getAmount());
-            owner.setQuantity(owner.getQuantity()+request.getQuantity());
-        }else{
-            owner.setAmount(request.getAmount());
-            owner.setQuantity(request.getQuantity());
-        }
-
-
-
-        BeanUtils.copyProperties(request,owner,"id","userId","quantity","amount");
+        BeanUtils.copyProperties(request,owner);
 
         owner.setUpdateTime(new Date());
 
@@ -64,8 +56,31 @@ public class HotelDeviceOwnerDomainImpl extends BaseDomain implements HotelDevic
         return owner;
     }
 
+    @Transactional()
+    @SaveUserCommission
+    @Override
+    public HotelDeviceOwner saveHotelDeviceOwnerBuy(HotelDeviceOwnerBuyDTO request) {
+        HotelDeviceOwner owner=hotelDeviceOwnerDao.findByUserIdLock(request.getUserId());
+        if(owner==null){
+            owner=new HotelDeviceOwner();
+            owner.setCreateTime(new Date());
+            owner.setAmount(request.getAmount());
+            owner.setQuantity(request.getQuantity());
+        }else{
+            owner.setAmount(owner.getAmount()+request.getAmount());
+            owner.setQuantity(owner.getQuantity()+request.getQuantity());
+        }
 
+        BeanUtils.copyProperties(request,owner,"quantity","amount");
 
+        owner.setUpdateTime(new Date());
+
+        owner.setKeyword(getKeyword(owner));
+
+        hotelDeviceOwnerDao.save(owner);
+
+        return owner;
+    }
 
     public String getKeyword(HotelDeviceOwner data){
         StringBuffer s=new StringBuffer();
@@ -84,34 +99,9 @@ public class HotelDeviceOwnerDomainImpl extends BaseDomain implements HotelDevic
     }
 
 
-
     @Override
     public HotelDeviceOwner getHotelDeviceOwnerByUserId(Long userId) {
         return hotelDeviceOwnerDao.findByUserId(userId);
-    }
-
-
-
-    @Override
-    public List<HotelDeviceOwner> getHotelDeviceOwnerList() {
-        return hotelDeviceOwnerDao.findAll();
-    }
-
-    @Override
-    public Page<HotelDeviceOwner> getHotelDeviceOwnerPage(GetHotelDeviceOwnerListDTO request, Pageable pageable) {
-
-        QHotelDeviceOwner e=QHotelDeviceOwner.hotelDeviceOwner;
-
-        Predicate p=null;
-        if(!StringUtils.isEmpty(request.getKeyword())){
-            p=e.keyword.like("%"+request.getKeyword()+"%");
-        }
-
-        if(p!=null){
-            return hotelDeviceOwnerDao.findAll(p,pageable);
-        }
-
-        return hotelDeviceOwnerDao.findAll(pageable);
     }
 
 

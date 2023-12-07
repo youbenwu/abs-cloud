@@ -8,5 +8,4 @@ public interface AdvertPvLogDomain {
     public AdvertPvLog saveAdvertPvLog(AdvertPvLog request);
 
 
-
 }

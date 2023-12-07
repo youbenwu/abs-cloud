@@ -15,6 +15,7 @@ public class ArticleCategoryVOConvert implements BeanConver<QArticleCategory, Ar
         ArticleCategoryVO vo=new ArticleCategoryVO();
         vo.setOrgId(t.get(e.orgId));
         vo.setId(t.get(e.id));
+        vo.setType(t.get(e.type));
         vo.setParentId(t.get(e.parent.id));
         vo.setLevel(t.get(e.level));
         vo.setLeaf(t.get(e.leaf));
@@ -34,6 +35,7 @@ public class ArticleCategoryVOConvert implements BeanConver<QArticleCategory, Ar
         return new Expression[]{
                 e.orgId,
                 e.id,
+                e.type,
                 e.parent.id,
                 e.level,
                 e.leaf,

@@ -1,8 +1,9 @@
 package com.outmao.ebs.hotel.domain;
 
+import com.outmao.ebs.hotel.dto.HotelDeviceBuyDTO;
+import com.outmao.ebs.hotel.dto.HotelDeviceLeaseDTO;
 import com.outmao.ebs.hotel.dto.GetHotelDeviceListDTO;
 import com.outmao.ebs.hotel.dto.HotelDeviceDTO;
-import com.outmao.ebs.hotel.dto.HotelDeviceNewDTO;
 import com.outmao.ebs.hotel.entity.HotelDevice;
 import com.outmao.ebs.hotel.vo.HotelDeviceVO;
 import com.outmao.ebs.hotel.vo.StatsHotelDeviceCityVO;
@@ -17,17 +18,18 @@ public interface HotelDeviceDomain {
 
     public HotelDevice saveHotelDevice(HotelDeviceDTO request);
 
-    public HotelDevice saveHotelDevice(HotelDeviceNewDTO request);
-
     public void deleteHotelDeviceById(Long id);
 
     public long getHotelDeviceCount();
+
+    public long getHotelDeviceCountByLeaseRenterId(Long leaseRenterId);
 
     public long getHotelDeviceCountByPartnerId(Long partnerId);
 
     public List<HotelDevice> getHotelDeviceListByOwnerId(Long ownerId);
 
     public List<HotelDevice> getHotelDeviceListByPartnerId(Long partnerId);
+
 
     public HotelDevice getHotelDeviceByUserId(Long userId);
 
@@ -45,6 +47,30 @@ public interface HotelDeviceDomain {
 
 
     public List<StatsHotelDeviceProvinceVO> getStatsHotelDeviceProvinceVOList(Integer size);
+
+
+    /**
+     *
+     * 设备购买
+     *
+     **/
+    public List<HotelDevice> buy(HotelDeviceBuyDTO request);
+
+
+    /**
+     *
+     * 设备租赁
+     *
+     **/
+    public List<HotelDevice> lease(HotelDeviceLeaseDTO request);
+
+
+    /**
+     *
+     * 检查设备租赁状态是否过期
+     *
+     **/
+    public List<HotelDevice> checkLeaseExpire();
 
 
 }

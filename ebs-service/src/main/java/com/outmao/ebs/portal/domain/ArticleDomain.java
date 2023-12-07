@@ -20,6 +20,8 @@ public interface ArticleDomain {
 
     public ArticleVO getArticleVOById(Long id);
 
+    public ArticleVO getArticleVOByCode(String code);
+
     public Page<ArticleVO> getArticleVOPage(GetArticleListDTO request, Pageable pageable);
 
     public List<ArticleVO> getArticleVOByIdIn(Collection<Long> idIn);

@@ -23,13 +23,13 @@ public interface ArticleService {
 
     public List<ArticleCategoryVO> getArticleCategoryVOList(GetArticleCategoryListDTO request);
 
-
-
     public Article saveArticle(ArticleDTO request);
 
     public Article setArticleStatus(SetArticleStatusDTO request);
 
     public ArticleVO getArticleVOById(Long id);
+
+    public ArticleVO getArticleVOByCode(String code);
 
     public Page<ArticleVO> getArticleVOPage(GetArticleListDTO request, Pageable pageable);
 

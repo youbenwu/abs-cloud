@@ -57,7 +57,7 @@ public class User implements Serializable, BindingSubjectId {
 	private Long walletId;
 
 	/**
-	 * 状态0正常1禁用
+	 * 状态 0--正常 1--禁用
 	 */
 	private int status;
 

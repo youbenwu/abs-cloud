@@ -87,7 +87,6 @@ public class Advert extends SortEntity {
     @ApiModelProperty(name = "buyAmount", value = "广告主购买的总金额")
     private double buyAmount;
 
-
     @ApiModelProperty(name = "pv", value = "流量")
     private long pv;
 

@@ -71,6 +71,11 @@ public class ArticleServiceImpl extends BaseService implements ArticleService {
     }
 
     @Override
+    public ArticleVO getArticleVOByCode(String code) {
+        return articleDomain.getArticleVOByCode(code);
+    }
+
+    @Override
     public Page<ArticleVO> getArticleVOPage(GetArticleListDTO request, Pageable pageable) {
         return articleDomain.getArticleVOPage(request,pageable);
     }

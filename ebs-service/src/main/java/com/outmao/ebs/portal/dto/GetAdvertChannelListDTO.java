@@ -9,7 +9,7 @@ public class GetAdvertChannelListDTO {
 
     private Long orgId;
 
-    @ApiModelProperty(name = "type", value = "投放是否收费 0--免费 1--收费")
+    @ApiModelProperty(name = "type", value = "广告类型 0--系统广告 1--企业广告 2--个人广告")
     private Integer type;
 
 

@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Api(value = "admin-portal-data-stats", tags = "后台-门户-数据大屏统计数据")
 @RestController
 @RequestMapping("/api/admin/portal/data/stats")
-public class DattaStatsAdminAction {
+public class DataStatsAdminAction {
 
 
 	@Autowired

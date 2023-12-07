@@ -20,11 +20,7 @@ import java.io.Serializable;
 @Embeddable
 public class ProductLease implements Serializable {
 
-	public final static int MINUTE = 1;
-	public final static int HOUR = 2;
-	public final static int DAY = 3;
-	public final static int MONTH = 4;
-	public final static int YEAR = 5;
+
 
 	@ApiModelProperty(name = "lease", value = "是否租赁")
 	private boolean lease;

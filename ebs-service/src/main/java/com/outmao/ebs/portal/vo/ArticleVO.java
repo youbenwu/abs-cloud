@@ -61,12 +61,23 @@ public class ArticleVO extends SubjectItemVO implements SimpleUserSetter {
     /**
      *
      *
-     * 状态 0--正常 1--禁用 2--未审核 3--审核中 4--审核成功 5--审核失败 6--删除
+     * 状态 0--正常 1--禁用 2--未审核 3--审核中 4--审核失败
      *
      */
-    @ApiModelProperty(name = "status", value = "状态 0--正常 1--禁用 2--未审核 3--审核中 4--审核成功 5--审核失败 6--删除")
+    @ApiModelProperty(name = "status", value = "状态 0--正常 1--禁用 2--未审核 3--审核中 4--审核失败")
     private Integer status;
 
+
+    /**
+     *
+     * 类型 0--普通文章 20--协义
+     *
+     */
+    @ApiModelProperty(name = "type", value = "类型 0--普通文章 10--公告 20--关于")
+    private int type;
+
+    @ApiModelProperty(name = "code", value = "类型 about--关于我们 agree--用户协议 privacy--隐私政策")
+    private String code;
 
     /**
      *
@@ -102,6 +113,13 @@ public class ArticleVO extends SubjectItemVO implements SimpleUserSetter {
      */
     @ApiModelProperty(name = "content", value = "文章内容详情")
     private String content;
+
+    /**
+     *
+     * H5地址
+     *
+     */
+    private String url;
 
     /**
      *

@@ -1,6 +1,7 @@
 package com.outmao.ebs.mall.order.vo;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.outmao.ebs.mall.order.entity.OrderProductLease;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -77,6 +78,14 @@ public class OrderProductVO {
 
     /**
      *
+     * 订单分销中的佣金
+     *
+     */
+    @ApiModelProperty(name = "amount", value = "商品总价")
+    private double commissionAmount;
+
+    /**
+     *
      * 重量小计
      *
      */
@@ -96,5 +105,29 @@ public class OrderProductVO {
      */
     @ApiModelProperty(name = "remark", value = "客户商品备注信息")
     private String remark;
+
+    /**
+     *
+     * 是否无需发货
+     *
+     */
+    @ApiModelProperty(name = "noDelivery", value = "是否无需发货")
+    private boolean noDelivery;
+
+    /**
+     *
+     * 租赁信息
+     *
+     *
+     */
+    @ApiModelProperty(name = "lease", value = "租赁信息")
+    private OrderProductLease lease;
+
+    /**
+     *
+     * 是否允许商家标记签收
+     *
+     */
+    private boolean sellerFinish;
 
 }

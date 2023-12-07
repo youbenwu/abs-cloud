@@ -1,6 +1,7 @@
 package com.outmao.ebs.mall.product.vo;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.outmao.ebs.mall.product.entity.ProductLease;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -98,6 +99,28 @@ public class ProductCategoryVO {
      */
     @ApiModelProperty(name = "productType", value = "商品类型")
     private int productType;
+
+    /**
+	 *
+	 * 是否无需发货
+	 *
+	 */
+	private boolean noDelivery;
+
+
+	/**
+	 *
+	 * 租赁信息
+	 *
+	 */
+	private ProductLease lease;
+
+    /**
+     *
+     * 是否允许商家标记签收
+     *
+     */
+    private boolean sellerFinish;
 
     /**
      *

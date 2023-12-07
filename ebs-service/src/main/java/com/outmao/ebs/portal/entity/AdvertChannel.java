@@ -42,7 +42,7 @@ public class AdvertChannel implements Serializable {
      * 组织ID
      *
      */
-    @Column(nullable = false)
+    @Column(nullable = false,updatable = false)
     private Long orgId;
 
     /**
@@ -55,7 +55,7 @@ public class AdvertChannel implements Serializable {
 
     /**
      *
-     * 投放是否收费 0--免费 1--收费
+     * 广告类型 0--系统广告 1--企业广告 2--个人广告
      *
      */
     @ApiModelProperty(name = "type", value = "广告类型 0--系统广告 1--企业广告 2--个人广告")
@@ -64,19 +64,10 @@ public class AdvertChannel implements Serializable {
 
     /**
      *
-     * 广告投放价格（1000PV）
-     *
-     */
-    @ApiModelProperty(name = "price", value = "广告投放价格（1000PV）")
-    private double price;
-
-
-    /**
-     *
      * 频道编码 唯一标识 在广告里代表广告位置
      *
      */
-    @ApiModelProperty(name = "code", value = "唯一编码 代表广告位置",required = true)
+    @ApiModelProperty(name = "code", value = "唯一编码",required = true)
     @Column(unique = true)
     private String code;
 
@@ -92,7 +83,7 @@ public class AdvertChannel implements Serializable {
     /**
      * 频道描述
      */
-    @ApiModelProperty(name = "description", value = "频道描述",required = true)
+    @ApiModelProperty(name = "description", value = "频道描述")
     private String description;
 
     /**

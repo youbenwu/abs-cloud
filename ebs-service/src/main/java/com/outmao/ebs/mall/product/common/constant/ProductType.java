@@ -23,7 +23,9 @@ public enum ProductType {
     HOTEL_FOOD_SERVICE(31, "酒店送餐服务"),
     HOTEL_MALL(32, "酒店商超"),
 
-    HOTEL_DEVICE(40, "酒店投放设备"),
+    HOTEL_DEVICE_LEASE(40, "酒店设备租赁"),
+    HOTEL_DEVICE(41, "酒店设备购买"),
+
 
     OUT_CTRIP(100, "外部携程旅游商品");
 

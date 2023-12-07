@@ -40,6 +40,7 @@ public class OrderVOConver implements BeanConver<QOrder, OrderVO> {
         vo.setExpectDeliveryTime(t.get(e.expectDeliveryTime));
         vo.setQuantity(t.get(e.quantity));
         vo.setAmount(t.get(e.amount));
+        vo.setCommissionAmount(t.get(e.commissionAmount));
         vo.setRemark(t.get(e.remark));
         vo.setDescription(t.get(e.description));
         vo.setData(t.get(e.data));
@@ -49,7 +50,9 @@ public class OrderVOConver implements BeanConver<QOrder, OrderVO> {
         vo.setTradeNo(t.get(e.tradeNo));
         vo.setAddressId(t.get(e.addressId));
         vo.setLogisticsId(t.get(e.logisticsId));
-
+        vo.setNoDelivery(t.get(e.noDelivery));
+        vo.setLease(t.get(e.lease));
+        vo.setSellerFinish(t.get(e.sellerFinish));
         return vo;
     }
 
@@ -82,6 +85,7 @@ public class OrderVOConver implements BeanConver<QOrder, OrderVO> {
                 e.expectDeliveryTime,
                 e.quantity,
                 e.amount,
+                e.commissionAmount,
                 e.remark,
                 e.description,
                 e.data,
@@ -91,6 +95,9 @@ public class OrderVOConver implements BeanConver<QOrder, OrderVO> {
                 e.tradeNo,
                 e.addressId,
                 e.logisticsId,
+                e.noDelivery,
+                e.lease,
+                e.sellerFinish,
         };
     }
 }

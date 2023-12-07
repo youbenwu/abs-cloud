@@ -221,6 +221,20 @@ public class Product implements Serializable, BindingSubjectId {
 
 	/**
 	 *
+	 * 是否无需发货
+	 *
+	 */
+	private boolean noDelivery;
+
+	/**
+	 *
+	 * 是否允许商家标记签收
+	 *
+	 */
+	private boolean sellerFinish;
+
+	/**
+	 *
 	 * 商品类型
 	 *
 	 */
@@ -308,6 +322,13 @@ public class Product implements Serializable, BindingSubjectId {
 	 */
 	private String marks;
 
+
+	/**
+	 *
+	 * 是否启用分销
+	 *
+	 * */
+	private boolean distribution;
 
 	/**
 	 *

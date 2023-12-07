@@ -13,6 +13,9 @@ public class ProductCategoryVOConvert implements BeanConver<QProductCategory, Pr
         ProductCategoryVO vo=new ProductCategoryVO();
         vo.setId(t.get(e.id));
         vo.setProductType(t.get(e.productType));
+        vo.setNoDelivery(t.get(e.noDelivery));
+        vo.setSellerFinish(t.get(e.sellerFinish));
+        vo.setLease(t.get(e.lease));
         vo.setTypeId(t.get(e.type.id));
         vo.setParentId(t.get(e.parent.id));
         vo.setLevel(t.get(e.level));
@@ -32,6 +35,9 @@ public class ProductCategoryVOConvert implements BeanConver<QProductCategory, Pr
         return new Expression[]{
                 e.id,
                 e.productType,
+                e.noDelivery,
+                e.sellerFinish,
+                e.lease,
                 e.type.id,
                 e.parent.id,
                 e.level,

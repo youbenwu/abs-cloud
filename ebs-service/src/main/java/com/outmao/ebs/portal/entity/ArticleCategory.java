@@ -89,6 +89,13 @@ public class ArticleCategory   implements Serializable {
 
     /**
      *
+     * 类型 0--文章 20--协议
+     *
+     */
+    private int type;
+
+    /**
+     *
      * 分类图片,分类的图片地址
      *
      */

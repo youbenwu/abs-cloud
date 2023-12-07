@@ -13,8 +13,7 @@ import java.util.Date;
  */
 @Data
 @Entity
-@Table(name = "ebs_HotelDevice", uniqueConstraints = {
-        @UniqueConstraint(columnNames = { "deviceNo", "hotelId" }) })
+@Table(name = "ebs_HotelDevice")
 public class HotelDevice  implements Serializable {
 
     /**
@@ -22,8 +21,6 @@ public class HotelDevice  implements Serializable {
      */
     private static final long serialVersionUID = 1L;
 
-
-    public static final String APP_TYPE_QY_PAD="HOTEL_PAD";
 
     /**
      *
@@ -35,10 +32,18 @@ public class HotelDevice  implements Serializable {
     private Long id;
 
     /**
+     *
+     * 迁眼PAD应用--会同时创建一个虚拟的用户，代表房客用户
+     *
+     */
+    private Long userId;
+
+    /**
      * 0--未激活
      * 1--已激活
      */
     private int status;
+
 
     /**
      * 酒店对应组织ID
@@ -56,21 +61,7 @@ public class HotelDevice  implements Serializable {
     private String roomNo;
 
     /**
-     *
-     * 迁眼PAD应用--会同时创建一个虚拟的用户，代表房客用户
-     *
-     */
-    private Long userId;
-
-    /**
-     * 设备号
-     */
-    @Column(unique = true)
-    private String deviceNo;
-
-
-    /**
-     * 设备投放省
+     * 设备投放省份
      */
     private String province;
 
@@ -81,24 +72,19 @@ public class HotelDevice  implements Serializable {
 
     /**
      *
-     * 设备所有者用户ID
+     * 设备购买信息
      *
      */
-    private Long ownerId;
+    @Embedded
+    private HotelDeviceBuy buy;
 
     /**
      *
-     * 合伙人ID
+     * 租赁信息
      *
      */
-    private Long partnerId;
-
-    /**
-     *
-     * 购买设备的金额
-     *
-     */
-    private Double amount;
+    @Embedded
+    private HotelDeviceLease lease;
 
     /**
      *
@@ -108,6 +94,13 @@ public class HotelDevice  implements Serializable {
     @Lob
     @Basic(fetch = FetchType.LAZY)
     private String keyword;
+
+
+    /**
+     * 设备号
+     */
+    @Column(unique = true)
+    private String deviceNo;
 
     /**
      * 设备名称
@@ -123,12 +116,6 @@ public class HotelDevice  implements Serializable {
      * 设备系统
      */
     private String os;
-
-    /**
-     * 应用类型
-     */
-    private String appType;
-
 
     /**
      *

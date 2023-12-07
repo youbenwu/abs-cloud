@@ -100,7 +100,7 @@ public class ArticleAdminAction {
     @PreAuthorize("hasPermission('/portal/article','read')")
     @ApiOperation(value = "获取文章列表", notes = "获取文章列表")
     @PostMapping("/page")
-    public Page<ArticleVO> getArticleVOPage(@RequestBody GetArticleListDTO request, Pageable pageable){
+    public Page<ArticleVO> getArticleVOPage(GetArticleListDTO request, Pageable pageable){
         return articleService.getArticleVOPage(request,pageable);
     }
 

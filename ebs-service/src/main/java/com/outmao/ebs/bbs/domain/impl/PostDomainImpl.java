@@ -113,6 +113,9 @@ public class PostDomainImpl extends BaseDomain implements PostDomain {
         if(request.getItemType()!=null){
             p=e.item.type.eq(request.getItemType()).and(p);
         }
+        if(request.getType()!=null){
+            p=e.type.eq(request.getType()).and(p);
+        }
         return queryPage(e,p,postVOConver,pageable);
     }
 

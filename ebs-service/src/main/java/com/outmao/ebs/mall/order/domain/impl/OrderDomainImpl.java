@@ -3,14 +3,19 @@ package com.outmao.ebs.mall.order.domain.impl;
 import com.outmao.ebs.common.exception.BusinessException;
 import com.outmao.ebs.common.exception.IdempotentException;
 import com.outmao.ebs.common.util.DateUtil;
+import com.outmao.ebs.common.vo.Between;
 import com.outmao.ebs.common.vo.SimpleContact;
 import com.outmao.ebs.common.base.BaseDomain;
 import com.outmao.ebs.common.util.OrderNoUtil;
 import com.outmao.ebs.common.util.StringUtil;
 import com.outmao.ebs.common.vo.TimeSpan;
+import com.outmao.ebs.mall.merchant.dao.MerchantCustomerDao;
+import com.outmao.ebs.mall.merchant.dao.MerchantDao;
 import com.outmao.ebs.mall.merchant.domain.MerchantCustomerDomain;
+import com.outmao.ebs.mall.merchant.entity.Merchant;
 import com.outmao.ebs.mall.merchant.entity.MerchantCustomer;
 import com.outmao.ebs.mall.order.common.constant.OrderStatus;
+import com.outmao.ebs.mall.order.common.util.OrderProductLeaseUtil;
 import com.outmao.ebs.mall.order.domain.OrderContractDomain;
 import com.outmao.ebs.mall.order.domain.OrderLogisticsDomain;
 import com.outmao.ebs.mall.product.dao.ProductDao;
@@ -78,8 +83,10 @@ public class OrderDomainImpl extends BaseDomain implements OrderDomain {
 
 
     @Autowired
-    private MerchantCustomerDomain merchantCustomerDomain;
+    private MerchantDao merchantDao;
 
+    @Autowired
+    private MerchantCustomerDao merchantCustomerDao;
 
     @Autowired
     private ShopDao shopDao;
@@ -109,6 +116,8 @@ public class OrderDomainImpl extends BaseDomain implements OrderDomain {
         //设置关联
         Shop shop=shopDao.getOne(request.getShopId());
         User user=userDao.getOne(request.getUserId());
+        MerchantCustomer customer=merchantCustomerDao.findByMerchantIdAndUserId(shop.getMerchantId(),user.getId());
+
 
         order.setShopId(shop.getId());
         order.setUserId(user.getId());
@@ -117,7 +126,6 @@ public class OrderDomainImpl extends BaseDomain implements OrderDomain {
         order.setMerchantId(shop.getMerchantId());
         order.setUseStoreStock(shop.isUseStoreStock());
 
-        MerchantCustomer customer=merchantCustomerDomain.getMerchantCustomer(shop.getMerchantId(),user.getId());
         if(customer!=null){
             order.setCustomerId(customer.getId());
             order.setBrokerId(customer.getBroker()!=null?customer.getBroker().getId():null);
@@ -127,6 +135,7 @@ public class OrderDomainImpl extends BaseDomain implements OrderDomain {
             }
         }
 
+
         //设置订单号
         order.setOrderNo(OrderNoUtil.generateOrderNo());
 
@@ -135,7 +144,14 @@ public class OrderDomainImpl extends BaseDomain implements OrderDomain {
         order.setUpdateTime(new Date());
         orderDao.save(order);
 
-        saveOrderProductList(order,request.getProducts());
+
+        Map<Long,ProductVO> products =getProductVOMap(request.getProducts());
+
+
+        saveOrderProductList(order,request.getProducts(),products);
+
+        //计算佣金
+        saveOrderCommission(order,products);
 
         //订单地址
         setAddress(order,request.getAddress());
@@ -151,6 +167,42 @@ public class OrderDomainImpl extends BaseDomain implements OrderDomain {
 
         return order;
     }
+
+    private void saveOrderCommission(Order order,Map<Long,ProductVO> pmap){
+        Merchant merchant=merchantDao.getOne(order.getMerchantId());
+        if(!merchant.isDistribution())
+            return;
+
+        double totalAmount=0;
+        //佣金比率
+        double productCommissionRate=merchant.getProductCommissionRate();
+
+        for (OrderProduct p:order.getProducts()){
+            ProductVO vo=pmap.get(p.getSkuId());
+            if(vo==null)
+                continue;
+            if(!vo.isDistribution())
+                continue;
+
+            double rate=productCommissionRate;
+            double amount=0;
+
+            if(vo.getCommissionType()==0){
+                amount=vo.getCommissionAmount();
+            }else{
+                rate=vo.getCommissionRate();
+            }
+
+            if(amount==0){
+                amount=p.getAmount()*rate;
+            }
+
+            totalAmount+=amount;
+            p.setCommissionAmount(amount);
+        }
+        order.setCommissionAmount(totalAmount);
+    }
+
 
     private String getDescription(Order order){
         StringBuffer sb=new StringBuffer("");
@@ -175,20 +227,67 @@ public class OrderDomainImpl extends BaseDomain implements OrderDomain {
         order.setAddressId(address.getId());
     }
 
-    private void saveOrderProductList(Order order,List<OrderProductDTO> data){
+
+    private Map<Long,ProductVO> getProductVOMap(List<OrderProductDTO> data){
+        Map<Long,ProductVO> map=new HashMap<>();
+        data.forEach(p->{
+            ProductVO product=productDomain.getProductVO(p.getProductId(),p.getSkuId());
+            map.put(p.getSkuId(),product);
+        });
+        return map;
+    }
+
+    private void saveOrderProductList(Order order,List<OrderProductDTO> data,Map<Long,ProductVO> pmap){
+        boolean noDelivery=true;
+        boolean sellerFinish=true;
         List<OrderProduct> products=new ArrayList<>();
-        for (OrderProductDTO t:data){
+        for (OrderProductDTO dto:data){
             OrderProduct p=new OrderProduct();
             p.setOrder(order);
-            BeanUtils.copyProperties(t,p);
+            BeanUtils.copyProperties(dto,p);
+
+            ProductVO product=pmap.get(dto.getSkuId());
+            if(product!=null){
+                //保存商品快照
+                ProductSnapshot snapshot=productSnapshotDomain.saveProductSnapshot(product,order.getId());
+                p.setSnapshotId(snapshot.getId());
+                p.setProductType(product.getType());
+
+                p.setSellerFinish(product.isSellerFinish());
+                if(!p.isSellerFinish()){
+                    sellerFinish=false;
+                }
+
+                //是否需要发货
+                p.setNoDelivery(product.isNoDelivery());
+                if(!p.isNoDelivery()){
+                    noDelivery=false;
+                }
+
+                //保存租赁信息
+                if(product.getLease()!=null&&product.getLease().isLease()){
+                    p.setLease(OrderProductLeaseUtil.skuNameToLease(p.getSkuName()));
+                    if(p.getLease().isLease()){
+                        order.setLease(true);
+                    }
+                }
+
+            }
             products.add(p);
         }
         orderProductDao.saveAll(products);
+        order.setSellerFinish(sellerFinish);
+        order.setNoDelivery(noDelivery);
         order.setProducts(products);
-        if(!order.isOut()) {
-            saveSnapshotList(products);
+        if(products.size()==1){
+            order.setType(products.get(0).getProductType());
         }
+
+
+
     }
+
+
 
     private void setOrderLogistics(Order order){
         OrderLogistics logistics=new OrderLogistics();
@@ -218,13 +317,6 @@ public class OrderDomainImpl extends BaseDomain implements OrderDomain {
     }
 
 
-    private void saveSnapshotList(List<OrderProduct> products){
-        products.forEach(t->{
-            ProductVO vo=productDomain.getProductVO(t.getProductId(),t.getSkuId());
-            ProductSnapshot snapshot=productSnapshotDomain.saveProductSnapshot(vo,t.getOrder().getId());
-            t.setSnapshotId(snapshot.getId());
-        });
-    }
 
     private String getKeyword(Order m){
         StringBuffer s=new StringBuffer();
@@ -301,10 +393,28 @@ public class OrderDomainImpl extends BaseDomain implements OrderDomain {
             }
         }
 
+        if(order.getStatus()==OrderStatus.SUCCESSED.getStatus()){
+            //租赁处理
+            if(order.isLease()){
+               leaseStart(order);
+            }
+
+        }
+
         orderDao.save(order);
 
-
         return order;
+    }
+
+
+    private void leaseStart(Order order){
+        order.getProducts().forEach(p->{
+            if(p.getLease()!=null&&p.getLease().isLease()){
+                Between<Date> between=p.getLease().getDateBetween(new Date());
+                p.getLease().setStartTime(between.getFrom());
+                p.getLease().setEndTime(between.getTo());
+            }
+        });
     }
 
 

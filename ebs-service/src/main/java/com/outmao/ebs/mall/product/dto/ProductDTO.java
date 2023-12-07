@@ -124,23 +124,6 @@ public class ProductDTO {
 
     /**
      *
-     * 商品类型
-     *
-     */
-    @ApiModelProperty(name = "type", value = "商品类型 0--普通商品 10--广告位")
-    private int type;
-
-    /**
-     *
-     * 租赁信息
-     *
-     */
-    @ApiModelProperty(name = "lease", value = "租赁信息")
-    private ProductLease lease;
-
-
-    /**
-     *
      * 商品条码
      *
      */
@@ -242,24 +225,6 @@ public class ProductDTO {
      */
     @ApiModelProperty(name = "commissionAmount", value = "佣金 固定金额")
     private Double commissionAmount;
-
-
-//    /**
-//     *
-//     * 商品价格
-//     *
-//     */
-    //@ApiModelProperty(name = "price", value = "参考总价")
-    //private Double price;
-
-
-//    /**
-//     *
-//     * 单价（房屋销售里的每平方米单价）
-//     *
-//     */
-    //@ApiModelProperty(name = "unitPrice", value = "参考单价")
-    //private Double unitPrice;
 
 
     /**

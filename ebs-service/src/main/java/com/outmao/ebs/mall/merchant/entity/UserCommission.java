@@ -60,7 +60,7 @@ public class UserCommission  implements Serializable {
 
     /**
      *
-     * 0--经纪人佣金 1--合伙人佣金
+     * 0--经纪人佣金 1--合伙人佣金 2--酒店设备佣金 3--租赁酒店设备佣金
      *
      */
     private int type;

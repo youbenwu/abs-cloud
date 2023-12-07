@@ -102,10 +102,12 @@ public class ArticleCategoryDomainImpl extends BaseDomain implements ArticleCate
             p=e.orgId.eq(request.getOrgId()).and(p);
         }
 
-        if(request.getStatusIn()==null){
-            p=e.status.eq(0).and(p);
-        }else{
-            p=e.status.in(request.getStatusIn()).and(p);
+        if(request.getStatus()!=null){
+            p=e.status.eq(request.getStatus()).and(p);
+        }
+
+        if(request.getType()!=null){
+            p=e.type.eq(request.getType()).and(p);
         }
 
         p=e.level.eq(0).and(p);

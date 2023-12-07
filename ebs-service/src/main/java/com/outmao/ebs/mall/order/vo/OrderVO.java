@@ -201,6 +201,14 @@ public class OrderVO implements SimpleShopSetter , ContactUserSetter {
     private double amount;
 
     /**
+     *
+     * 订单分销中的佣金
+     *
+     */
+    @ApiModelProperty(name = "amount", value = "商品总价")
+    private double commissionAmount;
+
+    /**
      * 客户备注
      */
     @ApiModelProperty(name = "remark", value = "客户备注")
@@ -252,6 +260,29 @@ public class OrderVO implements SimpleShopSetter , ContactUserSetter {
     @ApiModelProperty(name = "contracts", value = "交易合同")
     private List<OrderContractVO> contracts;
 
+
+    /**
+     *
+     * 是否无需发货
+     *
+     */
+    @ApiModelProperty(name = "noDelivery", value = "是否无需发货")
+    private boolean noDelivery;
+
+    /**
+     *
+     * 是否租赁
+     *
+     */
+    @ApiModelProperty(name = "lease", value = "是否租赁")
+    private boolean lease;
+
+    /**
+     *
+     * 是否允许商家标记签收
+     *
+     */
+    private boolean sellerFinish;
 
 
 }

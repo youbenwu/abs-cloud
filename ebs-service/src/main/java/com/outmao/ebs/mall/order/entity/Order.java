@@ -112,12 +112,14 @@ public class Order  implements Serializable{
 	 */
 	private Long lookId;
 
-
 	/**
 	 * 订单编号
 	 */
 	@Column(unique = true)
 	private String orderNo;
+
+
+	//各种状态
 
 	/**
 	 *
@@ -140,6 +142,35 @@ public class Order  implements Serializable{
 
 	/**
 	 *
+	 * 订单子状态
+	 * 10 待发货：商家未确认
+	 * 11 待发货：商家已确认
+	 * 12 待发货：部分发货
+	 *
+	 * 20 待签收：商家已发货
+	 *
+	 * 30 已完成：超时自动签收
+	 * 31 已完成：买家签收
+	 * 32 已完成：商家标记签收
+	 *
+	 * 40 已关闭：待付款超时取消
+	 * 41 已关闭：待付款买家取消
+	 * 42 已关闭：待付款卖家取消
+	 * 43 已关闭：全款退款关闭
+	 *
+	 *
+	 */
+	private int subStatus;
+
+	/**
+	 *
+	 * 订单子状态
+	 *
+	 */
+	private String subStatusRemark;
+
+	/**
+	 *
 	 * 订单退款状态
 	 * 0 没退款
 	 * 1 退款中：用户发起退款申请进入该状态
@@ -151,13 +182,19 @@ public class Order  implements Serializable{
 
 	/**
 	 *
+	 * 订单退款状态备注
+	 *
+	 */
+	private String refundStatusRemark;
+
+	/**
+	 *
 	 * 搜索关键字
 	 *
 	 */
 	@Lob
 	@Basic(fetch = FetchType.LAZY)
 	private String keyword;
-
 
 	/**
 	 * 收货地址
@@ -169,13 +206,19 @@ public class Order  implements Serializable{
 	 */
 	private Long logisticsId;
 
-
 	/**
 	 *
 	 * 商品业务类型
 	 *
 	 */
 	private Integer type;
+
+	/**
+	 *
+	 * 是否租赁
+	 *
+	 */
+	private boolean lease;
 
 	/**
 	 *
@@ -244,6 +287,12 @@ public class Order  implements Serializable{
 	 */
 	private String tradeNo;
 
+	/**
+	 *
+	 * 订单分销中的佣金
+	 *
+	 */
+	private double commissionAmount;
 
 
 	//各种时间节点
@@ -294,6 +343,20 @@ public class Order  implements Serializable{
 	 *
 	 */
 	private boolean useStoreStock;
+
+	/**
+	 *
+	 * 是否无需发货
+	 *
+	 */
+	private boolean noDelivery;
+
+	/**
+	 *
+	 * 是否允许商家标记签收
+	 *
+	 */
+	private boolean sellerFinish;
 
 
 	//是否外部商品

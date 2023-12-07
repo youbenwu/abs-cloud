@@ -38,18 +38,18 @@ public class AdvertChannelServiceImpl extends BaseService implements AdvertChann
         Product product=channel.getProductId()!=null?productService.getProductById(channel.getProductId()):null;
         if(product==null){
             ProductDTO productDTO=new ProductDTO();
-            productDTO.setType(ProductType.ADVERT_CHANNEL.getType());
             productDTO.setTitle(request.getTitle());
             productDTO.setSubtitle("广告位置商品，用于购买投放广告位置");
             productDTO.setImage("abc");
             ProductSkuDTO skuDTO=new ProductSkuDTO();
-            skuDTO.setPrice(request.getPrice());
-            skuDTO.setName("1000PV");
+            skuDTO.setPrice(0.01);
+            skuDTO.setName("PV");
             skuDTO.setStock(1000000000);
 
             productDTO.setSkus(new ArrayList<>());
             productDTO.getSkus().add(skuDTO);
             product=productService.saveProduct(productDTO);
+            product.setType(ProductType.ADVERT_CHANNEL.getType());
             channel.setProductId(product.getId());
         }
 
@@ -81,5 +81,7 @@ public class AdvertChannelServiceImpl extends BaseService implements AdvertChann
     public Page<AdvertChannel> getAdvertChannelPage(GetAdvertChannelListDTO request, Pageable pageable) {
         return advertChannelDomain.getAdvertChannelPage(request,pageable);
     }
+
+
 
 }

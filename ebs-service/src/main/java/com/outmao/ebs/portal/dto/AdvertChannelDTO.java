@@ -22,13 +22,13 @@ public class AdvertChannelDTO {
      */
     private Long orgId;
 
-//    /**
-//     *
-//     * 对应一个产品ID，用于投放收费
-//     *
-//     */
-//    @ApiModelProperty(name = "productId", value = "对应一个产品ID，用于投放收费")
-//    private Long productId;
+    /**
+     *
+     * 对应一个产品ID，用于投放收费
+     *
+     */
+    @ApiModelProperty(name = "productId", value = "对应一个产品ID，用于投放收费")
+    private Long productId;
 
     /**
      *
@@ -37,15 +37,6 @@ public class AdvertChannelDTO {
      */
     @ApiModelProperty(name = "type", value = "投放是否收费 0--免费 1--收费")
     private int type;
-
-
-    /**
-     *
-     * 广告投放价格（1000PV）
-     *
-     */
-    @ApiModelProperty(name = "price", value = "1000PV")
-    private double price;
 
 
     /**

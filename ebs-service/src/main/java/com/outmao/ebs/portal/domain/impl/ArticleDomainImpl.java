@@ -72,9 +72,10 @@ public class ArticleDomainImpl extends BaseDomain implements ArticleDomain {
 
         if(a==null){
             a=new Article();
-            a.setOrgId(request.getOrgId());
             a.setUser(userDao.getOne(request.getUserId()));
             a.setCategory(articleCategoryDao.getOne(request.getCategoryId()));
+            a.setOrgId(a.getCategory().getOrgId());
+            a.setType(a.getCategory().getType());
             a.setCreateTime(new Date());
         }
 
@@ -89,6 +90,11 @@ public class ArticleDomainImpl extends BaseDomain implements ArticleDomain {
 
         articleDao.save(a);
 
+        if(a.getUrl()==null){
+            String url=config.getBaseUrl()+"/article?id="+a.getId();
+            a.setUrl(url);
+        }
+
         saveArticleMediaList(a,request.getMedias());
 
         return a;
@@ -97,6 +103,8 @@ public class ArticleDomainImpl extends BaseDomain implements ArticleDomain {
 
     private List<ArticleMedia> saveArticleMediaList(Article a, List<ItemMediaDTO> data){
 
+        if(data==null)
+            return new ArrayList<>();
 
         Map<Long,ItemMediaDTO> dataMap=data.stream().filter(t->t.getId()!=null).collect(Collectors.toMap(t->t.getId(),t->t));
 
@@ -163,7 +171,25 @@ public class ArticleDomainImpl extends BaseDomain implements ArticleDomain {
 
         ArticleVO vo= queryOne(e,e.id.eq(id),articleVOConver);
 
-        vo.setMedias(getArticleMediaVOList(id));
+        if(vo!=null) {
+            vo.setMedias(getArticleMediaVOList(id));
+        }
+
+        return vo;
+    }
+
+    @SubjectBrowsesAdd
+    @SubjectItemFilter
+    @SetSimpleUser
+    @Override
+    public ArticleVO getArticleVOByCode(String code) {
+        QArticle e=QArticle.article;
+
+        ArticleVO vo= queryOne(e,e.code.eq(code),articleVOConver);
+
+        if(vo!=null) {
+            vo.setMedias(getArticleMediaVOList(vo.getId()));
+        }
 
         return vo;
     }
@@ -196,12 +222,12 @@ public class ArticleDomainImpl extends BaseDomain implements ArticleDomain {
             p=e.category.id.in(categoryIdIn).and(p);
         }
 
-        if(request.getStatusIn()!=null&&request.getStatusIn().size()>0){
-            p=e.status.in(request.getStatusIn()).and(p);
-        }else{
-            if(!SecurityUtil.isAdminApi()) {
-                p = e.status.eq(Status.NORMAL.getStatus()).and(p);
-            }
+        if(request.getStatus()!=null){
+            p=e.status.eq(request.getStatus()).and(p);
+        }
+
+        if(request.getType()!=null){
+            p=e.type.eq(request.getType()).and(p);
         }
 
         if(request.getUserId()!=null){

@@ -10,6 +10,7 @@ import com.outmao.ebs.mall.product.domain.conver.ProductCategoryVOConvert;
 import com.outmao.ebs.mall.product.dto.GetProductCategoryListDTO;
 import com.outmao.ebs.mall.product.dto.ProductCategoryDTO;
 import com.outmao.ebs.mall.product.entity.ProductCategory;
+import com.outmao.ebs.mall.product.entity.ProductType;
 import com.outmao.ebs.mall.product.entity.QProductCategory;
 import com.outmao.ebs.mall.product.vo.ProductCategoryVO;
 import com.querydsl.core.types.Predicate;
@@ -62,7 +63,12 @@ public class ProductCategoryDomainImpl extends BaseDomain implements ProductCate
         }
 
         if(request.getTypeId()!=null){
-            category.setType(productTypeDao.getOne(request.getTypeId()));
+            ProductType type=productTypeDao.getOne(request.getTypeId());
+            category.setType(type);
+            category.setProductType(type.getType());
+            category.setNoDelivery(type.isNoDelivery());
+            category.setLease(type.getLease());
+            category.setSellerFinish(type.isSellerFinish());
         }
 
         category.setLetter(StringUtil.toPinyin(request.getTitle()));

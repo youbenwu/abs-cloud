@@ -2,6 +2,8 @@ package com.outmao.ebs.hotel.vo;
 
 
 import com.outmao.ebs.hotel.common.data.SimpleHotelSetter;
+import com.outmao.ebs.hotel.entity.HotelDeviceBuy;
+import com.outmao.ebs.hotel.entity.HotelDeviceLease;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import java.util.Date;
@@ -33,8 +35,6 @@ public class HotelDeviceVO implements SimpleHotelSetter {
      */
     private Long orgId;
 
-
-
     private Long hotelId;
 
     private SimpleHotelVO hotel;
@@ -47,14 +47,11 @@ public class HotelDeviceVO implements SimpleHotelSetter {
     private String roomNo;
 
 
-
-
     /**
      * 迁眼PAD应用--会同时创建一个虚拟的用户，代表房客用户
      */
     @ApiModelProperty(name = "userId", value = "迁眼PAD应用--会同时创建一个虚拟的用户，代表房客用户")
     private Long userId;
-
 
     /**
      * 设备号
@@ -74,17 +71,17 @@ public class HotelDeviceVO implements SimpleHotelSetter {
 
     /**
      *
-     * 设备所有者用户ID
+     * 设备购买信息
      *
      */
-    private Long ownerId;
+    private HotelDeviceBuy buy;
 
     /**
      *
-     * 购买设备的金额
+     * 租赁信息
      *
      */
-    private Double amount;
+    private HotelDeviceLease lease;
 
     /**
      * 设备名称
@@ -103,13 +100,6 @@ public class HotelDeviceVO implements SimpleHotelSetter {
      */
     @ApiModelProperty(name = "os", value = "设备系统")
     private String os;
-
-
-    /**
-     * 应用类型
-     */
-    @ApiModelProperty(name = "appType", value = "应用类型")
-    private String appType;
 
 
     /**

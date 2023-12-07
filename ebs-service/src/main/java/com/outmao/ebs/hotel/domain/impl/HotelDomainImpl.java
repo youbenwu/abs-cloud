@@ -3,7 +3,9 @@ package com.outmao.ebs.hotel.domain.impl;
 import com.outmao.ebs.common.base.BaseDomain;
 import com.outmao.ebs.common.configuration.constant.Status;
 import com.outmao.ebs.common.exception.BusinessException;
+import com.outmao.ebs.common.vo.Contact;
 import com.outmao.ebs.hotel.dao.HotelDao;
+import com.outmao.ebs.hotel.dao.HotelDeviceDao;
 import com.outmao.ebs.hotel.domain.HotelDomain;
 import com.outmao.ebs.hotel.domain.conver.HotelVOConver;
 import com.outmao.ebs.hotel.domain.conver.SimpleHotelVOConver;
@@ -41,10 +43,12 @@ public class HotelDomainImpl extends BaseDomain implements HotelDomain {
     @Autowired
     private HotelDao hotelDao;
 
+    @Autowired
+    private HotelDeviceDao hotelDeviceDao;
+
     private HotelVOConver hotelVOConver=new HotelVOConver();
 
     private SimpleHotelVOConver simpleHotelVOConver=new SimpleHotelVOConver();
-
 
 
     @Transactional()
@@ -54,13 +58,16 @@ public class HotelDomainImpl extends BaseDomain implements HotelDomain {
         Assert.notNull(request.getUserId(),"用户ID不能为空");
         Assert.notNull(request.getName(),"酒店名称不能为空");
 
-//        if(!request.getUserId().equals(SecurityUtil.currentUserId())){
-//            throw new BusinessException("操作无效");
-//        }
+        checkContact(request.getContact());
+
+        String area=request.getContact().getAddress().toShortAddress();
 
         Hotel hotel=request.getId()==null?null:hotelDao.getOne(request.getId());
 
         if(hotel==null){
+            if(hotelDao.findByAreaAndName(area,request.getName())!=null){
+                throw new BusinessException("酒店名称同名");
+            }
             hotel=new Hotel();
             hotel.setContact(new HotelContact());
             hotel.setCreateTime(new Date());
@@ -68,9 +75,9 @@ public class HotelDomainImpl extends BaseDomain implements HotelDomain {
 
         BeanUtils.copyProperties(request,hotel,"contact");
 
-        if(request.getContact()!=null){
-            BeanUtils.copyProperties(request.getContact(),hotel.getContact());
-        }
+        BeanUtils.copyProperties(request.getContact(),hotel.getContact());
+
+        hotel.setArea(area);
 
         hotel.setUpdateTime(new Date());
 
@@ -80,6 +87,8 @@ public class HotelDomainImpl extends BaseDomain implements HotelDomain {
 
         hotelDao.save(hotel);
 
+        hotelDeviceDao.updateAddress(hotel.getId(),hotel.getContact().getAddress().getProvince(),hotel.getContact().getAddress().getCity());
+
         return hotel;
     }
 
@@ -87,20 +96,19 @@ public class HotelDomainImpl extends BaseDomain implements HotelDomain {
     @Override
     public Hotel saveHotel(HotelDTO request) {
 
-        Assert.notNull(request.getName(),"酒店名称不能为空");
+        checkContact(request.getContact());
 
         Hotel hotel=hotelDao.getOne(request.getId());
 
         security.hasPermission(hotel.getOrgId(),null);
 
-        BeanUtils.copyProperties(request,hotel);
+        BeanUtils.copyProperties(request,hotel,"contact");
 
-        if(request.getContact()!=null){
-            if(hotel.getContact()==null) {
-                hotel.setContact(new HotelContact());
-            }
-            BeanUtils.copyProperties(request.getContact(),hotel.getContact());
+        if(request.getContact()!=null) {
+            BeanUtils.copyProperties(request.getContact(), hotel.getContact());
         }
+
+        hotel.setArea(hotel.getContact().getAddress().toShortAddress());
 
         hotel.setUpdateTime(new Date());
 
@@ -108,7 +116,24 @@ public class HotelDomainImpl extends BaseDomain implements HotelDomain {
 
         hotelDao.save(hotel);
 
+        hotelDeviceDao.updateAddress(hotel.getId(),hotel.getContact().getAddress().getProvince(),hotel.getContact().getAddress().getCity());
+
         return hotel;
+    }
+
+
+    @Override
+    public Hotel getHotelByUserId(Long userId) {
+        return hotelDao.findByUserId(userId);
+    }
+
+    private void checkContact(Contact contact){
+        Assert.notNull(contact.getName(),"联系人名称不能为空");
+        Assert.notNull(contact.getPhone(),"手机号不能为空");
+        Assert.notNull(contact.getAddress(),"地址不能为空");
+        Assert.notNull(contact.getAddress().getProvince(),"省份不能为空");
+        //Assert.notNull(contact.getAddress().getCity(),"城市不能为空");
+        Assert.notNull(contact.getAddress().getDistrict(),"地区不能为空");
     }
 
 
@@ -146,12 +171,6 @@ public class HotelDomainImpl extends BaseDomain implements HotelDomain {
     @Override
     public long getHotelCount() {
         return hotelDao.count();
-    }
-
-
-    @Override
-    public Hotel getHotelByUserIdAndName(Long userId, String name) {
-        return hotelDao.findByUserIdAndName(userId,name);
     }
 
     @Override

@@ -2,8 +2,8 @@ package com.outmao.ebs.hotel.entity;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.outmao.ebs.mall.merchant.common.data.UserCommissionSaver;
 import lombok.Data;
-
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
@@ -18,13 +18,12 @@ import java.util.Date;
 @Data
 @Entity
 @Table(name = "ebs_HotelDeviceOwner")
-public class HotelDeviceOwner implements Serializable {
+public class HotelDeviceOwner implements Serializable, UserCommissionSaver {
 
     /**
      *
      */
     private static final long serialVersionUID = 1L;
-
 
     /**
      *
@@ -48,14 +47,12 @@ public class HotelDeviceOwner implements Serializable {
     @Basic(fetch = FetchType.LAZY)
     private String keyword;
 
-
     /**
      *
      * 佣金ID
      *
      */
     private Long commissionId;
-
 
     /**
      *
@@ -71,7 +68,6 @@ public class HotelDeviceOwner implements Serializable {
      */
     private String phone;
 
-
     /**
      *
      * 拥有设备数量
@@ -79,15 +75,12 @@ public class HotelDeviceOwner implements Serializable {
      */
     private int quantity;
 
-
     /**
      *
      * 购买设备总金额
      *
      */
     private double amount;
-
-
 
     /**
      *
