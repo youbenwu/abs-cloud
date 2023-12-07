@@ -12,6 +12,7 @@ import com.outmao.ebs.portal.dto.AdvertChannelDTO;
 import com.outmao.ebs.portal.dto.GetAdvertChannelListDTO;
 import com.outmao.ebs.portal.entity.AdvertChannel;
 import com.outmao.ebs.portal.service.AdvertChannelService;
+import com.outmao.ebs.portal.vo.AdvertChannelVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -80,6 +81,26 @@ public class AdvertChannelServiceImpl extends BaseService implements AdvertChann
     @Override
     public Page<AdvertChannel> getAdvertChannelPage(GetAdvertChannelListDTO request, Pageable pageable) {
         return advertChannelDomain.getAdvertChannelPage(request,pageable);
+    }
+
+    @Override
+    public AdvertChannelVO getAdvertChannelVOById(Long id) {
+        return advertChannelDomain.getAdvertChannelVOById(id);
+    }
+
+    @Override
+    public AdvertChannelVO getAdvertChannelVOByCode(String code) {
+        return advertChannelDomain.getAdvertChannelVOByCode(code);
+    }
+
+    @Override
+    public List<AdvertChannelVO> getAdvertChannelVOList(GetAdvertChannelListDTO request) {
+        return advertChannelDomain.getAdvertChannelVOList(request);
+    }
+
+    @Override
+    public Page<AdvertChannelVO> getAdvertChannelVOPage(GetAdvertChannelListDTO request, Pageable pageable) {
+        return advertChannelDomain.getAdvertChannelVOPage(request,pageable);
     }
 
 

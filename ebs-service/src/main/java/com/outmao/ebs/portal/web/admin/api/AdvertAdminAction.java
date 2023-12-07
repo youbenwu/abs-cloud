@@ -9,6 +9,7 @@ import com.outmao.ebs.portal.entity.Advert;
 import com.outmao.ebs.portal.entity.AdvertChannel;
 import com.outmao.ebs.portal.service.AdvertChannelService;
 import com.outmao.ebs.portal.service.AdvertService;
+import com.outmao.ebs.portal.vo.AdvertChannelVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -79,11 +80,13 @@ public class AdvertAdminAction {
     }
 
 
+    //
+
     @PreAuthorize("hasPermission('/portal/advert/channel','save')")
     @ApiOperation(value = "保存广告频道", notes = "保存广告频道")
     @PostMapping("/channel/save")
-    public AdvertChannel saveAdvertChannel(AdvertChannelDTO request){
-        return advertChannelService.saveAdvertChannel(request);
+    public void saveAdvertChannel(AdvertChannelDTO request){
+        advertChannelService.saveAdvertChannel(request);
     }
 
     @PreAuthorize("hasPermission('/portal/advert/channel','delete')")
@@ -93,18 +96,26 @@ public class AdvertAdminAction {
         advertChannelService.deleteAdvertChannelById(id);
     }
 
+
+    @PreAuthorize("hasPermission('/portal/advert/channel','read')")
+    @ApiOperation(value = "获取广告频道", notes = "获取广告频道")
+    @PostMapping("/channel/get")
+    public AdvertChannelVO getAdvertChannelVOById(Long id){
+        return advertChannelService.getAdvertChannelVOById(id);
+    }
+
     @PreAuthorize("hasPermission('/portal/advert/channel','read')")
     @ApiOperation(value = "获取广告频道", notes = "获取广告频道")
     @PostMapping("/channel/getByCode")
-    public AdvertChannel getAdvertChannelByCode(String code){
-        return advertChannelService.getAdvertChannelByCode(code);
+    public AdvertChannelVO getAdvertChannelVOByCode(String code){
+        return advertChannelService.getAdvertChannelVOByCode(code);
     }
 
     @PreAuthorize("hasPermission('/portal/advert/channel','read')")
     @ApiOperation(value = "获取广告频道列表", notes = "获取广告频道列表")
     @PostMapping("/channel/page")
-    public Page<AdvertChannel> getAdvertChannelPage(GetAdvertChannelListDTO request, Pageable pageable){
-        return advertChannelService.getAdvertChannelPage(request,pageable);
+    public Page<AdvertChannelVO> getAdvertChannelVOPage(GetAdvertChannelListDTO request, Pageable pageable){
+        return advertChannelService.getAdvertChannelVOPage(request,pageable);
     }
 
 

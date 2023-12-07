@@ -1,11 +1,9 @@
-package com.outmao.ebs.portal.entity;
+package com.outmao.ebs.portal.vo;
 
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
-import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -15,17 +13,9 @@ import java.util.Date;
  * 广告频道
  *
  */
-@ApiModel(value = "AdvertChannel", description = "广告频道")
-@JsonIgnoreProperties(value = {"hibernateLazyInitializer"})
+@ApiModel(value = "AdvertChannelVO", description = "广告频道")
 @Data
-@Entity
-@Table(name = "portal_AdvertChannel")
-public class AdvertChannel implements Serializable {
-
-    /**
-     *
-     */
-    private static final long serialVersionUID = 1L;
+public class AdvertChannelVO implements Serializable {
 
 
     /**
@@ -33,8 +23,6 @@ public class AdvertChannel implements Serializable {
      * ID
      *
      */
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
     /**
@@ -42,7 +30,6 @@ public class AdvertChannel implements Serializable {
      * 所属组织ID
      *
      */
-    @Column(nullable = false,updatable = false)
     private Long orgId;
 
     /**
@@ -68,7 +55,6 @@ public class AdvertChannel implements Serializable {
      *
      */
     @ApiModelProperty(name = "code", value = "唯一编码",required = true)
-    @Column(unique = true)
     private String code;
 
     /**
@@ -77,7 +63,6 @@ public class AdvertChannel implements Serializable {
      *
      */
     @ApiModelProperty(name = "title", value = "频道标题",required = true)
-    @Column(nullable = false)
     private String title;
 
     /**

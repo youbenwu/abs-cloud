@@ -9,6 +9,7 @@ import com.outmao.ebs.portal.entity.AdvertOrder;
 import com.outmao.ebs.portal.service.AdvertChannelService;
 import com.outmao.ebs.portal.service.AdvertPvLogService;
 import com.outmao.ebs.portal.service.AdvertService;
+import com.outmao.ebs.portal.vo.AdvertChannelVO;
 import com.outmao.ebs.security.util.SecurityUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -42,8 +43,8 @@ public class AdvertAction {
 
     @ApiOperation(value = "获取广告频道列表", notes = "获取广告频道列表")
     @PostMapping("/channel/list")
-    public List<AdvertChannel> getAdvertChannelList(GetAdvertChannelListDTO request) {
-        return advertChannelService.getAdvertChannelList(request);
+    public List<AdvertChannelVO> getAdvertChannelVOList(GetAdvertChannelListDTO request) {
+        return advertChannelService.getAdvertChannelVOList(request);
     }
 
 

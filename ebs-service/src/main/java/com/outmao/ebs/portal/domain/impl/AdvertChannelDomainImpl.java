@@ -3,10 +3,12 @@ package com.outmao.ebs.portal.domain.impl;
 import com.outmao.ebs.common.base.BaseDomain;
 import com.outmao.ebs.portal.dao.AdvertChannelDao;
 import com.outmao.ebs.portal.domain.AdvertChannelDomain;
+import com.outmao.ebs.portal.domain.conver.AdvertChannelVOConver;
 import com.outmao.ebs.portal.dto.AdvertChannelDTO;
 import com.outmao.ebs.portal.dto.GetAdvertChannelListDTO;
 import com.outmao.ebs.portal.entity.AdvertChannel;
 import com.outmao.ebs.portal.entity.QAdvertChannel;
+import com.outmao.ebs.portal.vo.AdvertChannelVO;
 import com.querydsl.core.types.Predicate;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +27,8 @@ public class AdvertChannelDomainImpl extends BaseDomain implements AdvertChannel
 
     @Autowired
     private AdvertChannelDao advertChannelDao;
+
+    private AdvertChannelVOConver advertChannelVOConver=new AdvertChannelVOConver();
 
 
     @Transactional
@@ -66,15 +70,8 @@ public class AdvertChannelDomainImpl extends BaseDomain implements AdvertChannel
     public List<AdvertChannel> getAdvertChannelList(GetAdvertChannelListDTO request) {
         QAdvertChannel e=QAdvertChannel.advertChannel;
 
-        Predicate p=null;
+        Predicate p=getPredicate(request);
 
-        if(request.getOrgId()!=null){
-            p=e.orgId.eq(request.getOrgId());
-        }
-
-        if(request.getType()!=null){
-            p=e.type.eq(request.getType()).and(p);
-        }
         if(p==null)
             return advertChannelDao.findAll();
 
@@ -85,6 +82,16 @@ public class AdvertChannelDomainImpl extends BaseDomain implements AdvertChannel
     public Page<AdvertChannel> getAdvertChannelPage(GetAdvertChannelListDTO request, Pageable pageable) {
         QAdvertChannel e=QAdvertChannel.advertChannel;
 
+        Predicate p=getPredicate(request);
+
+        if(p==null)
+            return advertChannelDao.findAll(pageable);
+
+        return advertChannelDao.findAll(p,pageable);
+    }
+
+    private Predicate getPredicate(GetAdvertChannelListDTO request){
+        QAdvertChannel e=QAdvertChannel.advertChannel;
         Predicate p=null;
 
         if(request.getOrgId()!=null){
@@ -94,11 +101,37 @@ public class AdvertChannelDomainImpl extends BaseDomain implements AdvertChannel
         if(request.getType()!=null){
             p=e.type.eq(request.getType()).and(p);
         }
+        return p;
+    }
 
-        if(p==null)
-            return advertChannelDao.findAll(pageable);
+    @Override
+    public AdvertChannelVO getAdvertChannelVOById(Long id) {
+        QAdvertChannel e=QAdvertChannel.advertChannel;
+        AdvertChannelVO vo=queryOne(e,e.id.eq(id),advertChannelVOConver);
+        return vo;
+    }
 
-        return advertChannelDao.findAll(p,pageable);
+    @Override
+    public AdvertChannelVO getAdvertChannelVOByCode(String code) {
+        QAdvertChannel e=QAdvertChannel.advertChannel;
+        AdvertChannelVO vo=queryOne(e,e.code.eq(code),advertChannelVOConver);
+        return vo;
+    }
+
+    @Override
+    public List<AdvertChannelVO> getAdvertChannelVOList(GetAdvertChannelListDTO request) {
+        QAdvertChannel e=QAdvertChannel.advertChannel;
+        Predicate p=getPredicate(request);
+        List<AdvertChannelVO> list=queryList(e,p,advertChannelVOConver);
+        return list;
+    }
+
+    @Override
+    public Page<AdvertChannelVO> getAdvertChannelVOPage(GetAdvertChannelListDTO request, Pageable pageable) {
+        QAdvertChannel e=QAdvertChannel.advertChannel;
+        Predicate p=getPredicate(request);
+        Page<AdvertChannelVO> page=queryPage(e,p,advertChannelVOConver,pageable);
+        return page;
     }
 
 
