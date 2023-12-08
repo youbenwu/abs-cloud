@@ -4,18 +4,16 @@ import com.outmao.ebs.common.base.BaseDomain;
 import com.outmao.ebs.common.exception.BusinessException;
 import com.outmao.ebs.common.util.DateUtil;
 import com.outmao.ebs.common.util.StringUtil;
-import com.outmao.ebs.mall.order.common.constant.OrderStatus;
+import com.outmao.ebs.portal.common.constant.AdvertStatus;
 import com.outmao.ebs.portal.dao.AdvertDao;
-import com.outmao.ebs.portal.dao.AdvertOrderDao;
 import com.outmao.ebs.portal.dao.AdvertPlaceDao;
 import com.outmao.ebs.portal.domain.AdvertDomain;
 import com.outmao.ebs.portal.domain.conver.AdvertVOConver;
 import com.outmao.ebs.portal.dto.*;
 import com.outmao.ebs.portal.entity.*;
 import com.outmao.ebs.portal.vo.AdvertVO;
-import com.outmao.ebs.security.util.SecurityUtil;
-import com.querydsl.core.Tuple;
 import com.querydsl.core.types.Predicate;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -24,13 +22,10 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.thymeleaf.util.StringUtils;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
-
+@Slf4j
 @Component
 public class AdvertDomainImpl extends BaseDomain implements AdvertDomain {
 
@@ -41,8 +36,6 @@ public class AdvertDomainImpl extends BaseDomain implements AdvertDomain {
     @Autowired
     private AdvertPlaceDao advertPlaceDao;
 
-    @Autowired
-    private AdvertOrderDao advertOrderDao;
 
     private AdvertVOConver advertVOConver=new AdvertVOConver();
 
@@ -58,7 +51,6 @@ public class AdvertDomainImpl extends BaseDomain implements AdvertDomain {
         }
 
         Advert advert=request.getId()==null?null:advertDao.findByIdForUpdate(request.getId());
-
 
         if(advert==null){
             advert=new Advert();
@@ -113,8 +105,11 @@ public class AdvertDomainImpl extends BaseDomain implements AdvertDomain {
     @Override
     public Advert setAdvertStatus(SetAdvertStatusDTO request) {
         Advert advert=advertDao.findByIdForUpdate(request.getId());
-        if(advert.getStatus()==2){
-            throw new BusinessException("需缴费");
+        if(advert.getStatus()==AdvertStatus.Expire.getStatus()){
+            throw new BusinessException("广告已过期");
+        }
+        if(advert.getStatus()==AdvertStatus.NoPay.getStatus()){
+            throw new BusinessException("广告没支付");
         }
         BeanUtils.copyProperties(request,advert);
         advert.setUpdateTime(new Date());
@@ -129,22 +124,62 @@ public class AdvertDomainImpl extends BaseDomain implements AdvertDomain {
     }
 
 
+
+    @Override
+    public void randomAdvertSort() {
+        List<Advert> list=advertDao.findAll();
+
+        Collections.shuffle(list);
+
+        for (int i=0;i<list.size();i++){
+            Advert advert=list.get(i);
+            advertDao.setSort(advert.getId(),i);
+        }
+
+    }
+
+
     @Transactional
     @Override
-    public void setAdvertSort(Long id, int sort) {
-        advertDao.setSort(id,sort);
+    public Advert buy(Long id, AdvertBuy buy) {
+        Advert advert=advertDao.findByIdForUpdate(id);
+        if(advert==null){
+            throw new BusinessException("广告不存在");
+        }
+        if(advert.getBuy()==null){
+            advert.setBuy(buy);
+        }else{
+            advert.getBuy().newBuy(buy);
+        }
+        if(advert.getStatus()== AdvertStatus.Expire.getStatus()
+                ||advert.getStatus()== AdvertStatus.NoPay.getStatus()){
+            if(advert.getBuy().getPv()>advert.getPv()){
+                //直接上架
+                advert.setStatus(AdvertStatus.Up.getStatus());
+            }
+        }
+        advertDao.save(advert);
+        return advert;
     }
 
     @Transactional
     @Override
-    public Advert buyPv(Long id,long buyPv,double buyAmount) {
+    public Advert buyDisplay(Long id, AdvertBuyDisplay buyDisplay) {
         Advert advert=advertDao.findByIdForUpdate(id);
-        advert.setBuyPv(buyPv+advert.getBuyPv());
-        advert.setBuyAmount(buyAmount+advert.getBuyAmount());
-        advert.setBuyPrice(advert.getBuyAmount()/advert.getBuyPv());
-        if(advert.getBuyPv()>advert.getPv()){
+        if(advert==null){
+            throw new BusinessException("广告不存在");
+        }
+        if(advert.getBuyDisplay()==null){
+            advert.setBuyDisplay(buyDisplay);
+        }else {
+            BeanUtils.copyProperties(buyDisplay,advert.getBuyDisplay());
+        }
+        advert.setStartTime(buyDisplay.getStartTime());
+        advert.setEndTime(buyDisplay.getEndTime());
+        if(advert.getStatus()== AdvertStatus.Expire.getStatus()
+                ||advert.getStatus()== AdvertStatus.NoPay.getStatus()){
             //直接上架
-            advert.setStatus(1);
+            advert.setStatus(AdvertStatus.Up.getStatus());
         }
         advertDao.save(advert);
         return advert;
@@ -155,13 +190,13 @@ public class AdvertDomainImpl extends BaseDomain implements AdvertDomain {
         QAdvert e=QAdvert.advert;
         AdvertVO vo=queryOne(e,e.id.eq(id),advertVOConver);
         if(vo!=null) {
-            setChannelData(vo);
+            setChannelTitle(vo);
         }
         return vo;
     }
 
 
-    private void setChannelData(AdvertVO vo){
+    private void setChannelTitle(AdvertVO vo){
         QAdvertChannel c = QAdvertChannel.advertChannel;
         String channel = QF.select(c.title).from(c).where(c.id.eq(vo.getChannelId())).fetchOne();
         vo.setChannelTitle(channel);
@@ -169,12 +204,31 @@ public class AdvertDomainImpl extends BaseDomain implements AdvertDomain {
 
 
     @Override
-    public List<Advert> getAdvertList() {
-        return advertDao.findAll();
+    public List<AdvertVO> getAdvertVOList(GetAdvertListDTO request) {
+        QAdvert e=QAdvert.advert;
+
+        Predicate p=getPredicate(request);
+
+        List<AdvertVO> list=queryList(e,p,advertVOConver);
+
+        return list;
     }
 
+
     @Override
-    public Page<Advert> getAdvertPage(GetAdvertListDTO request, Pageable pageable) {
+    public Page<AdvertVO> getAdvertVOPage(GetAdvertListDTO request, Pageable pageable) {
+        QAdvert e=QAdvert.advert;
+
+        Predicate p=getPredicate(request);
+
+
+        Page<AdvertVO> page=queryPage(e,p,advertVOConver,pageable);
+
+        return page;
+    }
+
+
+    private Predicate getPredicate(GetAdvertListDTO request){
         QAdvert e=QAdvert.advert;
 
         Predicate p=null;
@@ -200,48 +254,20 @@ public class AdvertDomainImpl extends BaseDomain implements AdvertDomain {
             p=e.channelId.eq(request.getChannelId()).and(p);
         }
 
+        if(request.getDisplay()!=null){
+            Date now =new Date();
+            if(request.getDisplay()){
+                //前端只返回在显示时间之内的
+                p=e.startTime.before(now).and(e.endTime.after(now)).and(p);
+            }
+        }
+
         if(request.getStatus()!=null){
             p=e.status.eq(request.getStatus()).and(p);
         }
 
-
-        if(!SecurityUtil.isAdminApi()){
-            //Date now =new Date();
-            //前端只返回在显示时间之内的
-            //p=e.startTime.before(now).and(e.endTime.after(now)).and(p);
-        }
-
-        Page<Advert> page=p==null?advertDao.findAll(pageable):advertDao.findAll(p,pageable);
-
-        return page;
+        return p;
     }
-
-    @Transactional
-    @Override
-    public AdvertOrder saveAdvertOrder(AdvertOrder request) {
-        if(request.getCreateTime()==null){
-            request.setCreateTime(new Date());
-        }
-        AdvertOrder advertOrder= advertOrderDao.save(request);
-        return advertOrder;
-    }
-
-    @Transactional
-    @Override
-    public AdvertOrder setAdvertOrderStatus(SetAdvertOrderStatusDTO request) {
-        AdvertOrder advertOrder=advertOrderDao.findByOrderNo(request.getOrderNo());
-        if(request.getStatus()==advertOrder.getStatus())
-            return advertOrder;
-        if(request.getStatus()== OrderStatus.SUCCESSED.getStatus()){
-            if(advertOrder.getStatus()!=OrderStatus.WAIT_PAY.getStatus()){
-                throw new BusinessException("状态异常");
-            }
-        }
-        advertOrder.setStatus(request.getStatus());
-        advertOrderDao.save(advertOrder);
-        return advertOrder;
-    }
-
 
 
 }

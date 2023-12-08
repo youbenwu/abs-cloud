@@ -41,8 +41,8 @@ public class AdvertOrderDTO {
     @ApiModelProperty(name = "citys", value = "广告投放城市，多个用逗号隔开")
     private String citys;
 
-    @ApiModelProperty(name = "hotels", value = "广告投放酒店ID，多个用逗号隔开")
-    private String hotels;
+    @ApiModelProperty(name = "places", value = "广告投放酒店ID，多个用逗号隔开")
+    private String places;
 
     @ApiModelProperty(name = "startTime", value = "广告展示开始时间")
     private Date startTime;
@@ -50,7 +50,7 @@ public class AdvertOrderDTO {
     @ApiModelProperty(name = "endTime", value = "广告展示结束时间")
     private Date endTime;
 
-    @ApiModelProperty(name = "quantity", value = "PV数量")
+    @ApiModelProperty(name = "quantity", value = "购买屏数量")
     private int quantity;
 
     @ApiModelProperty(name = "settleId", value = "结算ID")

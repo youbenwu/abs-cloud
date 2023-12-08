@@ -5,7 +5,6 @@ import com.outmao.ebs.common.vo.BindingItem;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
-
 import javax.persistence.Embedded;
 import java.util.Date;
 
@@ -25,36 +24,15 @@ public class AdvertDTO {
     @ApiModelProperty(name = "channelId", value = "频道ID")
     private Long channelId;
 
-
-    /**
-     *
-     * 排序
-     *
-     * */
     @ApiModelProperty(name = "sort", value = "排序")
     private int sort;
 
-    /**
-     *
-     * 0--未上架 1--已上架 2--欠费
-     *
-     * */
-    @ApiModelProperty(name = "status", value = "0--未上架 1--已上架 2--欠费")
+    @ApiModelProperty(name = "status", value = "0--未上架 1--已上架 2--已过期")
     private int status;
 
-    /**
-     *
-     * 广告类型
-     *
-     * */
     @ApiModelProperty(name = "type", value = "广告类型 0--系统广告 1--企业广告 2--个人广告")
     private int type;
 
-    /**
-     *
-     * 绑定商品 item.id--商品ID item.type--Product
-     *
-     * */
     @ApiModelProperty(name = "item", value = "绑定商品 item.id--商品ID item.type--Product")
     @Embedded
     private BindingItem item;

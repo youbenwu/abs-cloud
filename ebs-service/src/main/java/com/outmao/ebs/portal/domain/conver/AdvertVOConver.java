@@ -14,6 +14,7 @@ public class AdvertVOConver implements BeanConver<QAdvert, AdvertVO> {
     public AdvertVO fromTuple(Tuple t, QAdvert e) {
         AdvertVO vo=new AdvertVO();
         vo.setId(t.get(e.id));
+        vo.setStatus(t.get(e.status));
         vo.setTitle(t.get(e.title));
         vo.setSubtitle(t.get(e.subtitle));
         vo.setUrl(t.get(e.url));
@@ -29,6 +30,7 @@ public class AdvertVOConver implements BeanConver<QAdvert, AdvertVO> {
         vo.setEndTime(t.get(e.endTime));
         vo.setUserId(t.get(e.userId));
         vo.setOrgId(t.get(e.orgId));
+        vo.setBuy(t.get(e.buy));
         return vo;
     }
 
@@ -36,6 +38,7 @@ public class AdvertVOConver implements BeanConver<QAdvert, AdvertVO> {
     public Expression<?>[] select(QAdvert e) {
         return new Expression[]{
                 e.id,
+                e.status,
                 e.title,
                 e.subtitle,
                 e.url,
@@ -50,7 +53,8 @@ public class AdvertVOConver implements BeanConver<QAdvert, AdvertVO> {
                 e.startTime,
                 e.endTime,
                 e.userId,
-                e.orgId
+                e.orgId,
+                e.buy,
         };
     }
 

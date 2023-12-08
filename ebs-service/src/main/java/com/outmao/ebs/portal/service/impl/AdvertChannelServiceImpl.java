@@ -1,7 +1,6 @@
 package com.outmao.ebs.portal.service.impl;
 
 import com.outmao.ebs.common.base.BaseService;
-import com.outmao.ebs.mall.merchant.service.MerchantService;
 import com.outmao.ebs.mall.product.common.constant.ProductType;
 import com.outmao.ebs.mall.product.dto.ProductDTO;
 import com.outmao.ebs.mall.product.dto.ProductSkuDTO;
@@ -36,25 +35,39 @@ public class AdvertChannelServiceImpl extends BaseService implements AdvertChann
     @Override
     public AdvertChannel saveAdvertChannel(AdvertChannelDTO request) {
         AdvertChannel channel= advertChannelDomain.saveAdvertChannel(request);
-        Product product=channel.getProductId()!=null?productService.getProductById(channel.getProductId()):null;
-        if(product==null){
-            ProductDTO productDTO=new ProductDTO();
-            productDTO.setTitle(request.getTitle());
-            productDTO.setSubtitle("广告位置商品，用于购买投放广告位置");
-            productDTO.setImage("abc");
-            ProductSkuDTO skuDTO=new ProductSkuDTO();
-            skuDTO.setPrice(0.01);
-            skuDTO.setName("PV");
-            skuDTO.setStock(1000000000);
-
-            productDTO.setSkus(new ArrayList<>());
-            productDTO.getSkus().add(skuDTO);
-            product=productService.saveProduct(productDTO);
-            product.setType(ProductType.ADVERT_CHANNEL.getType());
-            channel.setProductId(product.getId());
+        if(channel.getProductId()==null){
+            bindProduct(channel);
         }
 
+
         return channel;
+    }
+
+
+    private void bindProduct(AdvertChannel channel){
+        //0--图文 1--图文视频 2--图文视频链接 3--图文视频二维码 4--图文视频链接二维码 5--图文链接 6--图文二维码
+
+        ProductDTO productDTO=new ProductDTO();
+        productDTO.setCategoryId(0L);
+        productDTO.setTitle(channel.getTitle());
+        productDTO.setSubtitle(channel.getDescription());
+        productDTO.setImage("");
+
+        productDTO.setSkus(new ArrayList<>());
+        productDTO.getSkus().add(new ProductSkuDTO("1000PV图文",0.01,Long.MAX_VALUE));
+        productDTO.getSkus().add(new ProductSkuDTO("1000PV图文视频",0.01,Long.MAX_VALUE));
+        productDTO.getSkus().add(new ProductSkuDTO("1000PV图文链接",0.01,Long.MAX_VALUE));
+        productDTO.getSkus().add(new ProductSkuDTO("1000PV图文二维码",0.01,Long.MAX_VALUE));
+        productDTO.getSkus().add(new ProductSkuDTO("1000PV图文视频链接",0.01,Long.MAX_VALUE));
+        productDTO.getSkus().add(new ProductSkuDTO("1000PV图文视频二维码",0.01,Long.MAX_VALUE));
+        productDTO.getSkus().add(new ProductSkuDTO("1000PV图文视频链接二维码",0.01,Long.MAX_VALUE));
+
+        Product product=productService.saveProduct(productDTO);
+        product.setType(ProductType.HOTEL_ADVERT_CHANNEL.getType());
+        product.setSellerFinish(true);
+        product.setNoDelivery(true);
+        channel.setProductId(product.getId());
+
     }
 
     @Override

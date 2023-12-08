@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.outmao.ebs.common.vo.BindingItem;
 import com.outmao.ebs.common.vo.SortEntity;
+import com.outmao.ebs.portal.entity.AdvertBuy;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -81,14 +82,8 @@ public class AdvertVO extends SortEntity {
     @ApiModelProperty(name = "endTime", value = "广告展示结束时间")
     private Date endTime;
 
-    @ApiModelProperty(name = "buyPv", value = "广告主购买的PV数")
-    private long buyPv;
-
-    @ApiModelProperty(name = "buyPrice", value = "广告主购买的每PV价钱")
-    private double buyPrice;
-
-    @ApiModelProperty(name = "buyAmount", value = "广告主购买的总金额")
-    private double buyAmount;
+    @ApiModelProperty(name = "buy", value = "广告主购买信息")
+    private AdvertBuy buy;
 
     @ApiModelProperty(name = "pv", value = "流量")
     private long pv;

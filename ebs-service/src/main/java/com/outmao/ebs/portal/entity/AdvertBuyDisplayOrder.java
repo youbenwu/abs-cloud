@@ -4,6 +4,7 @@ package com.outmao.ebs.portal.entity;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.outmao.ebs.common.vo.BindingItem;
 import com.outmao.ebs.common.vo.SortEntity;
+import com.outmao.ebs.common.vo.TimeSpan;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -17,12 +18,12 @@ import java.util.Date;
  * 广告投放记录
  *
  */
-@ApiModel(value = "AdvertOrder", description = "广告投放记录")
+@ApiModel(value = "AdvertBuyDisplayOrder", description = "广告投放记录")
 @JsonIgnoreProperties(value = {"hibernateLazyInitializer"})
 @Data
 @Entity
-@Table(name = "portal_AdvertOrder")
-public class AdvertOrder implements Serializable {
+@Table(name = "portal_AdvertBuyDisplayOrder")
+public class AdvertBuyDisplayOrder implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -30,18 +31,8 @@ public class AdvertOrder implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    /**
-     *
-     * 订单状态
-     * 0 待付款：用户下单未付款状态
-     * 1 已付款：用户付款商家未发货状态
-     * 2 待签收：商家发货用户未签收状态
-     * 3 已完成：用户签收交易完成状态
-     * 4 已关闭：待付款超时、全款退款完成进入该状态
-     *
-     */
+    @ApiModelProperty(name = "status", value = "0--没支付 1--待投放 2--已投放 3--已取消")
     private int status;
-
 
     @ApiModelProperty(name = "orderNo", value = "订单号")
     @Column(unique = true)
@@ -50,13 +41,24 @@ public class AdvertOrder implements Serializable {
     @ApiModelProperty(name = "advertId", value = "广告ID")
     private Long advertId;
 
-    @ApiModelProperty(name = "pv", value = "购买流量")
-    private long pv;
+    @ApiModelProperty(name = "screens", value = "屏幕数量")
+    private long screens;
 
     @ApiModelProperty(name = "amount", value = "订单金额")
     private double amount;
 
+    @ApiModelProperty(name = "times", value = "广告投放期限")
+    private TimeSpan times;
+
+    @ApiModelProperty(name = "startTime", value = "广告展示开始时间")
+    private Date startTime;
+
+    @ApiModelProperty(name = "endTime", value = "广告展示结束时间")
+    private Date endTime;
+
     private Date createTime;
+
+    private Date updateTime;
 
 
 }

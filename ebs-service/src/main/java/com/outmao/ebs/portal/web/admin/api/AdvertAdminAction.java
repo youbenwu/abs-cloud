@@ -10,6 +10,7 @@ import com.outmao.ebs.portal.entity.AdvertChannel;
 import com.outmao.ebs.portal.service.AdvertChannelService;
 import com.outmao.ebs.portal.service.AdvertService;
 import com.outmao.ebs.portal.vo.AdvertChannelVO;
+import com.outmao.ebs.portal.vo.AdvertVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -75,10 +76,9 @@ public class AdvertAdminAction {
     @PreAuthorize("hasPermission('/portal/advert','read')")
     @ApiOperation(value = "获取广告信息列表", notes = "获取广告信息列表")
     @PostMapping("/page")
-    public Page<Advert> getAdvertPage(GetAdvertListDTO request, Pageable pageable) {
-        return advertService.getAdvertPage(request,pageable);
+    public Page<AdvertVO> getAdvertVOPage(GetAdvertListDTO request, Pageable pageable) {
+        return advertService.getAdvertVOPage(request,pageable);
     }
-
 
     //
 
@@ -103,6 +103,7 @@ public class AdvertAdminAction {
     public AdvertChannelVO getAdvertChannelVOById(Long id){
         return advertChannelService.getAdvertChannelVOById(id);
     }
+
 
     @PreAuthorize("hasPermission('/portal/advert/channel','read')")
     @ApiOperation(value = "获取广告频道", notes = "获取广告频道")

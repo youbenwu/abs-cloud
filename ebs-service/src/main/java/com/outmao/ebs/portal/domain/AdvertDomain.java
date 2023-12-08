@@ -2,10 +2,10 @@ package com.outmao.ebs.portal.domain;
 
 import com.outmao.ebs.portal.dto.AdvertDTO;
 import com.outmao.ebs.portal.dto.GetAdvertListDTO;
-import com.outmao.ebs.portal.dto.SetAdvertOrderStatusDTO;
 import com.outmao.ebs.portal.dto.SetAdvertStatusDTO;
 import com.outmao.ebs.portal.entity.Advert;
-import com.outmao.ebs.portal.entity.AdvertOrder;
+import com.outmao.ebs.portal.entity.AdvertBuy;
+import com.outmao.ebs.portal.entity.AdvertBuyDisplay;
 import com.outmao.ebs.portal.vo.AdvertVO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -20,19 +20,17 @@ public interface AdvertDomain {
 
     public void deleteAdvertById(Long id);
 
-    public void setAdvertSort(Long id, int sort);
+    public Advert buy(Long id, AdvertBuy buy);
 
-    public Advert buyPv(Long id,long buyPv,double buyAmount);
+    public Advert buyDisplay(Long id, AdvertBuyDisplay buyDisplay);
+
+    public void randomAdvertSort();
 
     public AdvertVO getAdvertVOById(Long id);
 
-    public List<Advert> getAdvertList();
+    public List<AdvertVO> getAdvertVOList(GetAdvertListDTO request);
 
-    public Page<Advert> getAdvertPage(GetAdvertListDTO request, Pageable pageable);
-
-    public AdvertOrder saveAdvertOrder(AdvertOrder request);
-
-    public AdvertOrder setAdvertOrderStatus(SetAdvertOrderStatusDTO request);
+    public Page<AdvertVO> getAdvertVOPage(GetAdvertListDTO request, Pageable pageable);
 
 
 

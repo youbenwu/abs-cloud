@@ -32,7 +32,7 @@ public class GetOrderListDTO {
 
     /**
      * 商品类型
-     * ADVERT_CHANNEL(20, "广告频道"),
+     * HOTEL_ADVERT_CHANNEL(20, "广告频道"),
      *
      *     HOTEL_WASH_SERVICE(30, "酒店干洗服务"),
      *     HOTEL_FOOD_SERVICE(31, "酒店送餐服务"),

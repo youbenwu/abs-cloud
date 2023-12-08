@@ -3,9 +3,11 @@ package com.outmao.ebs.mall.product.dto;
 
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 
+@NoArgsConstructor
 @Data
 public class ProductSkuDTO {
 
@@ -79,6 +81,13 @@ public class ProductSkuDTO {
      * 告警库存
      */
     private Long alarmStock;
+
+
+    public ProductSkuDTO(String name,double price, long stock){
+        this.name=name;
+        this.price=price;
+        this.stock=stock;
+    }
 
 
     public String getName() {

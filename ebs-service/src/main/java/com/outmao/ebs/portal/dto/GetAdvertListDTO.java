@@ -15,18 +15,20 @@ public class GetAdvertListDTO  {
     @ApiModelProperty(name = "placeId", value = "场所ID")
     private Long placeId;
 
+    @ApiModelProperty(name = "city", value = "城市")
     private String city;
 
     @ApiModelProperty(name = "channelId", value = "频道ID")
     private Long channelId;
 
-    @ApiModelProperty(name = "channelCode", value = "频道CODE")
-    private String channelCode;
-
     @ApiModelProperty(name = "keyword", value = "关键字，不传查全部")
     private String keyword;
 
-    @ApiModelProperty(name = "status", value = "0--未上架 1--已上架,不传查全部")
+    @ApiModelProperty(name = "status", value = "0--未上架 1--已上架 1--已过期 不传查全部")
     private Integer status;
+
+    @ApiModelProperty(name = "display", value = "是否显示期限内")
+    private Boolean display;
+
 
 }

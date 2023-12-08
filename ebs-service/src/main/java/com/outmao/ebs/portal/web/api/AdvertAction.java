@@ -3,13 +3,13 @@ package com.outmao.ebs.portal.web.api;
 
 import com.outmao.ebs.mall.order.vo.SettleVO;
 import com.outmao.ebs.portal.dto.*;
-import com.outmao.ebs.portal.entity.Advert;
-import com.outmao.ebs.portal.entity.AdvertChannel;
-import com.outmao.ebs.portal.entity.AdvertOrder;
+import com.outmao.ebs.portal.entity.AdvertBuyDisplayOrder;
+import com.outmao.ebs.portal.service.AdvertBuyDisplayOrderService;
 import com.outmao.ebs.portal.service.AdvertChannelService;
 import com.outmao.ebs.portal.service.AdvertPvLogService;
 import com.outmao.ebs.portal.service.AdvertService;
 import com.outmao.ebs.portal.vo.AdvertChannelVO;
+import com.outmao.ebs.portal.vo.AdvertVO;
 import com.outmao.ebs.security.util.SecurityUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -38,6 +38,9 @@ public class AdvertAction {
     private AdvertChannelService advertChannelService;
 
     @Autowired
+    private AdvertBuyDisplayOrderService advertBuyDisplayOrderService;
+
+    @Autowired
     private AdvertPvLogService advertPvLogService;
 
 
@@ -49,11 +52,10 @@ public class AdvertAction {
 
 
     @PreAuthorize("permitAll")
-    @ApiOperation(value = "获取广告信息列表", notes = "获取广告信息列表")
-    @PostMapping("/page")
-    public Page<Advert> getAdvertPage(GetAdvertListDTO request, @PageableDefault(sort = {"sort"}, direction = Sort.Direction.ASC)Pageable pageable) {
-        request.setStatus(1);
-        Page<Advert> page= advertService.getAdvertPage(request,pageable);
+    @ApiOperation(value = "获取酒店设备广告信息列表", notes = "获取酒店设备广告信息列表")
+    @PostMapping("/pageForHotelPad")
+    public Page<AdvertVO> getAdvertPageForHotelPad(GetAdvertListForHotelPadDTO request, @PageableDefault(sort = {"sort"}, direction = Sort.Direction.ASC)Pageable pageable) {
+        Page<AdvertVO> page= advertService.getAdvertVOPage(request,pageable);
         pvLog(page.getContent());
         return page;
     }
@@ -64,17 +66,14 @@ public class AdvertAction {
             "默认广告:pad-home-def" +
             "首页广告:pad-home" +
             "副页广告:pad-sub")
-    @PostMapping("/list")
-    public List<Advert> getAdvertList(String channelCode,int size) {
-        List<Advert> list= advertService.getAdvertList(channelCode,size);
-        if(list.isEmpty()){
-            list=advertService.getAdvertList("pad-home-def",size);
-        }
+    @PostMapping("/listForHotelPad")
+    public List<AdvertVO> getAdvertList(GetAdvertListForHotelPadDTO request) {
+        List<AdvertVO> list= advertService.getAdvertVOList(request);
         pvLog(list);
         return list;
     }
 
-    private void pvLog(List<Advert> list){
+    private void pvLog(List<AdvertVO> list){
         if(list==null||list.isEmpty())
             return;
         if(SecurityUtil.isAuthenticated()) {
@@ -88,14 +87,14 @@ public class AdvertAction {
 
     @ApiOperation(value = "广告投放下单", notes = "广告投放下单")
     @PostMapping("/saveOrder")
-    public AdvertOrder saveAdvertOrder(AdvertOrderDTO request){
-        return advertService.saveAdvertOrder(request);
+    public AdvertBuyDisplayOrder saveAdvertOrder(AdvertOrderDTO request){
+        return advertBuyDisplayOrderService.saveAdvertOrder(request);
     }
 
     @ApiOperation(value = "获取广告投放结算金额", notes = "获取广告投放结算金额")
     @PostMapping("/settleOrder")
     public SettleVO settleAdvertOrder(AdvertOrderSettleDTO request){
-        return advertService.settleAdvertOrder(request);
+        return advertBuyDisplayOrderService.settleAdvertOrder(request);
     }
 
 

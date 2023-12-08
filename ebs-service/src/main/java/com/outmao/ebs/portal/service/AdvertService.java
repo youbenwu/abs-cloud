@@ -3,7 +3,9 @@ package com.outmao.ebs.portal.service;
 import com.outmao.ebs.mall.order.vo.SettleVO;
 import com.outmao.ebs.portal.dto.*;
 import com.outmao.ebs.portal.entity.Advert;
-import com.outmao.ebs.portal.entity.AdvertOrder;
+import com.outmao.ebs.portal.entity.AdvertBuy;
+import com.outmao.ebs.portal.entity.AdvertBuyDisplay;
+import com.outmao.ebs.portal.entity.AdvertBuyDisplayOrder;
 import com.outmao.ebs.portal.vo.AdvertVO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -19,17 +21,21 @@ public interface AdvertService {
 
     public void deleteAdvertById(Long id);
 
+    public Advert buy(Long id, AdvertBuy buy);
+
+    public Advert buyDisplay(Long id, AdvertBuyDisplay buyDisplay);
+
     public AdvertVO getAdvertVOById(Long id);
 
-    public Page<Advert> getAdvertPage(GetAdvertListDTO request, Pageable pageable);
+    public List<AdvertVO> getAdvertVOList(GetAdvertListDTO request);
 
-    public List<Advert> getAdvertList(String channelCode,int size);
+    public Page<AdvertVO> getAdvertVOPage(GetAdvertListDTO request, Pageable pageable);
 
-    public AdvertOrder saveAdvertOrder(AdvertOrderDTO request);
 
-    public SettleVO settleAdvertOrder(AdvertOrderSettleDTO request);
+    public List<AdvertVO> getAdvertVOList(GetAdvertListForHotelPadDTO request);
 
-    public AdvertOrder setAdvertOrderStatus(SetAdvertOrderStatusDTO request);
+    public Page<AdvertVO> getAdvertVOPage(GetAdvertListForHotelPadDTO request, Pageable pageable);
+
 
 
 }
