@@ -683,7 +683,7 @@ public class ProductDomainImpl extends BaseDomain implements ProductDomain {
 
 
 //        for(int i=0;i<list.size();i++){
-//            saveProductAttributeList(list.get(i),data.get(i).getAttributes());
+//            saveProductAttributeList(list.getSubStatus(i),data.getSubStatus(i).getAttributes());
 //        }
 
 

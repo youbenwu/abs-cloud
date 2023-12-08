@@ -23,7 +23,7 @@ public class ConfigBaseService {
 	protected String get(String key) {
 		Config conf = configDao.findByKey(key);
         if(null==conf){
-            log.error("get key no exist: {}", key);
+            log.error("getSubStatus key no exist: {}", key);
             return null;
         }
 

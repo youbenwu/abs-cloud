@@ -20,6 +20,8 @@ public interface OrderService {
 
     public Order setOrderStatus(SetOrderStatusDTO request);
 
+    public Order closeOrder(CloseOrderDTO request);
+
     public void deleteOrderById(Long id);
 
     public long getOrderCount();
@@ -37,7 +39,6 @@ public interface OrderService {
     public List<StatsOrderVO> getStatsOrderVOListByUserIdIn(Collection<Long> userIdIn);
 
     public TradeVO payPrepare(OrderPayPrepareDTO request);
-
 
     public List<StatsOrderStatusVO> getStatsOrderStatusVOList(GetStatsOrderStatusListDTO request);
 

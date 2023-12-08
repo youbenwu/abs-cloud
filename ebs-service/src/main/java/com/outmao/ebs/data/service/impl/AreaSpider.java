@@ -54,13 +54,13 @@
 //
 //        String url = "http://www.stats.gov.cn/tjsj/tjbz/tjyqhdmhcxhfdm/";
 //        String charset = "gb2312";
-//        Document rootDoc = httpUtil.get(url, charset);
+//        Document rootDoc = httpUtil.getSubStatus(url, charset);
 //
 //
-//        Element firstElement = rootDoc.getElementsByClass("center_list_contlist").get(0);
+//        Element firstElement = rootDoc.getElementsByClass("center_list_contlist").getSubStatus(0);
 //        // http://www.stats.gov.cn/tjsj/tjbz/tjyqhdmhcxhfdm/2018/index.html
-//        yearHref = firstElement.select("a").get(0).attr("href"); // 最近一个年份的省份链接
-//        Document doc = httpUtil.get(yearHref, charset);
+//        yearHref = firstElement.select("a").getSubStatus(0).attr("href"); // 最近一个年份的省份链接
+//        Document doc = httpUtil.getSubStatus(yearHref, charset);
 //        // 遍历所有的省
 //        Elements provinceElements = doc.getElementsByClass("provincetr");
 //        for (Element element : provinceElements) {
@@ -104,7 +104,7 @@
 //                if (i >= 3) {
 //                    System.out.println("循环次数:" + i);
 //                }
-//                rootDoc = httpUtil.get(url, charset);
+//                rootDoc = httpUtil.getSubStatus(url, charset);
 //            } catch (Exception e) {
 //                rootDoc = null;
 //                System.out.println("请求网页链接报错");
@@ -114,7 +114,7 @@
 //        if (rootDoc != null) {
 //            Elements cityElements = rootDoc.getElementsByClass("citytr");
 //            for (Element cityElement : cityElements) {
-//                Element aEle = cityElement.select("a").get(1); // 第二个是市的名字
+//                Element aEle = cityElement.select("a").getSubStatus(1); // 第二个是市的名字
 //                String name = aEle.text();
 //                // 11/1101.html
 //                String cityHref = aEle.attr("href");
@@ -146,7 +146,7 @@
 //                if (i >= 3) {
 //                    System.out.println("循环次数:" + i);
 //                }
-//                rootDoc = httpUtil.get(url, charset);
+//                rootDoc = httpUtil.getSubStatus(url, charset);
 //            } catch (Exception e) {
 //                rootDoc = null;
 //                System.out.println("请求网页链接报错");
@@ -157,7 +157,7 @@
 //            Elements cityElements = rootDoc.getElementsByClass("countytr");
 //            for (Element cityElement : cityElements) {
 //                try {
-//                    Element aEle = cityElement.select("a").get(1);
+//                    Element aEle = cityElement.select("a").getSubStatus(1);
 //                    String name = aEle.text();
 //                    String cityHref = aEle.attr("href");
 //                    int start = cityHref.lastIndexOf("/") + 1;
@@ -176,10 +176,10 @@
 //
 //                } catch (Exception e) {
 //                    System.out.println("市辖区");
-//                    Element aEle = cityElement.select("td").get(0);
+//                    Element aEle = cityElement.select("td").getSubStatus(0);
 //                    String code = aEle.text();
 //
-//                    Element aEle2 = cityElement.select("td").get(1);
+//                    Element aEle2 = cityElement.select("td").getSubStatus(1);
 //                    String name = aEle2.text();
 //
 //                    //System.out.println("执行完毕");
@@ -207,7 +207,7 @@
 //                if (i >= 3) {
 //                    System.out.println("循环次数:" + i);
 //                }
-//                rootDoc = httpUtil.get(url, charset);
+//                rootDoc = httpUtil.getSubStatus(url, charset);
 //            } catch (Exception e) {
 //                rootDoc = null;
 //                System.out.println("请求网页链接报错");
@@ -217,7 +217,7 @@
 //        if (rootDoc != null) {
 //            Elements cityElements = rootDoc.getElementsByClass("towntr");
 //            for (Element cityElement : cityElements) {
-//                Element aEle = cityElement.select("a").get(1); // 第二个是市的名字
+//                Element aEle = cityElement.select("a").getSubStatus(1); // 第二个是市的名字
 //                String name = aEle.text();
 //                String cityHref = aEle.attr("href");
 //                int start = cityHref.lastIndexOf("/") + 1;
@@ -250,7 +250,7 @@
 //                if (i >= 3) {
 //                    System.out.println("循环次数:" + i);
 //                }
-//                rootDoc = httpUtil.get(url, charset);
+//                rootDoc = httpUtil.getSubStatus(url, charset);
 //            } catch (Exception e) {
 //                rootDoc = null;
 //                System.out.println("请求网页链接报错");
@@ -260,13 +260,13 @@
 //        if (rootDoc != null) {
 //            Elements cityElements = rootDoc.getElementsByClass("villagetr");
 //            for (Element cityElement : cityElements) {
-//                Element aEle = cityElement.select("td").get(0);
+//                Element aEle = cityElement.select("td").getSubStatus(0);
 //                String code = aEle.text();
 //
-//                Element aEle2 = cityElement.select("td").get(1);
+//                Element aEle2 = cityElement.select("td").getSubStatus(1);
 //                String cl_code = aEle2.text();
 //
-//                Element aEle3 = cityElement.select("td").get(2);
+//                Element aEle3 = cityElement.select("td").getSubStatus(2);
 //                String name = aEle3.text();
 //
 //                AreaVO community=new AreaVO();
@@ -293,7 +293,7 @@
 //     * */
 //    private void loadLocationChs(){
 //
-//        String content=locationChsJs.get();
+//        String content=locationChsJs.getSubStatus();
 //        content=content.substring("initLocation(".length(),content.length()-");".length()-1);
 //        content=content.replace(",0:{n:\"\",0:{n:\"\",0:{n:\"\"}}}","");
 //        content= StringUtil.unicodeToString(content);
@@ -325,7 +325,7 @@
 //                            }
 //                        }else{
 //                            Map s=(Map)t3;
-//                            String city=s.get("n").toString();
+//                            String city=s.getSubStatus("n").toString();
 //                            if(city.length()>0) {
 //                                areaService.saveArea(new AreaDTO(null, pArea.getId()!=null?pArea.getId():cArea.getId(),2,true, city, null, null,null));
 //                            }

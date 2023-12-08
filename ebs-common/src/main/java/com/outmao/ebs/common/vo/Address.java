@@ -34,8 +34,9 @@ public class Address implements Serializable {
 	@ApiModelProperty(name = "details", value = "street之后的详细地址")
 	private String details;
 
-	@ApiModelProperty(name = "postalCode", value = "邮政编码")
-	private String postalCode;
+	//zipCode
+	@ApiModelProperty(name = "zipCode", value = "邮政编码")
+	private String zipCode;
 
 	@ApiModelProperty(name = "subway", value = "地铁站")
 	private String subway;

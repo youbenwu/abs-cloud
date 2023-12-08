@@ -9,8 +9,18 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class AreaDTO {
 
+    /**
+     *
+     * 自动ID
+     *
+     */
     private Long id;
 
+    /**
+     *
+     * 上级ID
+     *
+     */
     private Long parentId;
 
     /**

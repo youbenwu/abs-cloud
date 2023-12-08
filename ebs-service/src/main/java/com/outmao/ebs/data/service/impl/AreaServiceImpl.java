@@ -2,6 +2,7 @@ package com.outmao.ebs.data.service.impl;
 
 
 import com.outmao.ebs.common.base.BaseService;
+import com.outmao.ebs.common.util.ArrayUtil;
 import com.outmao.ebs.data.domain.AreaDomain;
 import com.outmao.ebs.data.dto.AreaDTO;
 import com.outmao.ebs.data.dto.GetAreaListDTO;
@@ -18,6 +19,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Order(10)
@@ -40,12 +42,22 @@ public class AreaServiceImpl extends BaseService implements AreaService, Command
     public void run(String... args) throws Exception {
         //areaSpider.spider();
         if(areaDomain.getAreaCount()==0){
+
+            AreaDTO areaDTO=new AreaDTO();
+            areaDTO.setName("中国");
+            Area country=saveArea(areaDTO);
+
             List<JisuAreaVO> list=jisuAreaService.getJisuAreaVOList();
-            saveFromJisu(list,null);
+            saveFromJisu(list,country);
         }
     }
 
     private void saveFromJisu(List<JisuAreaVO> list,Area parent){
+
+        //北京 天津 上海 重庆
+        List<String> ZX= ArrayUtil.arrayToList(new String[]{"北京","天津","上海","重庆"});
+
+
         list.forEach(t->{
             if(t.getName().equals("国外"))
                 return;
@@ -60,6 +72,7 @@ public class AreaServiceImpl extends BaseService implements AreaService, Command
                 saveFromJisu(t.getChildren(),area);
             }
         });
+
     }
 
     @Override

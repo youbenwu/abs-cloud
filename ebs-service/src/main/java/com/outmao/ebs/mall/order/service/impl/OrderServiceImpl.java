@@ -184,6 +184,12 @@ public class OrderServiceImpl extends BaseService implements OrderService, Trade
         return order;
     }
 
+
+    @Override
+    public Order closeOrder(CloseOrderDTO request) {
+        return orderDomain.closeOrder(request);
+    }
+
     @Override
     public void deleteOrderById(Long id) {
         orderDomain.deleteOrderById(id);

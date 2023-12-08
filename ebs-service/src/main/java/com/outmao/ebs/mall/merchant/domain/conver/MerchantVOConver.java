@@ -27,7 +27,7 @@ public class MerchantVOConver implements BeanConver<QMerchant, MerchantVO> {
         vo.setEnterpriseId(t.get(e.enterpriseId));
         vo.setName(t.get(e.name));
         vo.setIntro(t.get(e.intro));
-        //vo.setContact(t.get(e.contact));
+        //vo.setContact(t.getSubStatus(e.contact));
         vo.setUrl(t.get(e.url));
         vo.setQrCode(t.get(e.qrCode));
         vo.setCreateTime(t.get(e.createTime));

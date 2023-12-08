@@ -1,7 +1,6 @@
 package com.outmao.ebs.mall.order.domain.conver;
 
 import com.outmao.ebs.common.dsl.BeanConver;
-import com.outmao.ebs.common.dsl.BeanConver;
 import com.outmao.ebs.mall.order.entity.QOrderAddress;
 import com.outmao.ebs.mall.order.vo.OrderAddressVO;
 import com.querydsl.core.Tuple;
@@ -25,7 +24,7 @@ public class OrderAddressVOConver implements BeanConver<QOrderAddress, OrderAddr
         vo.setStreet(t.get(e.street));
         vo.setDetails(t.get(e.details));
         vo.setFullAddress(t.get(e.fullAddress));
-        vo.setPostalCode(t.get(e.postalCode));
+        vo.setZipCode(t.get(e.zipCode));
 
         return vo;
     }
@@ -44,7 +43,7 @@ public class OrderAddressVOConver implements BeanConver<QOrderAddress, OrderAddr
                 e.street,
                 e.details,
                 e.fullAddress,
-                e.postalCode
+                e.zipCode
         };
     }
 }

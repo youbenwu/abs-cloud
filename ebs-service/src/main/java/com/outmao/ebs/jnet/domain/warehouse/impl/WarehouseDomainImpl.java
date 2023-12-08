@@ -1725,7 +1725,7 @@ public class WarehouseDomainImpl extends BaseDomain implements WarehouseDomain {
         QWarehouseSnapshoot e=QWarehouseSnapshoot.warehouseSnapshoot;
         List<WarehouseSnapshoot> snapshoots=QF.select(e).from(e).where(e.subWarehouseId.eq(subWarehouseId))
                 .orderBy(e.id.asc()).offset(0).limit(1).fetch();
-        return snapshoots.isEmpty()?null:snapshoots.get(0);
+        return snapshoots.isEmpty()?null:snapshoots.getSubStatus(0);
     }
 
     private WarehouseSnapshoot getWarehouseSnapshootLastBySubWarehouseId(Long subWarehouseId){

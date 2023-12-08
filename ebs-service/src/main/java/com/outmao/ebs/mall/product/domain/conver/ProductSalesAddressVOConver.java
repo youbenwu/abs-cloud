@@ -23,7 +23,7 @@ public class ProductSalesAddressVOConver implements BeanConver<QProductSalesAddr
         vo.setStreet(t.get(e.street));
         vo.setDetails(t.get(e.details));
         vo.setFullAddress(t.get(e.fullAddress));
-        vo.setPostalCode(t.get(e.postalCode));
+        vo.setZipCode(t.get(e.zipCode));
         vo.setCreateTime(t.get(e.createTime));
         vo.setUpdateTime(t.get(e.updateTime));
         return vo;
@@ -43,7 +43,7 @@ public class ProductSalesAddressVOConver implements BeanConver<QProductSalesAddr
                 e.district,
                 e.details,
                 e.fullAddress,
-                e.postalCode,
+                e.zipCode,
                 e.createTime,
                 e.updateTime,
         };

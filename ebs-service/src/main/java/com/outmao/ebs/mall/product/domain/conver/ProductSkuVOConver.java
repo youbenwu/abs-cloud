@@ -20,7 +20,7 @@ public class ProductSkuVOConver implements BeanConver<QProductSku, ProductSkuVO>
         vo.setKey(t.get(e.key));
         vo.setValue(t.get(e.value));
         vo.setImage(t.get(e.image));
-        //vo.setImages(t.get(e.images));
+        //vo.setImages(t.getSubStatus(e.images));
         vo.setPrice(t.get(e.price));
         vo.setUnitPrice(t.get(e.unitPrice));
         vo.setStock(t.get(e.stock));

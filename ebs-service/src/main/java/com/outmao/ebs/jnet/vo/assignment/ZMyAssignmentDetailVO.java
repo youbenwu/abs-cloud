@@ -172,7 +172,7 @@ public class ZMyAssignmentDetailVO extends ZMyAssignmentVO implements Serializab
 		result.setProvince(t.get(e.province));
 		result.setReleaseTime(DateUtil.dateToStr(t.get(e.releaseTime)));
 		result.setVisitsNum(t.get(e.visitsNum));
-//		result.setAssignmentApplyId(t.get(e.ass));
+//		result.setAssignmentApplyId(t.getSubStatus(e.ass));
 		result.setId(t.get(e.id));
 		result.setImgUrl(t.get(e.imgUrl));
 //		result.getPrice()

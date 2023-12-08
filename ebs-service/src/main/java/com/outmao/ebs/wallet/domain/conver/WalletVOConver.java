@@ -18,7 +18,7 @@ public class WalletVOConver implements BeanConver<QWallet, WalletVO> {
         vo.setType(t.get(e.type));
         vo.setStatus(t.get(e.status));
         vo.setStatusRemark(t.get(e.statusRemark));
-        //vo.setBankAccount(t.get(e.bankAccount));
+        //vo.setBankAccount(t.getSubStatus(e.bankAccount));
         vo.setAccount(t.get(e.account));
         vo.setRealName(t.get(e.realName));
         vo.setPassword(t.get(e.password));

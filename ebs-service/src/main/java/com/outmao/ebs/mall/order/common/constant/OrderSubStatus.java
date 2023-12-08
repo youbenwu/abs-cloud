@@ -23,8 +23,10 @@ package com.outmao.ebs.mall.order.common.constant;
  */
 public enum OrderSubStatus {
 
+
+
     SUCCESSED_NO_CONFIRM(10, "商家未确认"),
-    SUCCESSED_CONFIRM(10, "商家已确认"),
+    SUCCESSED_CONFIRM(11, "商家已确认"),
 
     DELIVERED(20, "商家已发货"),
 
@@ -36,6 +38,7 @@ public enum OrderSubStatus {
     CLOSED_BUYER(41, "买家取消"),
     CLOSED_SELLER(42, "商家取消"),
     CLOSED_REFUND(43, "全款退款关闭");
+
 
     private int status;
 

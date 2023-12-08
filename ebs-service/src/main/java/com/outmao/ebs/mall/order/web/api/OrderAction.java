@@ -1,6 +1,8 @@
 package com.outmao.ebs.mall.order.web.api;
 
 
+import com.outmao.ebs.mall.order.common.constant.OrderSubStatus;
+import com.outmao.ebs.mall.order.dto.CloseOrderDTO;
 import com.outmao.ebs.mall.order.dto.GetOrderListDTO;
 import com.outmao.ebs.mall.order.dto.OrderDTO;
 import com.outmao.ebs.mall.order.dto.OrderPayPrepareDTO;
@@ -34,6 +36,17 @@ public class OrderAction {
     @PostMapping("/save")
     public Order saveOrder(@RequestBody OrderDTO request) {
         return orderService.saveOrder(request);
+    }
+
+
+    @ApiOperation(value = "取消订单", notes = "取消订单")
+    @PostMapping("/cancel")
+    public Order closeOrder(String orderNo){
+        CloseOrderDTO dto=new CloseOrderDTO();
+        dto.setOrderNo(orderNo);
+        dto.setSubStatus(OrderSubStatus.CLOSED_BUYER.getStatus());
+        Order order=orderService.closeOrder(dto);
+        return order;
     }
 
 

@@ -1,9 +1,6 @@
 package com.outmao.ebs.mall.order.domain;
 
-import com.outmao.ebs.mall.order.dto.GetOrderListDTO;
-import com.outmao.ebs.mall.order.dto.GetStatsOrderStatusListDTO;
-import com.outmao.ebs.mall.order.dto.OrderDTO;
-import com.outmao.ebs.mall.order.dto.SetOrderStatusDTO;
+import com.outmao.ebs.mall.order.dto.*;
 import com.outmao.ebs.mall.order.entity.Order;
 import com.outmao.ebs.mall.order.vo.OrderVO;
 import com.outmao.ebs.mall.order.vo.StatsOrderStatusVO;
@@ -17,6 +14,8 @@ public interface OrderDomain {
     public Order saveOrder(OrderDTO request);
 
     public Order setOrderStatus(SetOrderStatusDTO request);
+
+    public Order closeOrder(CloseOrderDTO request);
 
     public Order getOrderByOrderNo(String orderNo);
 

@@ -143,15 +143,15 @@ public class WXPayReport {
                             try {
                                 StringBuffer sb = new StringBuffer();
                                 String firstMsg = reportMsgQueue.take();
-                                WXPayUtil.getLogger().info("get first report msg: {}", firstMsg);
+                                WXPayUtil.getLogger().info("getSubStatus first report msg: {}", firstMsg);
                                 String msg = null;
                                 sb.append(firstMsg); //会阻塞至有消息
                                 int remainNum = config.getReportBatchSize() - 1;
                                 for (int j=0; j<remainNum; ++j) {
-                                    WXPayUtil.getLogger().info("try get remain report msg");
+                                    WXPayUtil.getLogger().info("try getSubStatus remain report msg");
                                     // msg = reportMsgQueue.poll();  // 不阻塞了
                                     msg = reportMsgQueue.take();
-                                    WXPayUtil.getLogger().info("get remain report msg: {}", msg);
+                                    WXPayUtil.getLogger().info("getSubStatus remain report msg: {}", msg);
                                     if (msg == null) {
                                         break;
                                     }

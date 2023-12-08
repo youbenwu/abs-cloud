@@ -10,13 +10,16 @@ import java.util.List;
 
 @Data
 @Entity
-@Table(name = "ebs_Area")
+@Table(name = "ebs_Area", uniqueConstraints = {
+		@UniqueConstraint(columnNames = { "parentId", "name" }) })
 public class Area implements Serializable {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+
+	//public static final int TYPE_
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -86,6 +89,7 @@ public class Area implements Serializable {
 	 * 国家统计局里的编号
 	 *
 	 */
+	@Column(unique = true)
 	private String code;
 
 	/**

@@ -43,19 +43,19 @@ public class AreaDomainImpl extends BaseDomain implements AreaDomain {
     @Transactional
     @Override
     public Area saveArea(AreaDTO request) {
-        Area area=request.getId()==null?null:areaDao.getOne(request.getId());
+        Area area=request.getId()==null?null:areaDao.findByIdLock(request.getId());
         if(area==null&&request.getCode()!=null){
-            area=areaDao.findByCode(request.getCode());
+            area=areaDao.findByCodeLock(request.getCode());
         }
         if(area==null){
-            area=areaDao.findByParentIdAndName(request.getParentId(),request.getName());
+            area=areaDao.findByParentIdAndNameLock(request.getParentId(),request.getName());
         }
         if(area==null){
             area=new Area();
             area.setCreateTime(new Date());
             area.setLeaf(true);
             if(request.getParentId()!=null){
-                Area parent=areaDao.getOne(request.getParentId());
+                Area parent=areaDao.findByIdLock(request.getParentId());
                 area.setParent(parent);
                 area.setLevel(parent.getLevel()+1);
                 if(parent.isLeaf()){
@@ -82,7 +82,7 @@ public class AreaDomainImpl extends BaseDomain implements AreaDomain {
     @Transactional
     @Override
     public void deleteAreaById(Long id) {
-        Area area=areaDao.getOne(id);
+        Area area=areaDao.findByIdLock(id);
         if(!area.isLeaf()){
             throw new BusinessException("请先删除下级");
         }

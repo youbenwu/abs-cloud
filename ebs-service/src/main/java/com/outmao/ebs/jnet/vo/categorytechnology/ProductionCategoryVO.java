@@ -109,8 +109,8 @@ public class ProductionCategoryVO implements DslVO<QProductionCategory> {
 	@Override
     public DslVO<QProductionCategory> fromTuple(Tuple t, QProductionCategory e) {
         this.id = t.get(e.id);
-//        this.parentId = t.get(e.parent.id);
-//        this.industryId = t.get(e.industry.id);
+//        this.parentId = t.getSubStatus(e.parent.id);
+//        this.industryId = t.getSubStatus(e.industry.id);
         this.level = t.get(e.level);
         this.leaf = t.get(e.leaf);
         this.name = t.get(e.name);

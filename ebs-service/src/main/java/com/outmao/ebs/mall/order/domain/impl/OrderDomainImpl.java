@@ -11,11 +11,12 @@ import com.outmao.ebs.common.util.StringUtil;
 import com.outmao.ebs.common.vo.TimeSpan;
 import com.outmao.ebs.mall.merchant.dao.MerchantCustomerDao;
 import com.outmao.ebs.mall.merchant.dao.MerchantDao;
-import com.outmao.ebs.mall.merchant.domain.MerchantCustomerDomain;
 import com.outmao.ebs.mall.merchant.entity.Merchant;
 import com.outmao.ebs.mall.merchant.entity.MerchantCustomer;
 import com.outmao.ebs.mall.order.common.constant.OrderStatus;
+import com.outmao.ebs.mall.order.common.constant.OrderSubStatus;
 import com.outmao.ebs.mall.order.common.util.OrderProductLeaseUtil;
+import com.outmao.ebs.mall.order.common.util.OrderStatusUtil;
 import com.outmao.ebs.mall.order.domain.OrderContractDomain;
 import com.outmao.ebs.mall.order.domain.OrderLogisticsDomain;
 import com.outmao.ebs.mall.product.dao.ProductDao;
@@ -38,16 +39,18 @@ import com.outmao.ebs.user.dao.UserDao;
 import com.outmao.ebs.user.entity.User;
 import com.querydsl.core.Tuple;
 import com.querydsl.core.types.Predicate;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+
 import java.util.*;
 import java.util.stream.Collectors;
 
-
+@Slf4j
 @Component
 public class OrderDomainImpl extends BaseDomain implements OrderDomain {
 
@@ -339,11 +342,7 @@ public class OrderDomainImpl extends BaseDomain implements OrderDomain {
         return s.toString();
     }
 
-    @Transactional
-    @Override
-    public Order setOrderStatus(SetOrderStatusDTO request) {
-
-        Order order=orderDao.findByOrderNo(request.getOrderNo());
+    private void setOrderStatus(Order order,SetOrderStatusDTO request) {
 
         security.hasPermission(order.getOrgId(),null);
 
@@ -396,15 +395,61 @@ public class OrderDomainImpl extends BaseDomain implements OrderDomain {
         if(order.getStatus()==OrderStatus.SUCCESSED.getStatus()){
             //租赁处理
             if(order.isLease()){
-               leaseStart(order);
+                leaseStart(order);
             }
 
         }
+
+
+
+    }
+
+
+    @Transactional
+    @Override
+    public Order setOrderStatus(SetOrderStatusDTO request) {
+
+        Order order=orderDao.findByOrderNo(request.getOrderNo());
+
+        setOrderStatus(order,request);
 
         orderDao.save(order);
 
         return order;
     }
+
+
+    @Transactional
+    @Override
+    public Order closeOrder(CloseOrderDTO request) {
+        Order order=orderDao.findByOrderNo(request.getOrderNo());
+
+        if(order.getStatus()!=OrderStatus.WAIT_PAY.getStatus()){
+            log.error("关闭订单失败 \n 订单号:{} \n 订单状态:{} {} \n 失败原因：只有待支付状态订单才能关闭"
+                    ,order.getOrderNo(),order.getStatus(),order.getStatusRemark());
+            throw new BusinessException("订单状态异常");
+        }
+
+        OrderStatus status=OrderStatus.CLOSED;
+        OrderSubStatus subStatus= OrderStatusUtil.getSubStatus(request.getSubStatus());
+
+        if(!OrderStatusUtil.isSub(status,subStatus)){
+            throw new BusinessException("订单状态异常");
+        }
+
+        SetOrderStatusDTO statusDTO=new SetOrderStatusDTO();
+        statusDTO.setStatus(status.getStatus());
+        statusDTO.setStatusRemark(status.getStatusRemark());
+        statusDTO.setSubStatus(subStatus.getStatus());
+        statusDTO.setSubStatusRemark(subStatus.getStatusRemark());
+
+        setOrderStatus(order,statusDTO);
+
+        orderDao.save(order);
+
+        return order;
+    }
+
 
 
     private void leaseStart(Order order){

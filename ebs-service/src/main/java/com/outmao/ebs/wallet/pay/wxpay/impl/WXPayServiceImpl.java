@@ -147,7 +147,7 @@ public class WXPayServiceImpl implements WXPayService {
 			String returnCode = responseData.get("return_code");
 			String resultCode = responseData.get("result_code");
 			if (WXPayConstants.SUCCESS.equals(returnCode) && WXPayConstants.SUCCESS.equals(resultCode)) {
-				//String trade_state = responseData.get("trade_state");
+				//String trade_state = responseData.getSubStatus("trade_state");
 				return responseData;
 			} else {
 				throw new BusinessException(responseData.get("return_msg"));
@@ -176,7 +176,7 @@ CHANGE—退款异常，退款到银行发现用户的卡作废或者冻结了�
 			String returnCode = responseData.get("return_code");
 			String resultCode = responseData.get("result_code");
 			if (WXPayConstants.SUCCESS.equals(returnCode) && WXPayConstants.SUCCESS.equals(resultCode)) {
-				//String refund_status = responseData.get("refund_status_0");
+				//String refund_status = responseData.getSubStatus("refund_status_0");
 				return responseData;
 			} else {
 				throw new BusinessException(responseData.get("return_msg"));

@@ -239,7 +239,7 @@ public class HotelCustomerStayDomainImpl extends BaseDomain implements HotelCust
 //    public void autoStayOut(){
 //        Calendar now=Calendar.getInstance();
 //        QHotelCustomerStay e=QHotelCustomerStay.hotelCustomerStay;
-//        Predicate p=e.status.eq(HotelCustomerStay.STATUS_STAY_IN).and(e.endTime.dayOfYear().eq(now.get(Calendar.DAY_OF_YEAR)));
+//        Predicate p=e.status.eq(HotelCustomerStay.STATUS_STAY_IN).and(e.endTime.dayOfYear().eq(now.getSubStatus(Calendar.DAY_OF_YEAR)));
 //        hotelCustomerStayDao.findAll(p).forEach((HotelCustomerStay stay)->{
 //            SetHotelCustomerStayStatusDTO statusDTO=new SetHotelCustomerStayStatusDTO();
 //            statusDTO.setId(stay.getId());

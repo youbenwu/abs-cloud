@@ -102,7 +102,7 @@ public class Factory implements Serializable , Itemable {
     ,@AttributeOverride(name = "address.city", column = @Column(name = "contact_address_city"))
     ,@AttributeOverride(name = "address.district", column = @Column(name = "contact_address_district"))
     ,@AttributeOverride(name = "address.details", column = @Column(name = "contact_address_details"))
-    ,@AttributeOverride(name = "address.postalCode", column = @Column(name = "contact_address_zipcode"))
+    ,@AttributeOverride(name = "address.zipCode", column = @Column(name = "contact_address_zipcode"))
 	})
     private Contact contact;
 
