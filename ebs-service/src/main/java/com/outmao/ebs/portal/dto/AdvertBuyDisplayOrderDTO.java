@@ -30,6 +30,9 @@ public class AdvertBuyDisplayOrderDTO implements Serializable {
     @ApiModelProperty(name = "screens", value = "屏幕数量")
     private long screens;
 
+    @ApiModelProperty(name = "price", value = "每屏每天单价")
+    private double price;
+
     @ApiModelProperty(name = "amount", value = "订单金额")
     private double amount;
 

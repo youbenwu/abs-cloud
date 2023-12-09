@@ -31,7 +31,7 @@ public class AdvertBuyDisplayOrder implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @ApiModelProperty(name = "status", value = "0--没支付 1--待投放 2--已投放 3--已取消")
+    @ApiModelProperty(name = "status", value = "0--待支付 1--待审核 2--已投放 3--已取消")
     private int status;
 
     @ApiModelProperty(name = "orderNo", value = "订单号")
@@ -43,6 +43,9 @@ public class AdvertBuyDisplayOrder implements Serializable {
 
     @ApiModelProperty(name = "screens", value = "屏幕数量")
     private long screens;
+
+    @ApiModelProperty(name = "price", value = "每屏每天单价")
+    private double price;
 
     @ApiModelProperty(name = "amount", value = "订单金额")
     private double amount;

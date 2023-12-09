@@ -22,7 +22,10 @@ import com.outmao.ebs.hotel.vo.StatsHotelCountVO;
 import com.outmao.ebs.org.common.annotation.BindingOrg;
 import com.outmao.ebs.org.service.OrgService;
 import com.querydsl.core.Tuple;
+import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Predicate;
+import com.querydsl.core.types.dsl.Expressions;
+import com.querydsl.core.types.dsl.NumberExpression;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -34,6 +37,9 @@ import org.springframework.util.StringUtils;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
+
+import static com.querydsl.core.types.dsl.MathExpressions.*;
+import static com.querydsl.core.types.dsl.MathExpressions.radians;
 
 
 @Component
@@ -78,6 +84,8 @@ public class HotelDomainImpl extends BaseDomain implements HotelDomain {
         BeanUtils.copyProperties(request.getContact(),hotel.getContact());
 
         hotel.setArea(area);
+        hotel.setLatitude(hotel.getContact().getAddress().getLatitude());
+        hotel.setLongitude(hotel.getContact().getAddress().getLongitude());
 
         hotel.setUpdateTime(new Date());
 
@@ -191,6 +199,8 @@ public class HotelDomainImpl extends BaseDomain implements HotelDomain {
     public Page<HotelVO> getHotelVOPage(GetHotelListDTO request, Pageable pageable) {
         QHotel e=QHotel.hotel;
         Predicate p=null;
+        OrderSpecifier orderBy=null;
+
         if(!StringUtils.isEmpty(request.getKeyword())){
             p=e.keyword.like("%"+request.getKeyword()+"%");
         }
@@ -199,7 +209,17 @@ public class HotelDomainImpl extends BaseDomain implements HotelDomain {
             p=e.status.eq(request.getStatus()).and(p);
         }
 
-        Page<HotelVO> page=queryPage(e,p,hotelVOConver,pageable);
+        if(request.getLatitude()!=null&&request.getLongitude()!=null){
+            NumberExpression<Double> distance = acos(sin(radians(Expressions.constant(request.getLatitude())))
+                    .multiply(sin(radians(e.latitude)))
+                    .add(cos(radians(Expressions.constant(request.getLatitude())))
+                            .multiply(cos(radians(e.latitude)))
+                            .multiply(cos(radians(Expressions.constant(request.getLongitude()))
+                                    .subtract(radians(e.longitude)))))).multiply(6371);
+            orderBy=distance.asc();
+        }
+
+        Page<HotelVO> page=queryPage(e,p,hotelVOConver,pageable,orderBy);
 
         return page;
     }

@@ -8,6 +8,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.querydsl.QuerydslPredicateExecutor;
 import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.LockModeType;
+import java.util.Date;
+import java.util.List;
 
 public interface AdvertDao extends JpaRepository<Advert,Long> , QuerydslPredicateExecutor<Advert> {
 
@@ -29,5 +31,8 @@ public interface AdvertDao extends JpaRepository<Advert,Long> , QuerydslPredicat
     @Query("update Advert p set p.sort=?2 where p.id=?1")
     public void setSort(Long id, int sort);
 
+    @Lock(value = LockModeType.PESSIMISTIC_READ)
+    @Query("select d from Advert d where d.buyDisplay.endTime<?1")
+    public List<Advert> findAllByBuyDisplayExpireLock(Date time);
 
 }

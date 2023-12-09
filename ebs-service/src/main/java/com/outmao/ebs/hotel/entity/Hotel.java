@@ -3,6 +3,7 @@ package com.outmao.ebs.hotel.entity;
 
 import com.outmao.ebs.common.vo.Item;
 import com.outmao.ebs.org.common.data.BindingOrg;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import javax.persistence.*;
 import java.io.Serializable;
@@ -146,12 +147,21 @@ public class Hotel implements Serializable ,BindingOrg {
     @JoinColumn(name = "contactId")
     private HotelContact contact;
 
+
+
+    @ApiModelProperty(name = "latitude", value = "纬度")
+    private Double latitude;// 纬度
+
+    @ApiModelProperty(name = "longitude", value = "经度")
+    private Double longitude;
+
     /**
      *
      * 地区 省市区
      *
      */
     private String area;
+
 
     /**
      *
@@ -172,6 +182,7 @@ public class Hotel implements Serializable ,BindingOrg {
     public Long getParentOrgId() {
         return null;
     }
+
 
     @Override
     public Item toItem() {

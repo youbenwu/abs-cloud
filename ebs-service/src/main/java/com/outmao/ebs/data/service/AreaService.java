@@ -15,6 +15,8 @@ public interface AreaService {
 
     public void deleteAreaById(Long id);
 
+    public Area getArea(String province,String city);
+
     public List<Area> getAreaList();
 
     //获取（国家、省、市）

@@ -9,7 +9,6 @@ import com.querydsl.core.types.Expression;
 public class AdvertVOConver implements BeanConver<QAdvert, AdvertVO> {
 
 
-
     @Override
     public AdvertVO fromTuple(Tuple t, QAdvert e) {
         AdvertVO vo=new AdvertVO();
@@ -31,6 +30,7 @@ public class AdvertVOConver implements BeanConver<QAdvert, AdvertVO> {
         vo.setUserId(t.get(e.userId));
         vo.setOrgId(t.get(e.orgId));
         vo.setBuy(t.get(e.buy));
+        vo.setBuyDisplay(t.get(e.buyDisplay));
         return vo;
     }
 
@@ -39,6 +39,7 @@ public class AdvertVOConver implements BeanConver<QAdvert, AdvertVO> {
         return new Expression[]{
                 e.id,
                 e.status,
+                e.display,
                 e.title,
                 e.subtitle,
                 e.url,
@@ -55,6 +56,7 @@ public class AdvertVOConver implements BeanConver<QAdvert, AdvertVO> {
                 e.userId,
                 e.orgId,
                 e.buy,
+                e.buyDisplay,
         };
     }
 

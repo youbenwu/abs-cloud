@@ -74,6 +74,22 @@ public class AreaDomainImpl extends BaseDomain implements AreaDomain {
 
 
     @Override
+    public Area getArea(String province, String city) {
+        if(province.endsWith("省")){
+            province=province.substring(0,province.length()-1);
+        }
+        if(city.endsWith("市")){
+            city=city.substring(0,city.length()-1);
+        }
+        Area p=areaDao.findByTypeAndName(Area.Type_Province,province);
+        if(p!=null){
+            Area c=areaDao.findByParentIdAndName(p.getId(),city);
+            return c;
+        }
+        return null;
+    }
+
+    @Override
     public long getAreaCount() {
         return areaDao.count();
     }
@@ -100,7 +116,7 @@ public class AreaDomainImpl extends BaseDomain implements AreaDomain {
     public List<AreaVO> getAreaVOList() {
         QArea e=QArea.area;
 
-        Predicate p=e.type.lt(4);
+        Predicate p=e.type.lt(Area.Type_Street);
 
         List<AreaVO> all=queryList(e,p,areaVOConver);
 
@@ -112,7 +128,7 @@ public class AreaDomainImpl extends BaseDomain implements AreaDomain {
     public List<AreaVO> getProvinceVOList() {
         QArea e=QArea.area;
 
-        Predicate p=e.type.lt(4);
+        Predicate p=e.type.lt(Area.Type_Street).and(e.foreign.isFalse());
 
         List<AreaVO> all=queryList(e,p,areaVOConver);
 
@@ -123,7 +139,7 @@ public class AreaDomainImpl extends BaseDomain implements AreaDomain {
                 return vo.getChildren();
         }
 
-        return null;
+        return list;
     }
 
     @Override
@@ -131,7 +147,7 @@ public class AreaDomainImpl extends BaseDomain implements AreaDomain {
 
         QArea e=QArea.area;
 
-        Predicate p=e.type.eq(2).and(e.foreign.isFalse()).and(e.name.ne("市辖区"));
+        Predicate p=e.type.eq(Area.Type_City).and(e.foreign.isFalse());
 
         List<AreaVO> list=queryList(e,p,areaVOConver);
 

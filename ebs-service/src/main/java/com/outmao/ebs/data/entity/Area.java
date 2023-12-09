@@ -14,6 +14,14 @@ import java.util.List;
 		@UniqueConstraint(columnNames = { "parentId", "name" }) })
 public class Area implements Serializable {
 
+	//0--国家 1--省级 2--市级 3--区级 4--街道 5--社区
+	public static final int Type_Country=0;
+	public static final int Type_Province=1;
+	public static final int Type_City=2;
+	public static final int Type_District=3;
+	public static final int Type_Street=4;
+
+
 	/**
 	 * 
 	 */

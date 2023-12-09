@@ -3,7 +3,6 @@ package com.outmao.ebs.portal.service.impl;
 import com.outmao.ebs.common.base.BaseService;
 import com.outmao.ebs.hotel.service.HotelDeviceService;
 import com.outmao.ebs.hotel.vo.HotelDeviceVO;
-import com.outmao.ebs.portal.common.constant.AdvertStatus;
 import com.outmao.ebs.portal.domain.AdvertDomain;
 import com.outmao.ebs.portal.dto.*;
 import com.outmao.ebs.portal.entity.Advert;
@@ -38,6 +37,11 @@ public class AdvertServiceImpl extends BaseService implements AdvertService {
     @Override
     public Advert saveAdvert(AdvertDTO request) {
         return advertDomain.saveAdvert(request);
+    }
+
+    @Override
+    public Advert setAdvertDisplay(SetAdvertDisplayDTO request) {
+        return advertDomain.setAdvertDisplay(request);
     }
 
     @Override
@@ -97,7 +101,7 @@ public class AdvertServiceImpl extends BaseService implements AdvertService {
         GetAdvertListDTO listDTO=new GetAdvertListDTO();
         listDTO.setPlaceId(device.getHotelId());
         listDTO.setDisplay(true);
-        listDTO.setStatus(AdvertStatus.Up.getStatus());
+        listDTO.setSee(true);
 
         if(StringUtils.isEmpty(request.getChannelCode()!=null)){
             AdvertChannel channel=advertChannelService.getAdvertChannelByCode(request.getChannelCode());
@@ -115,6 +119,14 @@ public class AdvertServiceImpl extends BaseService implements AdvertService {
     //打乱广告顺序
     public void randomAdvertSort(){
         advertDomain.randomAdvertSort();
+    }
+
+
+    //每天0时一次
+    @Scheduled(cron = "0 0 0 * * *")
+    //检测广告过期
+    public void checkAdvertExpire(){
+        advertDomain.checkAdvertExpire();
     }
 
 

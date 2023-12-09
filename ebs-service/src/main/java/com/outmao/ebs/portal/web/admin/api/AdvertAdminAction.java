@@ -60,6 +60,13 @@ public class AdvertAdminAction {
     }
 
     @PreAuthorize("hasPermission('/portal/advert','status')")
+    @ApiOperation(value = "设置广告上下架", notes = "设置广告上下架")
+    @PostMapping("/display")
+    public Advert setAdvertDisplay(SetAdvertDisplayDTO request){
+        return advertService.setAdvertDisplay(request);
+    }
+
+    @PreAuthorize("hasPermission('/portal/advert','status')")
     @ApiOperation(value = "设置广告状态", notes = "设置广告状态")
     @PostMapping("/setStatus")
     public Advert setAdvertStatus(SetAdvertStatusDTO request) {

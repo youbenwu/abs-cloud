@@ -54,6 +54,14 @@ public class HotelDeviceVO implements SimpleHotelSetter {
     private Long userId;
 
     /**
+     *
+     * 操作激活用户的ID
+     *
+     */
+    @ApiModelProperty(name = "actUserId", value = "操作激活用户的ID")
+    private Long actUserId;
+
+    /**
      * 设备号
      */
     @ApiModelProperty(name = "deviceNo", value = "设备号")

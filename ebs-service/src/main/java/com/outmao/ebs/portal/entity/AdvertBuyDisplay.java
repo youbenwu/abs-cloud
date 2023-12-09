@@ -28,6 +28,10 @@ public class AdvertBuyDisplay implements Serializable {
     @Column(name = "buy_display_amount")
     private double amount;
 
+    @ApiModelProperty(name = "price", value = "每屏每天单价")
+    @Column(name = "buy_display_price")
+    private double price;
+
     @ApiModelProperty(name = "startTime", value = "广告展示开始时间")
     @Column(name = "buy_display_start_time")
     private Date startTime;

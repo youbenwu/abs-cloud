@@ -2,11 +2,10 @@ package com.outmao.ebs.portal.service.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.outmao.ebs.common.base.BaseService;
+import com.outmao.ebs.common.configuration.constant.Status;
 import com.outmao.ebs.common.util.DateUtil;
-import com.outmao.ebs.mall.order.common.constant.OrderStatus;
 import com.outmao.ebs.mall.order.dto.CreateSettleDTO;
 import com.outmao.ebs.mall.order.dto.CreateSettleProductDTO;
-import com.outmao.ebs.mall.order.dto.OrderPayPrepareDTO;
 import com.outmao.ebs.mall.order.dto.ToOrderDTO;
 import com.outmao.ebs.mall.order.service.OrderService;
 import com.outmao.ebs.mall.order.service.SettleService;
@@ -16,7 +15,7 @@ import com.outmao.ebs.mall.order.vo.ToOrderVO;
 import com.outmao.ebs.mall.product.entity.Product;
 import com.outmao.ebs.mall.product.entity.ProductSku;
 import com.outmao.ebs.mall.product.service.ProductService;
-import com.outmao.ebs.portal.common.constant.AdvertStatus;
+import com.outmao.ebs.portal.common.constant.AdvertBuyDisplayOrderStatus;
 import com.outmao.ebs.portal.domain.AdvertBuyDisplayOrderDomain;
 import com.outmao.ebs.portal.dto.*;
 import com.outmao.ebs.portal.entity.Advert;
@@ -28,7 +27,6 @@ import com.outmao.ebs.portal.service.AdvertChannelService;
 import com.outmao.ebs.portal.service.AdvertService;
 import com.outmao.ebs.portal.vo.AdvertVO;
 import com.outmao.ebs.security.util.SecurityUtil;
-import com.outmao.ebs.wallet.common.constant.PayChannel;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -63,14 +61,28 @@ public class AdvertBuyDisplayOrderServiceImpl extends BaseService implements Adv
     @Override
     public AdvertBuyDisplayOrder setAdvertBuyDisplayOrderStatus(SetAdvertBuyDisplayOrderStatusDTO request) {
         AdvertBuyDisplayOrder order=advertBuyDisplayOrderDomain.setAdvertBuyDisplayOrderStatus(request);
-        if(order.getStatus()==2){
+        if(order.getStatus()== AdvertBuyDisplayOrderStatus.Up.getStatus()){
             //投放广告
             AdvertBuyDisplay buyDisplay=new AdvertBuyDisplay();
             buyDisplay.setAmount(order.getAmount());
+            buyDisplay.setPrice(order.getPrice());
             buyDisplay.setStartTime(order.getStartTime());
             buyDisplay.setEndTime(order.getEndTime());
             buyDisplay.setScreens(order.getScreens());
             advertService.buyDisplay(order.getAdvertId(),buyDisplay);
+
+            //订单完成，修改广告状态为正常
+            SetAdvertStatusDTO statusDTO=new SetAdvertStatusDTO();
+            statusDTO.setId(order.getAdvertId());
+            statusDTO.setStatus(Status.NORMAL.getStatus());
+            advertService.setAdvertStatus(statusDTO);
+
+        }else if(order.getStatus()== AdvertBuyDisplayOrderStatus.Cancel.getStatus()){
+            //订单取消，修改广告状态
+            SetAdvertStatusDTO statusDTO=new SetAdvertStatusDTO();
+            statusDTO.setId(order.getAdvertId());
+            statusDTO.setStatus(Status.ORDER_CANCEL.getStatus());
+            advertService.setAdvertStatus(statusDTO);
         }
         return order;
     }
@@ -88,7 +100,7 @@ public class AdvertBuyDisplayOrderServiceImpl extends BaseService implements Adv
         AdvertDTO advertDTO=new AdvertDTO();
         advertDTO.setUserId(SecurityUtil.currentUserId());
         BeanUtils.copyProperties(request,advertDTO);
-        advertDTO.setStatus(AdvertStatus.NoPay.getStatus());
+        advertDTO.setStatus(Status.ORDER_WAIT.getStatus());
         Advert advert=advertService.saveAdvert(advertDTO);
 
         AdvertVO vo=advertService.getAdvertVOById(advert.getId());
@@ -109,8 +121,8 @@ public class AdvertBuyDisplayOrderServiceImpl extends BaseService implements Adv
 
         displayOrderDTO.setOrderNo(order.getOrderNo());
         displayOrderDTO.setAmount(order.getTotalAmount());
-
-        displayOrderDTO.setScreens(request.getQuantity());
+        displayOrderDTO.setPrice(order.getTotalAmount()/order.getQuantity()/1000);
+        displayOrderDTO.setScreens(request.getQuantity()*1000);
         displayOrderDTO.setAdvertId(advert.getId());
         displayOrderDTO.setStartTime(advert.getStartTime());
         displayOrderDTO.setEndTime(advert.getEndTime());

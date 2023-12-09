@@ -17,9 +17,11 @@ public interface AreaDomain {
 
     public void deleteAreaById(Long id);
 
+    public Area getArea(String province,String city);
+
     public List<Area> getAreaList();
 
-    //获取（国家、省、市）
+    //获取（国家、省、市、区）
     public List<AreaVO> getAreaVOList();
 
     //获取国内（省、市，区）

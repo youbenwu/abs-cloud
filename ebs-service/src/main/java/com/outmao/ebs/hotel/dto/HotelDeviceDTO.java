@@ -21,6 +21,14 @@ public class HotelDeviceDTO {
      */
     private Long id;
 
+    /**
+     *
+     * 操作激活用户的ID
+     *
+     */
+    @ApiModelProperty(name = "actUserId", value = "操作激活用户的ID")
+    private Long actUserId;
+
 
     @ApiModelProperty(name = "hotelId", value = "酒店ID")
     private Long hotelId;

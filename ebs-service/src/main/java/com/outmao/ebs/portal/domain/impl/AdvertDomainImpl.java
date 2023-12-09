@@ -1,10 +1,10 @@
 package com.outmao.ebs.portal.domain.impl;
 
 import com.outmao.ebs.common.base.BaseDomain;
+import com.outmao.ebs.common.configuration.constant.Status;
 import com.outmao.ebs.common.exception.BusinessException;
 import com.outmao.ebs.common.util.DateUtil;
 import com.outmao.ebs.common.util.StringUtil;
-import com.outmao.ebs.portal.common.constant.AdvertStatus;
 import com.outmao.ebs.portal.dao.AdvertDao;
 import com.outmao.ebs.portal.dao.AdvertPlaceDao;
 import com.outmao.ebs.portal.domain.AdvertDomain;
@@ -68,6 +68,10 @@ public class AdvertDomainImpl extends BaseDomain implements AdvertDomain {
 
         advert.setUpdateTime(new Date());
 
+//        //修改信息要重新审核
+//        advert.setStatus(Status.NotAudit.getStatus());
+//        advert.setDisplay(false);
+
         advertDao.save(advert);
 
         if(request.getPlaces()!=null){
@@ -103,16 +107,26 @@ public class AdvertDomainImpl extends BaseDomain implements AdvertDomain {
 
     @Transactional
     @Override
+    public Advert setAdvertDisplay(SetAdvertDisplayDTO request) {
+        Advert advert=advertDao.findByIdForUpdate(request.getId());
+        if(advert.getStatus()!= Status.NORMAL.getStatus()){
+            throw new BusinessException("订单状态异常");
+        }
+        advert.setDisplay(request.isDisplay());
+        advertDao.save(advert);
+        return advert;
+    }
+
+    @Transactional
+    @Override
     public Advert setAdvertStatus(SetAdvertStatusDTO request) {
         Advert advert=advertDao.findByIdForUpdate(request.getId());
-        if(advert.getStatus()==AdvertStatus.Expire.getStatus()){
-            throw new BusinessException("广告已过期");
+        advert.setStatus(request.getStatus());
+        if(advert.getStatus()!=Status.NORMAL.getStatus()){
+            advert.setDisplay(false);
+        }else{
+            advert.setDisplay(true);
         }
-        if(advert.getStatus()==AdvertStatus.NoPay.getStatus()){
-            throw new BusinessException("广告没支付");
-        }
-        BeanUtils.copyProperties(request,advert);
-        advert.setUpdateTime(new Date());
         advertDao.save(advert);
         return advert;
     }
@@ -146,18 +160,7 @@ public class AdvertDomainImpl extends BaseDomain implements AdvertDomain {
         if(advert==null){
             throw new BusinessException("广告不存在");
         }
-        if(advert.getBuy()==null){
-            advert.setBuy(buy);
-        }else{
-            advert.getBuy().newBuy(buy);
-        }
-        if(advert.getStatus()== AdvertStatus.Expire.getStatus()
-                ||advert.getStatus()== AdvertStatus.NoPay.getStatus()){
-            if(advert.getBuy().getPv()>advert.getPv()){
-                //直接上架
-                advert.setStatus(AdvertStatus.Up.getStatus());
-            }
-        }
+        advert.setBuy(buy);
         advertDao.save(advert);
         return advert;
     }
@@ -169,18 +172,9 @@ public class AdvertDomainImpl extends BaseDomain implements AdvertDomain {
         if(advert==null){
             throw new BusinessException("广告不存在");
         }
-        if(advert.getBuyDisplay()==null){
-            advert.setBuyDisplay(buyDisplay);
-        }else {
-            BeanUtils.copyProperties(buyDisplay,advert.getBuyDisplay());
-        }
+        advert.setBuyDisplay(buyDisplay);
         advert.setStartTime(buyDisplay.getStartTime());
         advert.setEndTime(buyDisplay.getEndTime());
-        if(advert.getStatus()== AdvertStatus.Expire.getStatus()
-                ||advert.getStatus()== AdvertStatus.NoPay.getStatus()){
-            //直接上架
-            advert.setStatus(AdvertStatus.Up.getStatus());
-        }
         advertDao.save(advert);
         return advert;
     }
@@ -254,12 +248,16 @@ public class AdvertDomainImpl extends BaseDomain implements AdvertDomain {
             p=e.channelId.eq(request.getChannelId()).and(p);
         }
 
-        if(request.getDisplay()!=null){
+        if(request.getSee()!=null){
             Date now =new Date();
-            if(request.getDisplay()){
+            if(request.getSee()){
                 //前端只返回在显示时间之内的
                 p=e.startTime.before(now).and(e.endTime.after(now)).and(p);
             }
+        }
+
+        if(request.getDisplay()!=null){
+            p=e.display.eq(request.getDisplay()).and(p);
         }
 
         if(request.getStatus()!=null){
@@ -268,6 +266,18 @@ public class AdvertDomainImpl extends BaseDomain implements AdvertDomain {
 
         return p;
     }
+
+    @Transactional
+    @Override
+    public void checkAdvertExpire() {
+        Date time=DateUtil.addDays(new Date(),-1);
+        List<Advert> list=advertDao.findAllByBuyDisplayExpireLock(time);
+        list.forEach(a->{
+            a.setStatus(Status.EXPIRE.getStatus());
+        });
+        advertDao.saveAll(list);
+    }
+
 
 
 }

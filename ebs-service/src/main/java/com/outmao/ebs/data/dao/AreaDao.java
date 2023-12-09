@@ -14,6 +14,8 @@ public interface AreaDao extends JpaRepository<Area,Long> {
 
     public Area findByCode(String code);
 
+    public Area findByTypeAndName(int type,String name);
+
     @Lock(value = LockModeType.PESSIMISTIC_READ)
     @Query("select a from Area a where a.id=?1")
     public Area findByIdLock(Long id);

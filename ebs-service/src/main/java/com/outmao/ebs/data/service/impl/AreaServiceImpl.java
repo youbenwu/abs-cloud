@@ -65,8 +65,12 @@ public class AreaServiceImpl extends BaseService implements AreaService, Command
             areaDTO.setName(t.getName());
             areaDTO.setZipCode(t.getZipcode());
             areaDTO.setAreaCode(t.getAreacode());
-            areaDTO.setType(parent==null?1:(parent.getType()+1));
-            areaDTO.setParentId(parent==null?null:parent.getId());
+            if(ZX.contains(t.getName())){
+                areaDTO.setType(Area.Type_City);
+            }else{
+                areaDTO.setType(parent.getType()+1);
+            }
+            areaDTO.setParentId(parent.getId());
             Area area=saveArea(areaDTO);
             if(t.getChildren()!=null&&t.getChildren().size()>0){
                 saveFromJisu(t.getChildren(),area);
@@ -83,6 +87,11 @@ public class AreaServiceImpl extends BaseService implements AreaService, Command
     @Override
     public void deleteAreaById(Long id) {
         areaDomain.deleteAreaById(id);
+    }
+
+    @Override
+    public Area getArea(String province, String city) {
+        return areaDomain.getArea(province,city);
     }
 
     @Override

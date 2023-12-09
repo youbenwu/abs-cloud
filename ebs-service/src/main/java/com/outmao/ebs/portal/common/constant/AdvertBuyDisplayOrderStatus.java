@@ -3,13 +3,13 @@ package com.outmao.ebs.portal.common.constant;
 
 /*
  *
- * 0--没支付 1--待投放 2--已投放 3--已取消
+ * 0--没支付 1--待审核 2--已投放 3--已取消
  *
  */
 public enum AdvertBuyDisplayOrderStatus {
 
     NoPay(0, "没支付"),
-    WaitUp(1, "待投放"),
+    WaitAudit(1, "待审核"),
     Up(2, "已投放"),
     Cancel(3, "已取消");
 

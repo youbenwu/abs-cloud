@@ -2,6 +2,7 @@ package com.outmao.ebs.portal.domain;
 
 import com.outmao.ebs.portal.dto.AdvertDTO;
 import com.outmao.ebs.portal.dto.GetAdvertListDTO;
+import com.outmao.ebs.portal.dto.SetAdvertDisplayDTO;
 import com.outmao.ebs.portal.dto.SetAdvertStatusDTO;
 import com.outmao.ebs.portal.entity.Advert;
 import com.outmao.ebs.portal.entity.AdvertBuy;
@@ -15,6 +16,8 @@ import java.util.List;
 public interface AdvertDomain {
 
     public Advert saveAdvert(AdvertDTO request);
+
+    public Advert setAdvertDisplay(SetAdvertDisplayDTO request);
 
     public Advert setAdvertStatus(SetAdvertStatusDTO request);
 
@@ -32,6 +35,9 @@ public interface AdvertDomain {
 
     public Page<AdvertVO> getAdvertVOPage(GetAdvertListDTO request, Pageable pageable);
 
+
+    //检测广告是否过期
+    public void checkAdvertExpire();
 
 
 }

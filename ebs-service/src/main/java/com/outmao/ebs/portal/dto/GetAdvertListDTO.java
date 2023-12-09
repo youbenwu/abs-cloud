@@ -24,11 +24,14 @@ public class GetAdvertListDTO  {
     @ApiModelProperty(name = "keyword", value = "关键字，不传查全部")
     private String keyword;
 
-    @ApiModelProperty(name = "status", value = "0--未上架 1--已上架 1--已过期 不传查全部")
+    @ApiModelProperty(name = "status", value = "状态 0--正常 2--未审核 3--审核中 4--审核失败 7--过期")
     private Integer status;
 
-    @ApiModelProperty(name = "display", value = "是否显示期限内")
+    @ApiModelProperty(name = "display", value = "是否上架")
     private Boolean display;
+
+    @ApiModelProperty(name = "see", value = "是否在显示期限内")
+    private Boolean see;
 
 
 }

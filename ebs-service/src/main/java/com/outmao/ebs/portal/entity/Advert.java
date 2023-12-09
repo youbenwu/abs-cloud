@@ -23,6 +23,12 @@ import java.util.Date;
 public class Advert extends SortEntity {
 
 
+    @ApiModelProperty(name = "display", value = "是否上架")
+    private boolean display;
+
+    @ApiModelProperty(name = "status", value = "状态 0--正常 2--未审核 3--审核中 4--审核失败 7--过期")
+    private int status;
+
     @ApiModelProperty(name = "orgId", value = "发布广告的组织ID")
     private Long orgId;
 
@@ -38,8 +44,6 @@ public class Advert extends SortEntity {
     @ApiModelProperty(name = "citys", value = "投放城市")
     private String citys;
 
-    @ApiModelProperty(name = "status", value = "0--未上架 1--已上架 2--已过期")
-    private int status;
 
     @ApiModelProperty(name = "type", value = "广告类型 0--平台广告 1--企业广告 2--个人广告")
     private int type;

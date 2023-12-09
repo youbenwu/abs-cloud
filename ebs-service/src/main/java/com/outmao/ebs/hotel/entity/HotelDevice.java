@@ -39,6 +39,14 @@ public class HotelDevice  implements Serializable {
     private Long userId;
 
     /**
+     *
+     * 操作激活用户的ID
+     *
+     */
+    private Long actUserId;
+
+
+    /**
      * 0--未激活
      * 1--已激活
      */

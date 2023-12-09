@@ -13,7 +13,7 @@ public class SetAdvertStatusDTO {
     @ApiModelProperty(name = "id", value = "ID")
     private Long id;
 
-    @ApiModelProperty(name = "status", value = "0--未上架 1--已上架")
+    @ApiModelProperty(name = "status", value = "状态 0--正常 2--未审核 3--审核中 4--审核失败 7--过期")
     private int status;
 
 }

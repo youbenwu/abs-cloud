@@ -56,6 +56,7 @@ public class HotelDeviceDomainImpl extends BaseDomain implements HotelDeviceDoma
             device=getHotelDeviceByNew();
             device.setHotelId(request.getHotelId());
             device.setOrgId(hotel.getOrgId());
+            device.setActUserId(request.getActUserId());
             device.setStatus(1);
             if(hotel.getContact()!=null&&hotel.getContact().getAddress()!=null) {
                 device.setProvince(hotel.getContact().getAddress().getProvince());
@@ -63,7 +64,7 @@ public class HotelDeviceDomainImpl extends BaseDomain implements HotelDeviceDoma
             }
         }
 
-        BeanUtils.copyProperties(request,device,"id","hotelId");
+        BeanUtils.copyProperties(request,device,"id","hotelId","actUserId");
         device.setKeyword(getKeyword(device));
         device.setUpdateTime(new Date());
 

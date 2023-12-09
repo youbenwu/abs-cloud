@@ -17,6 +17,8 @@ public interface AdvertService {
 
     public Advert saveAdvert(AdvertDTO request);
 
+    public Advert setAdvertDisplay(SetAdvertDisplayDTO request);
+
     public Advert setAdvertStatus(SetAdvertStatusDTO request);
 
     public void deleteAdvertById(Long id);

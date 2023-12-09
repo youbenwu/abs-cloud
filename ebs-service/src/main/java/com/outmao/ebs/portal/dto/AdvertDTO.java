@@ -15,6 +15,12 @@ public class AdvertDTO {
     @ApiModelProperty(name = "id", value = "ID")
     private Long id;
 
+    @ApiModelProperty(name = "display", value = "是否上架")
+    private boolean display;
+
+    @ApiModelProperty(name = "status", value = "状态 0--正常 2--未审核 3--审核中 4--审核失败 7--过期")
+    private int status;
+
     @ApiModelProperty(name = "userId", value = "广告投放的用户ID")
     private Long userId;
 
@@ -27,9 +33,6 @@ public class AdvertDTO {
     @ApiModelProperty(name = "sort", value = "排序")
     private int sort;
 
-    @ApiModelProperty(name = "status", value = "0--未上架 1--已上架 2--已过期")
-    private int status;
-
     @ApiModelProperty(name = "type", value = "广告类型 0--系统广告 1--企业广告 2--个人广告")
     private int type;
 
@@ -39,6 +42,9 @@ public class AdvertDTO {
 
     @ApiModelProperty(name = "citys", value = "广告投放城市，多个用逗号隔开")
     private String citys;
+
+    @ApiModelProperty(name = "places", value = "广告投放场所（酒店）ID，多个用逗号隔开")
+    private String places;
 
     @ApiModelProperty(name = "advertType", value = "广告类型 CPM--普通图片视频广告 CPC--带广告链接 CPA--带二维码")
     private String advertType;
@@ -70,8 +76,6 @@ public class AdvertDTO {
     @ApiModelProperty(name = "endTime", value = "广告展示结束时间")
     private Date endTime;
 
-    @ApiModelProperty(name = "places", value = "广告投放场所（酒店）ID，多个用逗号隔开")
-    private String places;
 
 
 }

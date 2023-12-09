@@ -2,7 +2,9 @@ package com.outmao.ebs.hotel.web.api;
 
 
 import com.outmao.ebs.hotel.dto.GetHotelDeviceListDTO;
+import com.outmao.ebs.hotel.dto.HotelDeviceDTO;
 import com.outmao.ebs.hotel.dto.PadRegisterHotelDeviceDTO;
+import com.outmao.ebs.hotel.entity.HotelDevice;
 import com.outmao.ebs.hotel.service.HotelDeviceService;
 import com.outmao.ebs.hotel.vo.*;
 import com.outmao.ebs.security.util.SecurityUtil;
@@ -25,8 +27,14 @@ public class HotelDeviceAction {
 	@Autowired
     private HotelDeviceService hotelDeviceService;
 
-
     @ApiOperation(value = "平板激活设备", notes = "平板激活设备")
+    @PostMapping("/save")
+    public void saveHotelDevice(HotelDeviceDTO request){
+        hotelDeviceService.saveHotelDevice(request);
+    }
+
+
+    @ApiOperation(value = "平板注册酒店并激活设备", notes = "平板注册酒店并激活设备")
     @PostMapping("/register")
     public void registerHotelDevice(@RequestBody PadRegisterHotelDeviceDTO request) {
         if(request.getUserId()==null){

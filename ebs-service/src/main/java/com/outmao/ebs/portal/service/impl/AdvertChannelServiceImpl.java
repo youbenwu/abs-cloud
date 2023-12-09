@@ -51,7 +51,7 @@ public class AdvertChannelServiceImpl extends BaseService implements AdvertChann
         productDTO.setCategoryId(0L);
         productDTO.setTitle(channel.getTitle());
         productDTO.setSubtitle(channel.getDescription());
-        productDTO.setImage("");
+        productDTO.setImage("http://");
 
         productDTO.setSkus(new ArrayList<>());
         productDTO.getSkus().add(new ProductSkuDTO("1000PV图文",0.01,Long.MAX_VALUE));

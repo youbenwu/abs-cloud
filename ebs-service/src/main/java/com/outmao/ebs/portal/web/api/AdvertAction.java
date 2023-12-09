@@ -3,6 +3,7 @@ package com.outmao.ebs.portal.web.api;
 
 import com.outmao.ebs.mall.order.vo.SettleVO;
 import com.outmao.ebs.portal.dto.*;
+import com.outmao.ebs.portal.entity.Advert;
 import com.outmao.ebs.portal.entity.AdvertBuyDisplayOrder;
 import com.outmao.ebs.portal.service.AdvertBuyDisplayOrderService;
 import com.outmao.ebs.portal.service.AdvertChannelService;
@@ -20,6 +21,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
@@ -48,6 +50,21 @@ public class AdvertAction {
     @PostMapping("/channel/list")
     public List<AdvertChannelVO> getAdvertChannelVOList(GetAdvertChannelListDTO request) {
         return advertChannelService.getAdvertChannelVOList(request);
+    }
+
+
+    @PreAuthorize("principal.id.equals(#request.userId)")
+    @ApiOperation(value = "保存广告信息", notes = "保存广告信息")
+    @PostMapping("/save")
+    public Advert saveAdvert(@RequestBody AdvertDTO request) {
+        return advertService.saveAdvert(request);
+    }
+
+
+    @ApiOperation(value = "设置广告上下架", notes = "设置广告上下架")
+    @PostMapping("/display")
+    public Advert setAdvertDisplay(SetAdvertDisplayDTO request){
+        return advertService.setAdvertDisplay(request);
     }
 
 
