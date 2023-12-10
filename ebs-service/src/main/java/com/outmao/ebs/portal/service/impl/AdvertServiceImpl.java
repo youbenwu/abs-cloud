@@ -12,6 +12,7 @@ import com.outmao.ebs.portal.entity.AdvertChannel;
 import com.outmao.ebs.portal.service.AdvertChannelService;
 import com.outmao.ebs.portal.service.AdvertService;
 import com.outmao.ebs.portal.vo.AdvertVO;
+import com.outmao.ebs.portal.vo.StatsAdvertStatusVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
@@ -92,6 +93,11 @@ public class AdvertServiceImpl extends BaseService implements AdvertService {
     @Override
     public Page<AdvertVO> getAdvertVOPage(GetAdvertListForHotelPadDTO request, Pageable pageable) {
         return getAdvertVOPage(getGetAdvertListDTO(request),pageable);
+    }
+
+    @Override
+    public List<StatsAdvertStatusVO> getStatsAdvertStatusVOList(GetAdvertListDTO request) {
+        return advertDomain.getStatsAdvertStatusVOList(request);
     }
 
     private GetAdvertListDTO getGetAdvertListDTO(GetAdvertListForHotelPadDTO request){

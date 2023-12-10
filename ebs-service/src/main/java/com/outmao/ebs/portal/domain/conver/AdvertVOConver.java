@@ -14,6 +14,7 @@ public class AdvertVOConver implements BeanConver<QAdvert, AdvertVO> {
         AdvertVO vo=new AdvertVO();
         vo.setId(t.get(e.id));
         vo.setStatus(t.get(e.status));
+        vo.setDisplay(t.get(e.display));
         vo.setTitle(t.get(e.title));
         vo.setSubtitle(t.get(e.subtitle));
         vo.setUrl(t.get(e.url));

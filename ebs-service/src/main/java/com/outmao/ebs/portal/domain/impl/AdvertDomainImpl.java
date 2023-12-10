@@ -12,6 +12,8 @@ import com.outmao.ebs.portal.domain.conver.AdvertVOConver;
 import com.outmao.ebs.portal.dto.*;
 import com.outmao.ebs.portal.entity.*;
 import com.outmao.ebs.portal.vo.AdvertVO;
+import com.outmao.ebs.portal.vo.StatsAdvertStatusVO;
+import com.querydsl.core.Tuple;
 import com.querydsl.core.types.Predicate;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
@@ -110,7 +112,7 @@ public class AdvertDomainImpl extends BaseDomain implements AdvertDomain {
     public Advert setAdvertDisplay(SetAdvertDisplayDTO request) {
         Advert advert=advertDao.findByIdForUpdate(request.getId());
         if(advert.getStatus()!= Status.NORMAL.getStatus()){
-            throw new BusinessException("订单状态异常");
+            throw new BusinessException("广告状态异常");
         }
         advert.setDisplay(request.isDisplay());
         advertDao.save(advert);
@@ -265,6 +267,23 @@ public class AdvertDomainImpl extends BaseDomain implements AdvertDomain {
         }
 
         return p;
+    }
+
+
+    @Override
+    public List<StatsAdvertStatusVO> getStatsAdvertStatusVOList(GetAdvertListDTO request) {
+        QAdvert e=QAdvert.advert;
+        request.setStatus(null);
+        Predicate p=getPredicate(request);
+        List<Tuple> tuples= QF.select(e.count(),e.status).from(e).where(p).groupBy(e.status).fetch();
+        List<StatsAdvertStatusVO> list=new ArrayList<>(tuples.size());
+        for (Tuple t:tuples){
+            StatsAdvertStatusVO vo=new StatsAdvertStatusVO();
+            vo.setStatus(t.get(e.status));
+            vo.setCount(t.get(e.count()));
+            list.add(vo);
+        }
+        return list;
     }
 
     @Transactional

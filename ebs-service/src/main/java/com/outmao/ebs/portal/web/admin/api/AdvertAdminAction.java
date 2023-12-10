@@ -11,6 +11,7 @@ import com.outmao.ebs.portal.service.AdvertChannelService;
 import com.outmao.ebs.portal.service.AdvertService;
 import com.outmao.ebs.portal.vo.AdvertChannelVO;
 import com.outmao.ebs.portal.vo.AdvertVO;
+import com.outmao.ebs.portal.vo.StatsAdvertStatusVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 
 @AccessPermissionGroup(title="门户",url="/portal",name="",children = {
@@ -86,6 +89,15 @@ public class AdvertAdminAction {
     public Page<AdvertVO> getAdvertVOPage(GetAdvertListDTO request, Pageable pageable) {
         return advertService.getAdvertVOPage(request,pageable);
     }
+
+    @PreAuthorize("hasPermission('/portal/advert','read')")
+    @ApiOperation(value = "广告按状态统计数量", notes = "广告按状态统计数量")
+    @PostMapping("/stats/status")
+    public List<StatsAdvertStatusVO> getStatsAdvertStatusVOList(GetAdvertListDTO request){
+        return advertService.getStatsAdvertStatusVOList(request);
+    }
+
+
 
     //
 

@@ -252,6 +252,8 @@ public class ProductDomainImpl extends BaseDomain implements ProductDomain {
             itemsMap.put(properties.get(i).getId(),items);
         }
 
+        productPropertyDao.saveAll(properties);
+
         holder.properties=properties;
         holder.propertyItemsMap=itemsMap;
 
