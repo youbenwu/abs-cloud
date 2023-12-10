@@ -95,7 +95,7 @@ public class MenuDomainImpl extends BaseDomain implements MenuDomain {
 
     private List<MenuVO> getAllByIdIn(Collection<Long> idIn){
         QMenu e= QMenu.menu;
-        List<MenuVO> list=queryList(e,e.id.in(idIn),e.sort.asc(),menuVOConver);
+        List<MenuVO> list=queryList(e,e.id.in(idIn).and(e.status.eq(0)),e.sort.asc(),menuVOConver);
         return list;
     }
 
