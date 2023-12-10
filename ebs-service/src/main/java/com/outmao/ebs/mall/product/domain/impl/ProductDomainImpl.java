@@ -360,8 +360,10 @@ public class ProductDomainImpl extends BaseDomain implements ProductDomain {
 
         List<ProductSku> list=new ArrayList<>(data.size());
 
+        int sort=0;
         for(ProductSkuDTO dto:data){
             ProductSku sku=new ProductSku();
+            sku.setSort(sort++);
             sku.setKey(UUID.randomUUID().toString());
             sku.setProduct(holder.product);
             if(dto.getValue()!=null) {
@@ -865,7 +867,7 @@ public class ProductDomainImpl extends BaseDomain implements ProductDomain {
 
     private List<ProductSkuVO> getProductSkuVOList(Long productId){
         QProductSku e=QProductSku.productSku;
-        List<ProductSkuVO> list=queryList(e,e.product.id.eq(productId),productSkuVOConver);
+        List<ProductSkuVO> list=queryList(e,e.product.id.eq(productId),e.sort.asc(),productSkuVOConver);
         return list;
     }
 

@@ -39,6 +39,8 @@ public class ProductSku implements Serializable {
 	@JoinColumn(name = "productId",updatable = false)
 	private Product product;
 
+	private int sort;
+
 	/**
 	 *
 	 * SKU名称
