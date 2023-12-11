@@ -8,6 +8,10 @@ import com.outmao.ebs.hotel.entity.HotelDevice;
 import com.outmao.ebs.hotel.service.HotelDeviceService;
 import com.outmao.ebs.hotel.vo.*;
 import com.outmao.ebs.security.util.SecurityUtil;
+import com.outmao.ebs.user.dto.SetAuthenticatedDTO;
+import com.outmao.ebs.user.entity.UserOauth;
+import com.outmao.ebs.user.entity.UserOauthSession;
+import com.outmao.ebs.user.service.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +30,9 @@ public class HotelDeviceAction {
 
 	@Autowired
     private HotelDeviceService hotelDeviceService;
+
+    @Autowired
+    private UserService userService;
 
     @ApiOperation(value = "平板激活设备", notes = "平板激活设备")
     @PostMapping("/save")
@@ -47,7 +54,16 @@ public class HotelDeviceAction {
     @ApiOperation(value = "获取设备", notes = "获取设备")
     @PostMapping("/getByDeviceNo")
     public HotelDeviceVO getHotelDeviceVOByDeviceNo(String deviceNo){
-        return hotelDeviceService.getHotelDeviceVOByDeviceNo(deviceNo);
+        HotelDeviceVO vo= hotelDeviceService.getHotelDeviceVOByDeviceNo(deviceNo);
+        if(vo!=null){
+            UserOauth oauth=userService.getUserAuthByPrincipal(vo.getDeviceNo());
+            SetAuthenticatedDTO  dto=new SetAuthenticatedDTO();
+            dto.setOauthId(oauth.getId());
+            dto.setUserId(oauth.getUser().getId());
+            UserOauthSession session=userService.setAuthenticated(dto);
+            vo.setToken(session.getToken());
+        }
+        return vo;
     }
 
     @ApiOperation(value = "获取设备列表", notes = "获取设备列表")

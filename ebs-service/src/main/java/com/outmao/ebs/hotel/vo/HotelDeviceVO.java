@@ -125,5 +125,7 @@ public class HotelDeviceVO implements SimpleHotelSetter {
     private Date updateTime;
 
 
+    private String token;
+
 
 }
