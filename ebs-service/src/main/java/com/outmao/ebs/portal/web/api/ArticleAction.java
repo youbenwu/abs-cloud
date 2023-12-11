@@ -53,6 +53,14 @@ public class ArticleAction {
     }
 
     @PreAuthorize("permitAll")
+    @ApiOperation(value = "获取文章信息", notes = "获取文章信息")
+    @PostMapping("/getByCode")
+    public ArticleVO getArticleVOByCode(String code){
+        return articleService.getArticleVOByCode(code);
+    }
+
+
+    @PreAuthorize("permitAll")
     @ApiOperation(value = "获取文章列表", notes = "获取文章列表")
     @PostMapping("/page")
     public Page<ArticleVO> getArticleVOPage(GetArticleListDTO request, Pageable pageable){

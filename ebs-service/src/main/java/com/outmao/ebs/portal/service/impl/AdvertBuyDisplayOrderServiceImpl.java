@@ -3,6 +3,7 @@ package com.outmao.ebs.portal.service.impl;
 import com.alibaba.fastjson.JSON;
 import com.outmao.ebs.common.base.BaseService;
 import com.outmao.ebs.common.configuration.constant.Status;
+import com.outmao.ebs.common.exception.BusinessException;
 import com.outmao.ebs.common.util.DateUtil;
 import com.outmao.ebs.mall.order.dto.CreateSettleDTO;
 import com.outmao.ebs.mall.order.dto.CreateSettleProductDTO;
@@ -171,6 +172,10 @@ public class AdvertBuyDisplayOrderServiceImpl extends BaseService implements Adv
 
         if(request.getStartTime()!=null&&request.getEndTime()!=null){
             days= DateUtil.daysBetween(request.getStartTime(),request.getEndTime());
+        }
+
+        if(days<7){
+            throw new BusinessException("广告投放时间最少为7天");
         }
 
         int quantity=request.getQuantity()*days;

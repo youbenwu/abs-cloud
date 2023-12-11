@@ -56,6 +56,7 @@ public class HotelDeviceAction {
     public HotelDeviceVO getHotelDeviceVOByDeviceNo(String deviceNo){
         HotelDeviceVO vo= hotelDeviceService.getHotelDeviceVOByDeviceNo(deviceNo);
         if(vo!=null){
+            //自动登录
             UserOauth oauth=userService.getUserAuthByPrincipal(vo.getDeviceNo());
             SetAuthenticatedDTO  dto=new SetAuthenticatedDTO();
             dto.setOauthId(oauth.getId());

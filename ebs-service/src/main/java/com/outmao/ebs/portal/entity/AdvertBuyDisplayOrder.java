@@ -51,6 +51,11 @@ public class AdvertBuyDisplayOrder implements Serializable {
     private double amount;
 
     @ApiModelProperty(name = "times", value = "广告投放期限")
+    @AttributeOverrides({
+            @AttributeOverride(name="field", column=@Column(name="times_field")),
+            @AttributeOverride(name="value", column=@Column(name="times_value"))
+    })
+    @Embedded
     private TimeSpan times;
 
     @ApiModelProperty(name = "startTime", value = "广告展示开始时间")
