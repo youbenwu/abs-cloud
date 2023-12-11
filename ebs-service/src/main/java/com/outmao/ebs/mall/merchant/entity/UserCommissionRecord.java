@@ -57,14 +57,12 @@ public class UserCommissionRecord implements Serializable {
      */
     private Long orderId;
 
-
     /**
      *
      * 0--直接收益 1--子级产生的收益
      *
      */
     private int level;
-
 
     /**
      *
@@ -73,10 +71,9 @@ public class UserCommissionRecord implements Serializable {
      */
     private double amount;
 
-
     /**
      *
-     * 类型 0--订单收益 1--提现 2--提现取消
+     * 类型 0--收益 1--提现 2--提现取消
      *
      */
     private int type;
@@ -87,7 +84,6 @@ public class UserCommissionRecord implements Serializable {
      *
      */
     private String image;
-
 
     /**
      *

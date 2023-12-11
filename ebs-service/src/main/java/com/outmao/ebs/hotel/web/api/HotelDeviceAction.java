@@ -43,6 +43,7 @@ public class HotelDeviceAction {
         hotelDeviceService.saveHotelDevice(request);
     }
 
+    @PreAuthorize("permitAll")
     @ApiOperation(value = "获取设备", notes = "获取设备")
     @PostMapping("/getByDeviceNo")
     public HotelDeviceVO getHotelDeviceVOByDeviceNo(String deviceNo){

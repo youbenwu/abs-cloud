@@ -79,7 +79,6 @@ public class UserCommission  implements Serializable {
      */
     private double totalAmount;
 
-
     /**
      *
      * 统计时间
