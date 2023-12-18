@@ -23,11 +23,11 @@ public class AdvertBuy implements Serializable {
     @Column(name = "buy_pv")
     private long pv;
 
-    @ApiModelProperty(name = "buyPrice", value = "广告主购买的每PV价钱")
+    @ApiModelProperty(name = "price", value = "广告主购买的每PV价钱")
     @Column(name = "buy_price")
     private double price;
 
-    @ApiModelProperty(name = "buyAmount", value = "广告主购买的总金额")
+    @ApiModelProperty(name = "amount", value = "广告主购买的总金额")
     @Column(name = "buy_amount")
     private double amount;
 

@@ -1,5 +1,7 @@
 package com.outmao.ebs.hotel.service;
 
+import com.outmao.ebs.data.entity.Photo;
+import com.outmao.ebs.data.vo.PhotoVO;
 import com.outmao.ebs.hotel.dto.*;
 import com.outmao.ebs.hotel.entity.*;
 import com.outmao.ebs.hotel.vo.*;
@@ -24,9 +26,18 @@ public interface HotelService {
 
     public HotelVO getHotelVOById(Long id);
 
+
     public HotelVO getHotelVOByOrgId(Long orgId);
 
     public Page<HotelVO> getHotelVOPage(GetHotelListDTO request, Pageable pageable);
+
+
+
+    public QyHotelVO getQyHotelVOById(Long id);
+
+    public Page<QyHotelVO> getQyHotelVOPage(GetHotelListDTO request, Pageable pageable);
+
+    public Page<QyHotelVO> getQyHotelVOPage(GetHotelListForDeployDeviceDTO request, Pageable pageable);
 
     public List<HotelVO> getHotelVOListByOrgIdIn(Collection<Long> orgIdIn);
 
@@ -35,6 +46,14 @@ public interface HotelService {
 
     public List<StatsHotelCountVO> getStatsHotelCountVOListByMonths(Date fromTime, Date toTime);
 
+
+    public Photo saveHotelPhoto(HotelPhotoDTO request);
+
+    public void deleteHotelPhotoById(Long id);
+
+    public void deleteAllHotelPhotoByHotelId(Long hotelId);
+
+    public Page<PhotoVO> getHotelPhotoVOPage(GetHotelPhotoListDTO request,Pageable pageable);
 
     public HotelRoomType saveHotelRoomType(HotelRoomTypeDTO request);
 
@@ -57,7 +76,7 @@ public interface HotelService {
 
     public Page<HotelRoomVO> getHotelRoomVOPage(GetHotelRoomListDTO request, Pageable pageable);
 
-
+    public List<QyHotelRoomVO> getQyHotelRoomVOList(Long hotelId);
 
     public HotelWorkOrder saveHotelWorkOrder(HotelWorkOrderDTO request);
 

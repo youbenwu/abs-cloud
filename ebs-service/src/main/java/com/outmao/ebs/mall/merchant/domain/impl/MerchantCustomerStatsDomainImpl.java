@@ -36,22 +36,28 @@ public class MerchantCustomerStatsDomainImpl extends BaseDomain implements Merch
         //统计订单数量
         QOrder o= QOrder.order;
 
-        List<Tuple> os=QF.select(o.customerId,o.count(),o.totalAmount.sum()).groupBy(o.customerId).where(o.customerId.in(customerIdIn)).fetch();
+        List<Tuple> os=QF.select(o.customerId,o.count(),o.totalAmount.sum()).from(o).groupBy(o.customerId).where(o.customerId.in(customerIdIn)).fetch();
 
         os.forEach(t->{
             MerchantCustomerStatsVO vo=listMap.get(t.get(o.customerId));
-            vo.setOrderCount(t.get(o.count()));
-            vo.setOrderAmount(t.get(o.totalAmount.sum()));
+            if(vo!=null) {
+                Long c = t.get(o.count());
+                Double a = t.get(o.totalAmount.sum());
+                vo.setOrderCount(c == null ? 0 : c);
+                vo.setOrderAmount(a == null ? 0 : a);
+            }
         });
 
         //统计带看数量
         QTakeLook l=QTakeLook.takeLook;
 
-        List<Tuple> ls=QF.select(l.customerId,l.count()).groupBy(l.customerId).where(l.customerId.in(customerIdIn)).fetch();
+        List<Tuple> ls=QF.select(l.customerId,l.count()).groupBy(l.customerId).from(l).where(l.customerId.in(customerIdIn)).fetch();
 
         ls.forEach(t->{
             MerchantCustomerStatsVO vo=listMap.get(t.get(l.customerId));
-            vo.setLookCount(t.get(l.count()));
+            if(vo!=null) {
+                vo.setLookCount(t.get(l.count()));
+            }
         });
 
 

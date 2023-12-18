@@ -20,6 +20,8 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -292,7 +294,7 @@ public class BbsAction {
 	@PreAuthorize("permitAll")
 	@ApiOperation(value = "获取帖子分页列表", notes = "获取帖子分页列表")
 	@PostMapping("/post/page")
-	public Page<PostVO> getPostVOPage(GetPostListDTO request, Pageable pageable){
+	public Page<PostVO> getPostVOPage(@PageableDefault(sort = {"createTime"}, direction = Sort.Direction.ASC)GetPostListDTO request, Pageable pageable){
 		return bbsService.getPostVOPage(request,pageable);
 	}
 	/*

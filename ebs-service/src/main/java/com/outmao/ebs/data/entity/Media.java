@@ -10,7 +10,7 @@ import java.io.Serializable;
 import java.util.Date;
 
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
-@ApiModel(value = "MediaVO", description = "文件信息")
+@ApiModel(value = "Media", description = "文件信息")
 @Data
 @Entity
 @Table(name = "ebs_Media")

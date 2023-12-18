@@ -28,7 +28,7 @@ public class ProductCategoryAction {
 
 
     @ApiOperation(value = "获取商品类别列表", notes = "获取商品类别列表")
-    @PostMapping("/category/list")
+    @PostMapping("/list")
     public List<ProductCategoryVO> getProductCategoryVOList(){
         return productCategoryService.getProductCategoryVOList();
     }

@@ -1,7 +1,10 @@
 package com.outmao.ebs.hotel.web.api;
 
 
+import com.outmao.ebs.data.vo.PhotoVO;
 import com.outmao.ebs.hotel.dto.GetHotelListDTO;
+import com.outmao.ebs.hotel.dto.GetHotelListForDeployDeviceDTO;
+import com.outmao.ebs.hotel.dto.GetHotelPhotoListDTO;
 import com.outmao.ebs.hotel.dto.RegisterHotelDTO;
 import com.outmao.ebs.hotel.service.HotelService;
 import com.outmao.ebs.hotel.vo.*;
@@ -72,6 +75,42 @@ public class HotelAction {
         request.setStatus(0);
         return hotelService.getHotelVOPage(request,pageable);
     }
+
+    @ApiOperation(value = "获取酒店相册图片列表", notes = "获取酒店相册图片列表")
+    @PostMapping("/photo/page")
+    public Page<PhotoVO> getHotelPhotoVOPage(GetHotelPhotoListDTO request, Pageable pageable){
+        return hotelService.getHotelPhotoVOPage(request,pageable);
+    }
+
+
+    @ApiOperation(value = "迁眼--获取酒店信息", notes = "迁眼--获取酒店信息")
+    @PostMapping("/qy/get")
+    public QyHotelVO getQyHotelVOById(Long id){
+        return hotelService.getQyHotelVOById(id);
+    }
+
+
+    @ApiOperation(value = "迁眼--获取酒店列表", notes = "迁眼--获取酒店列表")
+    @PostMapping("/qy/page")
+    public Page<QyHotelVO> getQyHotelVOPage(GetHotelListDTO request, Pageable pageable){
+        return hotelService.getQyHotelVOPage(request,pageable);
+    }
+
+
+    @ApiOperation(value = "迁眼设备托管--获取酒店列表", notes = "迁眼设备托管--获取酒店列表")
+    @PostMapping("/qy_deploy_device/page")
+    public Page<QyHotelVO> getQyHotelVOPage(GetHotelListForDeployDeviceDTO request, Pageable pageable){
+        return hotelService.getQyHotelVOPage(request,pageable);
+    }
+
+    @ApiOperation(value = "迁眼--获取房间列表", notes = "迁眼--获取房间列表")
+    @PostMapping("/room/qy/list")
+    public List<QyHotelRoomVO> getQyHotelRoomVOList(Long hotelId){
+        return hotelService.getQyHotelRoomVOList(hotelId);
+    }
+
+
+
 
 
 }

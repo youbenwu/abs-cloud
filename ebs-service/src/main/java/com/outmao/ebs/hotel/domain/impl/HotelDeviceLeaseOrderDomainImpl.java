@@ -6,6 +6,7 @@ import com.outmao.ebs.hotel.dao.HotelDeviceLeaseOrderItemDao;
 import com.outmao.ebs.hotel.domain.HotelDeviceLeaseOrderDomain;
 import com.outmao.ebs.hotel.domain.conver.HotelDeviceLeaseOrderItemVOConver;
 import com.outmao.ebs.hotel.domain.conver.HotelDeviceLeaseOrderVOConver;
+import com.outmao.ebs.hotel.domain.conver.MinHotelDeviceLeaseOrderVOConver;
 import com.outmao.ebs.hotel.dto.GetHotelDeviceLeaseOrderItemListDTO;
 import com.outmao.ebs.hotel.dto.GetHotelDeviceLeaseOrderListDTO;
 import com.outmao.ebs.hotel.dto.HotelDeviceLeaseOrderDTO;
@@ -15,6 +16,7 @@ import com.outmao.ebs.hotel.entity.QHotelDeviceLeaseOrder;
 import com.outmao.ebs.hotel.entity.QHotelDeviceLeaseOrderItem;
 import com.outmao.ebs.hotel.vo.HotelDeviceLeaseOrderItemVO;
 import com.outmao.ebs.hotel.vo.HotelDeviceLeaseOrderVO;
+import com.outmao.ebs.hotel.vo.MinHotelDeviceLeaseOrderVO;
 import com.querydsl.core.types.Predicate;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
@@ -24,6 +26,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
@@ -41,6 +44,7 @@ public class HotelDeviceLeaseOrderDomainImpl extends BaseDomain implements Hotel
     private HotelDeviceLeaseOrderVOConver hotelDeviceLeaseOrderVOConver=new HotelDeviceLeaseOrderVOConver();
     private HotelDeviceLeaseOrderItemVOConver hotelDeviceLeaseOrderItemVOConver=new HotelDeviceLeaseOrderItemVOConver();
 
+    private MinHotelDeviceLeaseOrderVOConver minHotelDeviceLeaseOrderVOConver=new MinHotelDeviceLeaseOrderVOConver();
 
     @Transactional()
     @Override
@@ -113,5 +117,9 @@ public class HotelDeviceLeaseOrderDomainImpl extends BaseDomain implements Hotel
     }
 
 
-
+    @Override
+    public List<MinHotelDeviceLeaseOrderVO> getMinHotelDeviceLeaseOrderVOListByUserIdIn(Collection<Long> userIdIn) {
+        QHotelDeviceLeaseOrder e=QHotelDeviceLeaseOrder.hotelDeviceLeaseOrder;
+        return queryList(e,e.userId.in(userIdIn),minHotelDeviceLeaseOrderVOConver);
+    }
 }

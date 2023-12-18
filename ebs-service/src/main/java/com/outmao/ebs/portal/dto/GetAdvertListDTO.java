@@ -33,5 +33,7 @@ public class GetAdvertListDTO  {
     @ApiModelProperty(name = "see", value = "是否在显示期限内")
     private Boolean see;
 
+    //private Boolean random;
+
 
 }

@@ -26,7 +26,7 @@ public class BindingItem implements Serializable {
 	@Column(name="item_id")
 	private Long id;
 
-	@ApiModelProperty(name = "type", value = "绑定对像类型 绑定商品传：Product")
+	@ApiModelProperty(name = "type", value = "绑定对像类型 绑定商品传：Product 订单Order")
 	@Column(name="item_type")
 	private String type;
 

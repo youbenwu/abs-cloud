@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import javax.persistence.Embeddable;
+import javax.persistence.MappedSuperclass;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -14,6 +15,7 @@ import java.util.Date;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@MappedSuperclass
 @Embeddable
 public class TimeSpan implements Serializable {
 
@@ -25,8 +27,8 @@ public class TimeSpan implements Serializable {
 
 
     @ApiModelProperty(name = "field", value = "1--分钟 2--小时 3--天 4--月 5--年")
-    private Integer field;
-    private Integer value;
+    private Integer field=5;
+    private Integer value=1;
 
     public int getMinutes(){
         if(field!=null&&value!=null){
@@ -42,6 +44,10 @@ public class TimeSpan implements Serializable {
 
 
     public Between<Date> getDateBetween(Date date){
+        if(field==null)
+            field=5;
+        if(value==null)
+            value=1;
         Between<Date> between=new Between<>();
         Date startTime= DateUtil.format_yyyy_MM_dd(date);
         Date endTime=null;

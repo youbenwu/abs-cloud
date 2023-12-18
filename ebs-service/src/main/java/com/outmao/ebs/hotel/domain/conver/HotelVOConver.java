@@ -1,12 +1,31 @@
 package com.outmao.ebs.hotel.domain.conver;
 
 import com.outmao.ebs.common.dsl.BeanConver;
+import com.outmao.ebs.hotel.dto.GetHotelListDTO;
 import com.outmao.ebs.hotel.entity.QHotel;
 import com.outmao.ebs.hotel.vo.HotelVO;
 import com.querydsl.core.Tuple;
 import com.querydsl.core.types.Expression;
+import com.querydsl.core.types.dsl.Expressions;
+import com.querydsl.core.types.dsl.NumberExpression;
+
+import java.util.Arrays;
+import java.util.List;
+
+import static com.querydsl.core.types.dsl.MathExpressions.*;
+import static com.querydsl.core.types.dsl.MathExpressions.radians;
 
 public class HotelVOConver implements BeanConver<QHotel, HotelVO> {
+
+
+    private NumberExpression<Double> distance=null;
+
+    public HotelVOConver(){}
+
+    public HotelVOConver( NumberExpression<Double> distance){
+        this.distance=distance;
+    }
+
     @Override
     public HotelVO fromTuple(Tuple t, QHotel e) {
         HotelVO vo=new HotelVO();
@@ -28,12 +47,15 @@ public class HotelVOConver implements BeanConver<QHotel, HotelVO> {
         vo.setIdCardBack(t.get(e.idCardBack));
         vo.setCreateTime(t.get(e.createTime));
         vo.setUpdateTime(t.get(e.updateTime));
+        if(distance!=null) {
+            vo.setDistance(t.get(distance));
+        }
         return vo;
     }
 
     @Override
     public Expression<?>[] select(QHotel e) {
-        return new Expression[]{
+        Expression<?>[] exps=new Expression[]{
                 e.id,
                 e.status,
                 e.statusRemark,
@@ -46,13 +68,25 @@ public class HotelVOConver implements BeanConver<QHotel, HotelVO> {
                 e.contact,
                 e.logo,
                 e.image,
+                e.video,
+                e.mark,
+                e.star,
+                e.business,
+                e.estTime,
                 e.license,
                 e.idCardNo,
                 e.idCardFront,
                 e.idCardBack,
                 e.createTime,
                 e.updateTime,
-
         };
+
+        if(distance!=null) {
+            List<Expression<?>> list= Arrays.asList(exps);
+            list.add(distance);
+            return (Expression<?>[]) list.toArray();
+        }else{
+            return exps;
+        }
     }
 }

@@ -21,4 +21,5 @@ public class SendMessageByTypeDTO {
     @ApiModelProperty(name="data",value="消息参数数据")
     private Object data;
 
+
 }

@@ -27,19 +27,21 @@ import com.outmao.ebs.wallet.entity.Trade;
 import com.outmao.ebs.wallet.entity.Wallet;
 import com.outmao.ebs.wallet.vo.TradeVO;
 import com.querydsl.core.types.Predicate;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
-
+@Slf4j
 @Component
 public class TradeDomainImpl extends BaseDomain implements TradeDomain {
 
@@ -67,7 +69,7 @@ public class TradeDomainImpl extends BaseDomain implements TradeDomain {
             try{
                 l.statusChanged(trade);
             }catch (Exception e){
-                e.printStackTrace();
+                log.error("订单状态修改出错",e);
                 throw new BusinessException("系统繁忙，请稍候再试");
             }
         }
@@ -378,7 +380,7 @@ public class TradeDomainImpl extends BaseDomain implements TradeDomain {
         dto.setCurrencyId(request.getCurrencyId());
         dto.setPayChannel(PayChannel.WalletPay.getType());
         dto.setType(TradeType.Recharge.getType());
-        dto.setBusiness("充值");
+        dto.setBusiness(StringUtils.isEmpty(request.getRemark())?"充值":request.getRemark());
         dto.setBusinessType(WalletConstant.business_type_recharge);
         Trade trade=tradePrepare(dto);
 

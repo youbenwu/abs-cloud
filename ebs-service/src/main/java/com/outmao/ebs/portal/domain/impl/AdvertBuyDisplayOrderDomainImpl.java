@@ -41,9 +41,11 @@ public class AdvertBuyDisplayOrderDomainImpl extends BaseDomain implements Adver
     @Override
     public AdvertBuyDisplayOrder setAdvertBuyDisplayOrderStatus(SetAdvertBuyDisplayOrderStatusDTO request) {
         AdvertBuyDisplayOrder order=advertBuyDisplayOrderDao.findByOrderNoLock(request.getOrderNo());
-        order.setStatus(request.getStatus());
-        order.setUpdateTime(new Date());
-        advertBuyDisplayOrderDao.save(order);
+        if(order!=null) {
+            order.setStatus(request.getStatus());
+            order.setUpdateTime(new Date());
+            advertBuyDisplayOrderDao.save(order);
+        }
         return order;
     }
 

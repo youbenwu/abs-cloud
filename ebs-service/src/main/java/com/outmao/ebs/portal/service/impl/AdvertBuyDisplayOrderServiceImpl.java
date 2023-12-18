@@ -62,6 +62,8 @@ public class AdvertBuyDisplayOrderServiceImpl extends BaseService implements Adv
     @Override
     public AdvertBuyDisplayOrder setAdvertBuyDisplayOrderStatus(SetAdvertBuyDisplayOrderStatusDTO request) {
         AdvertBuyDisplayOrder order=advertBuyDisplayOrderDomain.setAdvertBuyDisplayOrderStatus(request);
+        if(order==null)
+            return null;
         if(order.getStatus()== AdvertBuyDisplayOrderStatus.Up.getStatus()){
             //投放广告
             AdvertBuyDisplay buyDisplay=new AdvertBuyDisplay();

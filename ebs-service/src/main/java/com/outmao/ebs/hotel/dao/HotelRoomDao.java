@@ -18,4 +18,7 @@ public interface HotelRoomDao extends JpaRepository<HotelRoom,Long> {
 
     public long countByTypeId(Long typeId);
 
+    public long countByHotelIdAndDeviceStatus(Long hotelId,int deviceStatus);
+
+
 }

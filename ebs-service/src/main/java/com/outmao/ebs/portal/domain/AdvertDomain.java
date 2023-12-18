@@ -31,6 +31,8 @@ public interface AdvertDomain {
 
     public List<AdvertVO> getAdvertVOList(GetAdvertListDTO request);
 
+    public long getAdvertCount(GetAdvertListDTO request);
+
     public Page<AdvertVO> getAdvertVOPage(GetAdvertListDTO request, Pageable pageable);
 
     public List<StatsAdvertStatusVO> getStatsAdvertStatusVOList(GetAdvertListDTO request);

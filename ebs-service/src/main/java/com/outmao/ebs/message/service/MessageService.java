@@ -5,6 +5,7 @@ import com.outmao.ebs.message.dto.*;
 import com.outmao.ebs.message.entity.Message;
 import com.outmao.ebs.message.entity.MessageTemplate;
 import com.outmao.ebs.message.entity.MessageType;
+import com.outmao.ebs.message.vo.MessageTemplateVO;
 import com.outmao.ebs.message.vo.MessageTypeVO;
 import com.outmao.ebs.message.vo.MessageVO;
 import com.outmao.ebs.message.vo.UserMessageVO;
@@ -34,6 +35,13 @@ public interface MessageService {
 	public MessageTemplate getMessageTemplateById(Long id);
 	public List<MessageTemplate> getMessageTemplateList(Long typeId);
 	public List<MessageTemplate> getMessageTemplateList(Long typeId, int sendType);
+
+	public MessageTemplateVO getMessageTemplateVOById(Long id);
+
+	public Page<MessageTypeVO> getMessageTypeVOPage(Pageable pageable);
+
+	public Page<MessageTemplateVO> getMessageTemplateVOPage(GetMessageTemplateListDTO request, Pageable pageable);
+
 
 
 	public Message saveMessage(MessageDTO request);

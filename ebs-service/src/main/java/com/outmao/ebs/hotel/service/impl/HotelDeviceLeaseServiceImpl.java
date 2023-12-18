@@ -9,9 +9,7 @@ import com.outmao.ebs.hotel.entity.HotelDevice;
 import com.outmao.ebs.hotel.entity.HotelDeviceLeaseOrder;
 import com.outmao.ebs.hotel.entity.HotelDeviceRenter;
 import com.outmao.ebs.hotel.service.HotelDeviceLeaseService;
-import com.outmao.ebs.hotel.vo.HotelDeviceLeaseOrderItemVO;
-import com.outmao.ebs.hotel.vo.HotelDeviceLeaseOrderVO;
-import com.outmao.ebs.hotel.vo.HotelDeviceRenterVO;
+import com.outmao.ebs.hotel.vo.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +17,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -102,7 +103,25 @@ public class HotelDeviceLeaseServiceImpl extends BaseService implements HotelDev
         return hotelDeviceRenterDomain.getHotelDeviceRenterVOPage(request,pageable);
     }
 
+    @Override
+    public List<MinHotelDeviceRenterVO> getMinHotelDeviceRenterVOListByUserIdIn(Collection<Long> userIdIn) {
 
+        List<MinHotelDeviceRenterVO> list=hotelDeviceRenterDomain.getMinHotelDeviceRenterVOListByUserIdIn(userIdIn);
 
+        if(list.size()>0){
+            Map<Long,MinHotelDeviceRenterVO> listMap=list.stream().collect(Collectors.toMap(t->t.getUserId(),t->t));
+            List<MinHotelDeviceLeaseOrderVO> vos=hotelDeviceLeaseOrderDomain.getMinHotelDeviceLeaseOrderVOListByUserIdIn(listMap.keySet());
+            for (MinHotelDeviceLeaseOrderVO vo:vos){
+                MinHotelDeviceRenterVO r=listMap.get(vo.getUserId());
+                if(r!=null){
+                    if(vo.getStartTime()!=null&&vo.getEndTime()!=null){
+                        r.setStartTime(vo.getStartTime());
+                        r.setEndTime(vo.getEndTime());
+                    }
+                }
+            }
+        }
 
+        return list;
+    }
 }

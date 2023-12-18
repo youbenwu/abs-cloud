@@ -1,6 +1,12 @@
 package com.outmao.ebs.hotel.service.impl;
 
 import com.outmao.ebs.common.base.BaseService;
+import com.outmao.ebs.common.vo.BindingItem;
+import com.outmao.ebs.data.dto.GetPhotoListDTO;
+import com.outmao.ebs.data.dto.PhotoDTO;
+import com.outmao.ebs.data.entity.Photo;
+import com.outmao.ebs.data.service.PhotoService;
+import com.outmao.ebs.data.vo.PhotoVO;
 import com.outmao.ebs.hotel.domain.*;
 import com.outmao.ebs.hotel.dto.*;
 import com.outmao.ebs.hotel.entity.*;
@@ -18,6 +24,7 @@ import com.outmao.ebs.user.common.constant.Oauth;
 import com.outmao.ebs.user.dto.RegisterDTO;
 import com.outmao.ebs.user.entity.User;
 import com.outmao.ebs.user.service.UserService;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -67,6 +74,9 @@ public class HotelServiceImpl extends BaseService implements HotelService {
 
     @Autowired
     private MerchantService merchantService;
+
+    @Autowired
+    private PhotoService photoService;
 
 
 
@@ -167,6 +177,21 @@ public class HotelServiceImpl extends BaseService implements HotelService {
     }
 
     @Override
+    public QyHotelVO getQyHotelVOById(Long id) {
+        return hotelDomain.getQyHotelVOById(id);
+    }
+
+    @Override
+    public Page<QyHotelVO> getQyHotelVOPage(GetHotelListDTO request, Pageable pageable) {
+        return hotelDomain.getQyHotelVOPage(request,pageable);
+    }
+
+    @Override
+    public Page<QyHotelVO> getQyHotelVOPage(GetHotelListForDeployDeviceDTO request, Pageable pageable) {
+        return hotelDomain.getQyHotelVOPage(request,pageable);
+    }
+
+    @Override
     public List<HotelVO> getHotelVOListByOrgIdIn(Collection<Long> orgIdIn) {
         return hotelDomain.getHotelVOListByOrgIdIn(orgIdIn);
     }
@@ -181,6 +206,32 @@ public class HotelServiceImpl extends BaseService implements HotelService {
         return hotelDomain.getStatsHotelCountVOListByMonths(fromTime,toTime);
     }
 
+
+    @Override
+    public Photo saveHotelPhoto(HotelPhotoDTO request) {
+        PhotoDTO dto=new PhotoDTO();
+        dto.setTarget(new BindingItem(request.getHotelId(),"Hotel"));
+        BeanUtils.copyProperties(request,dto);
+        return photoService.savePhoto(dto);
+    }
+
+    @Override
+    public void deleteHotelPhotoById(Long id) {
+        photoService.deletePhotoById(id);
+    }
+
+    @Override
+    public void deleteAllHotelPhotoByHotelId(Long hotelId) {
+        photoService.deleteAllByTargetTypeAndTargetId("Hotel",hotelId);
+    }
+
+    @Override
+    public Page<PhotoVO> getHotelPhotoVOPage(GetHotelPhotoListDTO request, Pageable pageable) {
+        GetPhotoListDTO dto=new GetPhotoListDTO();
+        dto.setTargetType("Hotel");
+        dto.setTargetId(request.getHotelId());
+        return photoService.getPhotoVOPage(dto,pageable);
+    }
 
     @Override
     public HotelRoomType saveHotelRoomType(HotelRoomTypeDTO request) {
@@ -236,7 +287,10 @@ public class HotelServiceImpl extends BaseService implements HotelService {
         return hotelRoomDomain.getHotelRoomVOPage(request,pageable);
     }
 
-
+    @Override
+    public List<QyHotelRoomVO> getQyHotelRoomVOList(Long hotelId) {
+        return hotelRoomDomain.getQyHotelRoomVOList(hotelId);
+    }
 
     @Override
     public HotelWorkOrder saveHotelWorkOrder(HotelWorkOrderDTO request) {

@@ -5,6 +5,7 @@ import com.outmao.ebs.mall.merchant.dto.GetMerchantCustomerListDTO;
 import com.outmao.ebs.mall.merchant.dto.MerchantCustomerDTO;
 import com.outmao.ebs.mall.merchant.entity.MerchantCustomer;
 import com.outmao.ebs.mall.merchant.vo.MerchantCustomerVO;
+import com.outmao.ebs.mall.merchant.vo.QyCustomerVO;
 import com.outmao.ebs.mall.merchant.vo.SimpleMerchantCustomerVO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -26,6 +27,9 @@ public interface MerchantCustomerService {
     public Page<MerchantCustomerVO> getMerchantCustomerVOPage(GetMerchantCustomerListDTO request, Pageable pageable);
 
     public List<SimpleMerchantCustomerVO> getSimpleMerchantCustomerVOByIdIn(Collection<Long> idIn);
+
+    public Page<QyCustomerVO> getQyCustomerVOPage(GetMerchantCustomerListDTO request, Pageable pageable);
+
 
 
 

@@ -4,12 +4,14 @@ import com.outmao.ebs.common.base.BaseDomain;
 import com.outmao.ebs.hotel.dao.HotelDeviceRenterDao;
 import com.outmao.ebs.hotel.domain.HotelDeviceRenterDomain;
 import com.outmao.ebs.hotel.domain.conver.HotelDeviceRenterVOConver;
+import com.outmao.ebs.hotel.domain.conver.MinHotelDeviceRenterVOConver;
 import com.outmao.ebs.hotel.dto.GetHotelDeviceRenterListDTO;
 import com.outmao.ebs.hotel.dto.HotelDeviceRenterDTO;
 import com.outmao.ebs.hotel.dto.HotelDeviceRenterLeaseDTO;
 import com.outmao.ebs.hotel.entity.HotelDeviceRenter;
 import com.outmao.ebs.hotel.entity.QHotelDeviceRenter;
 import com.outmao.ebs.hotel.vo.HotelDeviceRenterVO;
+import com.outmao.ebs.hotel.vo.MinHotelDeviceRenterVO;
 import com.outmao.ebs.mall.merchant.common.annotation.SaveUserCommission;
 import com.outmao.ebs.mall.merchant.common.annotation.SetUserCommission;
 import com.querydsl.core.types.Predicate;
@@ -22,7 +24,9 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
+import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 
 @Slf4j
 @Component
@@ -32,6 +36,8 @@ public class HotelDeviceRenterDomainImpl extends BaseDomain implements HotelDevi
     private HotelDeviceRenterDao hotelDeviceRenterDao;
 
     private HotelDeviceRenterVOConver hotelDeviceRenterVOConver=new HotelDeviceRenterVOConver();
+
+    private MinHotelDeviceRenterVOConver minHotelDeviceRenterVOConver=new MinHotelDeviceRenterVOConver();
 
     @Transactional()
     @SaveUserCommission
@@ -108,6 +114,12 @@ public class HotelDeviceRenterDomainImpl extends BaseDomain implements HotelDevi
             p=e.keyword.like("%"+request.getKeyword()+"%");
         }
         return queryPage(e,p,hotelDeviceRenterVOConver,pageable);
+    }
+
+    @Override
+    public List<MinHotelDeviceRenterVO> getMinHotelDeviceRenterVOListByUserIdIn(Collection<Long> userIdIn) {
+        QHotelDeviceRenter e=QHotelDeviceRenter.hotelDeviceRenter;
+        return queryList(e,e.userId.in(userIdIn),minHotelDeviceRenterVOConver);
     }
 
 

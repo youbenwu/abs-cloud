@@ -123,6 +123,8 @@ public class AdvertDomainImpl extends BaseDomain implements AdvertDomain {
     @Override
     public Advert setAdvertStatus(SetAdvertStatusDTO request) {
         Advert advert=advertDao.findByIdForUpdate(request.getId());
+        if(advert==null)
+            return null;
         advert.setStatus(request.getStatus());
         if(advert.getStatus()!=Status.NORMAL.getStatus()){
             advert.setDisplay(false);
@@ -201,22 +203,28 @@ public class AdvertDomainImpl extends BaseDomain implements AdvertDomain {
 
     @Override
     public List<AdvertVO> getAdvertVOList(GetAdvertListDTO request) {
+
         QAdvert e=QAdvert.advert;
 
         Predicate p=getPredicate(request);
+
 
         List<AdvertVO> list=queryList(e,p,advertVOConver);
 
         return list;
     }
 
+    @Override
+    public long getAdvertCount(GetAdvertListDTO request) {
+        Predicate p=getPredicate(request);
+        return advertDao.count(p);
+    }
 
     @Override
     public Page<AdvertVO> getAdvertVOPage(GetAdvertListDTO request, Pageable pageable) {
         QAdvert e=QAdvert.advert;
 
         Predicate p=getPredicate(request);
-
 
         Page<AdvertVO> page=queryPage(e,p,advertVOConver,pageable);
 

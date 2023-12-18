@@ -3,8 +3,11 @@ package com.outmao.ebs.hotel.domain;
 import com.outmao.ebs.hotel.dto.*;
 import com.outmao.ebs.hotel.entity.HotelRoom;
 import com.outmao.ebs.hotel.vo.HotelRoomVO;
+import com.outmao.ebs.hotel.vo.QyHotelRoomVO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+
+import java.util.List;
 
 public interface HotelRoomDomain {
 
@@ -22,6 +25,10 @@ public interface HotelRoomDomain {
     public HotelRoomVO getHotelRoomVO(Long hotelId,String roomNo);
 
     public Page<HotelRoomVO> getHotelRoomVOPage(GetHotelRoomListDTO request, Pageable pageable);
+
+
+    public List<QyHotelRoomVO> getQyHotelRoomVOList(Long hotelId);
+
 
 
 }

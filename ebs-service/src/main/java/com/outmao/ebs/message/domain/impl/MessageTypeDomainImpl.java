@@ -7,26 +7,28 @@ import com.outmao.ebs.message.dao.MessageTemplateDao;
 import com.outmao.ebs.message.dao.MessageTemplateTagDao;
 import com.outmao.ebs.message.dao.MessageTypeDao;
 import com.outmao.ebs.message.domain.MessageTypeDomain;
+import com.outmao.ebs.message.domain.conver.MessageTemplateTagVOConver;
+import com.outmao.ebs.message.domain.conver.MessageTemplateVOConver;
 import com.outmao.ebs.message.domain.conver.MessageTypeVOConver;
+import com.outmao.ebs.message.dto.GetMessageTemplateListDTO;
 import com.outmao.ebs.message.dto.MessageTemplateDTO;
 import com.outmao.ebs.message.dto.MessageTemplateTagDTO;
 import com.outmao.ebs.message.dto.MessageTypeDTO;
-import com.outmao.ebs.message.entity.MessageTemplate;
-import com.outmao.ebs.message.entity.MessageTemplateTag;
-import com.outmao.ebs.message.entity.MessageType;
-import com.outmao.ebs.message.entity.QMessageType;
+import com.outmao.ebs.message.entity.*;
+import com.outmao.ebs.message.vo.MessageTemplateTagVO;
+import com.outmao.ebs.message.vo.MessageTemplateVO;
 import com.outmao.ebs.message.vo.MessageTypeVO;
+import com.querydsl.core.types.Predicate;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Component
@@ -41,6 +43,12 @@ public class MessageTypeDomainImpl extends BaseDomain implements MessageTypeDoma
 
     @Autowired
     private MessageTemplateDao messageTemplateDao;
+
+
+    private MessageTypeVOConver messageTypeVOConver=new MessageTypeVOConver();
+    private MessageTemplateVOConver messageTemplateVOConver=new MessageTemplateVOConver();
+    private MessageTemplateTagVOConver messageTemplateTagVOConver=new MessageTemplateTagVOConver();
+
 
 
     private List<MessageTemplateTag> getMessageTemplateTagList(Long categoryId) {
@@ -139,9 +147,9 @@ public class MessageTypeDomainImpl extends BaseDomain implements MessageTypeDoma
     @Override
     public MessageTypeVO getMessageTypeVOByName(String name) {
         QMessageType e=QMessageType.messageType;
-        MessageTypeVO vo= queryOne(e,e.name.eq(name),new MessageTypeVOConver());
+        MessageTypeVO vo= queryOne(e,e.name.eq(name),messageTypeVOConver);
         if(vo!=null) {
-            vo.setTags(getMessageTemplateTagList(vo.getId()));
+            vo.setTags(getMessageTemplateTagVOList(vo.getId()));
             List list = new ArrayList(1);
             list.add(vo);
             setTemplateData(list);
@@ -154,7 +162,7 @@ public class MessageTypeDomainImpl extends BaseDomain implements MessageTypeDoma
         QMessageType e=QMessageType.messageType;
         MessageTypeVO vo= queryOne(e,e.id.eq(id),new MessageTypeVOConver());
         if(vo!=null) {
-            vo.setTags(getMessageTemplateTagList(vo.getId()));
+            vo.setTags(getMessageTemplateTagVOList(vo.getId()));
 
             List list = new ArrayList(1);
             list.add(vo);
@@ -186,9 +194,9 @@ public class MessageTypeDomainImpl extends BaseDomain implements MessageTypeDoma
                 tids.add(vo.getMpTemplateId());
         }
 
-        List<MessageTemplate> ts=messageTemplateDao.findAllByIdIn(tids);
+        List<MessageTemplateVO> ts=getMessageTemplateVOListByIdIn(tids);
 
-        Map<Long, MessageTemplate> tsmap=ts.stream().collect(Collectors.toMap(t->t.getId(), t->t));
+        Map<Long, MessageTemplateVO> tsmap=ts.stream().collect(Collectors.toMap(t->t.getId(), t->t));
 
 
         for (MessageTypeVO vo:list){
@@ -262,4 +270,43 @@ public class MessageTypeDomainImpl extends BaseDomain implements MessageTypeDoma
     }
 
 
+
+    @Override
+    public List<MessageTemplateVO> getMessageTemplateVOListByIdIn(Collection<Long> idIn) {
+        QMessageTemplate e=QMessageTemplate.messageTemplate;
+        List<MessageTemplateVO> list=queryList(e,e.id.in(idIn),messageTemplateVOConver);
+        return list;
+    }
+
+    @Override
+    public MessageTemplateVO getMessageTemplateVOById(Long id) {
+        QMessageTemplate e=QMessageTemplate.messageTemplate;
+        MessageTemplateVO vo=queryOne(e,e.id.eq(id),messageTemplateVOConver);
+        return vo;
+    }
+
+    @Override
+    public List<MessageTemplateTagVO> getMessageTemplateTagVOList(Long typeId) {
+        QMessageTemplateTag e=QMessageTemplateTag.messageTemplateTag;
+        return queryList(e,e.type.id.eq(typeId),messageTemplateTagVOConver);
+    }
+
+    @Override
+    public Page<MessageTypeVO> getMessageTypeVOPage(Pageable pageable) {
+        QMessageType e=QMessageType.messageType;
+        Predicate p=null;
+        Page<MessageTypeVO> page=queryPage(e,p,messageTypeVOConver,pageable);
+        return page;
+    }
+
+    @Override
+    public Page<MessageTemplateVO> getMessageTemplateVOPage(GetMessageTemplateListDTO request, Pageable pageable) {
+        QMessageTemplate e=QMessageTemplate.messageTemplate;
+        Predicate p=null;
+        if(request.getTypeId()!=null){
+            p=e.type.id.eq(request.getTypeId()).and(p);
+        }
+        Page<MessageTemplateVO> page=queryPage(e,p,messageTemplateVOConver,pageable);
+        return page;
+    }
 }

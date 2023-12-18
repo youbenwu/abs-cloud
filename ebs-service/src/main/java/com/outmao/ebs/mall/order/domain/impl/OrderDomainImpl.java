@@ -376,7 +376,7 @@ public class OrderDomainImpl extends BaseDomain implements OrderDomain {
             }
         }
 
-        BeanUtils.copyProperties(request,order);
+        BeanUtils.copyProperties(request,order,"orderNo");
 
         if(!order.isOut()&&order.getStatus()==OrderStatus.SUCCESSED.getStatus()){
             //计算预计发货时间
@@ -400,6 +400,16 @@ public class OrderDomainImpl extends BaseDomain implements OrderDomain {
 
         }
 
+        if(order.getStatus()==OrderStatus.SUCCESSED.getStatus()){
+            order.setSuccessTime(new Date());
+        }else if(order.getStatus()==OrderStatus.DELIVERED.getStatus()){
+            order.setDeliveryTime(new Date());
+        }else if(order.getStatus()==OrderStatus.FINISHED.getStatus()){
+            order.setFinishTime(new Date());
+        }else if(order.getStatus()==OrderStatus.CLOSED.getStatus()){
+            order.setCloseTime(new Date());
+        }
+        order.setUpdateTime(new Date());
 
 
     }
@@ -438,6 +448,7 @@ public class OrderDomainImpl extends BaseDomain implements OrderDomain {
         }
 
         SetOrderStatusDTO statusDTO=new SetOrderStatusDTO();
+        statusDTO.setOrderNo(order.getOrderNo());
         statusDTO.setStatus(status.getStatus());
         statusDTO.setStatusRemark(status.getStatusRemark());
         statusDTO.setSubStatus(subStatus.getStatus());

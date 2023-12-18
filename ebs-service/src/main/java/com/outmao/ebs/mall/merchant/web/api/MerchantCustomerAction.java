@@ -6,6 +6,7 @@ import com.outmao.ebs.mall.merchant.dto.MerchantCustomerDTO;
 import com.outmao.ebs.mall.merchant.entity.MerchantCustomer;
 import com.outmao.ebs.mall.merchant.service.MerchantCustomerService;
 import com.outmao.ebs.mall.merchant.vo.MerchantCustomerVO;
+import com.outmao.ebs.mall.merchant.vo.QyCustomerVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +38,13 @@ public class MerchantCustomerAction {
     public Page<MerchantCustomerVO> getMerchantCustomerVOPage(GetMerchantCustomerListDTO request, Pageable pageable){
         return merchantCustomerService.getMerchantCustomerVOPage(request,pageable);
     }
+
+    @ApiOperation(value = "获取迁眼客户信息列表", notes = "获取迁眼客户信息列表")
+    @PostMapping("/qy/page")
+    public Page<QyCustomerVO> getQyCustomerVOPage(GetMerchantCustomerListDTO request, Pageable pageable){
+        return merchantCustomerService.getQyCustomerVOPage(request,pageable);
+    }
+
 
 
 

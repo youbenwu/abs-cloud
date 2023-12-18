@@ -17,4 +17,6 @@ public class TradeRechargeDTO {
 
     private long amount;
 
+    private String remark;
+
 }

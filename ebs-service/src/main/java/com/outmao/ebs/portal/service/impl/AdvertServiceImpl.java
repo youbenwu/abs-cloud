@@ -20,6 +20,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import java.util.List;
+import java.util.Random;
 
 @Slf4j
 @Service
@@ -82,11 +83,25 @@ public class AdvertServiceImpl extends BaseService implements AdvertService {
 
     @Override
     public List<AdvertVO> getAdvertVOList(GetAdvertListForHotelPadDTO request) {
-        if(request.getSize()==null){
-            request.setSize(100);
+        if(request.getSize()==null||request.getSize()<=0){
+            request.setSize(10);
         }
-        Pageable pageable = PageRequest.of(0,request.getSize(), Sort.Direction.ASC,"sort");
+
+        //随机
+        long count=advertDomain.getAdvertCount(getGetAdvertListDTO(request));
+        int pageCount=(int)count/request.getSize();
+        int pageIndex=0;
+
+        if(pageCount>1){
+            pageIndex= new Random().nextInt(pageCount);
+        }
+
+        int sort=new Random().nextInt(2);
+
+        Pageable pageable = PageRequest.of(pageIndex,request.getSize(),sort==0? Sort.Direction.ASC:Sort.Direction.DESC,"sort");
+
         Page<AdvertVO> page=getAdvertVOPage(request,pageable);
+
         return page.getContent();
     }
 
@@ -102,12 +117,16 @@ public class AdvertServiceImpl extends BaseService implements AdvertService {
 
     private GetAdvertListDTO getGetAdvertListDTO(GetAdvertListForHotelPadDTO request){
 
-        HotelDeviceVO device=hotelDeviceService.getHotelDeviceVOByDeviceNo(request.getDeviceNo());
 
         GetAdvertListDTO listDTO=new GetAdvertListDTO();
-        listDTO.setPlaceId(device.getHotelId());
         listDTO.setDisplay(true);
         listDTO.setSee(true);
+
+        if(request.getDeviceNo()!=null){
+            HotelDeviceVO device=hotelDeviceService.getHotelDeviceVOByDeviceNo(request.getDeviceNo());
+            if(device!=null)
+            listDTO.setPlaceId(device.getHotelId());
+        }
 
         if(StringUtils.isEmpty(request.getChannelCode()!=null)){
             AdvertChannel channel=advertChannelService.getAdvertChannelByCode(request.getChannelCode());

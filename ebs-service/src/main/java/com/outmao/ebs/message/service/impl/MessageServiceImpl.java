@@ -10,6 +10,7 @@ import com.outmao.ebs.message.entity.Message;
 import com.outmao.ebs.message.entity.MessageTemplate;
 import com.outmao.ebs.message.entity.MessageType;
 import com.outmao.ebs.message.service.MessageService;
+import com.outmao.ebs.message.vo.MessageTemplateVO;
 import com.outmao.ebs.message.vo.MessageTypeVO;
 import com.outmao.ebs.message.vo.MessageVO;
 import com.outmao.ebs.message.vo.UserMessageVO;
@@ -56,7 +57,7 @@ public class MessageServiceImpl implements MessageService {
 			return;
 		}
 
-		List<MessageTemplate> list=new ArrayList<>();
+		List<MessageTemplateVO> list=new ArrayList<>();
 
 		if(category.isMsg()&&category.getMsgTemplate()!=null){
 			list.add(category.getMsgTemplate());
@@ -80,7 +81,7 @@ public class MessageServiceImpl implements MessageService {
 			return;
 		}
 
-		for (MessageTemplate t:list){
+		for (MessageTemplateVO t:list){
 			try {
 
 				String title = t.getTitle()==null?null: FreemarkerTemplateUtil.process(t.getTitle(), request.getData());
@@ -179,6 +180,21 @@ public class MessageServiceImpl implements MessageService {
 	@Override
 	public List<MessageTemplate> getMessageTemplateList(Long typeId, int sendType) {
 		return messageTypeDomain.getMessageTemplateList(typeId,sendType);
+	}
+
+	@Override
+	public Page<MessageTypeVO> getMessageTypeVOPage(Pageable pageable) {
+		return messageTypeDomain.getMessageTypeVOPage(pageable);
+	}
+
+	@Override
+	public Page<MessageTemplateVO> getMessageTemplateVOPage(GetMessageTemplateListDTO request, Pageable pageable) {
+		return messageTypeDomain.getMessageTemplateVOPage(request,pageable);
+	}
+
+	@Override
+	public MessageTemplateVO getMessageTemplateVOById(Long id) {
+		return messageTypeDomain.getMessageTemplateVOById(id);
 	}
 
 	@Override

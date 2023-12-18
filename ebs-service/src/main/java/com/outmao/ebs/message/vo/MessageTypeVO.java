@@ -1,19 +1,19 @@
 package com.outmao.ebs.message.vo;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.outmao.ebs.message.entity.MessageTemplate;
 import com.outmao.ebs.message.entity.MessageTemplateTag;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
 @Data
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 @ApiModel(value = "MessageTypeVO", description = "消息类型对象")
-public class MessageTypeVO {
+public class MessageTypeVO implements Serializable {
 
     @ApiModelProperty(name = "id", value = "类型ID")
     private Long id;
@@ -22,7 +22,7 @@ public class MessageTypeVO {
     private int status;
 
     @ApiModelProperty(name = "status", value = "模板标签")
-    private List<MessageTemplateTag> tags;
+    private List<MessageTemplateTagVO> tags;
 
     @ApiModelProperty(name = "status", value = "类型名称")
     private String name;
@@ -50,23 +50,23 @@ public class MessageTypeVO {
 
     private Long msgTemplateId;
     @ApiModelProperty(name = "msgTemplate", value = "站内信模板")
-    private MessageTemplate msgTemplate;
+    private MessageTemplateVO msgTemplate;
 
     private Long emailTemplateId;
     @ApiModelProperty(name = "emailTemplate", value = "邮件模板")
-    private MessageTemplate emailTemplate;
+    private MessageTemplateVO emailTemplate;
 
     private Long smsTemplateId;
     @ApiModelProperty(name = "smsTemplate", value = "短信模板")
-    private MessageTemplate smsTemplate;
+    private MessageTemplateVO smsTemplate;
 
     private Long pushTemplateId;
     @ApiModelProperty(name = "pushTemplate", value = "推送模板")
-    private MessageTemplate pushTemplate;
+    private MessageTemplateVO pushTemplate;
 
     private Long mpTemplateId;
     @ApiModelProperty(name = "mpTemplate", value = "微信消息模板")
-    private MessageTemplate mpTemplate;
+    private MessageTemplateVO mpTemplate;
 
     @ApiModelProperty(name = "createTime", value = "创建时间")
     private Date createTime;

@@ -22,7 +22,7 @@ public class Message implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
-	//表示组织内部消息
+	//组织内部消息
 	private Long orgId;
 	@JsonIgnore
 	@ManyToOne(cascade = CascadeType.REFRESH, optional = false, fetch = FetchType.LAZY)

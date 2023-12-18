@@ -51,11 +51,11 @@ public class WechatNotify {
 		}
 
 
-		String signature = RequestUtil.getHeader(request, "Wechatpay-Signature");
-		String timestamp = RequestUtil.getHeader(request, "Wechatpay-Timestamp");
-		String signType = RequestUtil.getHeader(request, "Wechatpay-Signature-Type");
-		String serial = RequestUtil.getHeader(request, "Wechatpay-Serial");
-		String nonce = RequestUtil.getHeader(request, "Wechatpay-Nonce");
+		String signature = request.getHeader("Wechatpay-Signature");
+		String timestamp = request.getHeader("Wechatpay-Timestamp");
+		String signType = request.getHeader( "Wechatpay-Signature-Type");
+		String serial = request.getHeader("Wechatpay-Serial");
+		String nonce = request.getHeader( "Wechatpay-Nonce");
 
 
 		WechatNotifyResult notifyResult = JSON.parseObject(requestWrapper.getRequestParams(), WechatNotifyResult.class);
@@ -71,6 +71,10 @@ public class WechatNotify {
 				.signType(signType)
 				.body(requestWrapper.getRequestParams())
 				.build();
+
+
+		log.info("/****************************** RequestParam ******************************/");
+		log.info(requestParam.toString());
 
 		// 初始化 NotificationParser
 		NotificationParser parser=new NotificationParser((NotificationConfig) configuration.payConfig());

@@ -8,6 +8,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Date;
+
 
 @ApiModel(value = "HotelDTO", description = "保存酒店信息")
 @NoArgsConstructor
@@ -50,6 +52,46 @@ public class HotelDTO extends BaseDTO {
      */
     @ApiModelProperty(name = "image", value = "酒店图片")
     private String image;
+
+    /**
+     *
+     * 酒店视频
+     *
+     */
+    @ApiModelProperty(name = "video", value = "酒店视频")
+    private String video;
+
+    /**
+     *
+     * 酒店服务说明
+     *
+     */
+    @ApiModelProperty(name = "business", value = "酒店服务说明")
+    private String business;
+
+    /**
+     *
+     * 星级 1～5
+     *
+     */
+    @ApiModelProperty(name = "star", value = "星级 1～5")
+    private int star;
+
+    /**
+     *
+     *  酒店标记
+     *
+     */
+    @ApiModelProperty(name = "mark", value = "酒店标记")
+    private String mark;
+
+    /**
+     *
+     *  酒店成立时间
+     *
+     */
+    @ApiModelProperty(name = "estTime", value = "酒店成立时间")
+    private Date estTime;
 
     /**
      *

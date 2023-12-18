@@ -77,8 +77,19 @@ public class HotelRoom implements Serializable {
      *
      * 房间状态备注
      *
+     *
      */
     private String statusRemark;
+
+
+    /**
+     *
+     * 房间设备状态
+     * 0--无设备 1--设备投放中 2--设备已投放
+     *
+     */
+    private int deviceStatus;
+
 
     /**
      *

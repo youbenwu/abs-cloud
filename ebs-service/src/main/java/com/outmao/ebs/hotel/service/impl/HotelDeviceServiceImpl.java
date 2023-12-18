@@ -167,6 +167,8 @@ public class HotelDeviceServiceImpl extends BaseService implements HotelDeviceSe
     }
 
 
+
+
 }
 
 

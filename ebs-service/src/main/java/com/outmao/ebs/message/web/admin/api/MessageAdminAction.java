@@ -4,6 +4,7 @@ package com.outmao.ebs.message.web.admin.api;
 import com.outmao.ebs.message.dto.*;
 import com.outmao.ebs.message.entity.MessageTemplate;
 import com.outmao.ebs.message.service.MessageService;
+import com.outmao.ebs.message.vo.MessageTemplateVO;
 import com.outmao.ebs.message.vo.MessageTypeVO;
 import com.outmao.ebs.message.vo.MessageVO;
 import io.swagger.annotations.Api;
@@ -31,33 +32,8 @@ public class MessageAdminAction {
     MessageService messageService;
 
 
-	@ApiOperation(value = "保存消息模板", notes = "保存消息模板")
-	@PostMapping("/template/save")
-	public MessageTemplate saveMessageTemplate(MessageTemplateDTO params) {
-		return messageService.saveMessageTemplate(params);
-	}
-
-	@ApiOperation(value = "删除消息模板", notes = "删除消息模板")
-	@PostMapping("/template/delete")
-	public void deleteMessageTemplateById(Long id) {
-		messageService.deleteMessageTemplateById(id);
-	}
-
-	@ApiOperation(value = "获取消息模板", notes = "获取消息模板")
-	@PostMapping("/template/get")
-	public MessageTemplate getMessageTemplateById(Long id) {
-		return messageService.getMessageTemplateById(id);
-	}
-
-
-	@ApiOperation(value = "获取消息模板", notes = "获取消息模板")
-	@PostMapping("/template/list")
-	public List<MessageTemplate> getMessageTemplateList(Long typeId) {
-		return messageService.getMessageTemplateList(typeId);
-	}
-
 	@ApiOperation(value = "保存消息类型", notes = "保存消息类型")
-	 @PostMapping("/type/save")
+	@PostMapping("/type/save")
 	public void saveMessageType(@RequestBody MessageTypeDTO request) {
 		messageService.saveMessageType(request);
 	}
@@ -74,18 +50,40 @@ public class MessageAdminAction {
 		return messageService.getMessageTypeVOById(id);
 	}
 
-	@ApiOperation(value = "获取消息类型", notes = "获取消息类型")
-	@PostMapping("/type/getByName")
-	public MessageTypeVO getMessageTypeVOByName(String name) {
-		return messageService.getMessageTypeVOByName(name);
+
+	@ApiOperation(value = "获取消息类型列表", notes = "获取消息类型列表")
+	@PostMapping("/type/page")
+	public Page<MessageTypeVO> getMessageTypeVOPage(Pageable pageable) {
+		return messageService.getMessageTypeVOPage(pageable);
 	}
 
 
-	@ApiOperation(value = "获取消息类型", notes = "获取消息类型")
-	@PostMapping("/type/list")
-	public List<MessageTypeVO> getMessageTypeVOList() {
-		return messageService.getMessageTypeVOList();
+	@ApiOperation(value = "保存消息模板", notes = "保存消息模板")
+	@PostMapping("/type/template/save")
+	public void saveMessageTemplate(MessageTemplateDTO params) {
+		messageService.saveMessageTemplate(params);
 	}
+
+	@ApiOperation(value = "删除消息模板", notes = "删除消息模板")
+	@PostMapping("/type/template/delete")
+	public void deleteMessageTemplateById(Long id) {
+		messageService.deleteMessageTemplateById(id);
+	}
+
+	@ApiOperation(value = "获取消息模板", notes = "获取消息模板")
+	@PostMapping("/type/template/get")
+	public MessageTemplateVO getMessageTemplateVOById(Long id) {
+		return messageService.getMessageTemplateVOById(id);
+	}
+
+
+	@ApiOperation(value = "获取消息模板", notes = "获取消息模板")
+	@PostMapping("/type/template/page")
+	public Page<MessageTemplateVO> getMessageTemplateVOPage(GetMessageTemplateListDTO request,Pageable pageable) {
+		return messageService.getMessageTemplateVOPage(request,pageable);
+	}
+
+
 
 
 	@ApiOperation(value = "发送站内消息", notes = "发送站内消息")

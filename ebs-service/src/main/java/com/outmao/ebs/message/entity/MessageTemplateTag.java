@@ -28,4 +28,6 @@ public class MessageTemplateTag implements Serializable {
     private String name;
     private String value;
 
+
+
 }

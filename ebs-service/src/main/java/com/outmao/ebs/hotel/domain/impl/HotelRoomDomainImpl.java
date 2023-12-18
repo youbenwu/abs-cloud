@@ -8,6 +8,7 @@ import com.outmao.ebs.hotel.dao.HotelRoomDao;
 import com.outmao.ebs.hotel.dao.HotelRoomTypeDao;
 import com.outmao.ebs.hotel.domain.HotelRoomDomain;
 import com.outmao.ebs.hotel.domain.conver.HotelRoomVOConver;
+import com.outmao.ebs.hotel.domain.conver.QyHotelRoomVOConver;
 import com.outmao.ebs.hotel.dto.GetHotelRoomListDTO;
 import com.outmao.ebs.hotel.dto.HotelRoomDTO;
 import com.outmao.ebs.hotel.dto.SetHotelRoomStatusDTO;
@@ -15,6 +16,7 @@ import com.outmao.ebs.hotel.dto.SetHotelStatusDTO;
 import com.outmao.ebs.hotel.entity.HotelRoom;
 import com.outmao.ebs.hotel.entity.QHotelRoom;
 import com.outmao.ebs.hotel.vo.HotelRoomVO;
+import com.outmao.ebs.hotel.vo.QyHotelRoomVO;
 import com.querydsl.core.types.Predicate;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +28,7 @@ import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
 import java.util.Date;
+import java.util.List;
 
 
 @Component
@@ -43,12 +46,19 @@ public class HotelRoomDomainImpl extends BaseDomain implements HotelRoomDomain {
 
     private HotelRoomVOConver hotelRoomVOConver=new HotelRoomVOConver();
 
+    private QyHotelRoomVOConver qyHotelRoomVOConver=new QyHotelRoomVOConver();
+
+
     @Transactional()
     @Override
     public HotelRoom saveHotelRoom(HotelRoomDTO request) {
 
         Assert.notNull(request.getHotelId(),"酒店ID不能为空");
         Assert.notNull(request.getRoomNo(),"房间号不能为空");
+
+        if(request.getName()==null){
+            request.setName(request.getRoomNo());
+        }
 
         HotelRoom room=request.getId()==null?null:hotelRoomDao.findByIdForUpdate(request.getId());
 
@@ -189,6 +199,14 @@ public class HotelRoomDomainImpl extends BaseDomain implements HotelRoomDomain {
     }
 
 
+    @Override
+    public List<QyHotelRoomVO> getQyHotelRoomVOList(Long hotelId) {
 
+        QHotelRoom e=QHotelRoom.hotelRoom;
+
+        List<QyHotelRoomVO> list=queryList(e,e.hotel.id.eq(hotelId),qyHotelRoomVOConver);
+
+        return list;
+    }
 
 }

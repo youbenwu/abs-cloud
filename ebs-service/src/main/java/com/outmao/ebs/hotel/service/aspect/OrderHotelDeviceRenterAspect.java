@@ -47,8 +47,10 @@ public class OrderHotelDeviceRenterAspect {
                 leaseOrderDTO.setAmount(order.getTotalAmount());
                 leaseOrderDTO.setQuantity(order.getQuantity());
                 OrderProductLease lease=order.getProducts().get(0).getLease();
-                leaseOrderDTO.setStartTime(lease.getStartTime());
-                leaseOrderDTO.setEndTime(lease.getEndTime());
+                if(lease!=null) {
+                    leaseOrderDTO.setStartTime(lease.getStartTime());
+                    leaseOrderDTO.setEndTime(lease.getEndTime());
+                }
 
                 hotelDeviceLeaseService.createHotelDeviceLeaseOrder(leaseOrderDTO);
 

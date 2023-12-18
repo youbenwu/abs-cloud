@@ -3,6 +3,8 @@ package com.outmao.ebs.hotel.web.admin.api;
 
 
 import com.outmao.ebs.common.exception.BusinessException;
+import com.outmao.ebs.data.entity.Photo;
+import com.outmao.ebs.data.vo.PhotoVO;
 import com.outmao.ebs.hotel.common.constant.HotelRoomStatus;
 import com.outmao.ebs.hotel.dto.*;
 import com.outmao.ebs.hotel.service.HotelService;
@@ -157,6 +159,29 @@ public class HotelAdminAction {
         return hotelService.getStatsHotelCountVOListByMonths(fromTime,toTime);
     }
 
+    @ApiOperation(value = "保存酒店相册", notes = "保存酒店相册")
+    @PostMapping("/photo/save")
+    public void saveHotelPhoto(HotelPhotoDTO request){
+        hotelService.saveHotelPhoto(request);
+    }
+
+    @ApiOperation(value = "删除酒店相册", notes = "删除酒店相册")
+    @PostMapping("/photo/delete")
+    public void deleteHotelPhotoById(Long id){
+        hotelService.deleteHotelPhotoById(id);
+    }
+
+    @ApiOperation(value = "删除酒店相册", notes = "删除酒店相册")
+    @PostMapping("/photo/deleteAll")
+    public void deleteAllHotelPhotoByHotelId(Long hotelId){
+        hotelService.deleteAllHotelPhotoByHotelId(hotelId);
+    }
+
+    @ApiOperation(value = "获取酒店相册图片列表", notes = "获取酒店相册图片列表")
+    @PostMapping("/photo/page")
+    public Page<PhotoVO> getHotelPhotoVOPage(GetHotelPhotoListDTO request, Pageable pageable){
+        return hotelService.getHotelPhotoVOPage(request,pageable);
+    }
 
     @PreAuthorize("hasPermission('/hotel/room/type','save')")
     @ApiOperation(value = "保存酒店房型", notes = "保存酒店房型")
@@ -231,6 +256,7 @@ public class HotelAdminAction {
     public HotelRoomVO getHotelRoomVO(Long hotelId,String roomNo){
         return hotelService.getHotelRoomVO(hotelId,roomNo);
     }
+
 
 
     @PreAuthorize("hasPermission('/hotel/room','read')")

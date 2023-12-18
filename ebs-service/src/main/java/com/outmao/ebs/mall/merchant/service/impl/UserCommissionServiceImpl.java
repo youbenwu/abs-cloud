@@ -78,7 +78,7 @@ public class UserCommissionServiceImpl extends BaseService implements UserCommis
     @Override
     public UserCommissionCash saveUserCommissionCash(UserCommissionCashDTO request) {
         UserCommissionCash cash= userCommissionDomain.saveUserCommissionCash(request);
-        if(cash.getAmount()<1000){
+        if(cash.getAmount()<10000){
             //不用审核
             SetUserCommissionCashStatusDTO statusDTO=new SetUserCommissionCashStatusDTO();
             statusDTO.setId(cash.getId());
@@ -104,7 +104,7 @@ public class UserCommissionServiceImpl extends BaseService implements UserCommis
         User user=userService.getUserById(cash.getUserId());
         Currency currency=walletService.getCurrencyById("RMB");
         long amount=(long)( cash.getAmount()*currency.getOneUnit());
-        Trade trade=tradeService.tradeRecharge(new TradeRechargeDTO(user.getWalletId(), currency.getId(), amount));
+        Trade trade=tradeService.tradeRecharge(new TradeRechargeDTO(user.getWalletId(), currency.getId(), amount,"佣金收益"));
         cash.setOrderNo(trade.getTradeNo());
 
     }
@@ -128,4 +128,6 @@ public class UserCommissionServiceImpl extends BaseService implements UserCommis
     public double getUserCommissionTotalAmount(GetUserCommissionTotalAmountDTO request) {
         return userCommissionDomain.getUserCommissionTotalAmount(request);
     }
+
+
 }

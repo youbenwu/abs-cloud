@@ -111,6 +111,41 @@ public class Hotel implements Serializable ,BindingOrg {
 
     /**
      *
+     * 酒店视频
+     *
+     */
+    private String video;
+
+    /**
+     *
+     * 酒店服务说明
+     *
+     */
+    private String business;
+
+    /**
+     *
+     * 星级 1～5
+     *
+     */
+    private int star;
+
+    /**
+     *
+     *  酒店标记
+     *
+     */
+    private String mark;
+
+    /**
+     *
+     *  酒店成立时间
+     *
+     */
+    private Date estTime;
+
+    /**
+     *
      * 营业执照
      *
      */

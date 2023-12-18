@@ -110,7 +110,7 @@ public class RechargeServiceImpl extends BaseService implements RechargeService,
 
         Currency currency=walletService.getCurrencyById(recharge.getRechargeAmount().getCurrencyId());
         long amount=(long)( recharge.getRechargeAmount().getAmount()*currency.getOneUnit());
-        Trade trade=tradeService.tradeRecharge(new TradeRechargeDTO(recharge.getWallet().getId(), currency.getId(), amount));
+        Trade trade=tradeService.tradeRecharge(new TradeRechargeDTO(recharge.getWallet().getId(), currency.getId(), amount,recharge.getRemark()));
         recharge.setRechargeNo(trade.getTradeNo());
     }
 
