@@ -9,6 +9,7 @@ import com.outmao.ebs.mall.order.dto.OrderPayPrepareDTO;
 import com.outmao.ebs.mall.order.entity.Order;
 import com.outmao.ebs.mall.order.service.OrderService;
 import com.outmao.ebs.mall.order.vo.OrderVO;
+import com.outmao.ebs.mall.order.vo.QyDeviceLeaseOrderVO;
 import com.outmao.ebs.wallet.vo.TradeVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -78,6 +79,19 @@ public class OrderAction {
     @PostMapping("/tradeCreate")
     public TradeVO payPrepare(OrderPayPrepareDTO request){
         return orderService.payPrepare(request);
+    }
+
+
+    @ApiOperation(value = "获取迁眼设备租赁订单信息", notes = "获取迁眼设备租赁订单信息")
+    @PostMapping("/qy_device_lease/get")
+    public QyDeviceLeaseOrderVO getQyDeviceLeaseOrderVOById(Long id){
+        return orderService.getQyDeviceLeaseOrderVOById(id);
+    }
+
+    @ApiOperation(value = "获取迁眼设备租赁订单信息列表", notes = "获取迁眼设备租赁订单信息列表")
+    @PostMapping("/qy_device_lease/page")
+    public Page<QyDeviceLeaseOrderVO> getQyDeviceLeaseOrderVOPage(GetOrderListDTO request, Pageable pageable){
+        return orderService.getQyDeviceLeaseOrderVOPage(request,pageable);
     }
 
 

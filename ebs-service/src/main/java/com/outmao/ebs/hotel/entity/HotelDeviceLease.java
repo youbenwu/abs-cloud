@@ -42,6 +42,13 @@ public class HotelDeviceLease implements Serializable {
 
     /**
      *
+     * 租赁几年
+     *
+     */
+    private int leaseYears;
+
+    /**
+     *
      * 当前租赁开始时间
      *
      */

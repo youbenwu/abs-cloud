@@ -3,13 +3,12 @@ package com.outmao.ebs.hotel.service.impl;
 import com.outmao.ebs.common.base.BaseService;
 import com.outmao.ebs.common.vo.Contact;
 import com.outmao.ebs.hotel.common.annotation.SetSimpleHotel;
+import com.outmao.ebs.hotel.common.constant.HotelRoomDeviceStatus;
 import com.outmao.ebs.hotel.domain.HotelDeviceDomain;
-import com.outmao.ebs.hotel.dto.GetHotelDeviceListDTO;
-import com.outmao.ebs.hotel.dto.HotelDeviceDTO;
-import com.outmao.ebs.hotel.dto.PadRegisterHotelDeviceDTO;
-import com.outmao.ebs.hotel.dto.RegisterHotelDTO;
+import com.outmao.ebs.hotel.dto.*;
 import com.outmao.ebs.hotel.entity.Hotel;
 import com.outmao.ebs.hotel.entity.HotelDevice;
+import com.outmao.ebs.hotel.service.HotelDeviceLeaseService;
 import com.outmao.ebs.hotel.service.HotelDeviceService;
 import com.outmao.ebs.hotel.service.HotelService;
 import com.outmao.ebs.hotel.vo.HotelDeviceVO;
@@ -48,6 +47,9 @@ public class HotelDeviceServiceImpl extends BaseService implements HotelDeviceSe
     @Autowired
     private MemberService memberService;
 
+    @Autowired
+    private HotelDeviceLeaseService hotelDeviceLeaseService;
+
     @Transactional()
     @Override
     public HotelDevice saveHotelDevice(HotelDeviceDTO request) {
@@ -57,6 +59,18 @@ public class HotelDeviceServiceImpl extends BaseService implements HotelDeviceSe
         if(device.getUserId()==null){
             findOrRegisterDeviceUser(device);
         }
+
+        //设置房间投放设备状态
+        hotelService.setHotelRoomDeviceStatus(
+                new SetHotelRoomDeviceStatusDTO(
+                        device.getHotelId(),
+                        device.getRoomNo(),
+                        HotelRoomDeviceStatus.HasDevice.getStatus())
+        );
+
+
+        hotelDeviceLeaseService.hotelDeviceActive(device.getId());
+
 
         return device;
     }
@@ -110,9 +124,20 @@ public class HotelDeviceServiceImpl extends BaseService implements HotelDeviceSe
 
     }
 
-
+    @Transactional()
     @Override
     public void deleteHotelDeviceById(Long id) {
+        HotelDevice device=hotelDeviceDomain.getHotelDeviceById(id);
+        //设置房间投放设备状态
+        if(device.getStatus()!=0&&hotelService.existsHotelRoomByHotelIdAndRoomNo(device.getHotelId(),device.getRoomNo())) {
+            hotelService.setHotelRoomDeviceStatus(
+                    new SetHotelRoomDeviceStatusDTO(
+                            device.getHotelId(),
+                            device.getRoomNo(),
+                            HotelRoomDeviceStatus.NoDevice.getStatus())
+            );
+        }
+        //删除设备
         hotelDeviceDomain.deleteHotelDeviceById(id);
     }
 
@@ -126,6 +151,11 @@ public class HotelDeviceServiceImpl extends BaseService implements HotelDeviceSe
     @Override
     public long getHotelDeviceCountByPartnerId(Long partnerId) {
         return hotelDeviceDomain.getHotelDeviceCountByPartnerId(partnerId);
+    }
+
+    @Override
+    public long getHotelDeviceCountByLeaseRenterId(Long leaseRenterId) {
+        return hotelDeviceDomain.getHotelDeviceCountByLeaseRenterId(leaseRenterId);
     }
 
     @Override
@@ -166,7 +196,22 @@ public class HotelDeviceServiceImpl extends BaseService implements HotelDeviceSe
         return hotelDeviceDomain.getStatsHotelDeviceProvinceVOList(size);
     }
 
+    @Override
+    public List<HotelDevice> buy(HotelDeviceBuyDTO request) {
+        return hotelDeviceDomain.buy(request);
+    }
 
+    @Override
+    public List<HotelDevice> lease(HotelDeviceLeaseDTO request) {
+        return hotelDeviceDomain.lease(request);
+    }
+
+    @Transactional()
+    @Override
+    public List<HotelDevice> deploy(HotelDeviceDeployDTO request) {
+
+        return hotelDeviceDomain.deploy(request);
+    }
 
 
 }

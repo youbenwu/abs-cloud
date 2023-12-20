@@ -3,15 +3,19 @@ package com.outmao.ebs.mall.order.service.impl;
 import com.outmao.ebs.common.base.BaseService;
 import com.outmao.ebs.common.exception.BusinessException;
 import com.outmao.ebs.common.exception.IdempotentException;
+import com.outmao.ebs.hotel.service.HotelDeviceLeaseService;
+import com.outmao.ebs.hotel.vo.HotelDeviceLeaseOrderVO;
 import com.outmao.ebs.mall.order.common.constant.OrderStatus;
 import com.outmao.ebs.mall.order.domain.OrderDomain;
 import com.outmao.ebs.mall.order.domain.OrderStatsDomain;
 import com.outmao.ebs.mall.order.dto.*;
 import com.outmao.ebs.mall.order.entity.Order;
 import com.outmao.ebs.mall.order.service.OrderService;
+import com.outmao.ebs.mall.order.vo.QyDeviceLeaseOrderVO;
 import com.outmao.ebs.mall.order.vo.StatsOrderStatusVO;
 import com.outmao.ebs.mall.order.vo.StatsOrderVO;
 import com.outmao.ebs.mall.order.vo.OrderVO;
+import com.outmao.ebs.mall.product.common.constant.ProductType;
 import com.outmao.ebs.mall.product.dto.ProductSkuStockOutDTO;
 import com.outmao.ebs.mall.product.service.ProductService;
 import com.outmao.ebs.mall.store.common.constant.StoreSkuStockOutStatus;
@@ -30,9 +34,11 @@ import com.outmao.ebs.wallet.pay.service.PayService;
 import com.outmao.ebs.wallet.service.WalletService;
 import com.outmao.ebs.wallet.vo.TradeVO;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -70,6 +76,9 @@ public class OrderServiceImpl extends BaseService implements OrderService, Trade
 
     @Autowired
     private PayService payService;
+
+    @Autowired
+    private HotelDeviceLeaseService hotelDeviceLeaseService;
 
 
     @Override
@@ -297,6 +306,36 @@ public class OrderServiceImpl extends BaseService implements OrderService, Trade
     @Override
     public List<StatsOrderStatusVO> getStatsOrderStatusVOList(GetStatsOrderStatusListDTO request) {
         return orderDomain.getStatsOrderStatusVOList(request);
+    }
+
+
+    @Override
+    public QyDeviceLeaseOrderVO getQyDeviceLeaseOrderVOById(Long id) {
+        OrderVO vo=getOrderVOById(id);
+        HotelDeviceLeaseOrderVO leaseOrderVO=hotelDeviceLeaseService.getHotelDeviceLeaseOrderVOByOrderNo(vo.getOrderNo());
+        QyDeviceLeaseOrderVO vo1=new QyDeviceLeaseOrderVO();
+        BeanUtils.copyProperties(vo,vo1);
+        vo1.setLeaseInfo(leaseOrderVO);
+        return vo1;
+    }
+
+
+    @Override
+    public Page<QyDeviceLeaseOrderVO> getQyDeviceLeaseOrderVOPage(GetOrderListDTO request, Pageable pageable) {
+        request.setType(ProductType.HOTEL_DEVICE_LEASE.getType());
+        Page<OrderVO> page=getOrderVOPage(request,pageable);
+
+        List<QyDeviceLeaseOrderVO> content=new ArrayList<>(page.getContent().size());
+
+        page.getContent().forEach(vo->{
+            HotelDeviceLeaseOrderVO leaseOrderVO=hotelDeviceLeaseService.getHotelDeviceLeaseOrderVOByOrderNo(vo.getOrderNo());
+            QyDeviceLeaseOrderVO vo1=new QyDeviceLeaseOrderVO();
+            BeanUtils.copyProperties(vo,vo1);
+            vo1.setLeaseInfo(leaseOrderVO);
+            content.add(vo1);
+        });
+
+        return new PageImpl(content,pageable,page.getTotalElements());
     }
 
 

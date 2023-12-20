@@ -2,6 +2,7 @@ package com.outmao.ebs.mall.order.service;
 
 import com.outmao.ebs.mall.order.dto.*;
 import com.outmao.ebs.mall.order.entity.Order;
+import com.outmao.ebs.mall.order.vo.QyDeviceLeaseOrderVO;
 import com.outmao.ebs.mall.order.vo.StatsOrderStatusVO;
 import com.outmao.ebs.mall.order.vo.StatsOrderVO;
 import com.outmao.ebs.mall.order.vo.OrderVO;
@@ -41,6 +42,11 @@ public interface OrderService {
     public TradeVO payPrepare(OrderPayPrepareDTO request);
 
     public List<StatsOrderStatusVO> getStatsOrderStatusVOList(GetStatsOrderStatusListDTO request);
+
+
+    public QyDeviceLeaseOrderVO getQyDeviceLeaseOrderVOById(Long id);
+
+    public Page<QyDeviceLeaseOrderVO> getQyDeviceLeaseOrderVOPage(GetOrderListDTO request, Pageable pageable);
 
 
 

@@ -1,6 +1,7 @@
 package com.outmao.ebs.hotel.entity;
 
 
+import com.outmao.ebs.common.vo.TimeSpan;
 import lombok.Data;
 import javax.persistence.*;
 import java.io.Serializable;
@@ -33,6 +34,20 @@ public class HotelDeviceLeaseOrder implements Serializable {
 
     /**
      *
+     * 0--未托管 1--已托管 2--已发货 3--部份激活 4--已激活
+     *
+     */
+    private int status;
+
+    /**
+     *
+     * 已经激活数量
+     *
+     */
+    private int activeQuantity;
+
+    /**
+     *
      * 租赁用户ID
      *
      */
@@ -56,7 +71,7 @@ public class HotelDeviceLeaseOrder implements Serializable {
 
     /**
      *
-     * 租赁单价
+     * 租赁每台设备单价
      *
      */
     private double price;
@@ -68,9 +83,18 @@ public class HotelDeviceLeaseOrder implements Serializable {
      */
     private double amount;
 
+
+    /**
+     *
+     * 租赁期限
+     *
+     */
+    private TimeSpan time;
+
     /**
      *
      * 租赁开始时间
+     * 激活完成开始计算
      *
      */
     private Date startTime;

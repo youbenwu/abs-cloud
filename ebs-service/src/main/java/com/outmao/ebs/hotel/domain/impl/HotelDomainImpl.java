@@ -51,15 +51,11 @@ public class HotelDomainImpl extends BaseDomain implements HotelDomain {
     private HotelDao hotelDao;
 
     @Autowired
-    private HotelRoomDao hotelRoomDao;
-
-    @Autowired
     private HotelDeviceDao hotelDeviceDao;
 
     private HotelVOConver hotelVOConver=new HotelVOConver();
 
     private SimpleHotelVOConver simpleHotelVOConver=new SimpleHotelVOConver();
-
 
 
 

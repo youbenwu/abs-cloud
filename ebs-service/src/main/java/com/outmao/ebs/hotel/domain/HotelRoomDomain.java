@@ -6,7 +6,6 @@ import com.outmao.ebs.hotel.vo.HotelRoomVO;
 import com.outmao.ebs.hotel.vo.QyHotelRoomVO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-
 import java.util.List;
 
 public interface HotelRoomDomain {
@@ -16,9 +15,13 @@ public interface HotelRoomDomain {
 
     public HotelRoom getHotelRoom(Long hotelId,String roomNo);
 
+    public boolean existsByHotelIdAndRoomNo(Long hotelId,String roomNo);
+
     public void deleteHotelRoomById(Long id);
 
     public HotelRoom setHotelRoomStatus(SetHotelRoomStatusDTO request);
+
+    public HotelRoom setHotelRoomDeviceStatus(SetHotelRoomDeviceStatusDTO request);
 
     public HotelRoomVO getHotelRoomVOById(Long id);
 
@@ -29,6 +32,10 @@ public interface HotelRoomDomain {
 
     public List<QyHotelRoomVO> getQyHotelRoomVOList(Long hotelId);
 
+
+    //托管设备
+    public void deviceDeploy(List<HotelRoomDeviceDeployDTO> request);
+    public void deviceDeploy(HotelRoomDeviceDeployDTO request);
 
 
 }

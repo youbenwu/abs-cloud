@@ -13,9 +13,12 @@ public class HotelDeviceLeaseOrderVOConver  implements BeanConver<QHotelDeviceLe
         vo.setId(t.get(e.id));
         vo.setUserId(t.get(e.userId));
         vo.setOrderNo(t.get(e.orderNo));
+        vo.setStatus(t.get(e.status));
+        vo.setActiveQuantity(t.get(e.activeQuantity));
         vo.setQuantity(t.get(e.quantity));
         vo.setAmount(t.get(e.amount));
         vo.setPrice(t.get(e.price));
+        vo.setTime(t.get(e.time));
         vo.setStartTime(t.get(e.startTime));
         vo.setEndTime(t.get(e.endTime));
         vo.setCreateTime(t.get(e.createTime));
@@ -29,9 +32,12 @@ public class HotelDeviceLeaseOrderVOConver  implements BeanConver<QHotelDeviceLe
                 e.id,
                 e.userId,
                 e.orderNo,
+                e.status,
+                e.activeQuantity,
                 e.quantity,
                 e.amount,
                 e.price,
+                e.time,
                 e.startTime,
                 e.endTime,
                 e.createTime,

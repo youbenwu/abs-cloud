@@ -265,8 +265,18 @@ public class HotelServiceImpl extends BaseService implements HotelService {
     }
 
     @Override
+    public boolean existsHotelRoomByHotelIdAndRoomNo(Long hotelId, String roomNo) {
+        return hotelRoomDomain.existsByHotelIdAndRoomNo(hotelId,roomNo);
+    }
+
+    @Override
     public HotelRoom setHotelRoomStatus(SetHotelRoomStatusDTO request) {
         return hotelRoomDomain.setHotelRoomStatus(request);
+    }
+
+    @Override
+    public HotelRoom setHotelRoomDeviceStatus(SetHotelRoomDeviceStatusDTO request) {
+        return hotelRoomDomain.setHotelRoomDeviceStatus(request);
     }
 
     @Override
@@ -306,6 +316,8 @@ public class HotelServiceImpl extends BaseService implements HotelService {
     public HotelWorkOrder setHotelWorkOrderStatus(SetHotelWorkOrderStatusDTO request) {
         return hotelWorkOrderDomain.setHotelWorkOrderStatus(request);
     }
+
+
 
     @Override
     public Page<HotelWorkOrderVO> getHotelWorkOrderVOPage(GetHotelWorkOrderListDTO request, Pageable pageable) {
@@ -412,7 +424,15 @@ public class HotelServiceImpl extends BaseService implements HotelService {
         return hotelCustomerStayDomain.getHotelCustomerStayVOPage(request,pageable);
     }
 
+    @Override
+    public void deviceDeploy(List<HotelRoomDeviceDeployDTO> request) {
+        hotelRoomDomain.deviceDeploy(request);
+    }
 
+    @Override
+    public void deviceDeploy(HotelRoomDeviceDeployDTO request) {
+        hotelRoomDomain.deviceDeploy(request);
+    }
 
     /**
      *

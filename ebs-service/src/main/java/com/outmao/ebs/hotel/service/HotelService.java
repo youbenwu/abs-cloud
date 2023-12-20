@@ -68,7 +68,11 @@ public interface HotelService {
 
     public void deleteHotelRoomById(Long id);
 
+    public boolean existsHotelRoomByHotelIdAndRoomNo(Long hotelId,String roomNo);
+
     public HotelRoom setHotelRoomStatus(SetHotelRoomStatusDTO request);
+
+    public HotelRoom setHotelRoomDeviceStatus(SetHotelRoomDeviceStatusDTO request);
 
     public HotelRoomVO getHotelRoomVOById(Long id);
 
@@ -120,6 +124,12 @@ public interface HotelService {
 
 
     public Page<HotelCustomerStayVO> getHotelCustomerStayVOPage(GetHotelCustomerStayListDTO request,Pageable pageable);
+
+
+    //托管设备
+    public void deviceDeploy(List<HotelRoomDeviceDeployDTO> request);
+    public void deviceDeploy(HotelRoomDeviceDeployDTO request);
+
 
 
 

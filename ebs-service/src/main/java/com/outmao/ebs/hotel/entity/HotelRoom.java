@@ -82,6 +82,7 @@ public class HotelRoom implements Serializable {
     private String statusRemark;
 
 
+
     /**
      *
      * 房间设备状态
@@ -89,6 +90,14 @@ public class HotelRoom implements Serializable {
      *
      */
     private int deviceStatus;
+
+    /**
+     *
+     * 房间设备ID
+     *
+     *
+     */
+    private Long deviceId;
 
 
     /**

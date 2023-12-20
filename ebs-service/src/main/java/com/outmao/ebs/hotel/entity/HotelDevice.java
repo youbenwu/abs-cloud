@@ -13,7 +13,8 @@ import java.util.Date;
  */
 @Data
 @Entity
-@Table(name = "ebs_HotelDevice")
+@Table(name = "ebs_HotelDevice",
+        uniqueConstraints = {@UniqueConstraint(columnNames = { "hotelId", "roomNo" })})
 public class HotelDevice  implements Serializable {
 
     /**
@@ -49,6 +50,7 @@ public class HotelDevice  implements Serializable {
     /**
      * 0--未激活
      * 1--已激活
+     * 2--预激活
      */
     private int status;
 

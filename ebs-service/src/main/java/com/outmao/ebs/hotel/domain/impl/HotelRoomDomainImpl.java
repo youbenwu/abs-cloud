@@ -2,6 +2,7 @@ package com.outmao.ebs.hotel.domain.impl;
 
 import com.outmao.ebs.common.base.BaseDomain;
 import com.outmao.ebs.common.exception.BusinessException;
+import com.outmao.ebs.hotel.common.constant.HotelRoomDeviceStatus;
 import com.outmao.ebs.hotel.common.constant.HotelRoomStatus;
 import com.outmao.ebs.hotel.dao.HotelDao;
 import com.outmao.ebs.hotel.dao.HotelRoomDao;
@@ -9,10 +10,7 @@ import com.outmao.ebs.hotel.dao.HotelRoomTypeDao;
 import com.outmao.ebs.hotel.domain.HotelRoomDomain;
 import com.outmao.ebs.hotel.domain.conver.HotelRoomVOConver;
 import com.outmao.ebs.hotel.domain.conver.QyHotelRoomVOConver;
-import com.outmao.ebs.hotel.dto.GetHotelRoomListDTO;
-import com.outmao.ebs.hotel.dto.HotelRoomDTO;
-import com.outmao.ebs.hotel.dto.SetHotelRoomStatusDTO;
-import com.outmao.ebs.hotel.dto.SetHotelStatusDTO;
+import com.outmao.ebs.hotel.dto.*;
 import com.outmao.ebs.hotel.entity.HotelRoom;
 import com.outmao.ebs.hotel.entity.QHotelRoom;
 import com.outmao.ebs.hotel.vo.HotelRoomVO;
@@ -63,10 +61,19 @@ public class HotelRoomDomainImpl extends BaseDomain implements HotelRoomDomain {
         HotelRoom room=request.getId()==null?null:hotelRoomDao.findByIdForUpdate(request.getId());
 
         if(room==null){
+            if(hotelRoomDao.existsByHotelIdAndRoomNo(request.getHotelId(),request.getRoomNo())){
+                throw new BusinessException("房间号已存在");
+            }
             room=new HotelRoom();
             room.setHotel(hotelDao.getOne(request.getHotelId()));
             room.setOrgId(room.getHotel().getOrgId());
             room.setCreateTime(new Date());
+        }else{
+            if(room.getDeviceStatus()!= HotelRoomDeviceStatus.NoDevice.getStatus()){
+                if(!room.getRoomNo().equals(request.getRoomNo())){
+                    throw new BusinessException("房间号已绑定设备，不能修改房间号");
+                }
+            }
         }
 
         security.hasPermission(room.getOrgId(),null);
@@ -93,6 +100,11 @@ public class HotelRoomDomainImpl extends BaseDomain implements HotelRoomDomain {
         return hotelRoomDao.findByHotelIdAndRoomNo(hotelId,roomNo);
     }
 
+    @Override
+    public boolean existsByHotelIdAndRoomNo(Long hotelId, String roomNo) {
+        return hotelRoomDao.existsByHotelIdAndRoomNo(hotelId,roomNo);
+    }
+
     private String getKeyword(HotelRoom room){
         StringBuffer s=new StringBuffer();
 
@@ -112,6 +124,9 @@ public class HotelRoomDomainImpl extends BaseDomain implements HotelRoomDomain {
     @Override
     public void deleteHotelRoomById(Long id) {
         HotelRoom room=hotelRoomDao.getOne(id);
+        if(room.getDeviceStatus()!= HotelRoomDeviceStatus.NoDevice.getStatus()){
+            throw new BusinessException("房间已绑定设备，不能删除");
+        }
         hotelRoomDao.delete(room);
     }
 
@@ -153,7 +168,6 @@ public class HotelRoomDomainImpl extends BaseDomain implements HotelRoomDomain {
 
         return room;
     }
-
 
 
     @Override
@@ -208,5 +222,44 @@ public class HotelRoomDomainImpl extends BaseDomain implements HotelRoomDomain {
 
         return list;
     }
+
+    @Transactional()
+    @Override
+    public HotelRoom setHotelRoomDeviceStatus(SetHotelRoomDeviceStatusDTO request) {
+        HotelRoom room=hotelRoomDao.findByHotelIdAndRoomNoLock(request.getHotelId(),request.getRoomNo());
+        if(room==null){
+            throw new BusinessException("房间号不存在");
+        }
+        room.setDeviceStatus(request.getDeviceStatus());
+        if(room.getDeviceStatus()==HotelRoomDeviceStatus.NoDevice.getStatus()){
+            room.setDeviceId(null);
+        }
+        hotelRoomDao.save(room);
+        return room;
+    }
+
+    @Transactional()
+    @Override
+    public void deviceDeploy(List<HotelRoomDeviceDeployDTO> request) {
+        request.forEach(d->{
+            deviceDeploy(d);
+        });
+    }
+
+    @Transactional()
+    @Override
+    public void deviceDeploy(HotelRoomDeviceDeployDTO request) {
+        HotelRoom room=hotelRoomDao.findByHotelIdAndRoomNoLock(request.getHotelId(),request.getRoomNo());
+        if(room==null){
+            throw new BusinessException("房间不存在");
+        }
+        if(room.getDeviceStatus()!=HotelRoomDeviceStatus.NoDevice.getStatus()){
+            throw new BusinessException("房间已经被占用");
+        }
+        room.setDeviceStatus(HotelRoomDeviceStatus.PreDevice.getStatus());
+        room.setDeviceId(request.getDeviceId());
+        hotelRoomDao.save(room);
+    }
+
 
 }

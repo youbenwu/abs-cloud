@@ -37,6 +37,14 @@ public class HotelDeviceLeaseDTO {
      */
     private Long partnerId;
 
+
+    /**
+     *
+     * 租几年
+     *
+     */
+    private int leaseYears;
+
     /**
      *
      * 当前租赁开始时间

@@ -1,5 +1,6 @@
 package com.outmao.ebs.hotel.dto;
 
+import com.outmao.ebs.common.vo.TimeSpan;
 import lombok.Data;
 
 import java.util.Date;
@@ -52,6 +53,13 @@ public class CreateHotelDeviceLeaseOrderDTO {
      *
      */
     private double amount;
+
+    /**
+     *
+     * 租赁期限
+     *
+     */
+    private TimeSpan time;
 
 
     /**

@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
 import javax.persistence.LockModeType;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
@@ -16,6 +17,10 @@ public interface HotelDeviceDao extends JpaRepository<HotelDevice,Long> {
     public HotelDevice findByDeviceNo(String deviceNo);
 
     public HotelDevice findByUserId(Long userId);
+
+    @Lock(value = LockModeType.PESSIMISTIC_READ)
+    @Query("select d from HotelDevice d where d.hotelId=?1 and d.roomNo=?2")
+    public HotelDevice findByHotelIdAndRoomNoLock(Long hotelId,String roomNo);
 
     @Lock(value = LockModeType.PESSIMISTIC_READ)
     @Query("select d from HotelDevice d where d.id=?1")
@@ -29,6 +34,8 @@ public interface HotelDeviceDao extends JpaRepository<HotelDevice,Long> {
     @Query("select d from HotelDevice d where d.status=0")
     public List<HotelDevice> findAllByNoActivateLock(PageRequest request);
 
+
+    public long countByStatusAndIdIn(int status,Collection<Long> idIn);
 
     public long countByBuyPartnerId(Long buyPartnerId);
 

@@ -1,16 +1,17 @@
 package com.outmao.ebs.hotel.domain.impl;
 
 import com.outmao.ebs.common.base.BaseDomain;
+import com.outmao.ebs.common.exception.BusinessException;
 import com.outmao.ebs.common.util.DateUtil;
+import com.outmao.ebs.common.vo.Between;
+import com.outmao.ebs.common.vo.TimeSpan;
 import com.outmao.ebs.hotel.common.constant.LeaseStatus;
 import com.outmao.ebs.hotel.dao.HotelDao;
 import com.outmao.ebs.hotel.dao.HotelDeviceDao;
+import com.outmao.ebs.hotel.dao.HotelRoomDao;
 import com.outmao.ebs.hotel.domain.HotelDeviceDomain;
 import com.outmao.ebs.hotel.domain.conver.HotelDeviceVOConver;
-import com.outmao.ebs.hotel.dto.HotelDeviceLeaseDTO;
-import com.outmao.ebs.hotel.dto.GetHotelDeviceListDTO;
-import com.outmao.ebs.hotel.dto.HotelDeviceDTO;
-import com.outmao.ebs.hotel.dto.HotelDeviceBuyDTO;
+import com.outmao.ebs.hotel.dto.*;
 import com.outmao.ebs.hotel.entity.*;
 import com.outmao.ebs.hotel.vo.HotelDeviceVO;
 import com.outmao.ebs.hotel.vo.StatsHotelDeviceCityVO;
@@ -24,6 +25,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 import java.util.ArrayList;
 import java.util.Date;
@@ -40,6 +42,10 @@ public class HotelDeviceDomainImpl extends BaseDomain implements HotelDeviceDoma
     @Autowired
     private HotelDao hotelDao;
 
+    @Autowired
+    private HotelRoomDao hotelRoomDao;
+
+
     private HotelDeviceVOConver hotelDeviceVOConver=new HotelDeviceVOConver();
 
 
@@ -47,30 +53,77 @@ public class HotelDeviceDomainImpl extends BaseDomain implements HotelDeviceDoma
     @Transactional()
     @Override
     public HotelDevice saveHotelDevice(HotelDeviceDTO request) {
+        Assert.notNull(request.getHotelId(),"酒店ID不能为空");
+        Assert.notNull(request.getRoomNo(),"房间号不能为空");
+        Assert.notNull(request.getDeviceNo(),"设备号不能为空");
 
         HotelDevice device=request.getId()==null?hotelDeviceDao.findByDeviceNoLock(request.getDeviceNo())
                 :hotelDeviceDao.findByIdLock(request.getId());
 
         if(device==null){
-            Hotel hotel=hotelDao.getOne(request.getHotelId());
-            device=getHotelDeviceByNew();
-            device.setHotelId(request.getHotelId());
-            device.setOrgId(hotel.getOrgId());
+            //未激活
+
+            device=hotelDeviceDao.findByHotelIdAndRoomNoLock(request.getHotelId(),request.getRoomNo());
+
+            if(device.getStatus()==1){
+                //一个房间只能激活一个设备
+                throw new BusinessException("房间已有设备");
+            }
+
+            if(device==null){
+                if(!hotelRoomDao.existsByHotelIdAndRoomNo(request.getHotelId(),request.getRoomNo())){
+                    throw new BusinessException("房间不存在");
+                }
+                device=getHotelDeviceByNew();
+                setHotelRoom(device,request.getHotelId(),request.getRoomNo());
+            }
+
+            //绑定设备号激活
+            device.setDeviceNo(request.getDeviceNo());
+            //绑定激活人
             device.setActUserId(request.getActUserId());
+            //设置状态
             device.setStatus(1);
-            if(hotel.getContact()!=null&&hotel.getContact().getAddress()!=null) {
-                device.setProvince(hotel.getContact().getAddress().getProvince());
-                device.setCity(hotel.getContact().getAddress().getCity());
+
+        }
+
+        BeanUtils.copyProperties(request,device,"id","hotelId","roomNo","deviceNo","actUserId");
+
+        if(device.getLease()!=null&&device.getLease().getStatus()==1){
+            if(device.getLease().getEndTime()==null){
+                //计算开始结束时间
+                TimeSpan span=new TimeSpan();
+                span.setField(TimeSpan.YEAR);
+                span.setValue(device.getLease().getLeaseYears());
+                Between<Date> between=span.getDateBetween(new Date());
+                device.getLease().setStartTime(between.getFrom());
+                device.getLease().setEndTime(between.getTo());
             }
         }
 
-        BeanUtils.copyProperties(request,device,"id","hotelId","actUserId");
         device.setKeyword(getKeyword(device));
         device.setUpdateTime(new Date());
 
         hotelDeviceDao.save(device);
 
         return device;
+    }
+
+
+    private void setHotelRoom(HotelDevice device,Long hotelId,String roomNo){
+        Hotel hotel=hotelDao.getOne(hotelId);
+        device.setOrgId(hotel.getOrgId());
+        device.setHotelId(hotelId);
+        device.setRoomNo(roomNo);
+        if(hotel.getContact()!=null&&hotel.getContact().getAddress()!=null) {
+            device.setProvince(hotel.getContact().getAddress().getProvince());
+            device.setCity(hotel.getContact().getAddress().getCity());
+        }
+    }
+
+    @Override
+    public HotelDevice getHotelDeviceById(Long id) {
+        return hotelDeviceDao.findById(id).orElse(null);
     }
 
     private HotelDevice newHotelDevice(){
@@ -271,7 +324,9 @@ public class HotelDeviceDomainImpl extends BaseDomain implements HotelDeviceDoma
     @Transactional()
     @Override
     public List<HotelDevice> lease(HotelDeviceLeaseDTO request) {
-        List<HotelDevice> devices=getHotelDeviceListByNoLeaseLock(request.getQuantity());
+        //List<HotelDevice> devices=getHotelDeviceListByNoLeaseLock(request.getQuantity());
+
+        List<HotelDevice> devices=newHotelDeviceList(request.getQuantity());
 
         devices.forEach(d->{
             if(d.getLease()==null){
@@ -280,9 +335,11 @@ public class HotelDeviceDomainImpl extends BaseDomain implements HotelDeviceDoma
             d.getLease().setStatus(LeaseStatus.LeaseIng.getStatus());
             d.getLease().setRenterId(request.getUserId());
             d.getLease().setPartnerId(request.getPartnerId());
+            d.getLease().setLeaseYears(request.getLeaseYears());
             d.getLease().setStartTime(request.getStartTime());
             d.getLease().setEndTime(request.getEndTime());
             d.getLease().setTotalRent(d.getLease().getTotalRent()+request.getPrice());
+            d.setStatus(2);
         });
 
         hotelDeviceDao.saveAll(devices);
@@ -303,7 +360,7 @@ public class HotelDeviceDomainImpl extends BaseDomain implements HotelDeviceDoma
     private List<HotelDevice> newHotelDeviceList(int size) {
         List<HotelDevice> list=new ArrayList<>(size);
         for (int i=0;i<size;i++){
-            HotelDevice device=new HotelDevice();
+            HotelDevice device=newHotelDevice();
             list.add(device);
         }
         return list;
@@ -322,6 +379,27 @@ public class HotelDeviceDomainImpl extends BaseDomain implements HotelDeviceDoma
         return list;
     }
 
+
+    @Transactional()
+    @Override
+    public List<HotelDevice> deploy(HotelDeviceDeployDTO request) {
+        List<HotelDevice> list=new ArrayList<>(request.getDevices().size());
+        int i=0;
+        for (HotelDeviceDeployHotelDTO hotelDTO:request.getHotels()){
+            for(String roomNo:hotelDTO.getRooms()){
+                HotelDevice device=hotelDeviceDao.findByIdLock(request.getDevices().get(i++));
+                if(device==null){
+                    throw new BusinessException("设备ID不存在");
+                }
+
+                setHotelRoom(device,hotelDTO.getHotelId(),roomNo);
+                device.setStatus(2);
+                list.add(device);
+            }
+        }
+        hotelDeviceDao.saveAll(list);
+        return list;
+    }
 
 
 }

@@ -23,6 +23,8 @@ public interface HotelDeviceService {
 
     public long getHotelDeviceCountByPartnerId(Long partnerId);
 
+    public long getHotelDeviceCountByLeaseRenterId(Long leaseRenterId);
+
     public HotelDevice getHotelDeviceByUserId(Long userId);
 
     public HotelDeviceVO getHotelDeviceVOById(Long id);
@@ -38,5 +40,29 @@ public interface HotelDeviceService {
     public List<StatsHotelDeviceProvinceVO> getStatsHotelDeviceProvinceVOList(Integer size);
 
 
+
+    /**
+     *
+     * 设备购买
+     *
+     **/
+    public List<HotelDevice> buy(HotelDeviceBuyDTO request);
+
+
+    /**
+     *
+     * 设备租赁
+     *
+     **/
+    public List<HotelDevice> lease(HotelDeviceLeaseDTO request);
+
+
+
+    /**
+     *
+     * 设备托管
+     *
+     **/
+    public List<HotelDevice> deploy(HotelDeviceDeployDTO request);
 
 }

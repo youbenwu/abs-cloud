@@ -15,10 +15,19 @@ import java.util.List;
 
 public interface HotelDeviceLeaseService {
 
+    public HotelDeviceLeaseOrder hotelDeviceActive(Long deviceId);
+
+
+    public HotelDeviceLeaseOrder hotelDeviceDeploy(HotelDeviceDeployDTO request);
+
 
     public HotelDeviceLeaseOrder createHotelDeviceLeaseOrder(CreateHotelDeviceLeaseOrderDTO request);
 
+    public HotelDeviceLeaseOrder setHotelDeviceLeaseOrderStatus(SetHotelDeviceLeaseOrderStatusDTO request);
+
     public HotelDeviceLeaseOrderVO getHotelDeviceLeaseOrderVOById(Long id);
+
+    public HotelDeviceLeaseOrderVO getHotelDeviceLeaseOrderVOByOrderNo(String orderNo);
 
     public Page<HotelDeviceLeaseOrderVO> getHotelDeviceLeaseOrderVOPage(GetHotelDeviceLeaseOrderListDTO request, Pageable pageable);
 

@@ -1,9 +1,6 @@
 package com.outmao.ebs.hotel.domain;
 
-import com.outmao.ebs.hotel.dto.HotelDeviceBuyDTO;
-import com.outmao.ebs.hotel.dto.HotelDeviceLeaseDTO;
-import com.outmao.ebs.hotel.dto.GetHotelDeviceListDTO;
-import com.outmao.ebs.hotel.dto.HotelDeviceDTO;
+import com.outmao.ebs.hotel.dto.*;
 import com.outmao.ebs.hotel.entity.HotelDevice;
 import com.outmao.ebs.hotel.vo.HotelDeviceVO;
 import com.outmao.ebs.hotel.vo.StatsHotelDeviceCityVO;
@@ -30,6 +27,7 @@ public interface HotelDeviceDomain {
 
     public List<HotelDevice> getHotelDeviceListByPartnerId(Long partnerId);
 
+    public HotelDevice getHotelDeviceById(Long id);
 
     public HotelDevice getHotelDeviceByUserId(Long userId);
 
@@ -71,6 +69,14 @@ public interface HotelDeviceDomain {
      *
      **/
     public List<HotelDevice> checkLeaseExpire();
+
+
+    /**
+     *
+     * 设备托管
+     *
+     **/
+    public List<HotelDevice> deploy(HotelDeviceDeployDTO request);
 
 
 }

@@ -1,6 +1,9 @@
 package com.outmao.ebs.hotel.domain.impl;
 
 import com.outmao.ebs.common.base.BaseDomain;
+import com.outmao.ebs.common.exception.BusinessException;
+import com.outmao.ebs.hotel.common.constant.HotelDeviceLeaseOrderStatus;
+import com.outmao.ebs.hotel.dao.HotelDeviceDao;
 import com.outmao.ebs.hotel.dao.HotelDeviceLeaseOrderDao;
 import com.outmao.ebs.hotel.dao.HotelDeviceLeaseOrderItemDao;
 import com.outmao.ebs.hotel.domain.HotelDeviceLeaseOrderDomain;
@@ -10,6 +13,7 @@ import com.outmao.ebs.hotel.domain.conver.MinHotelDeviceLeaseOrderVOConver;
 import com.outmao.ebs.hotel.dto.GetHotelDeviceLeaseOrderItemListDTO;
 import com.outmao.ebs.hotel.dto.GetHotelDeviceLeaseOrderListDTO;
 import com.outmao.ebs.hotel.dto.HotelDeviceLeaseOrderDTO;
+import com.outmao.ebs.hotel.dto.SetHotelDeviceLeaseOrderStatusDTO;
 import com.outmao.ebs.hotel.entity.HotelDeviceLeaseOrder;
 import com.outmao.ebs.hotel.entity.HotelDeviceLeaseOrderItem;
 import com.outmao.ebs.hotel.entity.QHotelDeviceLeaseOrder;
@@ -40,11 +44,44 @@ public class HotelDeviceLeaseOrderDomainImpl extends BaseDomain implements Hotel
     @Autowired
     private HotelDeviceLeaseOrderItemDao hotelDeviceLeaseOrderItemDao;
 
+    @Autowired
+    private HotelDeviceDao hotelDeviceDao;
+
 
     private HotelDeviceLeaseOrderVOConver hotelDeviceLeaseOrderVOConver=new HotelDeviceLeaseOrderVOConver();
     private HotelDeviceLeaseOrderItemVOConver hotelDeviceLeaseOrderItemVOConver=new HotelDeviceLeaseOrderItemVOConver();
 
     private MinHotelDeviceLeaseOrderVOConver minHotelDeviceLeaseOrderVOConver=new MinHotelDeviceLeaseOrderVOConver();
+
+
+    @Transactional()
+    @Override
+    public HotelDeviceLeaseOrder hotelDeviceActive(Long deviceId) {
+        List<HotelDeviceLeaseOrderItem> items=hotelDeviceLeaseOrderItemDao.findAllByDeviceId(deviceId);
+        if(items.size()>0){
+            for(HotelDeviceLeaseOrderItem t:items){
+                HotelDeviceLeaseOrder order=hotelDeviceLeaseOrderDao.findByIdLock(t.getOrderId());
+                if(order.getStatus()== HotelDeviceLeaseOrderStatus.IsDeploy.getStatus()
+                        ||order.getStatus()== HotelDeviceLeaseOrderStatus.InActive.getStatus()){
+
+                    long c=hotelDeviceDao.countByStatusAndIdIn(1,hotelDeviceLeaseOrderItemDao.findAllDeviceIdByOrderId(order.getId()));
+
+                    order.setActiveQuantity((int)c);
+                    if(order.getActiveQuantity()==order.getQuantity()){
+                        order.setStatus(HotelDeviceLeaseOrderStatus.IsActive.getStatus());
+                    }else{
+                        order.setStatus(HotelDeviceLeaseOrderStatus.InActive.getStatus());
+                    }
+
+                    hotelDeviceLeaseOrderDao.save(order);
+
+                    return order;
+
+                }
+            }
+        }
+        return null;
+    }
 
     @Transactional()
     @Override
@@ -65,6 +102,25 @@ public class HotelDeviceLeaseOrderDomainImpl extends BaseDomain implements Hotel
         return order;
     }
 
+    @Override
+    public HotelDeviceLeaseOrder getHotelDeviceLeaseOrderByOrderNo(String orderNo) {
+        return hotelDeviceLeaseOrderDao.findByOrderNo(orderNo);
+    }
+
+    @Transactional()
+    @Override
+    public HotelDeviceLeaseOrder setHotelDeviceLeaseOrderStatus(SetHotelDeviceLeaseOrderStatusDTO request) {
+        HotelDeviceLeaseOrder order=request.getId()!=null?hotelDeviceLeaseOrderDao.findByIdLock(request.getId())
+                :hotelDeviceLeaseOrderDao.findByOrderNoLock(request.getOrderNo());
+        if(request.getStatus()==HotelDeviceLeaseOrderStatus.IsSend.getStatus()){
+            if(order.getStatus()!=HotelDeviceLeaseOrderStatus.IsDeploy.getStatus()){
+                throw new BusinessException("等待客户托管设备");
+            }
+        }
+        order.setStatus(request.getStatus());
+        hotelDeviceLeaseOrderDao.save(order);
+        return order;
+    }
 
     private void saveItems(HotelDeviceLeaseOrder order, List<Long> devices){
         devices.forEach(d->{
@@ -76,12 +132,25 @@ public class HotelDeviceLeaseOrderDomainImpl extends BaseDomain implements Hotel
         });
     }
 
+    @Override
+    public List<HotelDeviceLeaseOrderItem> getHotelDeviceLeaseOrderItemListByOrderId(Long orderId) {
+        return hotelDeviceLeaseOrderItemDao.findAllByOrderId(orderId);
+    }
 
     @Override
     public HotelDeviceLeaseOrderVO getHotelDeviceLeaseOrderVOById(Long id) {
         QHotelDeviceLeaseOrder e=QHotelDeviceLeaseOrder.hotelDeviceLeaseOrder;
 
         HotelDeviceLeaseOrderVO vo=queryOne(e,e.id.eq(id),hotelDeviceLeaseOrderVOConver);
+
+        return vo;
+    }
+
+    @Override
+    public HotelDeviceLeaseOrderVO getHotelDeviceLeaseOrderVOByOrderNo(String orderNo) {
+        QHotelDeviceLeaseOrder e=QHotelDeviceLeaseOrder.hotelDeviceLeaseOrder;
+
+        HotelDeviceLeaseOrderVO vo=queryOne(e,e.orderNo.eq(orderNo),hotelDeviceLeaseOrderVOConver);
 
         return vo;
     }
@@ -122,4 +191,6 @@ public class HotelDeviceLeaseOrderDomainImpl extends BaseDomain implements Hotel
         QHotelDeviceLeaseOrder e=QHotelDeviceLeaseOrder.hotelDeviceLeaseOrder;
         return queryList(e,e.userId.in(userIdIn),minHotelDeviceLeaseOrderVOConver);
     }
+
+
 }

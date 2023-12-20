@@ -1,7 +1,10 @@
 package com.outmao.ebs.hotel.service.aspect;
 
 
+import com.outmao.ebs.common.vo.TimeSpan;
+import com.outmao.ebs.hotel.common.constant.HotelDeviceLeaseOrderStatus;
 import com.outmao.ebs.hotel.dto.CreateHotelDeviceLeaseOrderDTO;
+import com.outmao.ebs.hotel.dto.SetHotelDeviceLeaseOrderStatusDTO;
 import com.outmao.ebs.hotel.service.HotelDeviceLeaseService;
 import com.outmao.ebs.mall.order.common.constant.OrderStatus;
 import com.outmao.ebs.mall.order.entity.Order;
@@ -34,7 +37,7 @@ public class OrderHotelDeviceRenterAspect {
         if (order == null)
             return;
         if (order.getType() != null && order.getType() == ProductType.HOTEL_DEVICE_LEASE.getType()) {
-            if(order.getStatus()== OrderStatus.FINISHED.getStatus()){
+            if(order.getStatus()== OrderStatus.SUCCESSED.getStatus()){
 
                 //租赁订单完成的时候
 
@@ -48,11 +51,28 @@ public class OrderHotelDeviceRenterAspect {
                 leaseOrderDTO.setQuantity(order.getQuantity());
                 OrderProductLease lease=order.getProducts().get(0).getLease();
                 if(lease!=null) {
+                    leaseOrderDTO.setTime(new TimeSpan(TimeSpan.YEAR,lease.getValue()));
                     leaseOrderDTO.setStartTime(lease.getStartTime());
                     leaseOrderDTO.setEndTime(lease.getEndTime());
                 }
 
                 hotelDeviceLeaseService.createHotelDeviceLeaseOrder(leaseOrderDTO);
+
+            }else if(order.getStatus()== OrderStatus.DELIVERED.getStatus()){
+                hotelDeviceLeaseService.setHotelDeviceLeaseOrderStatus(
+                        new SetHotelDeviceLeaseOrderStatusDTO(
+                                order.getOrderNo(),
+                                HotelDeviceLeaseOrderStatus.IsSend.getStatus()
+                        )
+                );
+
+            }else if(order.getStatus()== OrderStatus.CLOSED.getStatus()){
+                hotelDeviceLeaseService.setHotelDeviceLeaseOrderStatus(
+                        new SetHotelDeviceLeaseOrderStatusDTO(
+                                order.getOrderNo(),
+                                HotelDeviceLeaseOrderStatus.Closed.getStatus()
+                        )
+                );
 
             }
         }

@@ -9,6 +9,7 @@ import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.core.types.dsl.NumberExpression;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -82,11 +83,12 @@ public class HotelVOConver implements BeanConver<QHotel, HotelVO> {
         };
 
         if(distance!=null) {
-            List<Expression<?>> list= Arrays.asList(exps);
+            List<Expression<?>> list=new ArrayList(exps.length+1);
+            list.addAll(Arrays.asList(exps));
             list.add(distance);
-            return (Expression<?>[]) list.toArray();
-        }else{
-            return exps;
+            exps= list.toArray(new Expression[]{});
         }
+
+        return exps;
     }
 }
