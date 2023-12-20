@@ -6,6 +6,7 @@ import com.outmao.ebs.mall.order.entity.Order;
 import com.outmao.ebs.mall.order.service.OrderService;
 import com.outmao.ebs.mall.order.service.SettleService;
 import com.outmao.ebs.mall.order.vo.OrderVO;
+import com.outmao.ebs.mall.order.vo.QyPadToOrderVO;
 import com.outmao.ebs.mall.order.vo.SettleVO;
 import com.outmao.ebs.mall.order.vo.ToOrderVO;
 import io.swagger.annotations.Api;
@@ -50,6 +51,12 @@ public class SettleAction {
         return settleService.buy(request);
     }
 
+
+    @ApiOperation(value = "迁眼平板下单支付", notes = "迁眼平板下单支付")
+    @PostMapping("/qy/buy")
+    public QyPadToOrderVO toOrderAndPay(QyPadToOrderDTO request){
+        return settleService.toOrderAndPay(request);
+    }
 
 
 }

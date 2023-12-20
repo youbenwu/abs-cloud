@@ -1,9 +1,7 @@
 package com.outmao.ebs.mall.order.service;
 
-import com.outmao.ebs.mall.order.dto.CreateSettleDTO;
-import com.outmao.ebs.mall.order.dto.SettleDTO;
-import com.outmao.ebs.mall.order.dto.ToOrderDTO;
-import com.outmao.ebs.mall.order.dto.UpdateSettleDTO;
+import com.outmao.ebs.mall.order.dto.*;
+import com.outmao.ebs.mall.order.vo.QyPadToOrderVO;
 import com.outmao.ebs.mall.order.vo.SettleVO;
 import com.outmao.ebs.mall.order.vo.ToOrderVO;
 
@@ -27,6 +25,7 @@ public interface SettleService {
     public ToOrderVO buy(ToOrderDTO request);
 
 
+    public QyPadToOrderVO toOrderAndPay(QyPadToOrderDTO request);
 
 
 }

@@ -1,23 +1,57 @@
 package com.outmao.ebs.mall.order.service.impl;
 
+import com.alipay.api.response.AlipayTradePrecreateResponse;
 import com.outmao.ebs.common.base.BaseService;
+import com.outmao.ebs.common.util.StringUtil;
+import com.outmao.ebs.hotel.entity.HotelDevice;
+import com.outmao.ebs.hotel.service.HotelDeviceService;
 import com.outmao.ebs.mall.order.domain.SettleDomain;
-import com.outmao.ebs.mall.order.dto.CreateSettleDTO;
-import com.outmao.ebs.mall.order.dto.SettleDTO;
-import com.outmao.ebs.mall.order.dto.ToOrderDTO;
-import com.outmao.ebs.mall.order.dto.UpdateSettleDTO;
+import com.outmao.ebs.mall.order.dto.*;
+import com.outmao.ebs.mall.order.service.OrderService;
 import com.outmao.ebs.mall.order.service.SettleService;
+import com.outmao.ebs.mall.order.vo.QyPadToOrderVO;
 import com.outmao.ebs.mall.order.vo.SettleVO;
 import com.outmao.ebs.mall.order.vo.ToOrderVO;
+import com.outmao.ebs.qrCode.dto.ActivateQrCodeDTO;
+import com.outmao.ebs.qrCode.entity.QrCode;
+import com.outmao.ebs.qrCode.service.QrCodeService;
+import com.outmao.ebs.user.common.constant.Oauth;
+import com.outmao.ebs.user.dto.RegisterDTO;
+import com.outmao.ebs.user.entity.User;
+import com.outmao.ebs.user.service.UserService;
+import com.outmao.ebs.wallet.pay.dto.PayPrepareDTO;
+import com.outmao.ebs.wallet.pay.service.PayService;
+import com.outmao.ebs.wallet.vo.TradeVO;
+import com.wechat.pay.java.service.payments.nativepay.model.PrepayResponse;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 
+@Slf4j
 @Service
 public class SettleServiceImpl extends BaseService implements SettleService {
 
     @Autowired
     private SettleDomain settleDomain;
+
+    @Autowired
+    private HotelDeviceService hotelDeviceService;
+
+    @Autowired
+    private OrderService orderService;
+
+    @Autowired
+    private PayService payService;
+
+    @Autowired
+    private QrCodeService qrCodeService;
+
+    @Autowired
+    private UserService userService;
 
     @Override
     public SettleVO saveSettle(SettleDTO request) {
@@ -58,4 +92,93 @@ public class SettleServiceImpl extends BaseService implements SettleService {
     public ToOrderVO buy(ToOrderDTO request) {
         return settleDomain.buy(request);
     }
+
+
+    @Override
+    public QyPadToOrderVO toOrderAndPay(QyPadToOrderDTO request) {
+
+        HotelDevice device=hotelDeviceService.getHotelDeviceByUserId(request.getUserId());
+
+        CreateSettleDTO settleDTO=new CreateSettleDTO();
+
+        if(device!=null){
+            settleDTO.setHotelId(device.getHotelId());
+            settleDTO.setRoomNo(device.getRoomNo());
+        }
+
+        if(device!=null&&StringUtil.isNotEmpty(request.getUserPhone())){
+            User user=findOrRegisterUser(request);
+            settleDTO.setUserId(user.getId());
+        }else{
+            settleDTO.setUserId(request.getUserId());
+        }
+
+        CreateSettleProductDTO productDTO=new CreateSettleProductDTO();
+        productDTO.setQuantity(request.getQuantity());
+        productDTO.setSkuId(request.getSkuId());
+
+        settleDTO.setProducts(new ArrayList<>());
+        settleDTO.getProducts().add(productDTO);
+
+
+        SettleVO settleVO=createSettle(settleDTO);
+
+        ToOrderDTO toOrderDTO=new ToOrderDTO();
+        toOrderDTO.setSettleId(settleVO.getId());
+
+        ToOrderVO toOrderVO=buy(toOrderDTO);
+
+        OrderPayPrepareDTO payPrepareDTO=new OrderPayPrepareDTO();
+        payPrepareDTO.setOrderNo(toOrderVO.getOrders().get(0));
+        payPrepareDTO.setPayChannel(request.getPayChannel());
+        payPrepareDTO.setOutPayType(request.getOutPayType());
+
+        TradeVO tradeVO=orderService.payPrepare(payPrepareDTO);
+
+        PayPrepareDTO payPrepareDTO1=new PayPrepareDTO();
+        payPrepareDTO1.setTradeNo(tradeVO.getTradeNo());
+        Object object=payService.payPrepare(payPrepareDTO1);
+
+        log.info("迁眼平板支付信息{}",object);
+
+        QyPadToOrderVO qyPadToOrderVO=new QyPadToOrderVO();
+        qyPadToOrderVO.setData(object);
+        qyPadToOrderVO.setOrderNo(tradeVO.getTradeNo());
+
+        if(object instanceof AlipayTradePrecreateResponse){
+            AlipayTradePrecreateResponse ali=(AlipayTradePrecreateResponse)object ;
+            qyPadToOrderVO.setQrCode(ali.getQrCode());
+            if(ali.getQrCode()!=null) {
+                QrCode qrCode=qrCodeService.activateQrCode(new ActivateQrCodeDTO(ali.getQrCode()));
+                qyPadToOrderVO.setQrCodeUrl(qrCode.getPath());
+            }
+        }
+
+       else if(object instanceof PrepayResponse){
+            PrepayResponse wx=(PrepayResponse)object ;
+            qyPadToOrderVO.setQrCodeUrl(wx.getCodeUrl());
+        }
+
+
+        return qyPadToOrderVO;
+    }
+
+
+    private User findOrRegisterUser(QyPadToOrderDTO request){
+        User user=userService.getUserByUsername(request.getUserPhone());
+        if(user==null){
+            RegisterDTO registerDTO=new RegisterDTO();
+            registerDTO.setOauth(Oauth.PHONE.getName());
+            registerDTO.setPrincipal(request.getUserPhone());
+            registerDTO.setArgs(new HashMap<>());
+            if(request.getUserName()!=null) {
+                registerDTO.getArgs().put("nickname", request.getUserName());
+            }
+            user=userService.registerUser(registerDTO);
+        }
+        return user;
+    }
+
+
+
 }
