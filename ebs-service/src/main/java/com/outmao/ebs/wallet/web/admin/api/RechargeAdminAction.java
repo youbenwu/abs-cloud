@@ -1,14 +1,13 @@
 package com.outmao.ebs.wallet.web.admin.api;
 
 
-import com.outmao.ebs.wallet.dto.GetCashListDTO;
-import com.outmao.ebs.wallet.dto.GetRechargeListDTO;
-import com.outmao.ebs.wallet.dto.SetCashStatusDTO;
-import com.outmao.ebs.wallet.dto.SetRechargeStatusDTO;
+import com.outmao.ebs.wallet.dto.*;
 import com.outmao.ebs.wallet.entity.Cash;
 import com.outmao.ebs.wallet.entity.Recharge;
+import com.outmao.ebs.wallet.entity.Trade;
 import com.outmao.ebs.wallet.service.CashService;
 import com.outmao.ebs.wallet.service.RechargeService;
+import com.outmao.ebs.wallet.service.TradeService;
 import com.outmao.ebs.wallet.vo.CashVO;
 import com.outmao.ebs.wallet.vo.RechargeVO;
 import io.swagger.annotations.Api;
@@ -29,6 +28,17 @@ public class RechargeAdminAction {
 
 	@Autowired
     private RechargeService rechargeService;
+
+	@Autowired
+	private TradeService tradeService;
+
+
+	@PreAuthorize("hasPermission(null,'wallet/recharge','recharge')")
+	@ApiOperation(value = "充值", notes = "充值")
+	@PostMapping("/tradeRecharge")
+	public Trade tradeRecharge(TradeRechargeDTO request){
+		return tradeService.tradeRecharge(request);
+	}
 
 
 	@PreAuthorize("hasPermission('wallet/recharge','status')")

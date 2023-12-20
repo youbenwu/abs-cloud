@@ -2,7 +2,7 @@ package com.outmao.ebs.common.configuration.constant;
 
 public enum Status {
 
-    //状态 0--正常 1--禁用 2--未审核 3--审核中 4--审核失败 5--审核成功 6--欠费 7--过期 100--已删除
+    //状态 0--正常 1--禁用 2--未审核 3--审核中 4--审核失败 5--审核成功 6--欠费 7--过期 8--待订单完成 9--订单取消 100--已删除
     NORMAL(0, "正常"),
     DISABLE(1, "禁用"),
     NotAudit(2, "未审核"),

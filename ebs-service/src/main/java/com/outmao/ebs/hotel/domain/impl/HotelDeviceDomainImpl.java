@@ -65,7 +65,7 @@ public class HotelDeviceDomainImpl extends BaseDomain implements HotelDeviceDoma
 
             device=hotelDeviceDao.findByHotelIdAndRoomNoLock(request.getHotelId(),request.getRoomNo());
 
-            if(device.getStatus()==1){
+            if(device!=null&&device.getStatus()==1){
                 //一个房间只能激活一个设备
                 throw new BusinessException("房间已有设备");
             }

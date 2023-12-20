@@ -71,7 +71,7 @@ public class OrderAction {
     //@PreAuthorize("principal.id.equals(#request.userId)")
     @ApiOperation(value = "获取订单信息列表", notes = "获取订单信息列表")
     @PostMapping("/page")
-    public Page<OrderVO> getOrderVOPage(@PageableDefault(sort = {"createTime"}, direction = Sort.Direction.ASC)GetOrderListDTO request, Pageable pageable) {
+    public Page<OrderVO> getOrderVOPage(GetOrderListDTO request, @PageableDefault(sort = {"createTime"}, direction = Sort.Direction.DESC)Pageable pageable) {
         return orderService.getOrderVOPage(request,pageable);
     }
 

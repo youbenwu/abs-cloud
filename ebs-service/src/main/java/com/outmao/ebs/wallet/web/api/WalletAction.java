@@ -18,6 +18,8 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -110,13 +112,13 @@ public class WalletAction {
 
 	@ApiOperation(value = "获取交易明细列表", notes = "获取交易明细列表")
 	@PostMapping("/transfer/page")
-	public Page<TransferVO> getTransferVOPage(GetTransferListDTO request, Pageable pageable) {
+	public Page<TransferVO> getTransferVOPage(GetTransferListDTO request, @PageableDefault(sort = {"createTime"}, direction = Sort.Direction.DESC)Pageable pageable) {
 		return walletService.getTransferVOPage(request,pageable);
 	}
 
 	@ApiOperation(value = "获取交易明细列表", notes = "获取交易明细列表")
 	@PostMapping("/transfer/simple/page")
-	public Page<SimpleTransferVO> getSimpleTransferVOPage(GetTransferListDTO request, Pageable pageable){
+	public Page<SimpleTransferVO> getSimpleTransferVOPage(GetTransferListDTO request,@PageableDefault(sort = {"createTime"}, direction = Sort.Direction.DESC) Pageable pageable){
 		return walletService.getSimpleTransferVOPage(request,pageable);
 	}
 
