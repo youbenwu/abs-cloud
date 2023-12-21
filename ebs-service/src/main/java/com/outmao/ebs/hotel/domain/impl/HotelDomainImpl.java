@@ -199,6 +199,7 @@ public class HotelDomainImpl extends BaseDomain implements HotelDomain {
     public HotelVO getHotelVOById(Long id) {
         QHotel e=QHotel.hotel;
         HotelVO vo=queryOne(e,e.id.eq(id),hotelVOConver);
+        stats(Arrays.asList(vo));
         return vo;
     }
 
