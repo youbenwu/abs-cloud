@@ -39,6 +39,8 @@ public interface ProductService {
 
     public ProductVO getProductVOById(Long id);
 
+    public ProductVO getProductVOByCode(String code);
+
     public Page<ProductVO> getProductVOPage(GetProductListDTO request, Pageable pageable);
 
     public Page<SubjectBrowseVO<ProductVO>> getProductBrowseVOPage(Long userId, Pageable pageable);

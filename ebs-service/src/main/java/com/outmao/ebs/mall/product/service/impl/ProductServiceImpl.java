@@ -117,6 +117,11 @@ public class ProductServiceImpl extends BaseService implements ProductService {
     }
 
     @Override
+    public ProductVO getProductVOByCode(String code) {
+        return productDomain.getProductVOByCode(code);
+    }
+
+    @Override
     public Page<ProductVO> getProductVOPage(GetProductListDTO request, Pageable pageable) {
         return productDomain.getProductVOPage(request,pageable);
     }

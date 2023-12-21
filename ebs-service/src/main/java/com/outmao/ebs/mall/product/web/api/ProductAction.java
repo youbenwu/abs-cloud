@@ -47,6 +47,12 @@ public class ProductAction {
         return productService.getProductVOById(id);
     }
 
+    @PreAuthorize("permitAll")
+    @ApiOperation(value = "获取商品信息", notes = "获取商品信息")
+    @PostMapping("/getByCode")
+    public ProductVO getProductVOByCode(String code){
+        return productService.getProductVOByCode(code);
+    }
 
     @PreAuthorize("permitAll")
     @ApiOperation(value = "获取商品信息列表", notes = "获取商品信息列表")

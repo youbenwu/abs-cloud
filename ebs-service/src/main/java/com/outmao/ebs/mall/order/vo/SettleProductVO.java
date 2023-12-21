@@ -77,10 +77,14 @@ public class SettleProductVO {
     @ApiModelProperty(name = "volume", value = "体积小计")
     private Double volume;
 
-    /**
-     * 客户商品备注信息
-     */
+//    /**
+//     * 客户商品备注信息
+//     */
 //    @ApiModelProperty(name = "remark", value = "客户商品备注信息")
 //    private String remark;
+
+    @ApiModelProperty(name = "lease", value = "租赁信息")
+    private SettleProductLeaseVO lease;
+
 
 }

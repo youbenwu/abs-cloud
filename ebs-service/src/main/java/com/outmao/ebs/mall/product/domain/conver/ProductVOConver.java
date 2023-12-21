@@ -122,6 +122,7 @@ public class ProductVOConver implements BeanConver<QProduct,ProductVO> {
                 e.expectDeliveryTimeSpan,
                 e.noDelivery,
                 e.sellerFinish,
+
         };
     }
 }

@@ -10,6 +10,9 @@ import com.outmao.ebs.common.util.JsonUtil;
 import com.outmao.ebs.common.util.StringUtil;
 import com.outmao.ebs.bbs.common.annotation.SubjectBrowsesAdd;
 import com.outmao.ebs.bbs.common.annotation.SubjectItemFilter;
+import com.outmao.ebs.common.vo.TimeSpan;
+import com.outmao.ebs.mall.order.common.util.OrderProductLeaseUtil;
+import com.outmao.ebs.mall.product.common.util.ProductLeaseUtil;
 import com.outmao.ebs.mall.product.common.util.SaveProductHolder;
 import com.outmao.ebs.mall.product.common.util.SpecAlgorithm;
 import com.outmao.ebs.mall.product.dao.*;
@@ -370,6 +373,10 @@ public class ProductDomainImpl extends BaseDomain implements ProductDomain {
                 sku.setValue(JsonUtil.toJson(dto.getValue()));
             }
             BeanUtils.copyProperties(dto,sku);
+            if(holder.product.getLease()!=null&&holder.product.getLease().isLease()){
+                TimeSpan lease=ProductLeaseUtil.skuNameToLease(sku.getName());
+                sku.setLease(lease);
+            }
             list.add(sku);
             if(dto.getImages()!=null) {
                 dto.getImages().forEach(t -> t.setSkuKey(sku.getKey()));
@@ -782,6 +789,14 @@ public class ProductDomainImpl extends BaseDomain implements ProductDomain {
         if(vo==null)
             return null;
 
+        loadData(vo);
+
+        return vo;
+
+    }
+
+    private void loadData(ProductVO vo){
+        Long id=vo.getId();
         List<ProductImageVO> images=getProductImageVOList(id);
         vo.setImages(images.stream().filter(t->t.getSkuKey()==null).collect(Collectors.toList()));
         vo.setImages(getProductImageVOList(id));
@@ -801,9 +816,22 @@ public class ProductDomainImpl extends BaseDomain implements ProductDomain {
         if(vo.getSalesAddressId()!=null){
             vo.setSalesAddress(getProductSalesAddressVO(vo.getSalesAddressId()));
         }
+    }
+
+    @SubjectBrowsesAdd
+    @SubjectItemFilter
+    @Override
+    public ProductVO getProductVOByCode(String code) {
+        QProduct e=QProduct.product;
+
+        ProductVO vo=queryOne(e,e.code.eq(code),productVOConver);
+
+        if(vo==null)
+            return null;
+
+        loadData(vo);
 
         return vo;
-
     }
 
     @Override

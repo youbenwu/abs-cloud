@@ -4,6 +4,7 @@ import com.outmao.ebs.common.base.BaseDomain;
 import com.outmao.ebs.common.exception.BusinessException;
 import com.outmao.ebs.common.util.JsonUtil;
 import com.outmao.ebs.common.util.StringUtil;
+import com.outmao.ebs.common.vo.Between;
 import com.outmao.ebs.mall.order.dao.SettleDao;
 import com.outmao.ebs.mall.order.domain.OrderDomain;
 import com.outmao.ebs.mall.order.domain.SettleDomain;
@@ -154,6 +155,18 @@ public class SettleDomainImpl extends BaseDomain implements SettleDomain {
             }
             if(sku.getProduct().getWeight()!=null){
                 vo.setWeight(sku.getProduct().getWeight()*vo.getQuantity());
+            }
+
+            if(sku.getLease()!=null){
+               SettleProductLeaseVO leaseVO=new SettleProductLeaseVO();
+               leaseVO.setField(sku.getLease().getField());
+               leaseVO.setValue(sku.getLease().getValue());
+               if(leaseVO.getValue()!=null&&leaseVO.getField()!=null){
+                   Between<Date> dates=leaseVO.getDateBetween(new Date());
+                   leaseVO.setStartTime(dates.getFrom());
+                   leaseVO.setEndTime(dates.getTo());
+               }
+               vo.setLease(leaseVO);
             }
 
             list.add(vo);

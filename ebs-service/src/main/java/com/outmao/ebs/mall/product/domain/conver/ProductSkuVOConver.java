@@ -25,6 +25,7 @@ public class ProductSkuVOConver implements BeanConver<QProductSku, ProductSkuVO>
         vo.setUnitPrice(t.get(e.unitPrice));
         vo.setStock(t.get(e.stock));
         vo.setAlarmStock(t.get(e.alarmStock));
+        vo.setLease(t.get(e.lease));
         return vo;
     }
 
@@ -44,6 +45,7 @@ public class ProductSkuVOConver implements BeanConver<QProductSku, ProductSkuVO>
                 e.unitPrice,
                 e.stock,
                 e.alarmStock,
+                e.lease,
         };
     }
 }

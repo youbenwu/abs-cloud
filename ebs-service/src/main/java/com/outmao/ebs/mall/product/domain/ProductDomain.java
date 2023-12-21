@@ -31,6 +31,8 @@ public interface ProductDomain {
 
       public ProductVO getProductVOById(Long id);
 
+      public ProductVO getProductVOByCode(String code);
+
       public ProductVO getProductVO(Long id, Long skuId);
 
       public Page<ProductVO> getProductVOPage(GetProductListDTO request, Pageable pageable);

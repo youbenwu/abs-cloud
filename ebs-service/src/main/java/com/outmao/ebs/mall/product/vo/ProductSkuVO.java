@@ -2,6 +2,7 @@ package com.outmao.ebs.mall.product.vo;
 
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.outmao.ebs.common.vo.TimeSpan;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -109,6 +110,11 @@ public class ProductSkuVO {
      */
     @ApiModelProperty(name = "alarmStock", value = "告警库存")
     private Long alarmStock;
+
+    /**
+     * 租赁信息
+     */
+    private TimeSpan lease;
 
 
 }

@@ -37,6 +37,14 @@ public class Product implements Serializable, BindingSubjectId {
 
 	/**
 	 *
+	 * 唯一编码
+	 *
+	 */
+	@Column(unique = true)
+	private String code;
+
+	/**
+	 *
 	 * 绑定主题ID
 	 *
 	 */

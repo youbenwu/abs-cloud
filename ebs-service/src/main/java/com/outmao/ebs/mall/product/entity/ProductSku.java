@@ -1,6 +1,7 @@
 package com.outmao.ebs.mall.product.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.outmao.ebs.common.vo.TimeSpan;
 import lombok.Data;
 import javax.persistence.*;
 import java.io.Serializable;
@@ -108,6 +109,15 @@ public class ProductSku implements Serializable {
 	 */
 	private Long alarmStock;
 
+	/**
+	 * 租赁信息
+	 */
+	@Embedded
+	@AttributeOverrides({
+			@AttributeOverride(name="field", column=@Column(name="lease_field")),
+			@AttributeOverride(name="value", column=@Column(name="lease_value"))
+	})
+	private TimeSpan lease;
 
 
 }
