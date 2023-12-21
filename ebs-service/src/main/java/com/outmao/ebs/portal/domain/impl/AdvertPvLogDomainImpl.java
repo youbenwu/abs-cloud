@@ -8,10 +8,16 @@ import com.outmao.ebs.portal.dao.AdvertUvLogDao;
 import com.outmao.ebs.portal.domain.AdvertPvLogDomain;
 import com.outmao.ebs.portal.entity.AdvertPvLog;
 import com.outmao.ebs.portal.entity.AdvertUvLog;
+import com.outmao.ebs.portal.entity.QAdvertPvLog;
+import com.outmao.ebs.portal.vo.QyStatsAdvertByHotelVO;
+import com.querydsl.core.Tuple;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Component
 public class AdvertPvLogDomainImpl extends BaseDomain implements AdvertPvLogDomain {
@@ -58,6 +64,23 @@ public class AdvertPvLogDomainImpl extends BaseDomain implements AdvertPvLogDoma
     }
 
 
+    @Override
+    public List<QyStatsAdvertByHotelVO> getQyStatsAdvertByHotelVOList(Long advertId) {
+        QAdvertPvLog e=QAdvertPvLog.advertPvLog;
+
+        List<Tuple> tuples=QF.select(e.count(),e.spaceId).from(e).groupBy(e.spaceId).where(e.advertId.eq(advertId)).fetch();
+
+        List<QyStatsAdvertByHotelVO> list=new ArrayList<>(tuples.size());
+
+        tuples.forEach(t->{
+            QyStatsAdvertByHotelVO vo=new QyStatsAdvertByHotelVO();
+            vo.setPv(t.get(e.count()));
+            vo.setHotelId(t.get(e.spaceId));
+            list.add(vo);
+        });
+
+        return list;
+    }
 
 
 }

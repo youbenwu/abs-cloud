@@ -1,7 +1,7 @@
 package com.outmao.ebs.mall.order.entity;
 
 
-import com.outmao.ebs.common.vo.TimeSpan;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import javax.persistence.Column;
@@ -10,8 +10,9 @@ import java.util.Date;
 
 @Embeddable
 @Data
-public class OrderProductLease extends TimeSpan {
+public class OrderProductLease {
 
+	@Column(name = "is_lease")
 	private boolean lease;
 
     @Column(name = "lease_start_time")
@@ -20,7 +21,9 @@ public class OrderProductLease extends TimeSpan {
 	@Column(name = "lease_end_time")
 	private Date endTime;
 
-
+	@ApiModelProperty(name = "field", value = "1--分钟 2--小时 3--天 4--月 5--年")
+	private Integer field=5;
+	private Integer value=1;
 
 
 

@@ -2,10 +2,7 @@ package com.outmao.ebs.mall.order.service;
 
 import com.outmao.ebs.mall.order.dto.*;
 import com.outmao.ebs.mall.order.entity.Order;
-import com.outmao.ebs.mall.order.vo.QyDeviceLeaseOrderVO;
-import com.outmao.ebs.mall.order.vo.StatsOrderStatusVO;
-import com.outmao.ebs.mall.order.vo.StatsOrderVO;
-import com.outmao.ebs.mall.order.vo.OrderVO;
+import com.outmao.ebs.mall.order.vo.*;
 import com.outmao.ebs.wallet.vo.TradeVO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -44,10 +41,7 @@ public interface OrderService {
     public List<StatsOrderStatusVO> getStatsOrderStatusVOList(GetStatsOrderStatusListDTO request);
 
 
-    public QyDeviceLeaseOrderVO getQyDeviceLeaseOrderVOById(Long id);
-
-    public Page<QyDeviceLeaseOrderVO> getQyDeviceLeaseOrderVOPage(GetOrderListDTO request, Pageable pageable);
-
+    
 
 
 }

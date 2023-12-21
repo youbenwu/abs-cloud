@@ -49,7 +49,7 @@ public class AdvertDomainImpl extends BaseDomain implements AdvertDomain {
             request.setStartTime(new Date());
         }
         if(request.getEndTime()==null){
-            request.setEndTime(DateUtil.addDays(request.getStartTime(),360));
+            request.setEndTime(DateUtil.addDays(request.getStartTime(),3600));
         }
 
         Advert advert=request.getId()==null?null:advertDao.findByIdForUpdate(request.getId());
@@ -200,6 +200,18 @@ public class AdvertDomainImpl extends BaseDomain implements AdvertDomain {
         vo.setChannelTitle(channel);
     }
 
+    private void setChannelTitle(List<AdvertVO> list){
+        QAdvertChannel c = QAdvertChannel.advertChannel;
+        List<Tuple> tuples = QF.select(c.title,c.id).from(c).where(c.id.in(list.stream().map(t->t.getChannelId()).collect(Collectors.toList()))).fetch();
+        Map<Long,String> map=new HashMap<>();
+        tuples.forEach(t->{
+            map.put(t.get(c.id),t.get(c.title));
+        });
+        list.forEach(t->{
+            t.setChannelTitle(map.get(t.getChannelId()));
+        });
+
+    }
 
     @Override
     public List<AdvertVO> getAdvertVOList(GetAdvertListDTO request) {
@@ -208,8 +220,21 @@ public class AdvertDomainImpl extends BaseDomain implements AdvertDomain {
 
         Predicate p=getPredicate(request);
 
-
         List<AdvertVO> list=queryList(e,p,advertVOConver);
+
+        setChannelTitle(list);
+
+        return list;
+    }
+
+
+    @Override
+    public List<AdvertVO> getAdvertVOListByIdIn(Collection<Long> idIn) {
+        QAdvert e=QAdvert.advert;
+
+        List<AdvertVO> list=queryList(e,e.id.in(idIn),advertVOConver);
+
+        setChannelTitle(list);
 
         return list;
     }
@@ -227,6 +252,8 @@ public class AdvertDomainImpl extends BaseDomain implements AdvertDomain {
         Predicate p=getPredicate(request);
 
         Page<AdvertVO> page=queryPage(e,p,advertVOConver,pageable);
+
+        setChannelTitle(page.getContent());
 
         return page;
     }
@@ -256,6 +283,12 @@ public class AdvertDomainImpl extends BaseDomain implements AdvertDomain {
 
         if(request.getChannelId()!=null){
             p=e.channelId.eq(request.getChannelId()).and(p);
+        }
+
+        if(request.getUserId()!=null){
+            p=e.userId.eq(request.getUserId()).and(p);
+        }else {
+            p=e.status.lt(Status.ORDER_WAIT.getStatus()).and(p);
         }
 
         if(request.getSee()!=null){

@@ -1,16 +1,15 @@
 package com.outmao.ebs.portal.web.api;
 
 
+import com.outmao.ebs.common.util.RequestUtil;
 import com.outmao.ebs.mall.order.vo.SettleVO;
 import com.outmao.ebs.portal.dto.*;
 import com.outmao.ebs.portal.entity.Advert;
-import com.outmao.ebs.portal.entity.AdvertBuyDisplayOrder;
-import com.outmao.ebs.portal.service.AdvertBuyDisplayOrderService;
-import com.outmao.ebs.portal.service.AdvertChannelService;
-import com.outmao.ebs.portal.service.AdvertPvLogService;
-import com.outmao.ebs.portal.service.AdvertService;
+import com.outmao.ebs.portal.entity.AdvertBuyOrder;
+import com.outmao.ebs.portal.service.*;
 import com.outmao.ebs.portal.vo.AdvertChannelVO;
 import com.outmao.ebs.portal.vo.AdvertVO;
+import com.outmao.ebs.portal.vo.QyStatsAdvertByHotelVO;
 import com.outmao.ebs.security.util.SecurityUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -40,7 +39,7 @@ public class AdvertAction {
     private AdvertChannelService advertChannelService;
 
     @Autowired
-    private AdvertBuyDisplayOrderService advertBuyDisplayOrderService;
+    private AdvertBuyOrderService advertBuyOrderService;
 
     @Autowired
     private AdvertPvLogService advertPvLogService;
@@ -65,6 +64,19 @@ public class AdvertAction {
     @PostMapping("/display")
     public Advert setAdvertDisplay(SetAdvertDisplayDTO request){
         return advertService.setAdvertDisplay(request);
+    }
+
+    @ApiOperation(value = "获取广告信息", notes = "获取广告信息")
+    @PostMapping("/get")
+    public AdvertVO getAdvertVOById(Long id){
+        return advertService.getAdvertVOById(id);
+    }
+
+    @PreAuthorize("principal.id.equals(#request.userId)")
+    @ApiOperation(value = "获取广告信息列表", notes = "获取广告信息列表")
+    @PostMapping("/page")
+    public Page<AdvertVO> getAdvertVOList(GetAdvertListDTO request,@PageableDefault(sort = {"createTime"}, direction = Sort.Direction.DESC)Pageable pageable){
+        return advertService.getAdvertVOPage(request,pageable);
     }
 
 
@@ -97,6 +109,7 @@ public class AdvertAction {
             SaveAdvertPvLogListDTO listDTO = new SaveAdvertPvLogListDTO();
             listDTO.setAdverts(list.stream().map(t -> t.getId()).collect(Collectors.toList()));
             listDTO.setUserId(SecurityUtil.currentUserId());
+            listDTO.setSpaceId(RequestUtil.getHeaderLong("hotelId"));
             advertPvLogService.saveAdvertPvLogListAsync(listDTO);
         }
     }
@@ -104,14 +117,20 @@ public class AdvertAction {
 
     @ApiOperation(value = "广告投放下单", notes = "广告投放下单")
     @PostMapping("/saveOrder")
-    public AdvertBuyDisplayOrder saveAdvertOrder(AdvertOrderDTO request){
-        return advertBuyDisplayOrderService.saveAdvertOrder(request);
+    public AdvertBuyOrder saveAdvertOrder(AdvertOrderDTO request){
+        return advertBuyOrderService.saveAdvertOrder(request);
     }
 
     @ApiOperation(value = "获取广告投放结算金额", notes = "获取广告投放结算金额")
     @PostMapping("/settleOrder")
     public SettleVO settleAdvertOrder(AdvertOrderSettleDTO request){
-        return advertBuyDisplayOrderService.settleAdvertOrder(request);
+        return advertBuyOrderService.settleAdvertOrder(request);
+    }
+
+    @ApiOperation(value = "迁眼广告按酒店统计", notes = "迁眼广告按酒店统计")
+    @PostMapping("/qy/statsByHotel")
+    public List<QyStatsAdvertByHotelVO> getQyStatsAdvertByHotelVOList(Long advertId){
+        return advertPvLogService.getQyStatsAdvertByHotelVOList(advertId);
     }
 
 

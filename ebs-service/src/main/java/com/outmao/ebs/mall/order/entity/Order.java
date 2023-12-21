@@ -2,6 +2,7 @@ package com.outmao.ebs.mall.order.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.outmao.ebs.mall.order.common.constant.OrderStatus;
 import com.outmao.ebs.mall.product.common.constant.ProductType;
 import lombok.Data;
 import javax.persistence.*;
@@ -34,7 +35,7 @@ public class Order  implements Serializable{
 	private Long id;
 
 	/**
-	 * 组织ID
+	 * 商家所属组织ID
 	 */
 	@Column(nullable = false,updatable = false)
 	private Long orgId;
@@ -52,18 +53,6 @@ public class Order  implements Serializable{
 	private Long shopId;
 
 	/**
-	 * 买家用户ID
-	 */
-	@Column(nullable = false,updatable = false)
-	private Long userId;
-
-	/**
-	 * 卖家用户ID
-	 */
-	@Column(nullable = false,updatable = false)
-	private Long sellerId;
-
-	/**
 	 *
 	 * 门店ID
 	 * 在门店下单
@@ -72,12 +61,40 @@ public class Order  implements Serializable{
 	@Column(updatable = false)
 	private Long storeId;
 
+	/**
+	 * 卖家用户ID
+	 */
+	@Column(nullable = false,updatable = false)
+	private Long sellerId;
 
+
+	/**
+	 * 买家用户ID
+	 */
+	@Column(nullable = false,updatable = false)
+	private Long userId;
+
+	//酒店相关信息
+
+	/**
+	 * 关联酒店ID
+	 */
+	@Column(updatable = false)
 	private Long hotelId;
 
-
+	/**
+	 * 关联酒店房间号
+	 */
+	@Column(updatable = false)
 	private String roomNo;
 
+    //仓库相关信息
+	/**
+	 *
+	 * 是否启用仓库库存
+	 *
+	 */
+	private boolean useStoreStock;
 
 	/**
 	 * 出货仓库ID
@@ -113,11 +130,61 @@ public class Order  implements Serializable{
 	private Long lookId;
 
 	/**
+	 *
+	 * 订单分销中的佣金
+	 *
+	 */
+	private double commissionAmount;
+
+
+
+    //订单信息
+
+	/**
 	 * 订单编号
 	 */
 	@Column(unique = true)
 	private String orderNo;
 
+	/**
+	 *
+	 * 预计发货时间
+	 *
+	 */
+	private Date expectDeliveryTime;
+
+
+	/**
+	 *
+	 * 是否无需发货
+	 *
+	 */
+	private boolean noDelivery;
+
+	/**
+	 *
+	 * 是否允许商家标记签收
+	 *
+	 */
+	private boolean sellerFinish;
+
+	/**
+	 *
+	 * 搜索关键字
+	 *
+	 */
+	@Lob
+	@Basic(fetch = FetchType.LAZY)
+	private String keyword;
+
+	/**
+	 *
+	 * 订单内容JSON
+	 *
+	 */
+	@Lob
+	@Basic(fetch = FetchType.LAZY)
+	private String data;
 
 	//各种状态
 
@@ -187,17 +254,10 @@ public class Order  implements Serializable{
 	 */
 	private String refundStatusRemark;
 
-	/**
-	 *
-	 * 搜索关键字
-	 *
-	 */
-	@Lob
-	@Basic(fetch = FetchType.LAZY)
-	private String keyword;
+
 
 	/**
-	 * 收货地址
+	 * 收货地址ID
 	 */
 	private Long addressId;
 
@@ -205,6 +265,10 @@ public class Order  implements Serializable{
 	 * 物流信息ID
 	 */
 	private Long logisticsId;
+
+
+
+	//商品信息
 
 	/**
 	 *
@@ -226,18 +290,6 @@ public class Order  implements Serializable{
 	 *
 	 */
 	private String description;
-
-	/**
-	 *
-	 * 订单内容JSON
-	 *
-	 */
-	@Lob
-	@Basic(fetch = FetchType.LAZY)
-	private String data;
-
-
-	//商品信息
 
 	/**
 	 * 订单商品信息
@@ -287,13 +339,6 @@ public class Order  implements Serializable{
 	 */
 	private String tradeNo;
 
-	/**
-	 *
-	 * 订单分销中的佣金
-	 *
-	 */
-	private double commissionAmount;
-
 
 	//各种时间节点
 
@@ -329,37 +374,35 @@ public class Order  implements Serializable{
 	 */
 	private Date closeTime;
 
-	/**
-	 *
-	 * 预计发货时间
-	 *
-	 */
-	private Date expectDeliveryTime;
 
 
-	/**
-	 *
-	 * 是否启用仓库库存
-	 *
-	 */
-	private boolean useStoreStock;
+	@JsonIgnore
+	public boolean isWaitPay(){
+		return status== OrderStatus.WAIT_PAY.getStatus();
+	}
 
-	/**
-	 *
-	 * 是否无需发货
-	 *
-	 */
-	private boolean noDelivery;
+	@JsonIgnore
+	public boolean isSuccessed(){
+		return status== OrderStatus.SUCCESSED.getStatus();
+	}
 
-	/**
-	 *
-	 * 是否允许商家标记签收
-	 *
-	 */
-	private boolean sellerFinish;
+	@JsonIgnore
+	public boolean isDelivered(){
+		return status== OrderStatus.DELIVERED.getStatus();
+	}
 
+	@JsonIgnore
+	public boolean isFinished(){
+		return status== OrderStatus.FINISHED.getStatus();
+	}
+
+	@JsonIgnore
+	public boolean isClosed(){
+		return status== OrderStatus.CLOSED.getStatus();
+	}
 
 	//是否外部商品
+	@JsonIgnore
 	public boolean isOut(){
 		if(type!=null){
 			if(type== ProductType.OUT_CTRIP.getType()){
@@ -368,6 +411,7 @@ public class Order  implements Serializable{
 		}
 		return false;
 	}
+
 
 	
 }

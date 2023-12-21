@@ -29,6 +29,14 @@ public class Photo extends ItemMedia  {
 
 
     /**
+     *
+     * 自定义类别
+     *
+     */
+    private String category;
+
+
+    /**
      * 绑定目标
      */
     @Embedded

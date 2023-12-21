@@ -21,12 +21,17 @@ import com.outmao.ebs.portal.entity.*;
 import com.outmao.ebs.portal.service.AdvertBuyOrderService;
 import com.outmao.ebs.portal.service.AdvertChannelService;
 import com.outmao.ebs.portal.service.AdvertService;
+import com.outmao.ebs.portal.vo.AdvertVO;
 import com.outmao.ebs.security.util.SecurityUtil;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 public class AdvertBuyOrderServiceImpl extends BaseService implements AdvertBuyOrderService {
@@ -64,6 +69,7 @@ public class AdvertBuyOrderServiceImpl extends BaseService implements AdvertBuyO
 
             buy.setAmount(order.getAmount());
             buy.setPrice(order.getPrice());
+            buy.setPv(order.getPv());
             advertService.buy(order.getAdvertId(),buy);
 
             //订单完成，修改广告状态为正常
@@ -155,6 +161,26 @@ public class AdvertBuyOrderServiceImpl extends BaseService implements AdvertBuyO
         SettleVO settleVO=settleService.createSettle(createSettleDTO);
 
         return settleVO;
+    }
+
+    @Override
+    public List<AdvertVO> getAdvertVOListByOrderNoIn(Collection<String> orderNoIn) {
+        List<AdvertBuyOrder> orders=advertBuyOrderDomain.getAdvertBuyOrderListByOrderNoIn(orderNoIn);
+         if(orders.size()>0){
+             Map<Long,AdvertBuyOrder> orderMap=orders.stream().collect(Collectors.toMap(t->t.getAdvertId(),t->t));
+
+             List<AdvertVO> list=advertService.getAdvertVOListByIdIn(orders.stream().map(t->t.getAdvertId()).collect(Collectors.toList()));
+
+             list.forEach(t->{
+                 AdvertBuyOrder order=orderMap.get(t.getId());
+                 if(order!=null){
+                     t.setOrderNo(order.getOrderNo());
+                 }
+             });
+
+            return list;
+        }
+        return new ArrayList<>();
     }
 
 

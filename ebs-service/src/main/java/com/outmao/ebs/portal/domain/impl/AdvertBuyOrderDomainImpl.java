@@ -11,7 +11,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 
 
 @Component
@@ -41,6 +43,16 @@ public class AdvertBuyOrderDomainImpl extends BaseDomain implements AdvertBuyOrd
         return order;
     }
 
+
+    @Override
+    public List<Long> getAdvertIdListByOrderNoIn(Collection<String> orderNoIn) {
+        return advertBuyOrderDao.findAllAdvertIdByOrderNoIn(orderNoIn);
+    }
+
+    @Override
+    public List<AdvertBuyOrder> getAdvertBuyOrderListByOrderNoIn(Collection<String> orderNoIn) {
+        return advertBuyOrderDao.findAllByOrderNoIn(orderNoIn);
+    }
 
 
 }

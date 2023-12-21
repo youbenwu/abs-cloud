@@ -105,6 +105,20 @@ public class HotelVO {
 
     /**
      *
+     *
+     *
+     */
+    private String roomImages;
+
+    /**
+     *
+     *
+     *
+     */
+    private String images;
+
+    /**
+     *
      * 酒店服务说明
      *
      */

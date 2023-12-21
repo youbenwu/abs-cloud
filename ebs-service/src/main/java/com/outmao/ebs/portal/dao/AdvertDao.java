@@ -18,6 +18,7 @@ public interface AdvertDao extends JpaRepository<Advert,Long> , QuerydslPredicat
     @Query("update Advert a set a.pv=a.pv+1 where a.id=?1")
     public void pv(Long id);
 
+
     @Modifying
     @Query("update Advert a set a.uv=a.uv+1 where a.id=?1")
     public void uv(Long id);

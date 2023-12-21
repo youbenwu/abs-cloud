@@ -122,10 +122,8 @@ public class OrderProduct implements Serializable {
 	 */
 	@Embedded
 	@AttributeOverrides({
-			@AttributeOverride(name="lease", column=@Column(name="is_lease")),
 			@AttributeOverride(name="field", column=@Column(name="lease_field")),
-			@AttributeOverride(name="value", column=@Column(name="lease_value")),
-			@AttributeOverride(name="min", column=@Column(name="lease_min"))
+			@AttributeOverride(name="value", column=@Column(name="lease_value"))
 	})
 	private OrderProductLease lease;
 

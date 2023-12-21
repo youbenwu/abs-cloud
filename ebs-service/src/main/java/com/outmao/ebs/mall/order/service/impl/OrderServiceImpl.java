@@ -77,8 +77,7 @@ public class OrderServiceImpl extends BaseService implements OrderService, Trade
     @Autowired
     private PayService payService;
 
-    @Autowired
-    private HotelDeviceLeaseService hotelDeviceLeaseService;
+
 
 
     @Override
@@ -309,34 +308,7 @@ public class OrderServiceImpl extends BaseService implements OrderService, Trade
     }
 
 
-    @Override
-    public QyDeviceLeaseOrderVO getQyDeviceLeaseOrderVOById(Long id) {
-        OrderVO vo=getOrderVOById(id);
-        HotelDeviceLeaseOrderVO leaseOrderVO=hotelDeviceLeaseService.getHotelDeviceLeaseOrderVOByOrderNo(vo.getOrderNo());
-        QyDeviceLeaseOrderVO vo1=new QyDeviceLeaseOrderVO();
-        BeanUtils.copyProperties(vo,vo1);
-        vo1.setLeaseInfo(leaseOrderVO);
-        return vo1;
-    }
 
-
-    @Override
-    public Page<QyDeviceLeaseOrderVO> getQyDeviceLeaseOrderVOPage(GetOrderListDTO request, Pageable pageable) {
-        request.setType(ProductType.HOTEL_DEVICE_LEASE.getType());
-        Page<OrderVO> page=getOrderVOPage(request,pageable);
-
-        List<QyDeviceLeaseOrderVO> content=new ArrayList<>(page.getContent().size());
-
-        page.getContent().forEach(vo->{
-            HotelDeviceLeaseOrderVO leaseOrderVO=hotelDeviceLeaseService.getHotelDeviceLeaseOrderVOByOrderNo(vo.getOrderNo());
-            QyDeviceLeaseOrderVO vo1=new QyDeviceLeaseOrderVO();
-            BeanUtils.copyProperties(vo,vo1);
-            vo1.setLeaseInfo(leaseOrderVO);
-            content.add(vo1);
-        });
-
-        return new PageImpl(content,pageable,page.getTotalElements());
-    }
 
 
 }

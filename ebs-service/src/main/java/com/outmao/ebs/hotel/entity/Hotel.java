@@ -118,6 +118,23 @@ public class Hotel implements Serializable ,BindingOrg {
 
     /**
      *
+     *
+     *
+     */
+    @Column(length = 1200)
+    private String roomImages;
+
+    /**
+     *
+     *
+     *
+     */
+    @Column(length = 1200)
+    private String images;
+
+
+    /**
+     *
      * 酒店服务说明
      *
      */

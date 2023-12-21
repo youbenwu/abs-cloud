@@ -26,7 +26,7 @@ public class AdvertVO extends SortEntity {
     @ApiModelProperty(name = "display", value = "是否上架")
     private boolean display;
 
-    @ApiModelProperty(name = "status", value = "状态 0--正常 2--未审核 3--审核中 4--审核失败 7--过期")
+    @ApiModelProperty(name = "status", value = "状态 0--正常 1--禁用 2--未审核 3--审核中 4--审核失败 7--过期 8--待订单完成 9--订单取消")
     private int status;
 
     @ApiModelProperty(name = "orgId", value = "发布广告的组织ID")
@@ -96,6 +96,9 @@ public class AdvertVO extends SortEntity {
 
     @ApiModelProperty(name = "uv", value = "独立访客，一台电脑24小时以内访问N次计为1次")
     private long uv;
+
+
+    private String orderNo;
 
 
 }

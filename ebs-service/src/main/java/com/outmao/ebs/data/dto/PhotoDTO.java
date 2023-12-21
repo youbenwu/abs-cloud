@@ -12,6 +12,13 @@ public class PhotoDTO extends ItemMediaDTO {
      */
     private Long userId;
 
+    /**
+     *
+     * 自定义类别
+     *
+     */
+    private String category;
+
     private BindingItem target;
 
 

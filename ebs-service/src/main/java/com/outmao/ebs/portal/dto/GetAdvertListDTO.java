@@ -9,8 +9,12 @@ import lombok.Data;
 @Data
 public class GetAdvertListDTO  {
 
+
     @ApiModelProperty(name = "orgId", value = "组织ID")
     private Long orgId;
+
+    @ApiModelProperty(name = "userId", value = "用户ID")
+    private Long userId;
 
     @ApiModelProperty(name = "placeId", value = "场所ID")
     private Long placeId;

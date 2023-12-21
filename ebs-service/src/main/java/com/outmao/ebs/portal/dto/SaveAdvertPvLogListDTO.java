@@ -20,5 +20,8 @@ public class SaveAdvertPvLogListDTO  {
     @ApiModelProperty(name = "userId", value = "点击用户")
     private Long userId;
 
+    @ApiModelProperty(name = "spaceId", value = "场所ID")
+    private Long spaceId;
+
 
 }

@@ -19,6 +19,8 @@ import org.springframework.data.domain.*;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
+
+import java.util.Collection;
 import java.util.List;
 import java.util.Random;
 
@@ -103,6 +105,11 @@ public class AdvertServiceImpl extends BaseService implements AdvertService {
         Page<AdvertVO> page=getAdvertVOPage(request,pageable);
 
         return page.getContent();
+    }
+
+    @Override
+    public List<AdvertVO> getAdvertVOListByIdIn(Collection<Long> idIn) {
+        return advertDomain.getAdvertVOListByIdIn(idIn);
     }
 
     @Override

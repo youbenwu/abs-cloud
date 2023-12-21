@@ -466,7 +466,8 @@ public class OrderDomainImpl extends BaseDomain implements OrderDomain {
     private void leaseStart(Order order){
         order.getProducts().forEach(p->{
             if(p.getLease()!=null&&p.getLease().isLease()){
-                Between<Date> between=p.getLease().getDateBetween(new Date());
+                TimeSpan timeSpan=new TimeSpan(p.getLease().getField(),p.getLease().getValue());
+                Between<Date> between=timeSpan.getDateBetween(new Date());
                 p.getLease().setStartTime(between.getFrom());
                 p.getLease().setEndTime(between.getTo());
             }

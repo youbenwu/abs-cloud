@@ -1,6 +1,7 @@
 package com.outmao.ebs.common.vo;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.outmao.ebs.common.util.DateUtil;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
@@ -8,6 +9,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import javax.persistence.Embeddable;
 import javax.persistence.MappedSuperclass;
+import javax.persistence.Transient;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -30,6 +32,9 @@ public class TimeSpan implements Serializable {
     private Integer field=5;
     private Integer value=1;
 
+
+    @JsonIgnore
+    @Transient
     public int getMinutes(){
         if(field!=null&&value!=null){
             if(field==MINUTE)

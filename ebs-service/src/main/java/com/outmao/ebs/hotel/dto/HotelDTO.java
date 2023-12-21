@@ -63,6 +63,20 @@ public class HotelDTO extends BaseDTO {
 
     /**
      *
+     *
+     *
+     */
+    private String roomImages;
+
+    /**
+     *
+     *
+     *
+     */
+    private String images;
+
+    /**
+     *
      * 酒店服务说明
      *
      */
