@@ -204,6 +204,15 @@ public class ProductDTO {
 
     /**
      *
+     * 是否启用分销
+     *
+     * */
+    @ApiModelProperty(name = "distribution", value = "是否启用分销")
+    private boolean distribution;
+
+
+    /**
+     *
      * 佣金类型 0固定/1按比例
      *
      */

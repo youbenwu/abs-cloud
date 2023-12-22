@@ -85,6 +85,7 @@ public class HotelVOConver implements BeanConver<QHotel, HotelVO> {
                 e.idCardBack,
                 e.createTime,
                 e.updateTime,
+
         };
 
         if(distance!=null) {

@@ -84,6 +84,8 @@ public class HotelDeviceDomainImpl extends BaseDomain implements HotelDeviceDoma
             device.setActUserId(request.getActUserId());
             //设置状态
             device.setStatus(1);
+            device.setActiveTime(new Date());
+
 
         }
 
@@ -262,6 +264,10 @@ public class HotelDeviceDomainImpl extends BaseDomain implements HotelDeviceDoma
 
         if(request.getRenterId()!=null){
             p=e.lease.renterId.eq(request.getRenterId()).and(p);
+        }
+
+        if(request.getActiveStatus()!=null){
+            p=e.activeStatus.eq(request.getActiveStatus()).and(p);
         }
 
         return p;

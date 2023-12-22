@@ -51,8 +51,35 @@ public class HotelDevice  implements Serializable {
      * 0--未激活
      * 1--已激活
      * 2--预激活
+     *
      */
     private int status;
+
+
+    /**
+     *
+     * 0--关机状态
+     * 1--开机状态
+     * 2--维修状态
+     * 3--预警状态
+     *
+     */
+    private int activeStatus;
+
+    /**
+     * 开机时长
+     */
+    private int activeOnDuration;
+
+    /**
+     * 最新开机时间
+     */
+    private Date activeOnTime;
+
+    /**
+     * 最新关机时间
+     */
+    private Date activeOffTime;
 
 
     /**
@@ -126,6 +153,14 @@ public class HotelDevice  implements Serializable {
      * 设备系统
      */
     private String os;
+
+
+    /**
+     *
+     * 激活时间
+     *
+     */
+    private Date activeTime;
 
     /**
      *

@@ -98,8 +98,11 @@ public class HotelDeviceLeaseServiceImpl extends BaseService implements HotelDev
                 dto.setDeviceId(d.getId());
                 dto.setHotelId(d.getHotelId());
                 dto.setRoomNo(d.getRoomNo());
+                deploys.add(dto);
             });
             hotelService.deviceDeploy(deploys);
+
+
 
             setHotelDeviceLeaseOrderStatus(new SetHotelDeviceLeaseOrderStatusDTO(order.getId(), HotelDeviceLeaseOrderStatus.IsDeploy.getStatus()));
 

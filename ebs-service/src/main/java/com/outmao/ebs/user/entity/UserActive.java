@@ -28,13 +28,12 @@ public class UserActive  implements Serializable {
 
     /**
      *
-     * 用户标识
+     * 标识
      *
      */
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-
 
     /**
      *
@@ -42,7 +41,6 @@ public class UserActive  implements Serializable {
      *
      */
     private Long userId;
-
 
     /**
      *

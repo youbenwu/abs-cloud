@@ -31,6 +31,41 @@ public class HotelDeviceVO implements SimpleHotelSetter {
     private int status;
 
     /**
+     *
+     * 0--关机状态
+     * 1--开机状态
+     * 2--维修状态
+     *
+     */
+    @ApiModelProperty(name = "activeStatus", value = "/**\n" +
+            "     *\n" +
+            "     * 0--关机状态\n" +
+            "     * 1--开机状态\n" +
+            "     * 2--维修状态\n" +
+            "     * 3--预警状态\n" +
+            "     *\n" +
+            "     */")
+    private int activeStatus;
+
+    /**
+     * 开机时长
+     */
+    @ApiModelProperty(name = "activeOnDuration", value = "开机时长")
+    private int activeOnDuration;
+
+    /**
+     * 最新开机时间
+     */
+    @ApiModelProperty(name = "activeOnTime", value = "最新开机时间")
+    private Date activeOnTime;
+
+    /**
+     * 最新关机时间
+     */
+    @ApiModelProperty(name = "activeOffTime", value = "最新关机时间")
+    private Date activeOffTime;
+
+    /**
      * 组织ID
      */
     private Long orgId;
