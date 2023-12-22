@@ -7,6 +7,7 @@ import com.outmao.ebs.data.dto.PhotoDTO;
 import com.outmao.ebs.data.entity.Photo;
 import com.outmao.ebs.data.service.PhotoService;
 import com.outmao.ebs.data.vo.PhotoVO;
+import com.outmao.ebs.hotel.common.util.HotelRoomUtil;
 import com.outmao.ebs.hotel.domain.*;
 import com.outmao.ebs.hotel.dto.*;
 import com.outmao.ebs.hotel.entity.*;
@@ -255,7 +256,19 @@ public class HotelServiceImpl extends BaseService implements HotelService {
 
     @Override
     public HotelRoom saveHotelRoom(HotelRoomDTO request) {
-        return hotelRoomDomain.saveHotelRoom(request);
+        List<String> rooms= HotelRoomUtil.getRoomNo(request.getRoomNo());
+        if(rooms.size()>1){
+            rooms.forEach(r->{
+                HotelRoomDTO dto=new HotelRoomDTO();
+                BeanUtils.copyProperties(request,dto);
+                dto.setRoomNo(r);
+                dto.setName(r);
+                hotelRoomDomain.saveHotelRoom(dto);
+            });
+            return null;
+        }else {
+            return hotelRoomDomain.saveHotelRoom(request);
+        }
     }
 
 
