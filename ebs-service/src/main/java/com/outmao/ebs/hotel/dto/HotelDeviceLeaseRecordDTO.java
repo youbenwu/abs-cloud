@@ -13,14 +13,6 @@ import java.util.Date;
 @Data
 public class HotelDeviceLeaseRecordDTO {
 
-
-    /**
-     *
-     * 自动编号
-     *
-     */
-    private Long id;
-
     /**
      *
      * 设备ID
@@ -37,28 +29,36 @@ public class HotelDeviceLeaseRecordDTO {
 
     /**
      *
-     * 租赁总金额
+     * 绑定合伙人ID
+     *
+     */
+    private Long partnerId;
+
+    /**
+     *
+     * 当前租金金额
      *
      */
     private double amount;
 
     /**
      *
-     * 0--未租赁 1--正租用 2--已过期
+     * 当前租赁年限
      *
      */
-    private int status;
+    private int years;
+
 
     /**
      *
-     * 租赁开始时间
+     * 当前租赁开始时间
      *
      */
     private Date startTime;
 
     /**
      *
-     * 租赁结束时间
+     * 当前租赁结束时间
      *
      */
     private Date endTime;

@@ -96,9 +96,7 @@ public class HotelDeviceLeaseServiceImpl extends BaseService implements HotelDev
                 }
             }
 
-
             hotelDeviceService.deploy(deploys);
-
 
             setHotelDeviceLeaseOrderStatus(new SetHotelDeviceLeaseOrderStatusDTO(order.getId(), HotelDeviceLeaseOrderStatus.IsDeploy.getStatus()));
 
@@ -128,7 +126,7 @@ public class HotelDeviceLeaseServiceImpl extends BaseService implements HotelDev
         //租赁设备
         HotelDeviceLeaseDTO leaseDTO=new HotelDeviceLeaseDTO();
         BeanUtils.copyProperties(request,leaseDTO);
-        leaseDTO.setLeaseYears(request.getTime().getValue());
+        leaseDTO.setYears(request.getTime().getValue());
         List<HotelDevice> devices=hotelDeviceService.lease(leaseDTO);
 
         //保存订单信息

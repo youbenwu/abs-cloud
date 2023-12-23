@@ -63,11 +63,10 @@ public class HotelDeviceRenterDomainImpl extends BaseDomain implements HotelDevi
         if(renter==null){
             renter=new HotelDeviceRenter();
             renter.setCreateTime(new Date());
-            renter.setAmount(request.getAmount());
-        }else{
-            renter.setAmount(renter.getAmount()+request.getAmount());
         }
-        BeanUtils.copyProperties(request,renter,"amount");
+        renter.setQuantity(renter.getQuantity()+request.getQuantity());
+        renter.setAmount(renter.getAmount()+request.getAmount());
+        BeanUtils.copyProperties(request,renter,"amount","quantity");
         renter.setKeyword(getKeyword(renter));
         renter.setUpdateTime(new Date());
         hotelDeviceRenterDao.save(renter);

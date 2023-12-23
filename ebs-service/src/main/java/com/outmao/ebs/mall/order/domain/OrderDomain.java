@@ -19,6 +19,8 @@ public interface OrderDomain {
 
     public Order getOrderByOrderNo(String orderNo);
 
+    public Order orderBindOwner(OrderBindOwnerDTO request);
+
     public void deleteOrderById(Long id);
 
     public long getOrderCount();

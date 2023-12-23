@@ -2,10 +2,7 @@ package com.outmao.ebs.mall.order.web.api;
 
 
 import com.outmao.ebs.mall.order.common.constant.OrderSubStatus;
-import com.outmao.ebs.mall.order.dto.CloseOrderDTO;
-import com.outmao.ebs.mall.order.dto.GetOrderListDTO;
-import com.outmao.ebs.mall.order.dto.OrderDTO;
-import com.outmao.ebs.mall.order.dto.OrderPayPrepareDTO;
+import com.outmao.ebs.mall.order.dto.*;
 import com.outmao.ebs.mall.order.entity.Order;
 import com.outmao.ebs.mall.order.service.OrderService;
 import com.outmao.ebs.mall.order.vo.OrderVO;
@@ -52,6 +49,11 @@ public class OrderAction {
         return order;
     }
 
+    @ApiOperation(value = "订单绑定用户", notes = "订单绑定用户")
+    @PostMapping("/bindOwner")
+    public Order orderBindOwner(OrderBindOwnerDTO request){
+        return orderService.orderBindOwner(request);
+    }
 
     //@PostAuthorize("principal.id.equals(returnObject.userId)")
     @ApiOperation(value = "获取订单信息", notes = "获取订单信息")

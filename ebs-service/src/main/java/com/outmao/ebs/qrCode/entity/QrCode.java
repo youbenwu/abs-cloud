@@ -36,6 +36,8 @@ public class QrCode implements Serializable{
 	//目标URL
 	private String url;
 
+	private String business;
+
 	//激活时间
 	private Date   activateTime;
 	

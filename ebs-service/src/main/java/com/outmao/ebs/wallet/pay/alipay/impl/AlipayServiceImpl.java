@@ -71,6 +71,7 @@ public class AlipayServiceImpl implements AlipayService {
 			model.setSubject(subject);
 			model.setBody(body);
 			request.setBizModel(model);
+			request.setNotifyUrl(alipayProperties.getNotifyUrl());
 			AlipayTradePrecreateResponse response = alipayClient.execute(request);
 			System.out.println(response.getBody());
 			if (response.isSuccess()) {

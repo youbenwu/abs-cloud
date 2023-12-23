@@ -70,7 +70,7 @@ public class HotelDeviceRenter implements Serializable , UserCommissionSaver {
 
     /**
      *
-     * 在租设备数量
+     * 总租赁设备数量
      *
      */
     private int quantity;

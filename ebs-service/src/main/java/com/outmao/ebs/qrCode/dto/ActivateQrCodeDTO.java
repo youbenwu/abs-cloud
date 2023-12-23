@@ -12,4 +12,10 @@ public class ActivateQrCodeDTO {
 
     private String url;
 
+    private String business;
+
+    public ActivateQrCodeDTO(String url){
+        this.url=url;
+    }
+
 }

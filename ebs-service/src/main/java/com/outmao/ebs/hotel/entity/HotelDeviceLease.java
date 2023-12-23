@@ -34,18 +34,11 @@ public class HotelDeviceLease implements Serializable {
 
     /**
      *
-     * 绑定合伙人ID
+     * 当前绑定合伙人ID
      *
      */
     @Column(name = "lease_partner_id")
     private Long partnerId;
-
-    /**
-     *
-     * 租赁几年
-     *
-     */
-    private int leaseYears;
 
     /**
      *
@@ -65,10 +58,35 @@ public class HotelDeviceLease implements Serializable {
 
     /**
      *
+     * 当前租金金额
+     *
+     */
+    @Column(name = "lease_amount")
+    private double amount;
+
+    /**
+     *
      * 租金总金额
      *
      */
-    private double totalRent;
+    @Column(name = "lease_total_amount")
+    private double totalAmount;
+
+    /**
+     *
+     * 当前租赁年限
+     *
+     */
+    @Column(name = "lease_years")
+    private int years;
+
+    /**
+     *
+     * 总租赁年限
+     *
+     */
+    @Column(name = "lease_total_years")
+    private int totalYears;
 
 
 

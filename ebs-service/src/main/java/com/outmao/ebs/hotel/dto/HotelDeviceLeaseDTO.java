@@ -43,7 +43,7 @@ public class HotelDeviceLeaseDTO {
      * 租几年
      *
      */
-    private int leaseYears;
+    private int years;
 
     /**
      *

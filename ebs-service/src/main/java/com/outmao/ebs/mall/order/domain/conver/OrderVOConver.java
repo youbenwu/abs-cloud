@@ -16,7 +16,12 @@ public class OrderVOConver implements BeanConver<QOrder, OrderVO> {
 
         vo.setId(t.get(e.id));
         vo.setShopId(t.get(e.shopId));
-        vo.setUserId(t.get(e.userId));
+        Long ownerId=t.get(e.ownerId);
+        if(ownerId!=null){
+            vo.setUserId(ownerId);
+        }else {
+            vo.setUserId(t.get(e.userId));
+        }
         vo.setOrgId(t.get(e.orgId));
         vo.setMerchantId(t.get(e.merchantId));
         vo.setStoreId(t.get(e.storeId));
@@ -62,6 +67,7 @@ public class OrderVOConver implements BeanConver<QOrder, OrderVO> {
                 e.id,
                 e.shopId,
                 e.userId,
+                e.ownerId,
                 e.orgId,
                 e.merchantId,
                 e.storeId,

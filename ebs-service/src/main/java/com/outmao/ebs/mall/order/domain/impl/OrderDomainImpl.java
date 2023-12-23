@@ -220,6 +220,18 @@ public class OrderDomainImpl extends BaseDomain implements OrderDomain {
         return orderDao.findByOrderNo(orderNo);
     }
 
+    @Transactional
+    @Override
+    public Order orderBindOwner(OrderBindOwnerDTO request) {
+        Order order=orderDao.findByOrderNo(request.getOrderNo());
+        if(order.getOwnerId()!=null&&!order.getOwnerId().equals(request.getUserId())){
+            throw new BusinessException("订单已绑定用户");
+        }
+        order.setOwnerId(request.getUserId());
+        orderDao.save(order);
+        return order;
+    }
+
     private void setAddress(Order order, OrderAddressDTO data){
         if(data==null)
             return;
@@ -585,7 +597,7 @@ public class OrderDomainImpl extends BaseDomain implements OrderDomain {
         }
 
         if(request.getUserId()!=null){
-            p=e.userId.eq(request.getUserId()).and(p);
+            p=(e.userId.eq(request.getUserId()).or(e.ownerId.eq(request.getUserId()))).and(p);
         }
 
         if(request.getBrokerId()!=null){
@@ -625,7 +637,7 @@ public class OrderDomainImpl extends BaseDomain implements OrderDomain {
         }
 
         if(request.getUserId()!=null){
-            p=e.userId.eq(request.getUserId()).and(p);
+            p=(e.userId.eq(request.getUserId()).or(e.ownerId.eq(request.getUserId()))).and(p);
         }
 
         if(request.getBrokerId()!=null){

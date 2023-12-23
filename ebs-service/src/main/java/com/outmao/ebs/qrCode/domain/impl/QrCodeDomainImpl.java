@@ -136,6 +136,7 @@ public class QrCodeDomainImpl extends BaseDomain implements QrCodeDomain {
 			QrCode qrCode=qrCodeDao.findByIdForUpdate(id);
 			if(qrCode.getStatus()==QrCodeStatus.NotActivated.getStatus()){
 				qrCode.setUrl(request.getUrl());
+				qrCode.setBusiness(request.getBusiness());
 				qrCode.setStatus(QrCodeStatus.Activated.getStatus());
 				qrCode.setStatusRemark(QrCodeStatus.Activated.getStatusRemark());
 				qrCode.setActivateTime(new Date());

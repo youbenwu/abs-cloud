@@ -22,7 +22,13 @@ public class QrCodeController {
 	@RequestMapping(value = "", method = RequestMethod.GET)
 	public void qrCode(Long id, HttpServletResponse response) throws IOException {
 		QrCode qrCode=qrCodeService.getQrCodeById(id);
-        response.sendRedirect(qrCode.getUrl());
+		String url=qrCode.getUrl();
+		if(url.indexOf("?")!=-1){
+			url=url+"&qrCodeId="+qrCode.getId();
+		}else{
+			url=url+"?qrCodeId="+qrCode.getId();
+		}
+        response.sendRedirect(url);
 	}
 
 

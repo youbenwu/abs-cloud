@@ -20,6 +20,8 @@ public interface OrderService {
 
     public Order closeOrder(CloseOrderDTO request);
 
+    public Order orderBindOwner(OrderBindOwnerDTO request);
+
     public void deleteOrderById(Long id);
 
     public long getOrderCount();

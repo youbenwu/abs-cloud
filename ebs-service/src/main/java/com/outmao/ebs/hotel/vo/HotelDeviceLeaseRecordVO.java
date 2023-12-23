@@ -2,7 +2,6 @@ package com.outmao.ebs.hotel.vo;
 
 
 import lombok.Data;
-
 import java.io.Serializable;
 import java.util.Date;
 
@@ -21,6 +20,13 @@ public class HotelDeviceLeaseRecordVO implements Serializable {
      *
      */
     private Long id;
+
+    /**
+     *
+     * 0--未租赁 1--正租用 2--已过期
+     *
+     */
+    private int status;
 
     /**
      *
@@ -45,28 +51,43 @@ public class HotelDeviceLeaseRecordVO implements Serializable {
 
     /**
      *
-     * 租赁总金额
+     * 当前租金金额
      *
      */
     private double amount;
 
     /**
      *
-     * 0--未租赁 1--正租用 2--已过期
+     * 租金总金额
      *
      */
-    private int status;
+    private double totalAmount;
 
     /**
      *
-     * 租赁开始时间
+     * 当前租赁年限
+     *
+     */
+    private int years;
+
+    /**
+     *
+     * 总租赁年限
+     *
+     */
+    private int totalYears;
+
+
+    /**
+     *
+     * 当前租赁开始时间
      *
      */
     private Date startTime;
 
     /**
      *
-     * 租赁结束时间
+     * 当前租赁结束时间
      *
      */
     private Date endTime;

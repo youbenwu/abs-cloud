@@ -159,6 +159,9 @@ public class SettleServiceImpl extends BaseService implements SettleService {
             qyPadToOrderVO.setQrCodeUrl(wx.getCodeUrl());
         }
 
+        String code="https://qianyan-4gbx9tubd992d384-1323130392.tcloudbaseapp.com?action=order_bind_owner&orderNo="+qyPadToOrderVO.getOrderNo();
+        QrCode qrCode=qrCodeService.activateQrCode(new ActivateQrCodeDTO(code,qyPadToOrderVO.getOrderNo()));
+        qyPadToOrderVO.setBindQrCodeUrl(qrCode.getPath());
 
         return qyPadToOrderVO;
     }

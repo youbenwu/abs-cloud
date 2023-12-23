@@ -6,6 +6,7 @@ import cn.jiguang.common.utils.StringUtils;
 import com.outmao.ebs.common.configuration.sys.Config;
 import com.outmao.ebs.common.exception.BusinessException;
 import com.outmao.ebs.security.util.SecurityUtil;
+import com.outmao.ebs.thirdpartys.rongcloud.dto.RcRegisterUserDTO;
 import com.outmao.ebs.thirdpartys.rongcloud.service.RongcloudService;
 import com.outmao.ebs.thirdpartys.rongcloud.vo.Token;
 import com.outmao.ebs.user.entity.User;
@@ -42,7 +43,7 @@ public class RongcloudAction {
 			throw new BusinessException("请先登录用户");
 		}
 		User user=userService.getUserById(SecurityUtil.currentUserId());
-		UserModel userModel=new UserModel();
+		RcRegisterUserDTO userModel=new RcRegisterUserDTO();
 		userModel.setId(user.getId().toString());
 		userModel.setName(StringUtils.isEmpty(user.getNickname())?user.getUsername():user.getNickname());
 		userModel.setPortrait(StringUtils.isEmpty(user.getAvatar())?(config.getBaseUrl()+"/user_head.jpg"):user.getNickname());

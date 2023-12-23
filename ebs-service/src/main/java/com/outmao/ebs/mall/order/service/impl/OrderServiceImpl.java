@@ -23,6 +23,8 @@ import com.outmao.ebs.mall.store.dto.SetStoreSkuStockOutStatusDTO;
 import com.outmao.ebs.mall.store.dto.StoreSkuStockOutDTO;
 import com.outmao.ebs.mall.store.dto.StoreSkuStockOutItemDTO;
 import com.outmao.ebs.mall.store.service.StoreSkuService;
+import com.outmao.ebs.qrCode.entity.QrCode;
+import com.outmao.ebs.qrCode.service.QrCodeService;
 import com.outmao.ebs.user.entity.User;
 import com.outmao.ebs.user.service.UserService;
 import com.outmao.ebs.wallet.common.constant.*;
@@ -76,6 +78,9 @@ public class OrderServiceImpl extends BaseService implements OrderService, Trade
 
     @Autowired
     private PayService payService;
+
+    @Autowired
+    private QrCodeService qrCodeService;
 
 
 
@@ -201,6 +206,21 @@ public class OrderServiceImpl extends BaseService implements OrderService, Trade
     @Override
     public void deleteOrderById(Long id) {
         orderDomain.deleteOrderById(id);
+    }
+
+    @Override
+    public Order orderBindOwner(OrderBindOwnerDTO request) {
+        if(request.getQrCodeId()==null){
+            throw new BusinessException("二维码ID不能为空");
+        }
+        QrCode qrCode=qrCodeService.getQrCodeById(request.getQrCodeId());
+        if(qrCode==null){
+            throw new BusinessException("二维码不存在");
+        }
+        if(!request.getOrderNo().equals(qrCode.getBusiness())){
+            throw new BusinessException("请扫二维码绑定");
+        }
+        return orderDomain.orderBindOwner(request);
     }
 
     @Override

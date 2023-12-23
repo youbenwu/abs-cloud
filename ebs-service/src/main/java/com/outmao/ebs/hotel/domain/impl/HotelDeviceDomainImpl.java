@@ -9,6 +9,7 @@ import com.outmao.ebs.hotel.common.constant.HotelDeviceStatus;
 import com.outmao.ebs.hotel.common.constant.LeaseStatus;
 import com.outmao.ebs.hotel.dao.HotelDao;
 import com.outmao.ebs.hotel.dao.HotelDeviceDao;
+import com.outmao.ebs.hotel.dao.HotelDeviceLeaseRecordDao;
 import com.outmao.ebs.hotel.dao.HotelRoomDao;
 import com.outmao.ebs.hotel.domain.HotelDeviceDomain;
 import com.outmao.ebs.hotel.domain.conver.HotelDeviceVOConver;
@@ -46,6 +47,8 @@ public class HotelDeviceDomainImpl extends BaseDomain implements HotelDeviceDoma
     @Autowired
     private HotelRoomDao hotelRoomDao;
 
+    @Autowired
+    private HotelDeviceLeaseRecordDao hotelDeviceLeaseRecordDao;
 
     private HotelDeviceVOConver hotelDeviceVOConver=new HotelDeviceVOConver();
 
@@ -95,12 +98,7 @@ public class HotelDeviceDomainImpl extends BaseDomain implements HotelDeviceDoma
         if(device.getLease()!=null&&device.getLease().getStatus()==1){
             if(device.getLease().getEndTime()==null){
                 //计算开始结束时间
-                TimeSpan span=new TimeSpan();
-                span.setField(TimeSpan.YEAR);
-                span.setValue(device.getLease().getLeaseYears());
-                Between<Date> between=span.getDateBetween(new Date());
-                device.getLease().setStartTime(between.getFrom());
-                device.getLease().setEndTime(between.getTo());
+                leaseStart(device);
             }
         }
 
@@ -344,17 +342,69 @@ public class HotelDeviceDomainImpl extends BaseDomain implements HotelDeviceDoma
             d.getLease().setStatus(LeaseStatus.LeaseIng.getStatus());
             d.getLease().setRenterId(request.getUserId());
             d.getLease().setPartnerId(request.getPartnerId());
-            d.getLease().setLeaseYears(request.getLeaseYears());
+            d.getLease().setYears(request.getYears());
             d.getLease().setStartTime(request.getStartTime());
             d.getLease().setEndTime(request.getEndTime());
-            d.getLease().setTotalRent(d.getLease().getTotalRent()+request.getPrice());
+            d.getLease().setAmount(request.getPrice());
+            d.getLease().setTotalYears(d.getLease().getTotalYears()+request.getYears());
+            d.getLease().setTotalAmount(d.getLease().getTotalAmount()+request.getPrice());
             //设备为未托管状态 等待用户选择酒店房间托管
             d.setStatus(HotelDeviceStatus.NoDeploy.getStatus());
+
         });
 
         hotelDeviceDao.saveAll(devices);
 
+        devices.forEach(d->{
+            saveHotelDeviceLeaseRecord(d);
+        });
+
         return devices;
+    }
+
+    private void leaseStart(HotelDevice device){
+        //计算开始结束时间
+        TimeSpan span=new TimeSpan();
+        span.setField(TimeSpan.YEAR);
+        span.setValue(device.getLease().getYears());
+        Between<Date> between=span.getDateBetween(new Date());
+        device.getLease().setStartTime(between.getFrom());
+        device.getLease().setEndTime(between.getTo());
+        HotelDeviceLeaseRecord record=hotelDeviceLeaseRecordDao.findByDeviceIdAndUserIdLock(device.getId(),device.getLease().getRenterId());
+        if(record!=null){
+            record.setStartTime(device.getLease().getStartTime());
+            record.setEndTime(device.getLease().getEndTime());
+            hotelDeviceLeaseRecordDao.save(record);
+        }
+    }
+
+    private HotelDeviceLeaseRecord saveHotelDeviceLeaseRecord(HotelDevice device){
+        HotelDeviceLeaseRecordDTO recordDTO=new HotelDeviceLeaseRecordDTO();
+        recordDTO.setUserId(device.getLease().getRenterId());
+        recordDTO.setPartnerId(device.getLease().getPartnerId());
+        recordDTO.setDeviceId(device.getId());
+        recordDTO.setYears(device.getLease().getYears());
+        recordDTO.setAmount(device.getLease().getAmount());
+        recordDTO.setStartTime(device.getLease().getStartTime());
+        recordDTO.setEndTime(device.getLease().getEndTime());
+        return saveHotelDeviceLeaseRecord(recordDTO);
+    }
+
+    private HotelDeviceLeaseRecord saveHotelDeviceLeaseRecord(HotelDeviceLeaseRecordDTO request){
+        HotelDeviceLeaseRecord record=hotelDeviceLeaseRecordDao.findByDeviceIdAndUserIdLock(request.getDeviceId(),request.getUserId());
+        if(record==null){
+            record=new HotelDeviceLeaseRecord();
+            record.setCreateTime(new Date());
+        }
+
+        BeanUtils.copyProperties(request,record);
+        record.setTotalAmount(record.getTotalAmount()+record.getAmount());
+        record.setTotalYears(record.getTotalYears()+record.getYears());
+        record.setUpdateTime(new Date());
+
+        hotelDeviceLeaseRecordDao.save(record);
+
+        return record;
     }
 
 
@@ -384,6 +434,11 @@ public class HotelDeviceDomainImpl extends BaseDomain implements HotelDeviceDoma
         List<HotelDevice> list=hotelDeviceDao.findAllByLeaseExpireLock(time);
         list.forEach(d->{
             d.getLease().setStatus(LeaseStatus.LeaseExpire.getStatus());
+            HotelDeviceLeaseRecord record=hotelDeviceLeaseRecordDao.findByDeviceIdAndUserIdLock(d.getId(),d.getLease().getRenterId());
+            if(record!=null){
+                record.setStatus(LeaseStatus.LeaseExpire.getStatus());
+                hotelDeviceLeaseRecordDao.save(record);
+            }
         });
         hotelDeviceDao.saveAll(list);
         return list;
