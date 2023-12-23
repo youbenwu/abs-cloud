@@ -62,6 +62,13 @@ public interface HotelDeviceDomain {
      **/
     public List<HotelDevice> lease(HotelDeviceLeaseDTO request);
 
+    /**
+     *
+     * 设备托管
+     *
+     **/
+    public List<HotelDevice> deploy(List<HotelRoomDeviceDeployDTO> request);
+
 
     /**
      *
@@ -71,12 +78,7 @@ public interface HotelDeviceDomain {
     public List<HotelDevice> checkLeaseExpire();
 
 
-    /**
-     *
-     * 设备托管
-     *
-     **/
-    public List<HotelDevice> deploy(HotelDeviceDeployDTO request);
+
 
 
 }

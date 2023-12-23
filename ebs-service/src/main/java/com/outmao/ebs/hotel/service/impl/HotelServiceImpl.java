@@ -287,10 +287,6 @@ public class HotelServiceImpl extends BaseService implements HotelService {
         return hotelRoomDomain.setHotelRoomStatus(request);
     }
 
-    @Override
-    public HotelRoom setHotelRoomDeviceStatus(SetHotelRoomDeviceStatusDTO request) {
-        return hotelRoomDomain.setHotelRoomDeviceStatus(request);
-    }
 
     @Override
     public HotelRoomVO getHotelRoomVOById(Long id) {
@@ -302,7 +298,6 @@ public class HotelServiceImpl extends BaseService implements HotelService {
     public HotelRoomVO getHotelRoomVO(Long hotelId, String roomNo) {
         return hotelRoomDomain.getHotelRoomVO(hotelId,roomNo);
     }
-
 
 
     @Override
@@ -437,15 +432,18 @@ public class HotelServiceImpl extends BaseService implements HotelService {
         return hotelCustomerStayDomain.getHotelCustomerStayVOPage(request,pageable);
     }
 
+
+    @Override
+    public HotelRoom setHotelRoomDeviceStatus(SetHotelRoomDeviceStatusDTO request) {
+        return hotelRoomDomain.setHotelRoomDeviceStatus(request);
+    }
+
     @Override
     public void deviceDeploy(List<HotelRoomDeviceDeployDTO> request) {
         hotelRoomDomain.deviceDeploy(request);
     }
 
-    @Override
-    public void deviceDeploy(HotelRoomDeviceDeployDTO request) {
-        hotelRoomDomain.deviceDeploy(request);
-    }
+
 
     /**
      *

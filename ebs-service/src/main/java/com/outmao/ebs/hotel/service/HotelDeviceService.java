@@ -57,12 +57,11 @@ public interface HotelDeviceService {
     public List<HotelDevice> lease(HotelDeviceLeaseDTO request);
 
 
-
     /**
      *
      * 设备托管
      *
      **/
-    public List<HotelDevice> deploy(HotelDeviceDeployDTO request);
+    public List<HotelDevice> deploy(List<HotelRoomDeviceDeployDTO> request);
 
 }

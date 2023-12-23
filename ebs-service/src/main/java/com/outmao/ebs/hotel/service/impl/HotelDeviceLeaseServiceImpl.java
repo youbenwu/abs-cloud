@@ -3,7 +3,6 @@ package com.outmao.ebs.hotel.service.impl;
 import com.outmao.ebs.common.base.BaseService;
 import com.outmao.ebs.common.exception.BusinessException;
 import com.outmao.ebs.hotel.common.constant.HotelDeviceLeaseOrderStatus;
-import com.outmao.ebs.hotel.domain.HotelDeviceDomain;
 import com.outmao.ebs.hotel.domain.HotelDeviceLeaseOrderDomain;
 import com.outmao.ebs.hotel.domain.HotelDeviceRenterDomain;
 import com.outmao.ebs.hotel.dto.*;
@@ -13,7 +12,6 @@ import com.outmao.ebs.hotel.entity.HotelDeviceLeaseOrderItem;
 import com.outmao.ebs.hotel.entity.HotelDeviceRenter;
 import com.outmao.ebs.hotel.service.HotelDeviceLeaseService;
 import com.outmao.ebs.hotel.service.HotelDeviceService;
-import com.outmao.ebs.hotel.service.HotelService;
 import com.outmao.ebs.hotel.vo.*;
 import com.outmao.ebs.mall.order.common.constant.OrderStatus;
 import com.outmao.ebs.mall.order.dto.SetOrderStatusDTO;
@@ -25,7 +23,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -44,9 +41,6 @@ public class HotelDeviceLeaseServiceImpl extends BaseService implements HotelDev
 
     @Autowired
     private HotelDeviceRenterDomain hotelDeviceRenterDomain;
-
-    @Autowired
-    private HotelService hotelService;
 
     @Autowired
     private OrderService orderService;
@@ -71,7 +65,6 @@ public class HotelDeviceLeaseServiceImpl extends BaseService implements HotelDev
 
 
 
-
     @Transactional()
     @Override
     public HotelDeviceLeaseOrder hotelDeviceDeploy(HotelDeviceDeployDTO request) {
@@ -85,23 +78,26 @@ public class HotelDeviceLeaseServiceImpl extends BaseService implements HotelDev
                 throw new BusinessException("订单状态异常");
             }
             check(order,request);
+
             List<HotelDeviceLeaseOrderItem> items = hotelDeviceLeaseOrderDomain.getHotelDeviceLeaseOrderItemListByOrderId(order.getId());
 
             request.setDevices(items.stream().map(t -> t.getDeviceId()).collect(Collectors.toList()));
 
+            List<HotelRoomDeviceDeployDTO> deploys=new ArrayList<>(items.size());
+            int index=0;
+            for (HotelDeviceDeployHotelDTO hotel:request.getHotels()){
+                for(String roomNo:hotel.getRooms()){
+                    HotelDeviceLeaseOrderItem item=items.get(index++);
+                    HotelRoomDeviceDeployDTO dto=new HotelRoomDeviceDeployDTO();
+                    dto.setDeviceId(item.getDeviceId());
+                    dto.setHotelId(hotel.getHotelId());
+                    dto.setRoomNo(roomNo);
+                    deploys.add(dto);
+                }
+            }
 
-            List<HotelDevice> devices=hotelDeviceService.deploy(request);
 
-            List<HotelRoomDeviceDeployDTO> deploys=new ArrayList<>(devices.size());
-            devices.forEach(d->{
-                HotelRoomDeviceDeployDTO dto=new HotelRoomDeviceDeployDTO();
-                dto.setDeviceId(d.getId());
-                dto.setHotelId(d.getHotelId());
-                dto.setRoomNo(d.getRoomNo());
-                deploys.add(dto);
-            });
-            hotelService.deviceDeploy(deploys);
-
+            hotelDeviceService.deploy(deploys);
 
 
             setHotelDeviceLeaseOrderStatus(new SetHotelDeviceLeaseOrderStatusDTO(order.getId(), HotelDeviceLeaseOrderStatus.IsDeploy.getStatus()));

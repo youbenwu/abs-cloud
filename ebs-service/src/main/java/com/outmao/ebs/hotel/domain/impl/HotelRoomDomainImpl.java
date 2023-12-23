@@ -233,6 +233,8 @@ public class HotelRoomDomainImpl extends BaseDomain implements HotelRoomDomain {
         room.setDeviceStatus(request.getDeviceStatus());
         if(room.getDeviceStatus()==HotelRoomDeviceStatus.NoDevice.getStatus()){
             room.setDeviceId(null);
+        }else{
+            room.setDeviceId(request.getDeviceId());
         }
         hotelRoomDao.save(room);
         return room;
@@ -242,24 +244,10 @@ public class HotelRoomDomainImpl extends BaseDomain implements HotelRoomDomain {
     @Override
     public void deviceDeploy(List<HotelRoomDeviceDeployDTO> request) {
         request.forEach(d->{
-            deviceDeploy(d);
+            setHotelRoomDeviceStatus(SetHotelRoomDeviceStatusDTO.deviceDeploy(d.getHotelId(),d.getRoomNo(),d.getDeviceId()));
         });
     }
 
-    @Transactional()
-    @Override
-    public void deviceDeploy(HotelRoomDeviceDeployDTO request) {
-        HotelRoom room=hotelRoomDao.findByHotelIdAndRoomNoLock(request.getHotelId(),request.getRoomNo());
-        if(room==null){
-            throw new BusinessException("房间不存在");
-        }
-        if(room.getDeviceStatus()!=HotelRoomDeviceStatus.NoDevice.getStatus()){
-            throw new BusinessException("房间已经被占用");
-        }
-        room.setDeviceStatus(HotelRoomDeviceStatus.PreDevice.getStatus());
-        room.setDeviceId(request.getDeviceId());
-        hotelRoomDao.save(room);
-    }
 
 
 }

@@ -2,18 +2,25 @@ package com.outmao.ebs.hotel.common.constant;
 
 
 
-public enum HotelRoomDeviceStatus {
+public enum HotelDeviceStatus {
 
-    //0--无设备 1--设备投放中 2--设备已投放
-    NoDevice(0, "无设备"),
-    DeviceDeploy(1, "设备投放中"),
-    DeviceActive(2, "设备已投放");
+    ///**
+    //     * 0--未激活
+    //     * 1--已激活
+    //     * 2--待托管
+    //     *
+    //     */
+
+    NoActive(0, "未激活"),
+    Active(1, "已激活"),
+    NoDeploy(2, "未托管"),
+    Deploy(3, "已托管");
 
     private int status;
 
     private String statusRemark;
 
-    private HotelRoomDeviceStatus(int status, String statusRemark) {
+    private HotelDeviceStatus(int status, String statusRemark) {
         this.status = status;
         this.statusRemark = statusRemark;
     }

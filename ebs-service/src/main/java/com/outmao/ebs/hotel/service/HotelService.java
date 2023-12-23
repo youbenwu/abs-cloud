@@ -128,7 +128,6 @@ public interface HotelService {
 
     //托管设备
     public void deviceDeploy(List<HotelRoomDeviceDeployDTO> request);
-    public void deviceDeploy(HotelRoomDeviceDeployDTO request);
 
 
 

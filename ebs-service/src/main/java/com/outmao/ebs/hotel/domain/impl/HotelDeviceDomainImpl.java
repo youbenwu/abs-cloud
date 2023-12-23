@@ -5,6 +5,7 @@ import com.outmao.ebs.common.exception.BusinessException;
 import com.outmao.ebs.common.util.DateUtil;
 import com.outmao.ebs.common.vo.Between;
 import com.outmao.ebs.common.vo.TimeSpan;
+import com.outmao.ebs.hotel.common.constant.HotelDeviceStatus;
 import com.outmao.ebs.hotel.common.constant.LeaseStatus;
 import com.outmao.ebs.hotel.dao.HotelDao;
 import com.outmao.ebs.hotel.dao.HotelDeviceDao;
@@ -330,8 +331,10 @@ public class HotelDeviceDomainImpl extends BaseDomain implements HotelDeviceDoma
     @Transactional()
     @Override
     public List<HotelDevice> lease(HotelDeviceLeaseDTO request) {
+
         //List<HotelDevice> devices=getHotelDeviceListByNoLeaseLock(request.getQuantity());
 
+        //租赁新创建设备，暂不做续租
         List<HotelDevice> devices=newHotelDeviceList(request.getQuantity());
 
         devices.forEach(d->{
@@ -345,7 +348,8 @@ public class HotelDeviceDomainImpl extends BaseDomain implements HotelDeviceDoma
             d.getLease().setStartTime(request.getStartTime());
             d.getLease().setEndTime(request.getEndTime());
             d.getLease().setTotalRent(d.getLease().getTotalRent()+request.getPrice());
-            d.setStatus(2);
+            //设备为未托管状态 等待用户选择酒店房间托管
+            d.setStatus(HotelDeviceStatus.NoDeploy.getStatus());
         });
 
         hotelDeviceDao.saveAll(devices);
@@ -388,24 +392,24 @@ public class HotelDeviceDomainImpl extends BaseDomain implements HotelDeviceDoma
 
     @Transactional()
     @Override
-    public List<HotelDevice> deploy(HotelDeviceDeployDTO request) {
-        List<HotelDevice> list=new ArrayList<>(request.getDevices().size());
-        int i=0;
-        for (HotelDeviceDeployHotelDTO hotelDTO:request.getHotels()){
-            for(String roomNo:hotelDTO.getRooms()){
-                HotelDevice device=hotelDeviceDao.findByIdLock(request.getDevices().get(i++));
-                if(device==null){
-                    throw new BusinessException("设备ID不存在");
-                }
-
-                setHotelRoom(device,hotelDTO.getHotelId(),roomNo);
-                device.setStatus(2);
-                list.add(device);
+    public List<HotelDevice> deploy(List<HotelRoomDeviceDeployDTO> request) {
+        List<HotelDevice> list=new ArrayList<>(request.size());
+        for (HotelRoomDeviceDeployDTO deploy : request) {
+            HotelDevice device=hotelDeviceDao.findByIdLock(deploy.getDeviceId());
+            if(device==null){
+                throw new BusinessException("设备ID不存在");
             }
+            if(device.getStatus()!=HotelDeviceStatus.NoDeploy.getStatus()){
+                throw new BusinessException("设备已被托管");
+            }
+            setHotelRoom(device,deploy.getHotelId(),deploy.getRoomNo());
+            device.setStatus(HotelDeviceStatus.Deploy.getStatus());
+            list.add(device);
         }
         hotelDeviceDao.saveAll(list);
         return list;
     }
+
 
 
 }

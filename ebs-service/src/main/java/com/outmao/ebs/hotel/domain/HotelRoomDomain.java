@@ -21,8 +21,6 @@ public interface HotelRoomDomain {
 
     public HotelRoom setHotelRoomStatus(SetHotelRoomStatusDTO request);
 
-    public HotelRoom setHotelRoomDeviceStatus(SetHotelRoomDeviceStatusDTO request);
-
     public HotelRoomVO getHotelRoomVOById(Long id);
 
     public HotelRoomVO getHotelRoomVO(Long hotelId,String roomNo);
@@ -34,8 +32,9 @@ public interface HotelRoomDomain {
 
 
     //托管设备
+    public HotelRoom setHotelRoomDeviceStatus(SetHotelRoomDeviceStatusDTO request);
     public void deviceDeploy(List<HotelRoomDeviceDeployDTO> request);
-    public void deviceDeploy(HotelRoomDeviceDeployDTO request);
+
 
 
 }

@@ -5,6 +5,7 @@ import com.outmao.ebs.common.vo.TimeSpan;
 import com.outmao.ebs.hotel.common.constant.HotelDeviceLeaseOrderStatus;
 import com.outmao.ebs.hotel.dto.CreateHotelDeviceLeaseOrderDTO;
 import com.outmao.ebs.hotel.dto.SetHotelDeviceLeaseOrderStatusDTO;
+import com.outmao.ebs.hotel.entity.HotelDevice;
 import com.outmao.ebs.hotel.service.HotelDeviceLeaseService;
 import com.outmao.ebs.mall.order.common.constant.OrderStatus;
 import com.outmao.ebs.mall.order.entity.Order;
@@ -25,6 +26,7 @@ public class OrderHotelDeviceRenterAspect {
 
     @Autowired
     private HotelDeviceLeaseService hotelDeviceLeaseService;
+
 
 
     @Pointcut("execution(public * com.outmao.ebs.mall.order.domain.OrderDomain.setOrderStatus(..))")
@@ -80,6 +82,14 @@ public class OrderHotelDeviceRenterAspect {
     }
 
 
+    @Pointcut("execution(public * com.outmao.ebs.hotel.domain.HotelDeviceDomain.saveHotelDevice(..))")
+    public void saveHotelDevice() { }
 
+
+    @Transactional()
+    @AfterReturning(returning = "d", pointcut = "saveHotelDevice()")
+    public void saveHotelDevice(JoinPoint jp, HotelDevice d) {
+        hotelDeviceLeaseService.hotelDeviceActive(d.getId());
+    }
 
 }
