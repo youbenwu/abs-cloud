@@ -4,7 +4,6 @@ package com.outmao.ebs.hotel.web.api;
 import com.outmao.ebs.hotel.dto.GetHotelDeviceListDTO;
 import com.outmao.ebs.hotel.dto.HotelDeviceDTO;
 import com.outmao.ebs.hotel.dto.PadRegisterHotelDeviceDTO;
-import com.outmao.ebs.hotel.entity.HotelDevice;
 import com.outmao.ebs.hotel.service.HotelDeviceService;
 import com.outmao.ebs.hotel.vo.*;
 import com.outmao.ebs.security.util.SecurityUtil;
@@ -15,11 +14,14 @@ import com.outmao.ebs.user.service.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
 import java.util.List;
 
 
@@ -73,6 +75,11 @@ public class HotelDeviceAction {
         return hotelDeviceService.getHotelDeviceVOList(request);
     }
 
+    @ApiOperation(value = "获取设备列表", notes = "获取设备列表")
+    @PostMapping("/page")
+    public Page<HotelDeviceVO> getHotelDeviceVOPage(GetHotelDeviceListDTO request, Pageable pageable) {
+        return hotelDeviceService.getHotelDeviceVOPage(request,pageable);
+    }
 
     @PreAuthorize("permitAll")
     @ApiOperation(value = "设备按城市统计数量和金额", notes = "设备按城市统计数量和金额")
