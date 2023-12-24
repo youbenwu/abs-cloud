@@ -8,6 +8,7 @@ import com.outmao.ebs.hotel.domain.HotelDeviceDomain;
 import com.outmao.ebs.hotel.dto.*;
 import com.outmao.ebs.hotel.entity.Hotel;
 import com.outmao.ebs.hotel.entity.HotelDevice;
+import com.outmao.ebs.hotel.service.HotelDeviceIncomeService;
 import com.outmao.ebs.hotel.service.HotelDeviceLeaseService;
 import com.outmao.ebs.hotel.service.HotelDeviceService;
 import com.outmao.ebs.hotel.service.HotelService;
@@ -16,6 +17,7 @@ import com.outmao.ebs.hotel.vo.StatsHotelDeviceCityVO;
 import com.outmao.ebs.hotel.vo.StatsHotelDeviceProvinceVO;
 import com.outmao.ebs.org.dto.MemberDTO;
 import com.outmao.ebs.org.service.MemberService;
+import com.outmao.ebs.security.util.SecurityUtil;
 import com.outmao.ebs.user.common.constant.Oauth;
 import com.outmao.ebs.user.common.constant.UserType;
 import com.outmao.ebs.user.dto.RegisterDTO;
@@ -46,6 +48,8 @@ public class HotelDeviceServiceImpl extends BaseService implements HotelDeviceSe
     @Autowired
     private MemberService memberService;
 
+    @Autowired
+    private HotelDeviceIncomeService hotelDeviceIncomeService;
 
     @Transactional()
     @Override
@@ -151,7 +155,14 @@ public class HotelDeviceServiceImpl extends BaseService implements HotelDeviceSe
     @SetSimpleHotel
     @Override
     public HotelDeviceVO getHotelDeviceVOById(Long id) {
-        return hotelDeviceDomain.getHotelDeviceVOById(id);
+
+        HotelDeviceVO vo= hotelDeviceDomain.getHotelDeviceVOById(id);
+        if(vo.getLease()!=null&&vo.getLease().getRenterId()!=null){
+            if(SecurityUtil.isAuthenticated()&&SecurityUtil.currentUserId().equals(vo.getLease().getRenterId())) {
+                vo.setRenterIncome(hotelDeviceIncomeService.getRenterHotelDeviceIncomeStatsVO(vo.getLease().getRenterId(), vo.getId()));
+            }
+        }
+        return vo;
     }
 
     @SetSimpleHotel

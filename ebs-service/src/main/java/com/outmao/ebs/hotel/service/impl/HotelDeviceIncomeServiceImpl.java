@@ -16,8 +16,10 @@ import java.util.List;
 @Service
 public class HotelDeviceIncomeServiceImpl extends BaseService implements HotelDeviceIncomeService {
 
+
     @Autowired
     private HotelDeviceIncomeDomain hotelDeviceIncomeDomain;
+
 
     @Override
     public RenterHotelDeviceIncomeStatsVO getRenterHotelDeviceIncomeStatsVO(Long renterId,Long deviceId) {

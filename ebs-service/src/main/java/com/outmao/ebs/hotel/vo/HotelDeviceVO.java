@@ -170,4 +170,6 @@ public class HotelDeviceVO implements SimpleHotelSetter {
     private String token;
 
 
+    private RenterHotelDeviceIncomeStatsVO renterIncome;
+
 }
