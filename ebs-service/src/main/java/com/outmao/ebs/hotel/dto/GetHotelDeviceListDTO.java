@@ -1,15 +1,24 @@
 package com.outmao.ebs.hotel.dto;
 
 import com.outmao.ebs.common.vo.BaseDTO;
+import com.outmao.ebs.common.vo.PageDTO;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
+import java.util.List;
+
 @Data
-public class GetHotelDeviceListDTO extends BaseDTO {
+public class GetHotelDeviceListDTO extends PageDTO {
 
 
-    @ApiModelProperty(name = "status", value = "0-未激活 1-已激活")
-    private Integer status;
+    @ApiModelProperty(name = "status", value = "/**\n" +
+            "     * 0--未激活\n" +
+            "     * 1--已激活\n" +
+            "     * 2--待托管\n" +
+            "     * 3--已托管\n" +
+            "     *\n" +
+            "     */")
+    private List<Integer> status;
 
     @ApiModelProperty(name = "activeStatus", value = "/**\n" +
             "     *\n" +

@@ -11,6 +11,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
@@ -64,14 +65,15 @@ public class HotelDeviceAdminAction {
     @PreAuthorize("hasPermission('/hotel/device','read')")
     @ApiOperation(value = "获取设备列表", notes = "获取设备列表")
     @PostMapping("/list")
-    public List<HotelDeviceVO> getHotelDeviceVOList(GetHotelDeviceListDTO request){
+    public List<HotelDeviceVO> getHotelDeviceVOList(@RequestBody GetHotelDeviceListDTO request){
         return hotelDeviceService.getHotelDeviceVOList(request);
     }
 
     @PreAuthorize("hasPermission('/hotel/device','read')")
     @ApiOperation(value = "获取设备列表", notes = "获取设备列表")
     @PostMapping("/page")
-    public Page<HotelDeviceVO> getHotelDeviceVOPage(GetHotelDeviceListDTO request, Pageable pageable){
+    public Page<HotelDeviceVO> getHotelDeviceVOPage(@RequestBody GetHotelDeviceListDTO request, Pageable pageable){
+        pageable=request.getPageable(pageable);
         return hotelDeviceService.getHotelDeviceVOPage(request,pageable);
     }
 

@@ -51,6 +51,7 @@ public class HotelDevice  implements Serializable {
      * 0--未激活
      * 1--已激活
      * 2--待托管
+     * 3--已托管
      *
      */
     private int status;

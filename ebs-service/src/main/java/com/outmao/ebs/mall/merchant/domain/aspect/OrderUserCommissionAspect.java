@@ -1,6 +1,9 @@
 package com.outmao.ebs.mall.merchant.domain.aspect;
 
 
+import com.outmao.ebs.mall.merchant.dto.UserCommissionCashDTO;
+import com.outmao.ebs.mall.merchant.entity.UserCommissionRecord;
+import com.outmao.ebs.mall.merchant.service.UserCommissionService;
 import com.outmao.ebs.mall.order.common.constant.OrderStatus;
 import com.outmao.ebs.mall.merchant.dao.MerchantDao;
 import com.outmao.ebs.mall.merchant.dao.MerchantBrokerDao;
@@ -11,6 +14,7 @@ import com.outmao.ebs.mall.merchant.entity.Merchant;
 import com.outmao.ebs.mall.merchant.entity.MerchantBroker;
 import com.outmao.ebs.mall.merchant.entity.MerchantPartner;
 import com.outmao.ebs.mall.order.entity.Order;
+import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Aspect;
@@ -19,7 +23,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-
+@Slf4j
 @Aspect
 @Component
 public class OrderUserCommissionAspect {
@@ -34,7 +38,7 @@ public class OrderUserCommissionAspect {
     private MerchantPartnerDao merchantPartnerDao;
 
     @Autowired
-    private UserCommissionDomain userCommissionDomain;
+    private UserCommissionService userCommissionService;
 
     @Pointcut("execution(public * com.outmao.ebs.mall.order.domain.OrderDomain.setOrderStatus(..))")
     public void setOrderStatus() { }
@@ -81,7 +85,21 @@ public class OrderUserCommissionAspect {
             recordDTO.setRemark(order.getProducts().get(0).getProductTitle());
         }
 
-        userCommissionDomain.saveUserCommissionRecord(recordDTO);
+        UserCommissionRecord record=userCommissionService.saveUserCommissionRecord(recordDTO);
+
+        //自动提现
+        try{
+            UserCommissionCashDTO cashDTO=new UserCommissionCashDTO();
+            cashDTO.setCommissionId(recordDTO.getCommissionId());
+            cashDTO.setAmount(recordDTO.getAmount());
+            cashDTO.setRemark("佣金收益");
+            cashDTO.setUserId(record.getUserId());
+            userCommissionService.saveUserCommissionCash(cashDTO);
+        }catch (Exception e){
+            log.error("佣金自动提现出错",e);
+        }
+
+
     }
 
 
@@ -104,11 +122,13 @@ public class OrderUserCommissionAspect {
             recordDTO.setRemark(order.getProducts().get(0).getProductTitle());
         }
 
-        userCommissionDomain.saveUserCommissionRecord(recordDTO);
+        userCommissionService.saveUserCommissionRecord(recordDTO);
 
         if(level==0&&partner.getParent()!=null&&merchant.getPartnerParentCommission()>0){
             saveUserCommissionRecordForPartner(merchant,partner.getParent().getId(),1,order);
         }
+
+
 
     }
 

@@ -287,8 +287,6 @@ public class AdvertDomainImpl extends BaseDomain implements AdvertDomain {
 
         if(request.getUserId()!=null){
             p=e.userId.eq(request.getUserId()).and(p);
-        }else {
-            p=e.status.lt(Status.ORDER_WAIT.getStatus()).and(p);
         }
 
         if(request.getSee()!=null){
@@ -305,6 +303,8 @@ public class AdvertDomainImpl extends BaseDomain implements AdvertDomain {
 
         if(request.getStatus()!=null){
             p=e.status.eq(request.getStatus()).and(p);
+        }else {
+            p=e.status.lt(Status.ORDER_WAIT.getStatus()).and(p);
         }
 
         return p;

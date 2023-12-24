@@ -250,8 +250,8 @@ public class HotelDeviceDomainImpl extends BaseDomain implements HotelDeviceDoma
     private Predicate getPredicate(GetHotelDeviceListDTO request){
         QHotelDevice e=QHotelDevice.hotelDevice;
         Predicate p=null;
-        if(request.getStatus()!=null){
-            p=e.status.eq(1);
+        if(request.getStatus()!=null&&request.getStatus().size()>0){
+            p=e.status.in(request.getStatus()).and(p);
         }
         if(!StringUtils.isEmpty(request.getKeyword())){
             p=e.keyword.like("%"+request.getKeyword()+"%").and(p);

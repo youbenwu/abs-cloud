@@ -79,6 +79,8 @@ public class WXMP {
 
 	}
 
+
+
 	public WXMPTokenResult getToken()throws Exception{
 		String url="https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid="+appid+"&secret="+secret;
 		String r= Https.httpRequest(url, "GET", null);

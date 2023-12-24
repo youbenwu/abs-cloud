@@ -71,13 +71,14 @@ public class HotelDeviceAction {
 
     @ApiOperation(value = "获取设备列表", notes = "获取设备列表")
     @PostMapping("/list")
-    public List<HotelDeviceVO> getHotelDeviceVOList(GetHotelDeviceListDTO request) {
+    public List<HotelDeviceVO> getHotelDeviceVOList(@RequestBody GetHotelDeviceListDTO request) {
         return hotelDeviceService.getHotelDeviceVOList(request);
     }
 
     @ApiOperation(value = "获取设备列表", notes = "获取设备列表")
     @PostMapping("/page")
-    public Page<HotelDeviceVO> getHotelDeviceVOPage(GetHotelDeviceListDTO request, Pageable pageable) {
+    public Page<HotelDeviceVO> getHotelDeviceVOPage(@RequestBody GetHotelDeviceListDTO request, Pageable pageable) {
+        pageable=request.getPageable(pageable);
         return hotelDeviceService.getHotelDeviceVOPage(request,pageable);
     }
 
