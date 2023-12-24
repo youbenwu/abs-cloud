@@ -248,4 +248,5 @@ public class Hotel implements Serializable ,BindingOrg {
     }
 
 
+
 }
