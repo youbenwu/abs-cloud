@@ -227,6 +227,9 @@ public class OrderDomainImpl extends BaseDomain implements OrderDomain {
         if(order.getOwnerId()!=null&&!order.getOwnerId().equals(request.getUserId())){
             throw new BusinessException("订单已绑定用户");
         }
+        if(request.getUserId().equals(order.getOwnerId())){
+            return order;
+        }
         order.setOwnerId(request.getUserId());
         orderDao.save(order);
         return order;

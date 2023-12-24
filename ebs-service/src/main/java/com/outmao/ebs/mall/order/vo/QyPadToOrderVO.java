@@ -16,4 +16,10 @@ public class QyPadToOrderVO {
 
     private String bindQrCodeUrl;
 
+    private Long bindQrCodeId;
+
+    private OrderVO order;
+
+
+
 }

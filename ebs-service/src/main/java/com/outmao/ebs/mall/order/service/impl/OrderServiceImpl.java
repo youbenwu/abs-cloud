@@ -25,6 +25,8 @@ import com.outmao.ebs.mall.store.dto.StoreSkuStockOutItemDTO;
 import com.outmao.ebs.mall.store.service.StoreSkuService;
 import com.outmao.ebs.qrCode.entity.QrCode;
 import com.outmao.ebs.qrCode.service.QrCodeService;
+import com.outmao.ebs.user.common.constant.Oauth;
+import com.outmao.ebs.user.dto.RegisterDTO;
 import com.outmao.ebs.user.entity.User;
 import com.outmao.ebs.user.service.UserService;
 import com.outmao.ebs.wallet.common.constant.*;
@@ -46,10 +48,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Slf4j
 @Service
@@ -209,6 +208,11 @@ public class OrderServiceImpl extends BaseService implements OrderService, Trade
     }
 
     @Override
+    public Order getOrderByOrderNo(String orderNo) {
+        return orderDomain.getOrderByOrderNo(orderNo);
+    }
+
+    @Override
     public Order orderBindOwner(OrderBindOwnerDTO request) {
         if(request.getQrCodeId()==null){
             throw new BusinessException("二维码ID不能为空");
@@ -219,6 +223,10 @@ public class OrderServiceImpl extends BaseService implements OrderService, Trade
         }
         if(!request.getOrderNo().equals(qrCode.getBusiness())){
             throw new BusinessException("请扫二维码绑定");
+        }
+        if(request.getUserId()==null&&request.getPhone()!=null){
+            User user=findOrRegisterUser(request.getPhone());
+            request.setUserId(user.getId());
         }
         return orderDomain.orderBindOwner(request);
     }
@@ -327,6 +335,18 @@ public class OrderServiceImpl extends BaseService implements OrderService, Trade
         return orderDomain.getStatsOrderStatusVOList(request);
     }
 
+
+    private User findOrRegisterUser(String phone){
+        User user=userService.getUserByUsername(phone);
+        if(user==null){
+            RegisterDTO registerDTO=new RegisterDTO();
+            registerDTO.setOauth(Oauth.PHONE.getName());
+            registerDTO.setPrincipal(phone);
+            registerDTO.setArgs(new HashMap<>());
+            user=userService.registerUser(registerDTO);
+        }
+        return user;
+    }
 
 
 

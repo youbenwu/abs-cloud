@@ -7,8 +7,10 @@ import com.outmao.ebs.hotel.entity.HotelDevice;
 import com.outmao.ebs.hotel.service.HotelDeviceService;
 import com.outmao.ebs.mall.order.domain.SettleDomain;
 import com.outmao.ebs.mall.order.dto.*;
+import com.outmao.ebs.mall.order.entity.Order;
 import com.outmao.ebs.mall.order.service.OrderService;
 import com.outmao.ebs.mall.order.service.SettleService;
+import com.outmao.ebs.mall.order.vo.OrderVO;
 import com.outmao.ebs.mall.order.vo.QyPadToOrderVO;
 import com.outmao.ebs.mall.order.vo.SettleVO;
 import com.outmao.ebs.mall.order.vo.ToOrderVO;
@@ -141,9 +143,12 @@ public class SettleServiceImpl extends BaseService implements SettleService {
 
         log.info("迁眼平板支付信息{}",object);
 
+        OrderVO order=orderService.getOrderVOByOrderNo(tradeVO.getTradeNo());
+
         QyPadToOrderVO qyPadToOrderVO=new QyPadToOrderVO();
-        qyPadToOrderVO.setData(object);
         qyPadToOrderVO.setOrderNo(tradeVO.getTradeNo());
+        qyPadToOrderVO.setData(object);
+        qyPadToOrderVO.setOrder(order);
 
         if(object instanceof AlipayTradePrecreateResponse){
             AlipayTradePrecreateResponse ali=(AlipayTradePrecreateResponse)object ;
@@ -159,9 +164,12 @@ public class SettleServiceImpl extends BaseService implements SettleService {
             qyPadToOrderVO.setQrCodeUrl(wx.getCodeUrl());
         }
 
-        String code="https://qianyan-4gbx9tubd992d384-1323130392.tcloudbaseapp.com?action=order_bind_owner&orderNo="+qyPadToOrderVO.getOrderNo();
+
+
+        String code="https://qianyan-4gbx9tubd992d384-1323130392.tcloudbaseapp.com?action=order_bind_owner&type="+order.getType()+"&orderNo="+order.getOrderNo();
         QrCode qrCode=qrCodeService.activateQrCode(new ActivateQrCodeDTO(code,qyPadToOrderVO.getOrderNo()));
         qyPadToOrderVO.setBindQrCodeUrl(qrCode.getPath());
+        qyPadToOrderVO.setBindQrCodeId(qrCode.getId());
 
         return qyPadToOrderVO;
     }

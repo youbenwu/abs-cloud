@@ -5,10 +5,13 @@ package com.outmao.ebs.thirdpartys.rongcloud.web.api;
 import cn.jiguang.common.utils.StringUtils;
 import com.outmao.ebs.common.configuration.sys.Config;
 import com.outmao.ebs.common.exception.BusinessException;
+import com.outmao.ebs.hotel.entity.HotelDevice;
+import com.outmao.ebs.hotel.service.HotelDeviceService;
 import com.outmao.ebs.security.util.SecurityUtil;
 import com.outmao.ebs.thirdpartys.rongcloud.dto.RcRegisterUserDTO;
 import com.outmao.ebs.thirdpartys.rongcloud.service.RongcloudService;
 import com.outmao.ebs.thirdpartys.rongcloud.vo.Token;
+import com.outmao.ebs.user.common.constant.UserType;
 import com.outmao.ebs.user.entity.User;
 import com.outmao.ebs.user.service.UserService;
 import io.rong.models.user.UserModel;
@@ -31,6 +34,9 @@ public class RongcloudAction {
 	@Autowired
 	private UserService userService;
 
+    @Autowired
+	private HotelDeviceService hotelDeviceService;
+
 	@Autowired
 	protected Config config;
 
@@ -43,10 +49,19 @@ public class RongcloudAction {
 			throw new BusinessException("请先登录用户");
 		}
 		User user=userService.getUserById(SecurityUtil.currentUserId());
+
 		RcRegisterUserDTO userModel=new RcRegisterUserDTO();
 		userModel.setId(user.getId().toString());
 		userModel.setName(StringUtils.isEmpty(user.getNickname())?user.getUsername():user.getNickname());
 		userModel.setPortrait(StringUtils.isEmpty(user.getAvatar())?(config.getBaseUrl()+"/user_head.jpg"):user.getNickname());
+
+        if(user.getType()== UserType.QyHotelDevice.getType()){
+            HotelDevice device=hotelDeviceService.getHotelDeviceByUserId(user.getId());
+            if(device!=null){
+                userModel.setGroupId(device.getHotelId().toString());
+                userModel.setGroupName(device.getHotelId().toString());
+            }
+        }
 
 		return rongcloudService.registerUser(userModel);
 

@@ -22,6 +22,8 @@ public interface OrderService {
 
     public Order orderBindOwner(OrderBindOwnerDTO request);
 
+    public Order getOrderByOrderNo(String orderNo);
+
     public void deleteOrderById(Long id);
 
     public long getOrderCount();
