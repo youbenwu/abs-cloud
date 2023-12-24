@@ -144,6 +144,13 @@ public class HotelDeviceVO implements SimpleHotelSetter {
     @ApiModelProperty(name = "os", value = "设备系统")
     private String os;
 
+    /**
+     *
+     * 激活时间
+     *
+     */
+    private Date activeTime;
+
 
     /**
      *

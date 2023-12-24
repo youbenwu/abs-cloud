@@ -42,4 +42,11 @@ public class BindingItem implements Serializable {
 		this.type=type;
 	}
 
+	public BindingItem(Long id,String type,String title){
+		this.id=id;
+		this.type=type;
+		this.title=title;
+	}
+
+
 }

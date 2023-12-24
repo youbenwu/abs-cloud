@@ -51,7 +51,7 @@ public class HotelDeviceIncomeDomainImpl extends BaseDomain implements HotelDevi
 
         Double total=QF.select(e.renterFee.sum()).from(e).where(p1).fetchOne();
 
-        vo.setAmount(total);
+        vo.setAmount(total==null?0:total);
 
         Date now=new Date();
         Date day7= DateUtil.addDays(now,-7);
@@ -60,14 +60,14 @@ public class HotelDeviceIncomeDomainImpl extends BaseDomain implements HotelDevi
 
         Double amount7day=QF.select(e.renterFee.sum()).from(e).where(p2).fetchOne();
 
-        vo.setAmount7day(amount7day);
+        vo.setAmount7day(amount7day==null?0:amount7day);
 
 
         Predicate p3=e.createTime.month().eq(now.getMonth()).and(p1);
 
         Double amountMonth=QF.select(e.renterFee.sum()).from(e).where(p3).fetchOne();
 
-        vo.setAmountMonth(amountMonth);
+        vo.setAmountMonth(amountMonth==null?0:amountMonth);
 
         return vo;
 
@@ -85,7 +85,7 @@ public class HotelDeviceIncomeDomainImpl extends BaseDomain implements HotelDevi
 
         Double total=QF.select(e.renterFee.sum()).from(e).where(p1).fetchOne();
 
-        vo.setAmount(total);
+        vo.setAmount(total==null?0:total);
 
         Date now=new Date();
         Date day7= DateUtil.addDays(now,-7);
@@ -94,14 +94,14 @@ public class HotelDeviceIncomeDomainImpl extends BaseDomain implements HotelDevi
 
         Double amount7day=QF.select(e.renterFee.sum()).from(e).where(p2).fetchOne();
 
-        vo.setAmount7day(amount7day);
+        vo.setAmount7day(amount7day==null?0:amount7day);
 
 
         Predicate p3=e.createTime.month().eq(now.getMonth()).and(p1);
 
         Double amountMonth=QF.select(e.renterFee.sum()).from(e).where(p3).fetchOne();
 
-        vo.setAmountMonth(amountMonth);
+        vo.setAmountMonth(amountMonth==null?0:amountMonth);
 
         return vo;
     }
@@ -131,7 +131,8 @@ public class HotelDeviceIncomeDomainImpl extends BaseDomain implements HotelDevi
 
         for(Tuple t:tuples){
             RenterHotelDeviceIncomeTypeStatsVO vo=listMap.get(t.get(e.type));
-            vo.setAmount(t.get(e.renterFee.sum()));
+            Double amount=t.get(e.renterFee.sum());
+            vo.setAmount(amount==null?0:amount);
         }
 
         return list;

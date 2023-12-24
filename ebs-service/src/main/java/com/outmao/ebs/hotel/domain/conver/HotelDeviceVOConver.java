@@ -32,6 +32,7 @@ public class HotelDeviceVOConver implements BeanConver<QHotelDevice, HotelDevice
         vo.setActiveOnDuration(t.get(e.activeOnDuration));
         vo.setActiveOnTime(t.get(e.activeOnTime));
         vo.setActiveOffTime(t.get(e.activeOffTime));
+        vo.setActiveTime(t.get(e.activeTime));
         return vo;
     }
 
@@ -59,6 +60,7 @@ public class HotelDeviceVOConver implements BeanConver<QHotelDevice, HotelDevice
                 e.activeOnDuration,
                 e.activeOnTime,
                 e.activeOffTime,
+                e.activeTime,
         };
     }
 }
