@@ -4,6 +4,7 @@ package com.outmao.ebs.hotel.web.api;
 import com.outmao.ebs.hotel.dto.GetHotelDeviceListDTO;
 import com.outmao.ebs.hotel.dto.HotelDeviceDTO;
 import com.outmao.ebs.hotel.dto.PadRegisterHotelDeviceDTO;
+import com.outmao.ebs.hotel.service.HotelDeviceIncomeService;
 import com.outmao.ebs.hotel.service.HotelDeviceService;
 import com.outmao.ebs.hotel.vo.*;
 import com.outmao.ebs.security.util.SecurityUtil;
@@ -32,6 +33,7 @@ public class HotelDeviceAction {
 
 	@Autowired
     private HotelDeviceService hotelDeviceService;
+
 
     @Autowired
     private UserService userService;
@@ -69,6 +71,15 @@ public class HotelDeviceAction {
         return vo;
     }
 
+    @PreAuthorize("permitAll")
+    @ApiOperation(value = "获取设备", notes = "获取设备")
+    @PostMapping("/get")
+    public HotelDeviceVO getHotelDeviceVOById(Long id){
+        HotelDeviceVO vo= hotelDeviceService.getHotelDeviceVOById(id);
+        return vo;
+    }
+
+
     @ApiOperation(value = "获取设备列表", notes = "获取设备列表")
     @PostMapping("/list")
     public List<HotelDeviceVO> getHotelDeviceVOList(@RequestBody GetHotelDeviceListDTO request) {
@@ -96,6 +107,7 @@ public class HotelDeviceAction {
     public List<StatsHotelDeviceProvinceVO> getStatsHotelDeviceProvinceVOList(Integer size) {
         return hotelDeviceService.getStatsHotelDeviceProvinceVOList(size);
     }
+
 
 
 

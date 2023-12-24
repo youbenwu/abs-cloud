@@ -160,6 +160,8 @@ public class Order  implements Serializable{
 	private Date expectDeliveryTime;
 
 
+
+
 	/**
 	 *
 	 * 是否无需发货

@@ -4,8 +4,12 @@ package com.outmao.ebs.hotel.web.api;
 import com.outmao.ebs.hotel.dto.HotelDeviceDeployDTO;
 import com.outmao.ebs.hotel.dto.HotelDeviceRenterDTO;
 import com.outmao.ebs.hotel.entity.HotelDeviceLeaseOrder;
+import com.outmao.ebs.hotel.service.HotelDeviceIncomeService;
 import com.outmao.ebs.hotel.service.HotelDeviceLeaseService;
 import com.outmao.ebs.hotel.vo.HotelDeviceRenterVO;
+import com.outmao.ebs.hotel.vo.RenterHotelDeviceIncomeStatsVO;
+import com.outmao.ebs.hotel.vo.RenterHotelDeviceIncomeTypeStatsVO;
+import com.outmao.ebs.hotel.vo.RenterTotalHotelDeviceIncomeStatsVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +19,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 
 @Api(value = "hotel-device-renter", tags = "酒店-设备-租户")
 @RestController
@@ -23,6 +29,9 @@ public class HotelDeviceRenterAction {
 
 	@Autowired
     private HotelDeviceLeaseService hotelDeviceLeaseService;
+
+    @Autowired
+    private HotelDeviceIncomeService hotelDeviceIncomeService;
 
 
     @PreAuthorize("principal.id.equals(#request.userId)")
@@ -44,6 +53,30 @@ public class HotelDeviceRenterAction {
     public void hotelDeviceDeploy(@RequestBody HotelDeviceDeployDTO request){
         hotelDeviceLeaseService.hotelDeviceDeploy(request);
     }
+
+    @PreAuthorize("permitAll")
+    @ApiOperation(value = "单个设备租赁收益统计", notes = "单个设备租赁收益统计")
+    @PostMapping("/income/stats/device")
+    public RenterHotelDeviceIncomeStatsVO getRenterHotelDeviceIncomeStatsVO(Long renterId,Long deviceId){
+        return hotelDeviceIncomeService.getRenterHotelDeviceIncomeStatsVO(renterId,deviceId);
+    }
+
+
+    @PreAuthorize("permitAll")
+    @ApiOperation(value = "租户租赁总收益统计", notes = "租户租赁总收益统计")
+    @PostMapping("/income/stats")
+    public RenterTotalHotelDeviceIncomeStatsVO getRenterTotalHotelDeviceIncomeStatsVO(Long renterId){
+        return hotelDeviceIncomeService.getRenterTotalHotelDeviceIncomeStatsVO(renterId);
+    }
+
+
+    @PreAuthorize("permitAll")
+    @ApiOperation(value = "租户租赁总收益按类型统计", notes = "租户租赁总收益按类型统计")
+    @PostMapping("/income/type/stats")
+    public List<RenterHotelDeviceIncomeTypeStatsVO> getRenterHotelDeviceIncomeTypeStatsVOList(Long renterId){
+        return hotelDeviceIncomeService.getRenterHotelDeviceIncomeTypeStatsVOList(renterId);
+    }
+
 
 
 }

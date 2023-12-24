@@ -13,8 +13,8 @@ import java.util.Date;
  */
 @Data
 @Entity
-@Table(name = "ebs_HotelDeviceStats")
-public class HotelDeviceStats implements Serializable {
+@Table(name = "ebs_HotelDeviceIncomeStats")
+public class HotelDeviceIncomeStats implements Serializable {
 
     /**
      *
@@ -40,21 +40,34 @@ public class HotelDeviceStats implements Serializable {
     private Long deviceId;
 
 
-//    /**
-//     *
-//     * 产生的交易总金额
-//     *
-//     */
-//    private double amount;
-//
-//
-//    /**
-//     *
-//     * 平台抽取佣金总额
-//     *
-//     */
-//    private double commissionAmount;
+    /**
+     *
+     * 交易金额
+     *
+     */
+    private double totalAmount;
 
+
+    /**
+     *
+     * 平台收取的佣金
+     *
+     */
+    private double totalFee;
+
+    /**
+     *
+     * 平台实际得到的佣金
+     *
+     */
+    private double fee;
+
+    /**
+     *
+     * 归属租客的佣金
+     *
+     */
+    private double renterFee;
 
     /**
      *

@@ -2,8 +2,11 @@ package com.outmao.ebs.hotel.common.constant;
 
 public enum HotelDeviceIncomeType {
 
-    Order(0,"订单购买服务费"),
-    Advert(1,"广告收益");
+    HotelService(10,"客房服务"),
+    AdvertV(20,"广告爆光"),
+    AdvertPv(21,"广告转化"),
+    Vod(30,"影视点播"),
+    Tour(40,"系统旅游订阅");
 
     private int type;
     private String description;
