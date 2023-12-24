@@ -77,7 +77,7 @@ public class Order  implements Serializable{
 	/**
 	 * 绑定的用户ID
 	 */
-	@Column(updatable = false)
+	@Column()
 	private Long ownerId;
 
 	//酒店相关信息

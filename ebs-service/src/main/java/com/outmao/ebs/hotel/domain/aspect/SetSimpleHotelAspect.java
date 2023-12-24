@@ -1,4 +1,4 @@
-package com.outmao.ebs.hotel.domain.conver;
+package com.outmao.ebs.hotel.domain.aspect;
 
 
 import com.outmao.ebs.hotel.common.annotation.SetSimpleHotel;
@@ -57,7 +57,7 @@ public class SetSimpleHotelAspect {
 	private void setList(List<? extends SimpleHotelSetter> list){
 		if(list==null||list.isEmpty())
 			return;
-		Collection<Long> hotelIdIn=list.stream().filter(t->((SimpleHotelSetter) t).getHotelId()!=null).map(t->((SimpleHotelSetter) t).getHotelId()).collect(Collectors.toList());
+		Collection<Long> hotelIdIn=list.stream().filter(t->t.getHotelId()!=null).map(t->t.getHotelId()).collect(Collectors.toList());
 		if(hotelIdIn.isEmpty())
 			return;
 		List<SimpleHotelVO> hotels=hotelDomain.getSimpleHotelVOListByIdIn(hotelIdIn);

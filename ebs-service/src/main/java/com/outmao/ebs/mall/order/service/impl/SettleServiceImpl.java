@@ -127,6 +127,12 @@ public class SettleServiceImpl extends BaseService implements SettleService {
 
         ToOrderDTO toOrderDTO=new ToOrderDTO();
         toOrderDTO.setSettleId(settleVO.getId());
+        if(request.getRemark()!=null) {
+            toOrderDTO.setShops(new ArrayList<>());
+            toOrderDTO.getShops().add(new ToOrderShopDTO());
+            toOrderDTO.getShops().get(0).setShopId(settleVO.getShops().get(0).getShopId());
+            toOrderDTO.getShops().get(0).setRemark(request.getRemark());
+        }
 
         ToOrderVO toOrderVO=buy(toOrderDTO);
 

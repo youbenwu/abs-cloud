@@ -16,6 +16,7 @@ public class SimpleHotelVOConver implements BeanConver<QHotel, SimpleHotelVO> {
         vo.setName(t.get(e.name));
         vo.setLogo(t.get(e.logo));
         vo.setImage(t.get(e.image));
+        vo.setServicePhone(t.get(e.servicePhone));
         return vo;
     }
 
@@ -26,7 +27,8 @@ public class SimpleHotelVOConver implements BeanConver<QHotel, SimpleHotelVO> {
                 e.shopId,
                 e.name,
                 e.logo,
-                e.image
+                e.image,
+                e.servicePhone,
         };
     }
 }

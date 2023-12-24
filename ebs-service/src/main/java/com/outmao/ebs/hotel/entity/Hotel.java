@@ -142,6 +142,13 @@ public class Hotel implements Serializable ,BindingOrg {
 
     /**
      *
+     * 服务电话
+     *
+     */
+    private String servicePhone;
+
+    /**
+     *
      * 星级 1～5
      *
      */
@@ -198,7 +205,6 @@ public class Hotel implements Serializable ,BindingOrg {
     @OneToOne(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
     @JoinColumn(name = "contactId")
     private HotelContact contact;
-
 
 
     @ApiModelProperty(name = "latitude", value = "纬度")

@@ -127,6 +127,14 @@ public class HotelVO {
 
     /**
      *
+     * 服务电话
+     *
+     */
+    @ApiModelProperty(name = "servicePhone", value = "服务电话")
+    private String servicePhone;
+
+    /**
+     *
      * 星级 1～5
      *
      */

@@ -52,6 +52,14 @@ public class SimpleHotelVO {
     private String image;
 
 
+    /**
+     *
+     * 服务电话
+     *
+     */
+    @ApiModelProperty(name = "servicePhone", value = "服务电话")
+    private String servicePhone;
+
 
 
 }

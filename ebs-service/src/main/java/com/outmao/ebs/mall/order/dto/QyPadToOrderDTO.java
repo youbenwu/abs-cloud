@@ -30,6 +30,9 @@ public class QyPadToOrderDTO {
     private String outPayType= OutPayType.AliPayPrecreate.name();
 
 
+    private String remark;
+
+
     private String userPhone;
 
     private String userName;

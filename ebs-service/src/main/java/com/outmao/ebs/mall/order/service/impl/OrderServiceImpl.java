@@ -228,6 +228,7 @@ public class OrderServiceImpl extends BaseService implements OrderService, Trade
             User user=findOrRegisterUser(request.getPhone());
             request.setUserId(user.getId());
         }
+
         return orderDomain.orderBindOwner(request);
     }
 

@@ -89,6 +89,10 @@ public class HotelDomainImpl extends BaseDomain implements HotelDomain {
         hotel.setLatitude(hotel.getContact().getAddress().getLatitude());
         hotel.setLongitude(hotel.getContact().getAddress().getLongitude());
 
+        if(StringUtils.isEmpty(hotel.getServicePhone())){
+            hotel.setServicePhone(hotel.getContact().getPhone());
+        }
+
         hotel.setUpdateTime(new Date());
 
         hotel.setStatus(Status.NotAudit.getStatus());
@@ -121,6 +125,10 @@ public class HotelDomainImpl extends BaseDomain implements HotelDomain {
         hotel.setArea(hotel.getContact().getAddress().toShortAddress());
         hotel.setLatitude(hotel.getContact().getAddress().getLatitude());
         hotel.setLongitude(hotel.getContact().getAddress().getLongitude());
+
+        if(StringUtils.isEmpty(hotel.getServicePhone())){
+            hotel.setServicePhone(hotel.getContact().getPhone());
+        }
 
         hotel.setUpdateTime(new Date());
 

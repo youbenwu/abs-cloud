@@ -2,6 +2,8 @@ package com.outmao.ebs.mall.order.vo;
 
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.outmao.ebs.hotel.common.data.SimpleHotelSetter;
+import com.outmao.ebs.hotel.vo.SimpleHotelVO;
 import com.outmao.ebs.mall.shop.common.data.SimpleShopSetter;
 import com.outmao.ebs.mall.shop.vo.SimpleShopVO;
 import com.outmao.ebs.user.common.data.ContactUserSetter;
@@ -15,7 +17,7 @@ import java.util.List;
 @ApiModel(value = "OrderVO", description = "订单信息")
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 @Data
-public class OrderVO implements SimpleShopSetter , ContactUserSetter {
+public class OrderVO implements SimpleShopSetter , ContactUserSetter, SimpleHotelSetter {
 
 
     /**
@@ -63,6 +65,9 @@ public class OrderVO implements SimpleShopSetter , ContactUserSetter {
 
     @ApiModelProperty(name = "hotelId", value = "酒店ID")
     private Long hotelId;
+
+    @ApiModelProperty(name = "hotel", value = "酒店信息")
+    private SimpleHotelVO hotel;
 
     @ApiModelProperty(name = "roomNo", value = "房间号")
     private String roomNo;

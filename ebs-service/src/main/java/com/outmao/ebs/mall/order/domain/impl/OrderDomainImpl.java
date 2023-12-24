@@ -9,6 +9,7 @@ import com.outmao.ebs.common.base.BaseDomain;
 import com.outmao.ebs.common.util.OrderNoUtil;
 import com.outmao.ebs.common.util.StringUtil;
 import com.outmao.ebs.common.vo.TimeSpan;
+import com.outmao.ebs.hotel.common.annotation.SetSimpleHotel;
 import com.outmao.ebs.mall.merchant.dao.MerchantCustomerDao;
 import com.outmao.ebs.mall.merchant.dao.MerchantDao;
 import com.outmao.ebs.mall.merchant.entity.Merchant;
@@ -504,6 +505,7 @@ public class OrderDomainImpl extends BaseDomain implements OrderDomain {
         orderDao.deleteById(id);
     }
 
+    @SetSimpleHotel
     @SetContactUser
     @SetSimpleShop
     @Override
@@ -530,6 +532,7 @@ public class OrderDomainImpl extends BaseDomain implements OrderDomain {
         vo.setContracts(orderContractDomain.getOrderContractVOListByOrderId(vo.getId()));
     }
 
+    @SetSimpleHotel
     @SetContactUser
     @SetSimpleShop
     @Override
