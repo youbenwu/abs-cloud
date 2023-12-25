@@ -2,6 +2,7 @@ package com.outmao.ebs.mall.order.domain.impl;
 
 import com.outmao.ebs.common.exception.BusinessException;
 import com.outmao.ebs.common.exception.IdempotentException;
+import com.outmao.ebs.common.services.eventBus.annotation.ActionEvent;
 import com.outmao.ebs.common.util.DateUtil;
 import com.outmao.ebs.common.vo.Between;
 import com.outmao.ebs.common.vo.SimpleContact;
@@ -16,6 +17,7 @@ import com.outmao.ebs.mall.merchant.entity.Merchant;
 import com.outmao.ebs.mall.merchant.entity.MerchantCustomer;
 import com.outmao.ebs.mall.order.common.constant.OrderStatus;
 import com.outmao.ebs.mall.order.common.constant.OrderSubStatus;
+import com.outmao.ebs.mall.order.common.event.OrderStatusChangeEvent;
 import com.outmao.ebs.mall.order.common.util.OrderProductLeaseUtil;
 import com.outmao.ebs.mall.order.common.util.OrderStatusUtil;
 import com.outmao.ebs.mall.order.domain.OrderContractDomain;
@@ -430,7 +432,7 @@ public class OrderDomainImpl extends BaseDomain implements OrderDomain {
 
     }
 
-
+    @ActionEvent(OrderStatusChangeEvent.class)
     @Transactional
     @Override
     public Order setOrderStatus(SetOrderStatusDTO request) {
@@ -445,6 +447,7 @@ public class OrderDomainImpl extends BaseDomain implements OrderDomain {
     }
 
 
+    @ActionEvent(OrderStatusChangeEvent.class)
     @Transactional
     @Override
     public Order closeOrder(CloseOrderDTO request) {

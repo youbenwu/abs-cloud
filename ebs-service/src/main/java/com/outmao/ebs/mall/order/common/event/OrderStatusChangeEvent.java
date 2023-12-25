@@ -3,9 +3,9 @@ package com.outmao.ebs.mall.order.common.event;
 
 import com.outmao.ebs.common.services.eventBus.ActionEvent;
 import com.outmao.ebs.common.services.eventBus.MethodEvent;
-import com.outmao.ebs.common.util.ServletRequestUtil;
-import com.outmao.ebs.wallet.common.constant.WalletConstant;
+import com.outmao.ebs.mall.order.entity.Order;
 import lombok.Data;
+
 
 /**
 *
@@ -15,12 +15,17 @@ import lombok.Data;
 @Data
 public class OrderStatusChangeEvent extends ActionEvent {
 
-    private String actionKey;
+    private Long orderId;
+    private int status;
 
 
     @Override
     public void setValue(MethodEvent methodEvent) {
-        actionKey= (String) ServletRequestUtil.getAttribute(WalletConstant.action_key);
+        Order order=(Order) methodEvent.getReturning();
+        if(order!=null){
+            orderId=order.getId();
+            status=order.getStatus();
+        }
     }
 
 
@@ -28,6 +33,7 @@ public class OrderStatusChangeEvent extends ActionEvent {
     public boolean async() {
         return super.async();
     }
+
 
 
 }
