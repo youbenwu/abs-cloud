@@ -47,6 +47,9 @@ public interface HotelDeviceDomain {
     public List<StatsHotelDeviceProvinceVO> getStatsHotelDeviceProvinceVOList(Integer size);
 
 
+    public List<Long> getUserIdListByHotelId(Long hotelId);
+
+
     /**
      *
      * 设备购买

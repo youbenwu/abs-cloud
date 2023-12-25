@@ -24,6 +24,9 @@ public class SimpleHotelVO {
     @ApiModelProperty(name = "shopId", value = "店铺ID")
     private Long shopId;
 
+    @ApiModelProperty(name = "userId", value = "酒店所属用户ID")
+    private Long userId;
+
 
     /**
      *

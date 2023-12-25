@@ -267,7 +267,14 @@ public class UserDomainImpl extends BaseDomain implements UserDomain {
 		return page;
 	}
 
-//	@SetUserStatsOrder
+    @Override
+    public List<UserDetailsVO> getUserDetailsVOListByIdIn(Collection<Long> idIn) {
+        QUser e=QUser.user;
+        List<UserDetailsVO> list=queryList(e,e.id.in(idIn),userDetailsVOConver);
+        return list;
+    }
+
+    //	@SetUserStatsOrder
 //	@SetUserStatsInquiry
 	@Override
 	public Page<HuaUserVO> getHuaUserVOPage(GetUserListDTO request, Pageable pageable) {
@@ -338,6 +345,12 @@ public class UserDomainImpl extends BaseDomain implements UserDomain {
             details.setSex(request.getSex());
 		}
 
+		if(request.getAge()!=null){
+			details.setAge(request.getAge());
+		}
+        if(StringUtil.isNotEmpty(request.getHobby())){
+            details.setHobby(request.getHobby());
+        }
 		user.setKeyword(getUserKeyword(user,details));
 
 		userDao.save(user);

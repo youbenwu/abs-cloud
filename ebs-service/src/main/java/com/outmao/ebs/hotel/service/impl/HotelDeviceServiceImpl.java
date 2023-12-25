@@ -23,12 +23,15 @@ import com.outmao.ebs.user.common.constant.UserType;
 import com.outmao.ebs.user.dto.RegisterDTO;
 import com.outmao.ebs.user.entity.User;
 import com.outmao.ebs.user.service.UserService;
+import com.outmao.ebs.user.vo.UserDetailsVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -190,6 +193,15 @@ public class HotelDeviceServiceImpl extends BaseService implements HotelDeviceSe
     @Override
     public List<StatsHotelDeviceProvinceVO> getStatsHotelDeviceProvinceVOList(Integer size) {
         return hotelDeviceDomain.getStatsHotelDeviceProvinceVOList(size);
+    }
+
+    @Override
+    public List<UserDetailsVO> getUserDetailsVOListByHotelId(Long hotelId) {
+        List<Long> userIdIn=hotelDeviceDomain.getUserIdListByHotelId(hotelId);
+        if(userIdIn.size()>0){
+            return userService.getUserDetailsVOListByIdIn(userIdIn);
+        }
+        return new ArrayList<>();
     }
 
     @Override

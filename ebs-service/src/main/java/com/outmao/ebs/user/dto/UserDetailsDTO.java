@@ -44,5 +44,16 @@ public class UserDetailsDTO {
 	private String  company;
     @ApiModelProperty(name = "job", value = "职位")
 	private String  job;
+	/**
+	 * 年龄
+	 */
+	@ApiModelProperty(name = "age", value = "年龄")
+	private Integer age;
+
+	/**
+	 * 个人爱好
+	 */
+	@ApiModelProperty(name = "hobby", value = "个人爱好")
+	private String hobby;
 
 }

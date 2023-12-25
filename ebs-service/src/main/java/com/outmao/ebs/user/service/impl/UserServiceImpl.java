@@ -141,6 +141,11 @@ public class UserServiceImpl extends BaseService implements UserService, Command
 	}
 
 	@Override
+	public List<UserDetailsVO> getUserDetailsVOListByIdIn(Collection<Long> idIn) {
+		return userDomain.getUserDetailsVOListByIdIn(idIn);
+	}
+
+	@Override
 	public Page<HuaUserVO> getHuaUserVOPage(GetUserListDTO request, Pageable pageable) {
 		return userDomain.getHuaUserVOPage(request,pageable);
 	}

@@ -5,6 +5,7 @@ import com.outmao.ebs.hotel.entity.HotelDevice;
 import com.outmao.ebs.hotel.vo.HotelDeviceVO;
 import com.outmao.ebs.hotel.vo.StatsHotelDeviceCityVO;
 import com.outmao.ebs.hotel.vo.StatsHotelDeviceProvinceVO;
+import com.outmao.ebs.user.vo.UserDetailsVO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -39,6 +40,8 @@ public interface HotelDeviceService {
 
     public List<StatsHotelDeviceProvinceVO> getStatsHotelDeviceProvinceVOList(Integer size);
 
+
+    public List<UserDetailsVO> getUserDetailsVOListByHotelId(Long hotelId);
 
 
     /**

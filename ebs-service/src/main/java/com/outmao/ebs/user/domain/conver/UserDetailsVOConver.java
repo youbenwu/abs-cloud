@@ -46,6 +46,8 @@ public class UserDetailsVOConver  implements BeanConver<QUser, UserDetailsVO> {
         vo.setOnline(t.get(e.online));
         vo.setRegisterTime(t.get(e.registerTime));
         vo.setLoginTime(t.get(e.loginTime));
+        vo.setAge(t.get(e.details.age));
+        vo.setHobby(t.get(e.details.hobby));
         return vo;
     }
 
@@ -86,6 +88,8 @@ public class UserDetailsVOConver  implements BeanConver<QUser, UserDetailsVO> {
                 e.online,
                 e.registerTime,
                 e.loginTime,
+                e.details.age,
+                e.details.hobby
         };
     }
 }

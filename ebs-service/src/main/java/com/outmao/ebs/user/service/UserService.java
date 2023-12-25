@@ -44,6 +44,7 @@ public interface UserService {
 	//获取用户列表
 	public Page<UserDetailsVO> getUserDetailsVOPage(GetUserListDTO request, Pageable pageable);
 
+	public List<UserDetailsVO> getUserDetailsVOListByIdIn(Collection<Long> idIn);
 
 	//获取成都花卉小程序用户列表
 	public Page<HuaUserVO> getHuaUserVOPage(GetUserListDTO request, Pageable pageable);

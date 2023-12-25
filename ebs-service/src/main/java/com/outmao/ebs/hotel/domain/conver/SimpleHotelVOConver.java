@@ -12,6 +12,7 @@ public class SimpleHotelVOConver implements BeanConver<QHotel, SimpleHotelVO> {
     public SimpleHotelVO fromTuple(Tuple t, QHotel e) {
         SimpleHotelVO vo=new SimpleHotelVO();
         vo.setId(t.get(e.id));
+        vo.setUserId(t.get(e.userId));
         vo.setShopId(t.get(e.shopId));
         vo.setName(t.get(e.name));
         vo.setLogo(t.get(e.logo));
@@ -24,6 +25,7 @@ public class SimpleHotelVOConver implements BeanConver<QHotel, SimpleHotelVO> {
     public Expression<?>[] select(QHotel e) {
         return new Expression[]{
                 e.id,
+                e.userId,
                 e.shopId,
                 e.name,
                 e.logo,

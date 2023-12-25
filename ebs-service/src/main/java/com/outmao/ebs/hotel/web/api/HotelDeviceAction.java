@@ -4,6 +4,7 @@ package com.outmao.ebs.hotel.web.api;
 import com.outmao.ebs.hotel.dto.GetHotelDeviceListDTO;
 import com.outmao.ebs.hotel.dto.HotelDeviceDTO;
 import com.outmao.ebs.hotel.dto.PadRegisterHotelDeviceDTO;
+import com.outmao.ebs.hotel.entity.HotelDevice;
 import com.outmao.ebs.hotel.service.HotelDeviceIncomeService;
 import com.outmao.ebs.hotel.service.HotelDeviceService;
 import com.outmao.ebs.hotel.vo.*;
@@ -12,6 +13,7 @@ import com.outmao.ebs.user.dto.SetAuthenticatedDTO;
 import com.outmao.ebs.user.entity.UserOauth;
 import com.outmao.ebs.user.entity.UserOauthSession;
 import com.outmao.ebs.user.service.UserService;
+import com.outmao.ebs.user.vo.UserDetailsVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +25,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -108,7 +111,15 @@ public class HotelDeviceAction {
         return hotelDeviceService.getStatsHotelDeviceProvinceVOList(size);
     }
 
-
+    @ApiOperation(value = "获取酒店内部用户列表", notes = "获取酒店内部用户列表")
+    @PostMapping("/user/list")
+    public List<UserDetailsVO> getUserDetailsVOListByHotel(){
+        HotelDevice device=hotelDeviceService.getHotelDeviceByUserId(SecurityUtil.currentUserId());
+        if(device!=null&&device.getHotelId()!=null){
+            return hotelDeviceService.getUserDetailsVOListByHotelId(device.getHotelId());
+        }
+        return new ArrayList<>();
+    }
 
 
 }

@@ -106,6 +106,19 @@ public class UserDetails implements Serializable {
 	 */
 	private String job;
 
+
+	/**
+	 * 年龄
+	 */
+	private Integer age;
+
+	/**
+	 * 个人爱好
+	 */
+	private String hobby;
+
+
+
 	/**
 	 * 更新时间
 	 */

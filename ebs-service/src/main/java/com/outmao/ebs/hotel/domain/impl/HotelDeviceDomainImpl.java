@@ -168,6 +168,13 @@ public class HotelDeviceDomainImpl extends BaseDomain implements HotelDeviceDoma
 
 
     @Override
+    public List<Long> getUserIdListByHotelId(Long hotelId) {
+        QHotelDevice e=QHotelDevice.hotelDevice;
+        List<Long> list=QF.select(e.userId).from(e).where(e.hotelId.eq(hotelId).and(e.userId.isNotNull())).fetch();
+        return list;
+    }
+
+    @Override
     public long getHotelDeviceCount() {
         return hotelDeviceDao.count();
     }
