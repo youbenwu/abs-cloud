@@ -10,11 +10,14 @@ import com.outmao.ebs.wallet.dao.TransferDao;
 import com.outmao.ebs.wallet.entity.Transfer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
+import org.springframework.stereotype.Component;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+//@Component
 public class WalletTradeEventListener extends ActionEventListener<WalletTradeEvent> {
 
     @Autowired

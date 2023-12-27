@@ -15,13 +15,14 @@ public class MessageTypeVOConver implements BeanConver<QMessageType, MessageType
         MessageTypeVO vo=new MessageTypeVO();
         vo.setId(t.get(q.id));
         vo.setStatus(t.get(q.status));
+        vo.setTitle(t.get(q.title));
         vo.setName(t.get(q.name));
         vo.setMsg(t.get(q.msg));
         vo.setEmail(t.get(q.email));
         vo.setSms(t.get(q.sms));
         vo.setPush(t.get(q.push));
         vo.setMp(t.get(q.mp));
-        vo.setMsgTemplateId(t.get(q.smsTemplate.id));
+        vo.setMsgTemplateId(t.get(q.msgTemplate.id));
         vo.setEmailTemplateId(t.get(q.emailTemplate.id));
         vo.setSmsTemplateId(t.get(q.smsTemplate.id));
         vo.setPushTemplateId(t.get(q.pushTemplate.id));
@@ -36,13 +37,14 @@ public class MessageTypeVOConver implements BeanConver<QMessageType, MessageType
         return new Expression[]{
                 q.id,
                 q.status,
+                q.title,
                 q.name,
                 q.msg,
                 q.email,
                 q.sms,
                 q.push,
                 q.mp,
-                q.smsTemplate.id,
+                q.msgTemplate.id,
                 q.emailTemplate.id,
                 q.smsTemplate.id,
                 q.pushTemplate.id,

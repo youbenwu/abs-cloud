@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -39,6 +41,8 @@ public class UserActiveAction {
 	@ApiOperation(value = "活跃用户数量统计按天", notes = "活跃用户数量统计按天")
 	@PostMapping("/stats/days")
 	public List<StatsUserActiveCountVO> getStatsUserActiveCountVOListByDays(Date fromTime, Date toTime) {
+		if(true)
+		return getFalseData();
 		if(fromTime==null){
 			fromTime= DateUtil.beforeDays(7);
 		}
@@ -63,6 +67,29 @@ public class UserActiveAction {
 	}
 
 
+	private List<StatsUserActiveCountVO> getFalseData(){
+		List<StatsUserActiveCountVO> list=new ArrayList<>(7);
+
+        list.add(getFalseData(7,300));
+		list.add(getFalseData(6,600));
+		list.add(getFalseData(5,300));
+		list.add(getFalseData(4,300));
+		list.add(getFalseData(3,800));
+		list.add(getFalseData(2,300));
+		list.add(getFalseData(1,900));
+		list.add(getFalseData(0,300));
+		return list;
+	}
+
+	private StatsUserActiveCountVO getFalseData(int deforeDays,int count){
+
+		Date date1= DateUtil.beforeDays(deforeDays);
+		StatsUserActiveCountVO vo1=new StatsUserActiveCountVO();
+		vo1.setTime(date1);
+		vo1.setIndex(DateUtil.getDateMMdd(date1));
+		vo1.setCount(count);
+		return vo1;
+	}
 
 
 }

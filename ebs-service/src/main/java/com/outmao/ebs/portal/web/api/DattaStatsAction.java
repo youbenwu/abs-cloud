@@ -1,9 +1,13 @@
 package com.outmao.ebs.portal.web.api;
 
 
+import com.outmao.ebs.portal.dto.GetDataCityStatsListDTO;
+import com.outmao.ebs.portal.dto.GetDataProvinceStatsListDTO;
 import com.outmao.ebs.portal.dto.GetDataStatsListDTO;
+import com.outmao.ebs.portal.entity.DataCityStats;
 import com.outmao.ebs.portal.entity.DataStats;
 import com.outmao.ebs.portal.service.DataStatsService;
+import com.outmao.ebs.portal.vo.DataProvinceStatsVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,6 +43,19 @@ public class DattaStatsAction {
         return dataStatsService.getDataStatsList(request);
     }
 
+    @PreAuthorize("permitAll")
+    @ApiOperation(value = "获取城市统计数据列表", notes = "获取城市统计数据列表")
+    @PostMapping("/city/list")
+    public List<DataCityStats> getDataCityStatsList(GetDataCityStatsListDTO request){
+        return dataStatsService.getDataCityStatsList(request);
+    }
+
+    @PreAuthorize("permitAll")
+    @ApiOperation(value = "获取按省统计数据列表", notes = "获取按省统计数据列表")
+    @PostMapping("/province/list")
+    public List<DataProvinceStatsVO> getDataProvinceStatsVOList(GetDataProvinceStatsListDTO request){
+        return dataStatsService.getDataProvinceStatsVOList(request);
+    }
 
 
 }

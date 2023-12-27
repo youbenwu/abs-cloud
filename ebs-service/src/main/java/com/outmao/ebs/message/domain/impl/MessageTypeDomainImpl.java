@@ -64,7 +64,7 @@ public class MessageTypeDomainImpl extends BaseDomain implements MessageTypeDoma
                 tag=new MessageTemplateTag();
                 tag.setType(category);
             }
-            BeanUtils.copyProperties(t,tag);
+            BeanUtils.copyProperties(t,tag,"id");
             tags.add(tag);
         });
 
@@ -88,7 +88,7 @@ public class MessageTypeDomainImpl extends BaseDomain implements MessageTypeDoma
             category.setCreateTime(new Date());
         }
 
-        BeanUtils.copyProperties(request, category);
+        BeanUtils.copyProperties(request, category,"tags");
 
         category.setMsgTemplate(request.getMsgTemplateId()==null?null:messageTemplateDao.getOne(request.getMsgTemplateId()));
         category.setEmailTemplate(request.getEmailTemplateId()==null?null:messageTemplateDao.getOne(request.getEmailTemplateId()));

@@ -6,9 +6,7 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -19,17 +17,30 @@ import java.util.Date;
 @Table(name = "RcChatroom")
 public class RcChatroom   implements Serializable {
 
+    /**
+     *
+     * 用户标识
+     *
+     */
     @Id
-    private String id;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
 
     private String userId;
 
+    //聊天室ID
+    @Column(unique = true)
+    private String chatroomId;
+
     //绑定音视频房间
+    @Column(unique = true)
     private String rtcroomId;
 
     private String groupId;
 
     private String name;
+
+    private String type;
 
     //指定聊天室的销毁方式。0：默认值，表示不活跃时销毁。默认情况下，所有聊天室的自动销毁方式均为不活跃时销毁，一旦不活跃长达到 60 分钟即被销毁，可通过 destroyTime 延长该时间。1：固定时间销毁，设置为该类型后，聊天室默认在创建 60 分钟后自动销毁，可通过 destroyTime 设置更长的存活时间。
     private int destroyType;

@@ -8,7 +8,9 @@ public enum DataStatsChannel {
     TicketOrderAmountStats("ticket-order-amount-stats", "门票订单金额统计"),
     TicketOrderCountStats("ticket-order-count-stats", "门票订单数量统计"),
     UserStats("user-stats", "用户相关统计"),
-    HotelDeviceStats("hotel-device-stats", "酒店设备统计");
+    HotelDeviceStats("hotel-device-stats", "酒店设备统计"),
+
+    HotelDeviceIncomeStats("hotel-device-income-stats", "智囊屏终端收益统计");
 
     private String channel;
     private String desc;

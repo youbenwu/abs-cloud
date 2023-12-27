@@ -198,6 +198,7 @@ public class UserServiceImpl extends BaseService implements UserService, Command
 		return userOauthDomain.getUserOauthSessionByToken(token);
 	}
 
+
 	@Override
 	public UserOauthSession setAuthenticated(SetAuthenticatedDTO request) {
 		return userOauthDomain.setAuthenticated(request);

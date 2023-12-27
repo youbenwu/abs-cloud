@@ -31,7 +31,7 @@ public class MessageType implements Serializable {
 	private Long id;
 	private int status;
 	@JsonIgnore
-	@OneToMany(mappedBy = "type", cascade = CascadeType.REFRESH, fetch = FetchType.LAZY)
+	@OneToMany(mappedBy = "type", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
 	private List<MessageTemplateTag> tags;
 	@Column(unique=true)
 	private String name;

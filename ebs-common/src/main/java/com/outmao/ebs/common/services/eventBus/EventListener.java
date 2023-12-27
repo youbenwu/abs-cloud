@@ -7,7 +7,7 @@ import org.springframework.context.ApplicationListener;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.stereotype.Component;
 
-@Component
+
 public abstract class EventListener<T extends Event> implements ApplicationListener<ApplicationPreparedEvent> {
 
     @Autowired
