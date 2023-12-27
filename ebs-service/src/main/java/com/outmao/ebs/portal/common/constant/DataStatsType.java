@@ -23,6 +23,12 @@ public enum DataStatsType {
     HotelDeviceWarnCount(55, "待处理预警总数", DataStatsChannel.HotelDeviceStats.getChannel(),""),
     HotelDeviceWarnHandleRate(56, "预警处理率", DataStatsChannel.HotelDeviceStats.getChannel(),""),
 
+    TicketOrderCountMax(60, "用来计算收益百份比", DataStatsChannel.TicketOrderCountStats.getChannel(),""),
+
+
+    HotelCityCount(80, "投放设备的城市数量", DataStatsChannel.HotelDeviceStats.getChannel(),""),
+    HotelCount(81, "投放设备的酒店数量", DataStatsChannel.HotelDeviceStats.getChannel(),""),
+
 
     HotelDeviceIncomeV(70, "CPM曝光收益", DataStatsChannel.HotelDeviceIncomeStats.getChannel(),""),
     HotelDeviceIncomePV(71, "CPS转化收益", DataStatsChannel.HotelDeviceIncomeStats.getChannel(),""),
