@@ -9,8 +9,18 @@ import org.springframework.ui.freemarker.FreeMarkerTemplateUtils;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
+import java.util.HashMap;
+import java.util.Map;
 
 public class FreemarkerTemplateUtil {
+
+    public static void main(String[] args) {
+        Map<String,Object> model=new HashMap<>();
+        model.put("id","111111");
+        String template="测试---${id}";
+        String r=process(template,model);
+        System.out.println(r);
+    }
 
 
     public static String process(String template,Object model){

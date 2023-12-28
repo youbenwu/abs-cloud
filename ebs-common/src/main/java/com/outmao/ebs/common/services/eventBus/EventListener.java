@@ -1,6 +1,7 @@
 package com.outmao.ebs.common.services.eventBus;
 
 
+import com.google.common.eventbus.Subscribe;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.event.ApplicationPreparedEvent;
 import org.springframework.context.ApplicationListener;
@@ -16,12 +17,19 @@ public abstract class EventListener<T extends Event> implements ApplicationListe
     @Override
     public void onApplicationEvent(ApplicationPreparedEvent event) {
         ConfigurableApplicationContext applicationContext = event.getApplicationContext();
-        EventListener listener = applicationContext.getBean(this.getClass());
+        Component c=this.getClass().getAnnotation(Component.class);
+        Object listener;
+        if(c!=null&&c.value().length()>0){
+            listener = applicationContext.getBean(c.value());
+        }else{
+            listener = applicationContext.getBean(this.getClass());
+        }
         System.out.println("/* aspect register:"+listener.getClass().toString()+" */");
         eventService.register(listener);
     }
 
 
+    @Subscribe
     public abstract void onEvent(T event);
 
 

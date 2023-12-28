@@ -20,13 +20,13 @@ public class EventServiceImpl implements EventService {
 
 
 
-    public void register(EventListener listener) {
+    public void register(Object listener) {
         eventBus.register(listener);
         asyncEventBus.register(listener);
     }
 
 
-    public void unregister(EventListener listener) {
+    public void unregister(Object listener) {
         eventBus.unregister(listener);
         asyncEventBus.unregister(listener);
     }

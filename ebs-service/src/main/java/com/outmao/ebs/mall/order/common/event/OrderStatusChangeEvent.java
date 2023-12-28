@@ -5,6 +5,10 @@ import com.outmao.ebs.common.services.eventBus.ActionEvent;
 import com.outmao.ebs.common.services.eventBus.MethodEvent;
 import com.outmao.ebs.mall.order.entity.Order;
 import lombok.Data;
+import org.springframework.beans.BeanUtils;
+
+import java.util.HashMap;
+import java.util.Map;
 
 
 /**
@@ -15,17 +19,14 @@ import lombok.Data;
 @Data
 public class OrderStatusChangeEvent extends ActionEvent {
 
-    private Long orderId;
-    private int status;
 
+    private OrderData data=new OrderData();
 
     @Override
     public void setValue(MethodEvent methodEvent) {
         Order order=(Order) methodEvent.getReturning();
-        if(order!=null){
-            orderId=order.getId();
-            status=order.getStatus();
-        }
+        BeanUtils.copyProperties(order,data);
+
     }
 
 
@@ -34,6 +35,18 @@ public class OrderStatusChangeEvent extends ActionEvent {
         return super.async();
     }
 
+
+    @Data
+    public class OrderData{
+        private Long id;
+        private Long userId;
+        private Long ownerId;
+        private Long sellerId;
+        private String orderNo;
+        private int status;
+        private String statusRemark;
+        private Integer type;
+    }
 
 
 }

@@ -201,7 +201,7 @@ public class MessageTypeDomainImpl extends BaseDomain implements MessageTypeDoma
 
         for (MessageTypeVO vo:list){
             if(vo.getMsgTemplateId()!=null)
-                vo.setSmsTemplate(tsmap.get(vo.getSmsTemplateId()));
+                vo.setMsgTemplate(tsmap.get(vo.getMsgTemplateId()));
             if(vo.getEmailTemplateId()!=null)
                 vo.setEmailTemplate(tsmap.get(vo.getEmailTemplateId()));
             if(vo.getSmsTemplateId()!=null)
