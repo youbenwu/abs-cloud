@@ -215,7 +215,6 @@ public class UserAction {
 	}
 
 	// 获取用户详细信息
-	@PreAuthorize("principal.id.equals(#userId)")
 	@ApiOperation(value = "获取用户详细信息", notes = "获取用户详细信息息")
 	@PostMapping("/details/get")
 	public UserDetailsVO getUserDetailsVOByUserId(Long userId){
@@ -223,8 +222,12 @@ public class UserAction {
 	}
 
 
-
-
+	@PreAuthorize("principal.id.equals(#userId)")
+	@ApiOperation(value = "获取用户自己的详细信息", notes = "获取用户自己的详细信息")
+	@PostMapping("/details")
+	public UserDetailsVO getUserDetailsVOById(Long id){
+		return userService.getUserDetailsVOByUserId(id);
+	}
 
 
 }

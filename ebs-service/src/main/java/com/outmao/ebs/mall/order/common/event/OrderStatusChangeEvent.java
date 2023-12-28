@@ -20,13 +20,12 @@ import java.util.Map;
 public class OrderStatusChangeEvent extends ActionEvent {
 
 
-    private OrderData data=new OrderData();
+    private Model model=new Model();
 
     @Override
     public void setValue(MethodEvent methodEvent) {
         Order order=(Order) methodEvent.getReturning();
-        BeanUtils.copyProperties(order,data);
-
+        BeanUtils.copyProperties(order,model);
     }
 
 
@@ -37,7 +36,7 @@ public class OrderStatusChangeEvent extends ActionEvent {
 
 
     @Data
-    public class OrderData{
+    public class Model{
         private Long id;
         private Long userId;
         private Long ownerId;

@@ -73,6 +73,13 @@ public class MessageTemplate implements Serializable {
 	 */
 	private String url;
 
+	/**
+	 *
+	 * 按钮名称
+	 *
+	 */
+	private String action;
+
 	private Date createTime;
 	private Date updateTime;
 

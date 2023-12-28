@@ -19,6 +19,7 @@ public class MessageTemplateVOConver implements BeanConver<QMessageTemplate, Mes
         vo.setName(t.get(e.name));
         vo.setContent(t.get(e.content));
         vo.setUrl(t.get(e.url));
+        vo.setAction(t.get(e.action));
         vo.setTemplateId(t.get(e.templateId));
         vo.setCreateTime(t.get(e.createTime));
         vo.setUpdateTime(t.get(e.updateTime));
@@ -35,6 +36,7 @@ public class MessageTemplateVOConver implements BeanConver<QMessageTemplate, Mes
                 e.name,
                 e.content,
                 e.url,
+                e.action,
                 e.templateId,
                 e.createTime,
                 e.updateTime,

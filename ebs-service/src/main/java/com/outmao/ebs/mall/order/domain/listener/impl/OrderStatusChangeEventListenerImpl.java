@@ -1,6 +1,5 @@
 package com.outmao.ebs.mall.order.domain.listener.impl;
 
-import com.google.common.eventbus.Subscribe;
 import com.outmao.ebs.common.services.eventBus.ActionEventListener;
 import com.outmao.ebs.common.vo.BindingItem;
 import com.outmao.ebs.mall.order.common.constant.OrderStatus;
@@ -25,13 +24,12 @@ public class OrderStatusChangeEventListenerImpl extends ActionEventListener<Orde
     private MessageService messageService;
 
 
-    @Subscribe
     @Async
     @Override
     public void onEvent(OrderStatusChangeEvent event) {
-        if(event.getData()==null)
+        if(event.getModel()==null)
             return;
-        sendMessage(event.getData());
+        sendMessage(event.getModel());
     }
 
 
@@ -50,7 +48,7 @@ public class OrderStatusChangeEventListenerImpl extends ActionEventListener<Orde
     //    //订单消息--设备租赁去托管提醒
     //    public static final String message_type_order_qy_wait_deploy="order-qy-wait-deploy";
 
-    private void sendMessage(OrderStatusChangeEvent.OrderData order){
+    private void sendMessage(OrderStatusChangeEvent.Model order){
         String type=null;
         if(order.getStatus()== OrderStatus.SUCCESSED.getStatus()){
            type=MessageConstant.message_type_order_success;
@@ -101,7 +99,7 @@ public class OrderStatusChangeEventListenerImpl extends ActionEventListener<Orde
         }
     }
 
-    private void sendMessageUser(OrderStatusChangeEvent.OrderData order,String type){
+    private void sendMessageUser(OrderStatusChangeEvent.Model order,String type){
 
         List<Long> tos= Arrays.asList(order.getUserId(),order.getOwnerId()).stream().filter(t->t!=null).collect(Collectors.toList());
 

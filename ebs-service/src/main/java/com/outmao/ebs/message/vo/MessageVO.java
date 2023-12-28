@@ -57,6 +57,14 @@ public class MessageVO implements SimpleUserSetter {
 	@ApiModelProperty(name = "image", value = "消息图片")
 	private String image;
 
+	/**
+	 *
+	 * 按钮名称
+	 *
+	 */
+	@ApiModelProperty(name = "action", value = "按钮名称")
+	private String action;
+
 	@ApiModelProperty(name = "createTime", value = "创建时间")
 	private Date createTime;
 

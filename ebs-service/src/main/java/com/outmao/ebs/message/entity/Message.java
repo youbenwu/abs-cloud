@@ -44,6 +44,14 @@ public class Message implements Serializable {
 	@Lob
 	private String content;
 	private String url;
+
+	/**
+	 *
+	 * 按钮名称
+	 *
+	 */
+	private String action;
+
 	/**
 	 *
 	 * 搜索关键字

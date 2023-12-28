@@ -26,7 +26,7 @@ public class UserMessageVOConver implements BeanConver<QUserMessage, UserMessage
         vo.setItem(t.get(e.message.item));
         vo.setTitle(t.get(e.message.title));
         vo.setUrl(t.get(e.message.url));
-
+        vo.setAction(t.get(e.message.action));
         return vo;
     }
 
@@ -47,7 +47,8 @@ public class UserMessageVOConver implements BeanConver<QUserMessage, UserMessage
                 e.message.image,
                 e.message.item,
                 e.message.title,
-                e.message.url
+                e.message.url,
+                e.message.action,
         };
     }
 

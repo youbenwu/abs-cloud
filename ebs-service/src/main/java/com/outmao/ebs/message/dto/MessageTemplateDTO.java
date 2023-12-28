@@ -30,4 +30,7 @@ public class MessageTemplateDTO {
 	@ApiModelProperty(name="url",value="消息详情URL模板")
 	private String url;
 
+	@ApiModelProperty(name = "action", value = "按钮名称")
+	private String action;
+
 }

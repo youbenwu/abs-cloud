@@ -31,6 +31,8 @@ public class MessageDTO {
 	private String image;
 	@ApiModelProperty(name="title",value="消息地址")
 	private String url;
+	@ApiModelProperty(name = "action", value = "按钮名称")
+	private String action;
 	@ApiModelProperty(name="title",value="消息绑定对象")
 	private BindingItem item;
 

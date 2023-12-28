@@ -2,7 +2,7 @@ package com.outmao.ebs.message.service.impl;
 
 
 import com.outmao.ebs.common.exception.BusinessException;
-import com.outmao.ebs.common.util.FreemarkerTemplateUtil;
+import com.outmao.ebs.common.util.MarkerTemplateParser;
 import com.outmao.ebs.message.domain.MessageDomain;
 import com.outmao.ebs.message.domain.MessageTypeDomain;
 import com.outmao.ebs.message.dto.*;
@@ -35,6 +35,8 @@ public class MessageServiceImpl implements MessageService {
 	@Autowired
     private MessageDomain messageDomain;
 
+	@Autowired
+	private MarkerTemplateParser markerTemplateParser;
 
 
 	@Async
@@ -84,9 +86,9 @@ public class MessageServiceImpl implements MessageService {
 		for (MessageTemplateVO t:list){
 			try {
 
-				String title = t.getTitle()==null?null: FreemarkerTemplateUtil.process(t.getTitle(), request.getData());
-				String content= t.getContent()==null?null: FreemarkerTemplateUtil.process(t.getContent(), request.getData());
-				String url=t.getUrl()==null?null: FreemarkerTemplateUtil.process(t.getUrl(), request.getData());
+				String title = markerTemplateParser.process(null,t.getTitle(), request.getData());
+				String content= markerTemplateParser.process(null,t.getContent(), request.getData());
+				String url= markerTemplateParser.process(null,t.getUrl(), request.getData());
 
 				MessageDTO p=new MessageDTO();
 				p.setItem(request.getItem());
@@ -98,6 +100,7 @@ public class MessageServiceImpl implements MessageService {
 				p.setTitle(title);
 				p.setContent(content);
 				p.setUrl(url);
+				p.setAction(t.getAction());
 
 				this.sendMessageAsync(p);
 

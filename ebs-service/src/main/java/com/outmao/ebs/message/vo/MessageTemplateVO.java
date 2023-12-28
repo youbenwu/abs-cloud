@@ -1,6 +1,7 @@
 package com.outmao.ebs.message.vo;
 
 
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import java.io.Serializable;
 import java.util.Date;
@@ -59,6 +60,9 @@ public class MessageTemplateVO implements Serializable {
 	 *
 	 */
 	private String url;
+
+	@ApiModelProperty(name = "action", value = "按钮名称")
+	private String action;
 
 	private Date createTime;
 	private Date updateTime;

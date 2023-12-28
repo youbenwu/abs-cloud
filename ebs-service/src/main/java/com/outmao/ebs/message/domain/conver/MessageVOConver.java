@@ -25,6 +25,7 @@ public class MessageVOConver implements BeanConver<QMessage, MessageVO> {
         vo.setItem(t.get(e.item));
         vo.setTitle(t.get(e.title));
         vo.setUrl(t.get(e.url));
+        vo.setAction(t.get(e.action));
         vo.setCreateTime(t.get(e.createTime));
         vo.setUpdateTime(t.get(e.updateTime));
         return vo;
@@ -45,6 +46,7 @@ public class MessageVOConver implements BeanConver<QMessage, MessageVO> {
                 e.item,
                 e.title,
                 e.url,
+                e.action,
                 e.createTime,
                 e.updateTime,
         };
