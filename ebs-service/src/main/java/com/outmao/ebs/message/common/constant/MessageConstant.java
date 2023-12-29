@@ -14,7 +14,6 @@ public class MessageConstant {
     public static final String message_type_order_wait_pay="order-wait-pay";
 
 
-
     //订单消息--支付成功提醒
     public static final String message_type_order_success="order-success";
 
@@ -32,7 +31,6 @@ public class MessageConstant {
 
     //订单消息--支付成功提醒--酒店商超
     public static final String message_type_order_success_32="order-success-32";
-
 
 
     //订单消息--订单发货提醒
@@ -70,9 +68,9 @@ public class MessageConstant {
     public static final String message_type_order_finish_32="order-finish-32";
 
 
-
     //订单消息--设备租赁去托管提醒
     public static final String message_type_order_qy_wait_deploy="order-qy-wait-deploy";
+
 
 
 }

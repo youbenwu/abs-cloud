@@ -1,11 +1,13 @@
 package com.outmao.ebs.common.services.eventBus;
 
+import com.google.common.eventbus.Subscribe;
 import org.springframework.stereotype.Component;
 
 @Component("MethodEventListener")
 public class MethodEventListener extends EventListener<MethodEvent> {
 
 
+    @Subscribe
     @Override
     public void onEvent(MethodEvent event) {
 

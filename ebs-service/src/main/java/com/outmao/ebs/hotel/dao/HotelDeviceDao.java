@@ -45,6 +45,8 @@ public interface HotelDeviceDao extends JpaRepository<HotelDevice,Long> {
 
     public long countByLeaseRenterId(Long leaseRenterId);
 
+    public long countByLeasePartnerId(Long leasePartnerId);
+
 
     @Lock(value = LockModeType.PESSIMISTIC_READ)
     @Query("select d from HotelDevice d where d.lease.status in ?1")

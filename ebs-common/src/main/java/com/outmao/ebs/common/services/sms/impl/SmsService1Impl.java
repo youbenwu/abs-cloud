@@ -26,4 +26,5 @@ public class SmsService1Impl implements SmsService {
     public void sendAsync(String phone, String template, String params) {
         send(phone,template,params);
     }
+    
 }

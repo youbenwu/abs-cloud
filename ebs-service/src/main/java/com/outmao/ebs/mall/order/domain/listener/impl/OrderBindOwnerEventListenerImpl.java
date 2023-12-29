@@ -2,9 +2,9 @@ package com.outmao.ebs.mall.order.domain.listener.impl;
 
 import com.outmao.ebs.common.services.eventBus.ActionEventListener;
 import com.outmao.ebs.common.vo.BindingItem;
-import com.outmao.ebs.mall.order.common.event.OrderStatusChangeEvent;
+import com.outmao.ebs.mall.order.common.event.OrderBindOwnerEvent;
 import com.outmao.ebs.mall.order.common.util.OrderMessageUtil;
-import com.outmao.ebs.mall.order.domain.listener.OrderStatusChangeEventListener;
+import com.outmao.ebs.mall.order.domain.listener.OrderBindOwnerEventListener;
 import com.outmao.ebs.message.dto.SendMessageByTypeDTO;
 import com.outmao.ebs.message.service.MessageService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,11 +12,10 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
+@Component("OrderBindOwnerEventListener")
+public class OrderBindOwnerEventListenerImpl extends ActionEventListener<OrderBindOwnerEvent> implements OrderBindOwnerEventListener {
 
-@Component("OrderStatusChangeEventListener")
-public class OrderStatusChangeEventListenerImpl extends ActionEventListener<OrderStatusChangeEvent> implements OrderStatusChangeEventListener {
 
     @Autowired
     private MessageService messageService;
@@ -24,23 +23,24 @@ public class OrderStatusChangeEventListenerImpl extends ActionEventListener<Orde
 
     @Async
     @Override
-    public void onEvent(OrderStatusChangeEvent event) {
+    public void onEvent(OrderBindOwnerEvent event) {
         if(event.getModel()==null)
             return;
         sendMessage(event.getModel());
     }
 
 
-    private void sendMessage(OrderStatusChangeEvent.Model order){
+    private void sendMessage(OrderBindOwnerEvent.Model order){
+        //给被绑定用户发订单状态消息
         String type= OrderMessageUtil.getMessageType(order.getType(),order.getStatus());
         if(type!=null) {
             sendMessageUser(order, type);
         }
     }
 
-    private void sendMessageUser(OrderStatusChangeEvent.Model order,String type){
+    private void sendMessageUser(OrderBindOwnerEvent.Model order,String type){
 
-        List<Long> tos= Arrays.asList(order.getUserId(),order.getOwnerId()).stream().filter(t->t!=null).collect(Collectors.toList());
+        List<Long> tos= Arrays.asList(order.getOwnerId());
 
         SendMessageByTypeDTO dto=new SendMessageByTypeDTO();
         dto.setType(type);
@@ -56,5 +56,6 @@ public class OrderStatusChangeEventListenerImpl extends ActionEventListener<Orde
         messageService.sendMessageAsync(dto);
 
     }
+
 
 }

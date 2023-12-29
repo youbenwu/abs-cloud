@@ -8,7 +8,6 @@ import com.outmao.ebs.mall.order.common.constant.OrderStatus;
 import com.outmao.ebs.mall.merchant.dao.MerchantDao;
 import com.outmao.ebs.mall.merchant.dao.MerchantBrokerDao;
 import com.outmao.ebs.mall.merchant.dao.MerchantPartnerDao;
-import com.outmao.ebs.mall.merchant.domain.UserCommissionDomain;
 import com.outmao.ebs.mall.merchant.dto.UserCommissionRecordDTO;
 import com.outmao.ebs.mall.merchant.entity.Merchant;
 import com.outmao.ebs.mall.merchant.entity.MerchantBroker;
@@ -122,12 +121,23 @@ public class OrderUserCommissionAspect {
             recordDTO.setRemark(order.getProducts().get(0).getProductTitle());
         }
 
-        userCommissionService.saveUserCommissionRecord(recordDTO);
+        UserCommissionRecord record=userCommissionService.saveUserCommissionRecord(recordDTO);
 
         if(level==0&&partner.getParent()!=null&&merchant.getPartnerParentCommission()>0){
             saveUserCommissionRecordForPartner(merchant,partner.getParent().getId(),1,order);
         }
 
+        //自动提现
+        try{
+            UserCommissionCashDTO cashDTO=new UserCommissionCashDTO();
+            cashDTO.setCommissionId(recordDTO.getCommissionId());
+            cashDTO.setAmount(recordDTO.getAmount());
+            cashDTO.setRemark("佣金收益");
+            cashDTO.setUserId(record.getUserId());
+            userCommissionService.saveUserCommissionCash(cashDTO);
+        }catch (Exception e){
+            log.error("佣金自动提现出错",e);
+        }
 
 
     }

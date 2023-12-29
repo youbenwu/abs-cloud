@@ -1,7 +1,6 @@
 package com.outmao.ebs.common.services.eventBus;
 
 
-import com.google.common.eventbus.Subscribe;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.event.ApplicationPreparedEvent;
 import org.springframework.context.ApplicationListener;
@@ -29,7 +28,6 @@ public abstract class EventListener<T extends Event> implements ApplicationListe
     }
 
 
-    @Subscribe
     public abstract void onEvent(T event);
 
 

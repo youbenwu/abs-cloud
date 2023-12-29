@@ -1,18 +1,20 @@
-package com.outmao.ebs.mall.merchant.entity;
+package com.outmao.ebs.mall.distribution.entity;
 
 import lombok.Data;
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Date;
+
 
 /**
  *
- * 商家分销设置
+ * 分销设置
  *
  * */
 @Data
 @Entity
-@Table(name = "ebs_MerchantDistribution")
-public class MerchantDistribution  implements Serializable {
+@Table(name = "ebs_DistributionConfig")
+public class DistributionConfig implements Serializable {
 
     /**
      *
@@ -27,6 +29,13 @@ public class MerchantDistribution  implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
+    /**
+     *
+     * 商家ID
+     *
+     * */
+    @Column(unique = true,nullable = false)
+    private Long merchantId;
 
     /**
      *
@@ -67,8 +76,19 @@ public class MerchantDistribution  implements Serializable {
      * */
     private double partnerParentCommission;
 
+    /**
+     *
+     * 创建时间
+     *
+     */
+    private Date createTime;
 
-
+    /**
+     *
+     * 更新时间
+     *
+     */
+    private Date updateTime;
 
 
 }

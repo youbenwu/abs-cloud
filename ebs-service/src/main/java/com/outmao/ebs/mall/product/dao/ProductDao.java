@@ -3,6 +3,7 @@ package com.outmao.ebs.mall.product.dao;
 
 import com.outmao.ebs.common.vo.TimeSpan;
 import com.outmao.ebs.mall.product.entity.Product;
+import com.outmao.ebs.mall.product.vo.ProductDistributionVO;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.jpa.repository.Modifying;
@@ -29,6 +30,9 @@ public interface ProductDao extends JpaRepository<Product,Long> {
 
     @Query("select p.expectDeliveryTimeSpan from Product p where p.expectDeliveryTimeSpan is not null and p.id in ?1")
     public List<TimeSpan> findAllExpectDeliveryTimeSpanByIdIn(Collection<Long> idIn);
+
+    @Query("select p.id,p.distribution,p.commissionType,p.commissionRate,p.commissionAmount from Product p where p.id in ?1")
+    public List<ProductDistributionVO> findAllDistributionByIdIn(Collection<Long> idIn);
 
 
 }

@@ -11,12 +11,14 @@ import com.outmao.ebs.common.util.OrderNoUtil;
 import com.outmao.ebs.common.util.StringUtil;
 import com.outmao.ebs.common.vo.TimeSpan;
 import com.outmao.ebs.hotel.common.annotation.SetSimpleHotel;
+import com.outmao.ebs.mall.distribution.service.DistributionService;
 import com.outmao.ebs.mall.merchant.dao.MerchantCustomerDao;
 import com.outmao.ebs.mall.merchant.dao.MerchantDao;
 import com.outmao.ebs.mall.merchant.entity.Merchant;
 import com.outmao.ebs.mall.merchant.entity.MerchantCustomer;
 import com.outmao.ebs.mall.order.common.constant.OrderStatus;
 import com.outmao.ebs.mall.order.common.constant.OrderSubStatus;
+import com.outmao.ebs.mall.order.common.event.OrderBindOwnerEvent;
 import com.outmao.ebs.mall.order.common.event.OrderStatusChangeEvent;
 import com.outmao.ebs.mall.order.common.util.OrderProductLeaseUtil;
 import com.outmao.ebs.mall.order.common.util.OrderStatusUtil;
@@ -100,8 +102,8 @@ public class OrderDomainImpl extends BaseDomain implements OrderDomain {
     @Autowired
     private UserDao userDao;
 
-
-
+    @Autowired
+    private DistributionService distributionService;
 
 
     @Autowired
@@ -175,37 +177,7 @@ public class OrderDomainImpl extends BaseDomain implements OrderDomain {
     }
 
     private void saveOrderCommission(Order order,Map<Long,ProductVO> pmap){
-        Merchant merchant=merchantDao.getOne(order.getMerchantId());
-        if(!merchant.isDistribution())
-            return;
-
-        double totalAmount=0;
-        //佣金比率
-        double productCommissionRate=merchant.getProductCommissionRate();
-
-        for (OrderProduct p:order.getProducts()){
-            ProductVO vo=pmap.get(p.getSkuId());
-            if(vo==null)
-                continue;
-            if(!vo.isDistribution())
-                continue;
-
-            double rate=productCommissionRate;
-            double amount=0;
-
-            if(vo.getCommissionType()==0){
-                amount=vo.getCommissionAmount();
-            }else{
-                rate=vo.getCommissionRate();
-            }
-
-            if(amount==0){
-                amount=p.getAmount()*rate;
-            }
-
-            totalAmount+=amount;
-            p.setCommissionAmount(amount);
-        }
+        double totalAmount=distributionService.calculate(order);
         order.setCommissionAmount(totalAmount);
     }
 
@@ -223,6 +195,8 @@ public class OrderDomainImpl extends BaseDomain implements OrderDomain {
         return orderDao.findByOrderNo(orderNo);
     }
 
+
+    @ActionEvent(OrderBindOwnerEvent.class)
     @Transactional
     @Override
     public Order orderBindOwner(OrderBindOwnerDTO request) {
