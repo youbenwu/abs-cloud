@@ -4,7 +4,8 @@ import com.outmao.ebs.common.base.BaseService;
 import com.outmao.ebs.hotel.service.HotelService;
 import com.outmao.ebs.hotel.vo.HotelVO;
 import com.outmao.ebs.portal.domain.AdvertPvLogDomain;
-import com.outmao.ebs.portal.dto.SaveAdvertPvLogListDTO;
+import com.outmao.ebs.portal.dto.AdvertPvLogDTO;
+import com.outmao.ebs.portal.dto.AdvertPvLogListDTO;
 import com.outmao.ebs.portal.entity.AdvertPvLog;
 import com.outmao.ebs.portal.service.AdvertPvLogService;
 import com.outmao.ebs.portal.vo.QyStatsAdvertByHotelVO;
@@ -29,7 +30,7 @@ public class AdvertPvLogServiceImpl extends BaseService implements AdvertPvLogSe
 
 
     @Override
-    public AdvertPvLog saveAdvertPvLog(AdvertPvLog request) {
+    public AdvertPvLog saveAdvertPvLog(AdvertPvLogDTO request) {
         AdvertPvLog log= advertPvLogDomain.saveAdvertPvLog(request);
         return log;
     }
@@ -37,14 +38,14 @@ public class AdvertPvLogServiceImpl extends BaseService implements AdvertPvLogSe
 
     @Transactional
     @Override
-    public List<AdvertPvLog> saveAdvertPvLogList(SaveAdvertPvLogListDTO request) {
+    public List<AdvertPvLog> saveAdvertPvLogList(AdvertPvLogListDTO request) {
         List<AdvertPvLog> list=new ArrayList<>(request.getAdverts().size());
         request.getAdverts().forEach(t->{
-            AdvertPvLog log=new AdvertPvLog();
-            log.setAdvertId(t);
-            log.setUserId(request.getUserId());
-            log.setSpaceId(request.getSpaceId());
-            saveAdvertPvLog(log);
+            AdvertPvLogDTO dto=new AdvertPvLogDTO();
+            dto.setAdvertId(t);
+            dto.setUserId(request.getUserId());
+            dto.setSpaceId(request.getSpaceId());
+            AdvertPvLog log=saveAdvertPvLog(dto);
             list.add(log);
         });
         return list;
@@ -53,7 +54,7 @@ public class AdvertPvLogServiceImpl extends BaseService implements AdvertPvLogSe
     @Async
     @Transactional
     @Override
-    public List<AdvertPvLog> saveAdvertPvLogListAsync(SaveAdvertPvLogListDTO request) {
+    public List<AdvertPvLog> saveAdvertPvLogListAsync(AdvertPvLogListDTO request) {
         return saveAdvertPvLogList(request);
     }
 

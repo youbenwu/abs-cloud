@@ -18,6 +18,7 @@ import io.rong.models.chatroom.ChatroomMember;
 import io.rong.models.chatroom.ChatroomModel;
 import io.rong.models.group.GroupMember;
 import io.rong.models.response.ChatroomUserQueryResult;
+import io.rong.models.response.CheckOnlineResult;
 import io.rong.models.response.ResponseResult;
 import io.rong.models.response.TokenResult;
 import io.rong.models.user.UserModel;
@@ -295,10 +296,26 @@ public class RongcloudServiceImpl implements RongcloudService {
 
 
 
+
     }
 
 
-
+    @Override
+    public String rongCloudUserCheckOnline(String userId){
+        try{
+            UserModel model=new UserModel();
+            model.setId(userId);
+            CheckOnlineResult result= rongCloud.user.onlineStatus.check(model);
+            if(result.getCode()!=200){
+                log.error("融云获取用户在线状态出错:{}",result.getErrorMessage());
+                throw new BusinessException("融云获取用户在线状态出错");
+            }
+            return result.getStatus();
+        }catch (Exception e){
+            log.error("融云获取用户在线状态出错",e);
+            throw new BusinessException("融云获取用户在线状态出错");
+        }
+    }
 
 
 }

@@ -32,5 +32,7 @@ public interface RongcloudService {
 
     public List<ChatroomMember> rongCloudChatroomUserQuery(String chatroomId);
 
+    public String rongCloudUserCheckOnline(String userId);
+
 
 }

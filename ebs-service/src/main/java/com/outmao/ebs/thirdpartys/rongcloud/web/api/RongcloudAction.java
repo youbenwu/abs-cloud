@@ -128,5 +128,12 @@ public class RongcloudAction {
 		return new ArrayList<>();
 	}
 
+	@ApiOperation(value = "获取融云聊天室用户列表", notes = "获取融云聊天室用户列表")
+	@PostMapping("/user/checkOnline")
+	public String rongCloudUserCheckOnline(String userId){
+		return rongcloudService.rongCloudUserCheckOnline(userId);
+	}
+
+
 
 }

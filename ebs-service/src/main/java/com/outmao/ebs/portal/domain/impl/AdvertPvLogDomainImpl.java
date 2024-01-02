@@ -6,11 +6,13 @@ import com.outmao.ebs.portal.dao.AdvertDao;
 import com.outmao.ebs.portal.dao.AdvertPvLogDao;
 import com.outmao.ebs.portal.dao.AdvertUvLogDao;
 import com.outmao.ebs.portal.domain.AdvertPvLogDomain;
+import com.outmao.ebs.portal.dto.AdvertPvLogDTO;
 import com.outmao.ebs.portal.entity.AdvertPvLog;
 import com.outmao.ebs.portal.entity.AdvertUvLog;
 import com.outmao.ebs.portal.entity.QAdvertPvLog;
 import com.outmao.ebs.portal.vo.QyStatsAdvertByHotelVO;
 import com.querydsl.core.Tuple;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -35,30 +37,32 @@ public class AdvertPvLogDomainImpl extends BaseDomain implements AdvertPvLogDoma
 
     @Transactional
     @Override
-    public AdvertPvLog saveAdvertPvLog(AdvertPvLog request) {
+    public AdvertPvLog saveAdvertPvLog(AdvertPvLogDTO request) {
 
-        request.setCreateTime(new Date());
-        request.setDate(DateUtil.yyyy_MM_dd.format(request.getCreateTime()));
+        AdvertPvLog log=new AdvertPvLog();
+        log.setCreateTime(new Date());
+        BeanUtils.copyProperties(request,log);
+        log.setDate(DateUtil.yyyy_MM_dd.format(log.getCreateTime()));
 
-        advertDao.pv(request.getAdvertId());
+        advertDao.pv(log.getAdvertId());
 
-        String uvKey=request.getUserId()+"_"+request.getAdvertId()+"_"+request.getDate();
+        String uvKey=log.getUserId()+"_"+log.getAdvertId()+"_"+log.getDate();
         if(advertUvLogDao.findByKey(uvKey)==null){
 
-            advertDao.uv(request.getAdvertId());
+            advertDao.uv(log.getAdvertId());
 
             AdvertUvLog uvLog=new AdvertUvLog();
             uvLog.setKey(uvKey);
-            uvLog.setUserId(request.getUserId());
-            uvLog.setAdvertId(request.getAdvertId());
-            uvLog.setCreateTime(request.getCreateTime());
-            uvLog.setDate(request.getDate());
+            uvLog.setUserId(log.getUserId());
+            uvLog.setAdvertId(log.getAdvertId());
+            uvLog.setCreateTime(log.getCreateTime());
+            uvLog.setDate(log.getDate());
 
             advertUvLogDao.save(uvLog);
 
         }
 
-        AdvertPvLog log=advertPvLogDao.save(request);
+        advertPvLogDao.save(log);
 
         return log;
     }

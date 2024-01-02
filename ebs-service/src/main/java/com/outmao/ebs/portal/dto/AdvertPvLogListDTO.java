@@ -12,7 +12,7 @@ import java.util.List;
  */
 
 @Data
-public class SaveAdvertPvLogListDTO  {
+public class AdvertPvLogListDTO {
 
     @ApiModelProperty(name = "adverts", value = "广告ID列表")
     private List<Long> adverts;

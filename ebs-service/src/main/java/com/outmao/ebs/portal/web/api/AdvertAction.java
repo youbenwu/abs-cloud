@@ -106,12 +106,19 @@ public class AdvertAction {
         if(list==null||list.isEmpty())
             return;
         if(SecurityUtil.isAuthenticated()) {
-            SaveAdvertPvLogListDTO listDTO = new SaveAdvertPvLogListDTO();
+            AdvertPvLogListDTO listDTO = new AdvertPvLogListDTO();
             listDTO.setAdverts(list.stream().map(t -> t.getId()).collect(Collectors.toList()));
             listDTO.setUserId(SecurityUtil.currentUserId());
             listDTO.setSpaceId(RequestUtil.getHeaderLong("hotelId"));
             advertPvLogService.saveAdvertPvLogListAsync(listDTO);
         }
+    }
+
+
+    @ApiOperation(value = "广告点击记录", notes = "广告点击记录")
+    @PostMapping("/pv")
+    public void pv(AdvertPvLogDTO request) {
+        advertPvLogService.saveAdvertPvLog(request);
     }
 
 
