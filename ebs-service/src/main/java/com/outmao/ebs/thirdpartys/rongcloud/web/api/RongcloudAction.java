@@ -5,6 +5,7 @@ package com.outmao.ebs.thirdpartys.rongcloud.web.api;
 import cn.jiguang.common.utils.StringUtils;
 import com.outmao.ebs.common.configuration.sys.Config;
 import com.outmao.ebs.common.exception.BusinessException;
+import com.outmao.ebs.common.vo.Result;
 import com.outmao.ebs.hotel.entity.HotelDevice;
 import com.outmao.ebs.hotel.service.HotelDeviceService;
 import com.outmao.ebs.security.util.SecurityUtil;
@@ -130,8 +131,9 @@ public class RongcloudAction {
 
 	@ApiOperation(value = "获取用户在线状态", notes = "获取用户在线状态")
 	@PostMapping("/user/checkOnline")
-	public String rongCloudUserCheckOnline(String userId){
-		return rongcloudService.rongCloudUserCheckOnline(userId);
+	public Result rongCloudUserCheckOnline(String userId){
+        String r=rongcloudService.rongCloudUserCheckOnline(userId);
+		return Result.successResult(r);
 	}
 
 

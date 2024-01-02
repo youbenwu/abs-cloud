@@ -17,7 +17,7 @@ public class AdvertPvVO {
 
     private long pv;
 
-    private long totalPv;
+    private Long totalPv;
 
 }
 
