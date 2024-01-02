@@ -69,6 +69,11 @@ public class AdvertServiceImpl extends BaseService implements AdvertService {
     }
 
     @Override
+    public void pv(AdvertPvDTO request) {
+        advertDomain.pv(request);
+    }
+
+    @Override
     public AdvertVO getAdvertVOById(Long id) {
         return advertDomain.getAdvertVOById(id);
     }

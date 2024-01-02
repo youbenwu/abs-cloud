@@ -31,7 +31,7 @@ public interface ProductDao extends JpaRepository<Product,Long> {
     @Query("select p.expectDeliveryTimeSpan from Product p where p.expectDeliveryTimeSpan is not null and p.id in ?1")
     public List<TimeSpan> findAllExpectDeliveryTimeSpanByIdIn(Collection<Long> idIn);
 
-    @Query("select p.id,p.distribution,p.commissionType,p.commissionRate,p.commissionAmount from Product p where p.id in ?1")
+    @Query("select new com.outmao.ebs.mall.product.vo.ProductDistributionVO(p.id,p.distribution,p.commissionType,p.commissionRate,p.commissionAmount) from Product p where p.id in ?1")
     public List<ProductDistributionVO> findAllDistributionByIdIn(Collection<Long> idIn);
 
 

@@ -3,7 +3,9 @@ package com.outmao.ebs.portal.service.impl;
 import com.outmao.ebs.common.base.BaseService;
 import com.outmao.ebs.hotel.service.HotelService;
 import com.outmao.ebs.hotel.vo.HotelVO;
+import com.outmao.ebs.portal.domain.AdvertDomain;
 import com.outmao.ebs.portal.domain.AdvertPvLogDomain;
+import com.outmao.ebs.portal.dto.AdvertPvDTO;
 import com.outmao.ebs.portal.dto.AdvertPvLogDTO;
 import com.outmao.ebs.portal.dto.AdvertPvLogListDTO;
 import com.outmao.ebs.portal.entity.AdvertPvLog;
@@ -26,12 +28,16 @@ public class AdvertPvLogServiceImpl extends BaseService implements AdvertPvLogSe
     private AdvertPvLogDomain advertPvLogDomain;
 
     @Autowired
+    private AdvertDomain advertDomain;
+
+    @Autowired
     private HotelService hotelService;
 
-
+    @Transactional
     @Override
     public AdvertPvLog saveAdvertPvLog(AdvertPvLogDTO request) {
         AdvertPvLog log= advertPvLogDomain.saveAdvertPvLog(request);
+        advertDomain.pv(new AdvertPvDTO(request.getAdvertId(),request.getAdvertType()));
         return log;
     }
 

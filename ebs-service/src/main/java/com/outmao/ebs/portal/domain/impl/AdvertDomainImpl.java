@@ -11,6 +11,7 @@ import com.outmao.ebs.portal.domain.AdvertDomain;
 import com.outmao.ebs.portal.domain.conver.AdvertVOConver;
 import com.outmao.ebs.portal.dto.*;
 import com.outmao.ebs.portal.entity.*;
+import com.outmao.ebs.portal.vo.AdvertPvVO;
 import com.outmao.ebs.portal.vo.AdvertVO;
 import com.outmao.ebs.portal.vo.StatsAdvertStatusVO;
 import com.querydsl.core.Tuple;
@@ -156,6 +157,24 @@ public class AdvertDomainImpl extends BaseDomain implements AdvertDomain {
 
     }
 
+    @Transactional
+    @Override
+    public void pv(AdvertPvDTO request) {
+        if(request.getType()!=null&&request.getType()!=1&&request.getType()!=2){
+            advertDao.pv(request.getId());
+            return;
+        }
+        AdvertPvVO advert=advertDao.findAdvertPvLock(request.getId());
+        if(advert.getType()==1||advert.getType()==2){
+            //企业广告或个人广告
+            advert.setPv(advert.getPv()+1);
+            //如果PV消耗完，设置为过期状态
+            int status=advert.getPv()>=advert.getTotalPv()?Status.EXPIRE.getStatus():advert.getStatus();
+            advertDao.updataAdvertPv(request.getId(),advert.getPv(),status);
+        }else{
+            advertDao.pv(request.getId());
+        }
+    }
 
     @Transactional
     @Override

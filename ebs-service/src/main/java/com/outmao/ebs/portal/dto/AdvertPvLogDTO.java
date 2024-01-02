@@ -15,6 +15,9 @@ public class AdvertPvLogDTO {
     @ApiModelProperty(name = "advertId", value = "广告ID")
     private Long advertId;
 
+    @ApiModelProperty(name = "advertType", value = "广告类型 0--平台广告 1--企业广告 2--个人广告")
+    private Integer advertType;
+
     @ApiModelProperty(name = "userId", value = "点击用户")
     private Long userId;
 

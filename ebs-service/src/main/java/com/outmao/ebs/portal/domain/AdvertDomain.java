@@ -26,6 +26,8 @@ public interface AdvertDomain {
 
     public Advert buyDisplay(Long id, AdvertBuyDisplay buyDisplay);
 
+    public void pv(AdvertPvDTO request);
+
     public void randomAdvertSort();
 
     public AdvertVO getAdvertVOById(Long id);

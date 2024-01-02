@@ -128,7 +128,7 @@ public class RongcloudAction {
 		return new ArrayList<>();
 	}
 
-	@ApiOperation(value = "获取融云聊天室用户列表", notes = "获取融云聊天室用户列表")
+	@ApiOperation(value = "获取用户在线状态", notes = "获取用户在线状态")
 	@PostMapping("/user/checkOnline")
 	public String rongCloudUserCheckOnline(String userId){
 		return rongcloudService.rongCloudUserCheckOnline(userId);

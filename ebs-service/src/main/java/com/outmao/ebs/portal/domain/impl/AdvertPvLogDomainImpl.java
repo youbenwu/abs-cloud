@@ -44,8 +44,6 @@ public class AdvertPvLogDomainImpl extends BaseDomain implements AdvertPvLogDoma
         BeanUtils.copyProperties(request,log);
         log.setDate(DateUtil.yyyy_MM_dd.format(log.getCreateTime()));
 
-        advertDao.pv(log.getAdvertId());
-
         String uvKey=log.getUserId()+"_"+log.getAdvertId()+"_"+log.getDate();
         if(advertUvLogDao.findByKey(uvKey)==null){
 

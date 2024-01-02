@@ -28,6 +28,8 @@ public interface AdvertService {
 
     public Advert buyDisplay(Long id, AdvertBuyDisplay buyDisplay);
 
+    public void pv(AdvertPvDTO request);
+
     public AdvertVO getAdvertVOById(Long id);
 
     public List<AdvertVO> getAdvertVOList(GetAdvertListDTO request);

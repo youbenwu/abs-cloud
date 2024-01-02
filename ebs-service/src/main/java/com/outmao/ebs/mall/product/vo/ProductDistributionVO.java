@@ -4,10 +4,14 @@ package com.outmao.ebs.mall.product.vo;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @ApiModel(value = "ProductDistributionVO", description = "商品分销信息")
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
+@AllArgsConstructor
+@NoArgsConstructor
 @Data
 public class ProductDistributionVO  {
 
