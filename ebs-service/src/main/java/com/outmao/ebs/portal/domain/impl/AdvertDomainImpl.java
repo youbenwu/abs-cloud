@@ -168,9 +168,16 @@ public class AdvertDomainImpl extends BaseDomain implements AdvertDomain {
         if(advert.getType()==1||advert.getType()==2){
             //企业广告或个人广告
             advert.setPv(advert.getPv()+1);
-            //如果PV消耗完，设置为过期状态
-            int status=advert.getPv()>=advert.getTotalPv()?Status.EXPIRE.getStatus():advert.getStatus();
-            advertDao.updataAdvertPv(request.getId(),advert.getPv(),status);
+
+            int status=advert.getStatus();
+            boolean display=advert.isDisplay();
+            if(advert.getPv()>=advert.getTotalPv()){
+                //如果PV消耗完，设置为过期状态
+                status=Status.EXPIRE.getStatus();
+                //广告下架
+                display=false;
+            }
+            advertDao.updataAdvertPv(request.getId(),advert.getPv(),status,display);
         }else{
             advertDao.pv(request.getId());
         }

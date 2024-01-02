@@ -13,6 +13,8 @@ public class AdvertPvVO {
 
     private int status;
 
+    private boolean display;
+
     private int type;
 
     private long pv;
