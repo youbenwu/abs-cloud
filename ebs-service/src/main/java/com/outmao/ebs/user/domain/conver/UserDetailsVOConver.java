@@ -15,6 +15,8 @@ public class UserDetailsVOConver  implements BeanConver<QUser, UserDetailsVO> {
         vo.setPhone(t.get(e.details.phone));
         vo.setEmail(t.get(e.details.email));
         vo.setRealName(t.get(e.details.realName));
+        vo.setEnterpriseId(t.get(e.details.enterpriseId));
+        vo.setEnterpriseName(t.get(e.details.enterpriseName));
         vo.setSex(t.get(e.details.sex));
         vo.setBirthday(t.get(e.details.birthday));
         vo.setHometown(t.get(e.details.hometown));
@@ -36,7 +38,8 @@ public class UserDetailsVOConver  implements BeanConver<QUser, UserDetailsVO> {
         vo.setAvatar(t.get(e.avatar));
         vo.setArea(t.get(e.area));
         vo.setAreaCode(t.get(e.areaCode));
-        vo.setCertified(t.get(e.certified));
+        vo.setVerified(t.get(e.verified));
+        vo.setEntVerified(t.get(e.entVerified));
         vo.setCredits(t.get(e.credits));
         vo.setLevel(t.get(e.level));
         vo.setVip(t.get(e.vip));
@@ -79,7 +82,8 @@ public class UserDetailsVOConver  implements BeanConver<QUser, UserDetailsVO> {
                 e.area,
                 e.areaCode,
                 e.imei,
-                e.certified,
+                e.verified,
+                e.entVerified,
                 e.credits,
                 e.level,
                 e.vip,

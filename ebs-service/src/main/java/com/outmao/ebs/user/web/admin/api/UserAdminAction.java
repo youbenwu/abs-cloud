@@ -38,11 +38,11 @@ import org.springframework.web.bind.annotation.RestController;
 				@AccessPermission(title = "读取用户等级",url = "/user/level",name = "read"),
 		}),
 
-		@AccessPermissionParent(title = "实名认证信息管理",url = "/user/idCard",name = "",children = {
-				@AccessPermission(title = "保存实名认证信息",url = "/user/idCard",name = "save"),
-				@AccessPermission(title = "删除实名认证信息",url = "/user/idCard",name = "delete"),
-				@AccessPermission(title = "读取实名认证信息",url = "/user/idCard",name = "read"),
-				@AccessPermission(title = "审核实名认证信息",url = "/user/idCard",name = "status"),
+		@AccessPermissionParent(title = "实名认证信息管理",url = "/user/certification",name = "",children = {
+				@AccessPermission(title = "保存实名认证信息",url = "/user/certification",name = "save"),
+				@AccessPermission(title = "删除实名认证信息",url = "/user/certification",name = "delete"),
+				@AccessPermission(title = "读取实名认证信息",url = "/user/certification",name = "read"),
+				@AccessPermission(title = "审核实名认证信息",url = "/user/certification",name = "status"),
 		}),
 
 		@AccessPermissionParent(title = "用户位置信息管理",url = "/user/location",name = "",children = {

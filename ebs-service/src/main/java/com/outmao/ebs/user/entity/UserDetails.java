@@ -40,16 +40,31 @@ public class UserDetails implements Serializable {
 	private User user;
 
 	/**
+	 * 真实姓名
+	 */
+	private String realName;
+
+	/**
+	 * 认证的企业ID
+	 */
+	private Long enterpriseId;
+
+	/**
+	 * 认证的企业名称
+	 */
+	private String enterpriseName;
+
+	/**
+	 * 用户绑定手机号
+	 */
+	private String phone;
+
+	/**
 	 *
 	 * 住址
 	 *
 	 */
 	private String address;
-
-	/**
-	 * 用户手机
-	 */
-	private String phone;
 
 	/**
 	 * 用户邮箱
@@ -66,20 +81,16 @@ public class UserDetails implements Serializable {
 	 */
 	private String qq;
 
-	/**
-	 * 真实姓名
-	 */
-	private String realName;
 
 	/**
 	 * 0未知1男2女
 	 */
-	private int    sex;
+	private int sex;
 
 	/**
 	 * 生日
 	 */
-	private Date   birthday;
+	private Date birthday;
 
 	/**
 	 * 故乡 格式 广东-广州
@@ -106,7 +117,6 @@ public class UserDetails implements Serializable {
 	 */
 	private String job;
 
-
 	/**
 	 * 年龄
 	 */
@@ -118,11 +128,10 @@ public class UserDetails implements Serializable {
 	private String hobby;
 
 
-
 	/**
 	 * 更新时间
 	 */
-	private Date   updateTime;
+	private Date updateTime;
 
 
 }

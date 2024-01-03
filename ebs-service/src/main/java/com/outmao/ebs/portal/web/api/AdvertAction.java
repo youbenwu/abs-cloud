@@ -1,7 +1,8 @@
 package com.outmao.ebs.portal.web.api;
 
 
-import com.outmao.ebs.common.util.RequestUtil;
+import com.outmao.ebs.hotel.entity.HotelDevice;
+import com.outmao.ebs.hotel.service.HotelDeviceService;
 import com.outmao.ebs.mall.order.vo.SettleVO;
 import com.outmao.ebs.portal.dto.*;
 import com.outmao.ebs.portal.entity.Advert;
@@ -44,6 +45,9 @@ public class AdvertAction {
     @Autowired
     private AdvertPvLogService advertPvLogService;
 
+    @Autowired
+    private HotelDeviceService hotelDeviceService;
+
 
     @ApiOperation(value = "获取广告频道列表", notes = "获取广告频道列表")
     @PostMapping("/channel/list")
@@ -85,7 +89,7 @@ public class AdvertAction {
     @PostMapping("/pageForHotelPad")
     public Page<AdvertVO> getAdvertPageForHotelPad(GetAdvertListForHotelPadDTO request, @PageableDefault(sort = {"sort"}, direction = Sort.Direction.ASC)Pageable pageable) {
         Page<AdvertVO> page= advertService.getAdvertVOPage(request,pageable);
-        pvLog(page.getContent());
+        pvLog(page.getContent(),request.getDeviceNo());
         return page;
     }
 
@@ -98,20 +102,30 @@ public class AdvertAction {
     @PostMapping("/listForHotelPad")
     public List<AdvertVO> getAdvertList(GetAdvertListForHotelPadDTO request) {
         List<AdvertVO> list= advertService.getAdvertVOList(request);
-        pvLog(list);
+        pvLog(list,request.getDeviceNo());
         return list;
     }
 
-    private void pvLog(List<AdvertVO> list){
+    private void pvLog(List<AdvertVO> list,String deviceNo){
         if(list==null||list.isEmpty())
             return;
-        if(SecurityUtil.isAuthenticated()) {
+        HotelDevice device=null;
+        if(deviceNo!=null){
+            device=hotelDeviceService.getHotelDeviceByDeviceNo(deviceNo);
+        }
+        if(device==null){
+            if(SecurityUtil.isAuthenticated()){
+                device=hotelDeviceService.getHotelDeviceByUserId(SecurityUtil.currentUserId());
+            }
+        }
+        if(device!=null){
             AdvertPvLogListDTO listDTO = new AdvertPvLogListDTO();
             listDTO.setAdverts(list.stream().map(t -> t.getId()).collect(Collectors.toList()));
-            listDTO.setUserId(SecurityUtil.currentUserId());
-            listDTO.setSpaceId(RequestUtil.getHeaderLong("hotelId"));
+            listDTO.setUserId(device.getUserId());
+            listDTO.setSpaceId(device.getHotelId());
             advertPvLogService.saveAdvertPvLogListAsync(listDTO);
         }
+
     }
 
 

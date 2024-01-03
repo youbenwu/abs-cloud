@@ -32,6 +32,8 @@ public class AdvertVOConver implements BeanConver<QAdvert, AdvertVO> {
         vo.setOrgId(t.get(e.orgId));
         vo.setBuy(t.get(e.buy));
         vo.setBuyDisplay(t.get(e.buyDisplay));
+        vo.setPv(t.get(e.pv));
+        vo.setUv(t.get(e.uv));
         return vo;
     }
 
@@ -58,6 +60,8 @@ public class AdvertVOConver implements BeanConver<QAdvert, AdvertVO> {
                 e.orgId,
                 e.buy,
                 e.buyDisplay,
+                e.pv,
+                e.uv,
         };
     }
 

@@ -22,9 +22,8 @@ public class EnterpriseVOConver implements BeanConver<QEnterprise, EnterpriseVO>
         vo.setLegalRepresentative(t.get(e.legalRepresentative));
 
 
-        vo.setLegalRepresentativeCertificate(t.get(e.legalRepresentativeCertificate));
-        vo.setLegalRepresentativeCertificateType(t.get(e.legalRepresentativeCertificateType));
-        vo.setLegalRepresentativeCertificateNumber(t.get(e.legalRepresentativeCertificateNumber));
+        vo.setLegalRepresentativeAuth(t.get(e.legalRepresentativeAuth));
+
         vo.setRegisteredCapital(t.get(e.registeredCapital));
 
 
@@ -56,9 +55,7 @@ public class EnterpriseVOConver implements BeanConver<QEnterprise, EnterpriseVO>
                 e.registryAuthority,
                 e.legalRepresentative,
 
-                e.legalRepresentativeCertificate,
-                e.legalRepresentativeCertificateType,
-                e.legalRepresentativeCertificateNumber,
+                e.legalRepresentativeAuth,
                 e.registeredCapital,
 
                 e.enterpriseType,

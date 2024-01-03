@@ -2,7 +2,6 @@ package com.outmao.ebs.mall.merchant.dto;
 
 
 import com.outmao.ebs.common.vo.Contact;
-import com.outmao.ebs.org.dto.EnterpriseDTO;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -61,10 +60,11 @@ public class MerchantDTO {
 
     /**
      *
-     * 企业信息
+     * 企业ID
      *
      */
-    @ApiModelProperty(name = "enterprise", value = "企业信息")
-    private EnterpriseDTO enterprise;
+    @ApiModelProperty(name = "enterpriseId", value = "企业ID")
+    private Long enterpriseId;
+
 
 }

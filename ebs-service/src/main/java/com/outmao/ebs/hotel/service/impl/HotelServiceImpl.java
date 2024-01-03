@@ -193,6 +193,11 @@ public class HotelServiceImpl extends BaseService implements HotelService {
     }
 
     @Override
+    public List<HotelVO> getHotelVOListByIdIn(Collection<Long> idIn) {
+        return hotelDomain.getHotelVOListByIdIn(idIn);
+    }
+
+    @Override
     public List<HotelVO> getHotelVOListByOrgIdIn(Collection<Long> orgIdIn) {
         return hotelDomain.getHotelVOListByOrgIdIn(orgIdIn);
     }

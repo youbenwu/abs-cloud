@@ -72,7 +72,7 @@ public class RongcloudAction {
 
 	@ApiOperation(value = "融云注册用户，获取APP登录TOKEN", notes = "融云注册用户，获取APP登录TOKEN")
 	@PostMapping("/register")
-	public Token register() {
+	public Token register(Long hotelId) {
 		if(!SecurityUtil.isAuthenticated()){
 			throw new BusinessException("请先登录用户");
 		}
@@ -89,7 +89,12 @@ public class RongcloudAction {
                 userModel.setGroupId(device.getHotelId().toString());
                 userModel.setGroupName(device.getHotelId().toString());
             }
-        }
+        }else{
+        	if(hotelId!=null) {
+				userModel.setGroupId(hotelId.toString());
+				userModel.setGroupName(hotelId.toString());
+			}
+		}
 
 		return rongcloudService.registerUser(userModel);
 

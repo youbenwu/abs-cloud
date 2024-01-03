@@ -12,4 +12,6 @@ public interface EnterpriseAccountInformationDao extends JpaRepository<Enterpris
     @Query("select e from EnterpriseAccountInformation e where e.enterprise.id in ?1")
     public List<EnterpriseAccountInformation> findAllByEnterpriseIdIn(Collection<Long> idIn);
 
+    public void deleteAllByEnterpriseId(Long enterpriseId);
+
 }

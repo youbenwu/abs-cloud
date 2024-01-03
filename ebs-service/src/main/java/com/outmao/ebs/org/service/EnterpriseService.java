@@ -15,6 +15,7 @@ public interface EnterpriseService  {
 
 
     public Enterprise saveEnterprise(EnterpriseDTO request);
+    public void deleteEnterpriseById(Long id);
     public Enterprise setEnterpriseStatus(Long id, int status, String statusRemark);
     public Enterprise getEnterpriseById(Long id);
     public List<Enterprise> getEnterpriseListByUserId(Long userId);
@@ -23,5 +24,6 @@ public interface EnterpriseService  {
     public EnterpriseVO getEnterpriseVOById(Long id);
     public List<EnterpriseVO> getEnterpriseVOListByUserId(Long userId);
     public Page<EnterpriseVO> getEnterpriseVOPage(GetEnterpriseListDTO request, Pageable pageable);
+
 
 }

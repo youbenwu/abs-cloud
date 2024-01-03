@@ -25,6 +25,12 @@ public interface UserService {
 	// 修改手机号
 	public User modifyUserPhone(Long id, String phone);
 
+	// 设置用户认证状态
+	public User setUserVerified(Long id,boolean verified,String realName);
+
+	// 设置企业认证状态
+	public User setUserEntVerified(Long id,boolean entVerified,Long enterpriseId,String enterpriseName);
+
 	// 获取用户总数
 	public long getUserCount();
 

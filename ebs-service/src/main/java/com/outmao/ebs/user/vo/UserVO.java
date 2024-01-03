@@ -44,8 +44,11 @@ public class UserVO extends SimpleUserVO{
 	@ApiModelProperty(name = "url", value = "用户信息地址")
 	private String  url;
 
-	@ApiModelProperty(name = "certified", value = "是否实名认证")
-	private Boolean certified;
+	@ApiModelProperty(name = "verified", value = "是否实名认证")
+	private Boolean verified;
+
+	@ApiModelProperty(name = "entVerified", value = "是否企业认证")
+	private Boolean entVerified;
 
 	@ApiModelProperty(name = "credits", value = "用户成长值")
 	private Long    credits;

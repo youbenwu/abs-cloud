@@ -57,29 +57,10 @@ public class EnterpriseBasicInformation {
     @ApiModelProperty(name = "legalRepresentative", value = "法定代表人-营业执照上的法定代表人或负责人")
     private String legalRepresentative;
 
-    /**
-     *
-     * 法人代表人证件类型
-     *
-     */
-    @ApiModelProperty(name = "legalRepresentativeCertificateType", value = "法人代表人证件类型")
-    private String legalRepresentativeCertificateType;
 
-    /**
-     *
-     * 法人代表人证件号
-     *
-     */
-    @ApiModelProperty(name = "legalRepresentativeCertificateNumber", value = "法人代表人证件号")
-    private String legalRepresentativeCertificateNumber;
-
-    /**
-     *
-     * 法定代表人证件电子版
-     *
-     */
-    @ApiModelProperty(name = "legalRepresentativeCertificate", value = "法定代表人证件电子版")
-    private String legalRepresentativeCertificate;
+    @ApiModelProperty(name = "legalRepresentativeAuth", value = "法定代表人认证信息")
+    @Embedded
+    private EnterpriseLegalRepresentativeAuth legalRepresentativeAuth;
 
 
     /**

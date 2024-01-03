@@ -12,4 +12,6 @@ public interface EnterpriseBrandInformationDao extends JpaRepository<EnterpriseB
     @Query("select e from EnterpriseBrandInformation e where e.enterprise.id in ?1")
     public List<EnterpriseBrandInformation> findAllByEnterpriseIdIn(Collection<Long> idIn);
 
+    public void deleteAllByEnterpriseId(Long enterpriseId);
+
 }

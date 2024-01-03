@@ -10,9 +10,6 @@ import com.outmao.ebs.user.dto.*;
 import com.outmao.ebs.user.entity.*;
 import com.outmao.ebs.user.service.UserService;
 import com.outmao.ebs.user.vo.*;
-import com.outmao.ebs.wallet.dto.RegisterWalletDTO;
-import com.outmao.ebs.wallet.entity.Wallet;
-import com.outmao.ebs.wallet.service.WalletService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.core.annotation.Order;
@@ -20,7 +17,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.util.Collection;
 import java.util.List;
 
@@ -34,44 +30,30 @@ public class UserServiceImpl extends BaseService implements UserService, Command
 	@Autowired
 	private UserOauthDomain userOauthDomain;
 
-	@Autowired
-	private WalletService walletService;
-
 
 	@Transactional
 	@Override
 	public void run(String... args) throws Exception {
 
 		//创建管理员用户
-//		User admin = this.getUserByUsername("admin");
-//		if (admin == null) {
-//			this.registerUser(new RegisterDTO(Oauth.USERNAME.getName(), "admin", "123456"));
-//		}
+		User admin = this.getUserByUsername("admin");
+		if (admin == null) {
+			registerUser(new RegisterDTO(
+					Oauth.USERNAME.getName(),
+					"admin",
+					"123456"
+			));
+		}
 
 	}
 
 
-	@Transactional
 	@Override
 	public User registerUser(RegisterDTO request) {
-
 		User user= userDomain.registerUser(request);
-
-		registerWallet(user);
-
-
-
 		return user;
 	}
 
-	private void registerWallet(User user){
-		RegisterWalletDTO walletDTO=new RegisterWalletDTO();
-		walletDTO.setUserId(user.getId());
-		walletDTO.setPhone(user.getDetails().getPhone());
-		walletDTO.setRealName(user.getDetails().getRealName());
-		Wallet wallet=walletService.registerWallet(walletDTO);
-		user.setWalletId(wallet.getId());
-	}
 
 
 	@Override
@@ -94,20 +76,25 @@ public class UserServiceImpl extends BaseService implements UserService, Command
 		return userDomain.modifyUserPhone(id,phone);
 	}
 
+
+	@Override
+	public User setUserVerified(Long id, boolean verified, String realName) {
+		return userDomain.setUserVerified(id,verified,realName);
+	}
+
+	@Override
+	public User setUserEntVerified(Long id,boolean entVerified,Long enterpriseId,String enterpriseName) {
+		return userDomain.setUserEntVerified(id,entVerified,enterpriseId,enterpriseName);
+	}
+
 	@Override
 	public long getUserCount() {
 		return userDomain.getUserCount();
 	}
 
-	@Transactional
 	@Override
 	public User getUserById(Long id) {
-
-		User user= userDomain.getUserById(id);
-		if(user.getWalletId()==null){
-			registerWallet(user);
-		}
-		return user;
+		return userDomain.getUserById(id);
 	}
 
 	@Override

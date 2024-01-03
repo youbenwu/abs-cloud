@@ -26,6 +26,8 @@ public interface HotelDeviceService {
 
     public long getHotelDeviceCountByLeaseRenterId(Long leaseRenterId);
 
+    public HotelDevice getHotelDeviceByDeviceNo(String deviceNo);
+
     public HotelDevice getHotelDeviceByUserId(Long userId);
 
     public HotelDeviceVO getHotelDeviceVOById(Long id);

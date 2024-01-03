@@ -39,6 +39,8 @@ public interface HotelService {
 
     public Page<QyHotelVO> getQyHotelVOPage(GetHotelListForDeployDeviceDTO request, Pageable pageable);
 
+    public List<HotelVO> getHotelVOListByIdIn(Collection<Long> idIn);
+
     public List<HotelVO> getHotelVOListByOrgIdIn(Collection<Long> orgIdIn);
 
 

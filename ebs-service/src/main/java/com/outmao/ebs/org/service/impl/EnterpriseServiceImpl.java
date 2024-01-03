@@ -3,16 +3,19 @@ package com.outmao.ebs.org.service.impl;
 
 
 import com.outmao.ebs.common.base.BaseService;
+import com.outmao.ebs.common.configuration.constant.Status;
 import com.outmao.ebs.org.domain.EnterpriseDomain;
 import com.outmao.ebs.org.dto.EnterpriseDTO;
 import com.outmao.ebs.data.dto.GetEnterpriseListDTO;
 import com.outmao.ebs.org.entity.enterprise.Enterprise;
 import com.outmao.ebs.org.service.EnterpriseService;
 import com.outmao.ebs.org.vo.EnterpriseVO;
+import com.outmao.ebs.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -20,17 +23,46 @@ import java.util.List;
 public class EnterpriseServiceImpl extends BaseService implements EnterpriseService {
 
     @Autowired
-    EnterpriseDomain enterpriseDomain;
+    private EnterpriseDomain enterpriseDomain;
 
+    @Autowired
+    private UserService userService;
 
+    @Transactional
     @Override
     public Enterprise saveEnterprise(EnterpriseDTO request) {
-        return enterpriseDomain.saveEnterprise(request);
+
+        Enterprise enterprise= enterpriseDomain.saveEnterprise(request);
+
+        updateUser(enterprise);
+
+        return enterprise;
     }
 
+    @Transactional
+    @Override
+    public void deleteEnterpriseById(Long id) {
+        Enterprise enterprise=enterpriseDomain.getEnterpriseById(id);
+        enterprise.setStatus(Status.DELETED.getStatus());
+        updateUser(enterprise);
+        enterpriseDomain.deleteEnterpriseById(id);
+    }
+
+    @Transactional
     @Override
     public Enterprise setEnterpriseStatus(Long id, int status, String statusRemark) {
-        return enterpriseDomain.setEnterpriseStatus(id,status,statusRemark);
+        Enterprise enterprise= enterpriseDomain.setEnterpriseStatus(id,status,statusRemark);
+        updateUser(enterprise);
+        return enterprise;
+    }
+
+    private void updateUser(Enterprise enterprise){
+        userService.setUserEntVerified(
+                enterprise.getUser().getId(),
+                enterprise.getStatus()== Status.NORMAL.getStatus(),
+                enterprise.getId(),
+                enterprise.getEnterpriseName()
+        );
     }
 
     @Override

@@ -3,8 +3,7 @@ package com.outmao.ebs.mall.merchant.domain.impl;
 import com.outmao.ebs.common.configuration.constant.Status;
 import com.outmao.ebs.common.base.BaseDomain;
 import com.outmao.ebs.common.util.StringUtil;
-import com.outmao.ebs.org.domain.EnterpriseDomain;
-import com.outmao.ebs.mall.merchant.common.annotation.SetMerchantStats;
+import com.outmao.ebs.org.common.annotation.BindingOrg;
 import com.outmao.ebs.mall.merchant.dao.MerchantDao;
 import com.outmao.ebs.mall.merchant.domain.MerchantDomain;
 import com.outmao.ebs.mall.merchant.domain.conver.MerchantVOConver;
@@ -17,16 +16,12 @@ import com.outmao.ebs.mall.merchant.entity.MerchantContact;
 import com.outmao.ebs.mall.merchant.entity.QMerchant;
 import com.outmao.ebs.mall.merchant.vo.MerchantVO;
 import com.outmao.ebs.mall.merchant.vo.SimpleMerchantVO;
-import com.outmao.ebs.mall.shop.domain.ShopDomain;
-import com.outmao.ebs.mall.shop.dto.ShopDTO;
-import com.outmao.ebs.mall.shop.entity.Shop;
-import com.outmao.ebs.mall.store.domain.StoreDomain;
-import com.outmao.ebs.mall.store.dto.StoreDTO;
-import com.outmao.ebs.org.entity.enterprise.Enterprise;
-import com.outmao.ebs.org.service.OrgService;
+import com.outmao.ebs.qrCode.dto.ActivateQrCodeDTO;
+import com.outmao.ebs.qrCode.entity.QrCode;
 import com.outmao.ebs.qrCode.service.QrCodeService;
 import com.outmao.ebs.user.common.annotation.SetSimpleUser;
 import com.outmao.ebs.user.dao.UserDao;
+import com.outmao.ebs.wallet.common.annotation.BindingWallet;
 import com.querydsl.core.types.Predicate;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,52 +45,31 @@ public class MerchantDomainImpl extends BaseDomain implements MerchantDomain {
     private MerchantDao merchantDao;
 
     @Autowired
-    private ShopDomain shopDomain;
-
-    @Autowired
-    private StoreDomain storeDomain;
-
-    @Autowired
     private QrCodeService qrcodeService;
-
-
-    @Autowired
-    private EnterpriseDomain enterpriseDomain;
-
-    @Autowired
-    private OrgService orgService;
-
-
 
     private MerchantVOConver merchantVOConver=new MerchantVOConver();
     private SimpleMerchantVOConver simpleMerchantVOConver=new SimpleMerchantVOConver();
 
     @Transactional
+    @BindingWallet
+    @BindingOrg
     @Override
     public Merchant saveMerchant(MerchantDTO request) {
 
-        Merchant merchant=request.getId()==null?null:merchantDao.getOne(request.getId());
+        Merchant merchant=request.getId()==null?merchantDao.findByUserId(request.getUserId()):merchantDao.getOne(request.getId());
 
         if(merchant==null){
             merchant=new Merchant();
             merchant.setCreateTime(new Date());
             merchant.setUser(userDao.getOne(request.getUserId()));
-        }
-
-        if(request.getEnterprise()!=null){
-            request.getEnterprise().setUserId(request.getUserId());
-            Enterprise enterprise=enterpriseDomain.saveEnterprise(request.getEnterprise());
-            merchant.setEnterpriseId(enterprise.getId());
-        }
-
-        if(merchant.getContact()==null){
             merchant.setContact(new MerchantContact());
         }
+
         if(request.getContact()!=null){
             BeanUtils.copyProperties(request.getContact(),merchant.getContact());
         }
 
-        BeanUtils.copyProperties(request,merchant,"contact");
+        BeanUtils.copyProperties(request,merchant,"id","contact");
         merchant.setUpdateTime(new Date());
 
         merchant.setKeyword(getKeyword(merchant));
@@ -105,39 +79,16 @@ public class MerchantDomainImpl extends BaseDomain implements MerchantDomain {
 
         merchantDao.save(merchant);
 
-        if(merchant.getOrgId()==null){
-            orgService.registerOrg(merchant);
-        }
-
-//        if(merchant.getUrl()==null){
-//            String url=config.getBaseUrl()+"/merchant?id="+merchant.getId();
-//            String qrCode=qrcodeService.generateQrCode(new GenerateQrCodeDTO(url,500,500));
-//            merchant.setUrl(url);
-//            merchant.setQrCode(qrCode);
-//        }
-
-        if(merchant.getShopId()==null){
-
-            //创建店铺
-            ShopDTO shopDTO=new ShopDTO();
-            shopDTO.setMerchantId(merchant.getId());
-            shopDTO.setTitle(merchant.getId()+":"+merchant.getName());
-            Shop shop= shopDomain.saveShop(shopDTO);
-            merchant.setShopId(shop.getId());
-
-            //创建默认仓库
-            StoreDTO storeDTO=new StoreDTO();
-            storeDTO.setMerchantId(merchant.getId());
-            storeDTO.setType(1);
-            storeDTO.setTitle(merchant.getId()+":"+"默认仓库");
-            storeDomain.saveStore(storeDTO);
-
+        if(merchant.getUrl()==null){
+            String url=config.getBaseUrl()+"/merchant?id="+merchant.getId();
+            QrCode qrCode=qrcodeService.activateQrCode(new ActivateQrCodeDTO(url));
+            merchant.setUrl(url);
+            merchant.setQrCode(qrCode.getPath());
         }
 
         return merchant;
+
     }
-
-
 
 
 
@@ -194,10 +145,6 @@ public class MerchantDomainImpl extends BaseDomain implements MerchantDomain {
 
         MerchantVO vo=queryOne(e,e.id.eq(id),merchantVOConver);
 
-
-        if(vo!=null&&vo.getEnterpriseId()!=null){
-            vo.setEnterprise(enterpriseDomain.getEnterpriseVOById(vo.getEnterpriseId()));
-        }
         return vo;
     }
 
@@ -208,21 +155,15 @@ public class MerchantDomainImpl extends BaseDomain implements MerchantDomain {
 
         MerchantVO vo=queryOne(e,e.orgId.eq(orgId),merchantVOConver);
 
-        if(vo!=null&&vo.getEnterpriseId()!=null){
-            vo.setEnterprise(enterpriseDomain.getEnterpriseVOById(vo.getEnterpriseId()));
-        }
         return vo;
     }
 
-    @SetMerchantStats
     @Override
     public MerchantVO getMerchantVOByUserId(Long userId) {
         QMerchant e=QMerchant.merchant;
 
         MerchantVO vo=queryOne(e,e.user.id.eq(userId),merchantVOConver);
-        if(vo.getEnterpriseId()!=null){
-            vo.setEnterprise(enterpriseDomain.getEnterpriseVOById(vo.getEnterpriseId()));
-        }
+
         return vo;
     }
 
@@ -231,13 +172,10 @@ public class MerchantDomainImpl extends BaseDomain implements MerchantDomain {
         QMerchant e=QMerchant.merchant;
 
         MerchantVO vo=queryOne(e,e.shopId.eq(shopId),merchantVOConver);
-        if(vo.getEnterpriseId()!=null){
-            vo.setEnterprise(enterpriseDomain.getEnterpriseVOById(vo.getEnterpriseId()));
-        }
+
         return vo;
     }
 
-    @SetMerchantStats
     @Override
     public Page<MerchantVO> getMerchantVOPage(GetMerchantListDTO request, Pageable pageable) {
 
@@ -262,5 +200,7 @@ public class MerchantDomainImpl extends BaseDomain implements MerchantDomain {
         List<SimpleMerchantVO> list=queryList(e,e.id.in(idIn),simpleMerchantVOConver);
         return list;
     }
+
+
 
 }

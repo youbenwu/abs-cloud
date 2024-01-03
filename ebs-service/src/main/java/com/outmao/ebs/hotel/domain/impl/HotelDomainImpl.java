@@ -358,8 +358,17 @@ public class HotelDomainImpl extends BaseDomain implements HotelDomain {
 
     @Override
     public List<HotelVO> getHotelVOListByOrgIdIn(Collection<Long> orgIdIn) {
+        if(orgIdIn==null||orgIdIn.isEmpty())
+            return new ArrayList<>();
         QHotel e=QHotel.hotel;
         Predicate p=e.orgId.in(orgIdIn);
+        return queryList(e,p,hotelVOConver);
+    }
+
+    @Override
+    public List<HotelVO> getHotelVOListByIdIn(Collection<Long> idIn) {
+        QHotel e=QHotel.hotel;
+        Predicate p=e.id.in(idIn);
         return queryList(e,p,hotelVOConver);
     }
 

@@ -6,6 +6,7 @@ import com.outmao.ebs.common.configuration.constant.Status;
 import com.outmao.ebs.common.vo.Item;
 import com.outmao.ebs.org.common.data.BindingOrg;
 import com.outmao.ebs.user.entity.User;
+import com.outmao.ebs.wallet.common.data.BindingWallet;
 import lombok.Data;
 import javax.persistence.*;
 import java.io.Serializable;
@@ -19,16 +20,17 @@ import java.util.Date;
 @Data
 @Entity
 @Table(name = "ebs_Merchant")
-public class Merchant implements Serializable , BindingOrg {
+public class Merchant implements Serializable , BindingOrg, BindingWallet {
 
     /**
      *
      */
     private static final long serialVersionUID = 1L;
 
-
     /**
+     *
      * 自动编号
+     *
      */
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -64,6 +66,14 @@ public class Merchant implements Serializable , BindingOrg {
      * */
     private int type;
 
+
+    /**
+     *
+     * 钱包ID
+     *
+     * */
+    private Long walletId;
+
     /**
      *
      * 企业ID
@@ -95,44 +105,6 @@ public class Merchant implements Serializable , BindingOrg {
     @Basic(fetch = FetchType.LAZY)
     private String keyword;
 
-    /**
-     *
-     * 是否启用分销
-     *
-     * */
-    private boolean distribution;
-
-    /**
-     *
-     * 商品交易实际金额的提成比率 0～1
-     * 如果商品有设置则使用商品设置的
-     *
-     * */
-    private double productCommissionRate;
-
-    /**
-     *
-     * 经纪人佣金提成 0～1
-     * 指商品交易佣金中的比率
-     *
-     * */
-    private double commission;
-
-    /**
-     *
-     * 直接合伙人佣金提成 0～1
-     * 指商品交易佣金中的比率
-     *
-     * */
-    private double partnerCommission;
-
-    /**
-     *
-     * 上级合伙人佣金提成 0～1
-     * 指商品交易佣金中的比率
-     *
-     * */
-    private double partnerParentCommission;
 
     /**
      *

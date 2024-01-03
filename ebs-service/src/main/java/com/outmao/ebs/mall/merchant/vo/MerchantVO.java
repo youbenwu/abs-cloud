@@ -3,20 +3,17 @@ package com.outmao.ebs.mall.merchant.vo;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.outmao.ebs.common.vo.Contact;
-import com.outmao.ebs.org.vo.EnterpriseVO;
-import com.outmao.ebs.mall.merchant.common.data.MerchantStatsSetter;
 import com.outmao.ebs.user.common.data.SimpleUserSetter;
 import com.outmao.ebs.user.vo.SimpleUserVO;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
-
 import java.util.Date;
 
 @ApiModel(value = "MerchantVO", description = "商家信息")
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 @Data
-public class MerchantVO implements MerchantStatsSetter , SimpleUserSetter {
+public class MerchantVO implements /*MerchantStatsSetter ,*/ SimpleUserSetter {
 
     /**
      * 自动编号
@@ -32,11 +29,11 @@ public class MerchantVO implements MerchantStatsSetter , SimpleUserSetter {
 
     /**
      *
-     * 状态 0--正常 1--禁用 2--未审核 3--审核中 4--审核成功 5--审核失败 6--删除
+     * 状态 0--正常 1--禁用 2--未审核 3--审核中
      *
      *
      */
-    @ApiModelProperty(name = "status", value = "状态 0--正常 1--禁用 2--未审核 3--审核中 4--审核失败 5--审核成功 7--欠费")
+    @ApiModelProperty(name = "status", value = "状态 0--正常 1--禁用 2--未审核 3--审核中")
     private int status;
 
     /**
@@ -54,7 +51,6 @@ public class MerchantVO implements MerchantStatsSetter , SimpleUserSetter {
      */
     @ApiModelProperty(name = "userId", value = "用户")
     private Long userId;
-
     private SimpleUserVO user;
 
     /**
@@ -82,8 +78,8 @@ public class MerchantVO implements MerchantStatsSetter , SimpleUserSetter {
     @ApiModelProperty(name = "enterpriseId", value = "企业ID")
     private Long enterpriseId;
 
-    @ApiModelProperty(name = "enterprise", value = "企业信息")
-    private EnterpriseVO enterprise;
+//    @ApiModelProperty(name = "enterprise", value = "企业信息")
+//    private EnterpriseVO enterprise;
 
     /**
      *
@@ -144,8 +140,8 @@ public class MerchantVO implements MerchantStatsSetter , SimpleUserSetter {
     private Date updateTime;
 
 
-    @ApiModelProperty(name = "stats", value = "统计数据")
-    private MerchantStatsVO stats;
+//    @ApiModelProperty(name = "stats", value = "统计数据")
+//    private MerchantStatsVO stats;
 
 
 

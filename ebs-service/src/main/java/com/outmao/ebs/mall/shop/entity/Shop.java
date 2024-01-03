@@ -36,9 +36,6 @@ public class Shop implements Serializable , BindingSubjectId {
 	 * 店铺所属商家
 	 *
 	 */
-//	@OneToOne(cascade = CascadeType.REFRESH, optional = false, fetch = FetchType.LAZY)
-//	@JoinColumn(name = "merchantId",updatable = false)
-//	private Merchant merchant;
 	@Column(updatable = false,nullable = false)
 	private Long merchantId;
 
@@ -47,16 +44,14 @@ public class Shop implements Serializable , BindingSubjectId {
 	 * 店铺所属用户
 	 *
 	 */
-//	@ManyToOne(cascade = CascadeType.REFRESH, optional = false, fetch = FetchType.LAZY)
-//	@JoinColumn(name = "userId",updatable = false)
-//	private User user;
 	@Column(updatable = false,nullable = false)
 	private Long userId;
 
-
-	//	@ManyToOne(cascade = CascadeType.REFRESH, fetch = FetchType.LAZY)
-//	@JoinColumn(name = "subjectId")
-//	private Subject subject;
+	/**
+	 *
+	 * 主题ID
+	 *
+	 */
 	private Long subjectId;
 
 
@@ -147,6 +142,7 @@ public class Shop implements Serializable , BindingSubjectId {
 	public Item toItem() {
 		return new Item(id,"Shop",title);
 	}
+
 
 
 }

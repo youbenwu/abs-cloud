@@ -34,6 +34,8 @@ public interface HotelDomain {
 
     public List<HotelVO> getHotelVOListByOrgIdIn(Collection<Long> orgIdIn);
 
+    public List<HotelVO> getHotelVOListByIdIn(Collection<Long> idIn);
+
     public List<SimpleHotelVO> getSimpleHotelVOListByIdIn(Collection<Long> idIn);
 
     public List<StatsHotelCountVO> getStatsHotelCountVOListByDays(Date fromTime, Date toTime);

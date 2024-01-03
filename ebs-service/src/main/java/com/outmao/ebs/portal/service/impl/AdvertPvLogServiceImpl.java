@@ -69,7 +69,7 @@ public class AdvertPvLogServiceImpl extends BaseService implements AdvertPvLogSe
     public List<QyStatsAdvertByHotelVO> getQyStatsAdvertByHotelVOList(Long advertId) {
         List<QyStatsAdvertByHotelVO> vos=advertPvLogDomain.getQyStatsAdvertByHotelVOList(advertId);
 
-        List<HotelVO> hotelVOS=hotelService.getHotelVOListByOrgIdIn(vos.stream().map(t->t.getHotelId()).collect(Collectors.toList()));
+        List<HotelVO> hotelVOS=hotelService.getHotelVOListByIdIn(vos.stream().map(t->t.getHotelId()).collect(Collectors.toList()));
 
         Map<Long,HotelVO> hotelVOMap=hotelVOS.stream().collect(Collectors.toMap(t->t.getId(),t->t));
 

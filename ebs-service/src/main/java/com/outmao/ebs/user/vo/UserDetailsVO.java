@@ -13,12 +13,16 @@ import java.util.Date;
 @Data
 public class UserDetailsVO extends UserVO{
 
+	@ApiModelProperty(name = "realName", value = "真实姓名")
+	private String      realName;
+	@ApiModelProperty(name = "enterpriseId", value = "认证的企业ID")
+	private Long        enterpriseId;
+	@ApiModelProperty(name = "enterpriseName", value = "认证的企业名称")
+	private String      enterpriseName;
 	@ApiModelProperty(name = "phone", value = "手机号")
 	private String      phone;
 	@ApiModelProperty(name = "EMAIL", value = "电子邮箱")
 	private String      email;
-	@ApiModelProperty(name = "realName", value = "真实姓名")
-	private String      realName;
 	@ApiModelProperty(name = "sex", value = "姓别0--未知 1--男 2--女")
 	private Integer     sex;
 	@ApiModelProperty(name = "birthday", value = "生日")
@@ -39,17 +43,10 @@ public class UserDetailsVO extends UserVO{
 	private String      company;
 	@ApiModelProperty(name = "job", value = "职位")
 	private String      job;
-	/**
-	 * 年龄
-	 */
 	@ApiModelProperty(name = "age", value = "年龄")
-	private Integer age;
-
-	/**
-	 * 个人爱好
-	 */
+	private Integer     age;
 	@ApiModelProperty(name = "hobby", value = "个人爱好")
-	private String hobby;
+	private String      hobby;
 	@ApiModelProperty(name = "updateTime", value = "修改时间")
 	private Date        updateTime;
 

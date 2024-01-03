@@ -2,6 +2,7 @@ package com.outmao.ebs.common.vo;
 
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+import org.springframework.util.StringUtils;
 
 import javax.persistence.Embeddable;
 import javax.persistence.MappedSuperclass;
@@ -47,7 +48,23 @@ public class Address implements Serializable {
 	public String toFullAddress(){
 		if(fullAddress!=null&&fullAddress.length()>0)
 			return fullAddress;
-		return province + ("市辖区".equals(city)?"":city) + (district == null ? "" : district) + (street == null ? "" : street)+ (details == null ? "" : details);
+		StringBuffer sb=new StringBuffer();
+		if(!StringUtils.isEmpty(province)){
+			sb.append(province);
+		}
+		if(!StringUtils.isEmpty(city)&&!city.equals("市辖区")){
+			sb.append(city);
+		}
+		if(!StringUtils.isEmpty(district)){
+			sb.append(district);
+		}
+		if(!StringUtils.isEmpty(street)){
+			sb.append(street);
+		}
+		if(!StringUtils.isEmpty(details)){
+			sb.append(details);
+		}
+		return sb.toString();
 	}
 
 	@Override
@@ -56,7 +73,17 @@ public class Address implements Serializable {
 	}
 
 	public String toShortAddress(){
-		return province + ("市辖区".equals(city)?"":city) + (district == null ? "" : district);
+		StringBuffer sb=new StringBuffer();
+		if(!StringUtils.isEmpty(province)){
+			sb.append(province);
+		}
+		if(!StringUtils.isEmpty(city)&&!city.equals("市辖区")){
+			sb.append(city);
+		}
+		if(!StringUtils.isEmpty(district)){
+			sb.append(district);
+		}
+		return sb.toString();
 	}
 
 

@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.outmao.ebs.bbs.common.data.BindingSubjectId;
 import com.outmao.ebs.common.vo.Item;
+import com.outmao.ebs.wallet.common.data.BindingWallet;
 import lombok.Data;
 import javax.persistence.*;
 import java.io.Serializable;
@@ -20,7 +21,7 @@ import java.util.Date;
 @Data
 @Entity
 @Table(name = "ebs_User")
-public class User implements Serializable, BindingSubjectId {
+public class User implements Serializable, BindingSubjectId, BindingWallet {
 
 	/**
 	 * 
@@ -126,10 +127,17 @@ public class User implements Serializable, BindingSubjectId {
 
 	/**
 	 * 
-	 * 实名认证状态
+	 * 实名认证
 	 * 
 	 */
-	private boolean certified;
+	private boolean verified;
+
+	/**
+	 *
+	 * 企业认证
+	 *
+	 */
+	private boolean entVerified;
 
 	/**
 	 * 积分

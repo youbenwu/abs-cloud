@@ -6,6 +6,9 @@ import com.outmao.ebs.mall.merchant.dto.*;
 import com.outmao.ebs.mall.merchant.entity.Merchant;
 import com.outmao.ebs.mall.merchant.service.MerchantService;
 import com.outmao.ebs.mall.merchant.vo.*;
+import com.outmao.ebs.mall.shop.dto.ShopDTO;
+import com.outmao.ebs.mall.shop.entity.Shop;
+import com.outmao.ebs.mall.shop.service.ShopService;
 import com.outmao.ebs.user.entity.User;
 import com.outmao.ebs.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +17,8 @@ import org.springframework.core.annotation.Order;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.util.Collection;
 import java.util.List;
 
@@ -25,8 +30,12 @@ public class MerchantServiceImpl extends BaseService implements MerchantService,
     private MerchantDomain merchantDomain;
 
     @Autowired
+    private ShopService shopService;
+
+    @Autowired
     private UserService userService;
 
+    @Transactional
     @Override
     public void run(String... args) throws Exception {
         User user=userService.getUserByUsername("admin");
@@ -43,10 +52,27 @@ public class MerchantServiceImpl extends BaseService implements MerchantService,
         }
     }
 
+
+    @Transactional
     @Override
     public Merchant saveMerchant(MerchantDTO request) {
 
-        return merchantDomain.saveMerchant(request);
+        Merchant merchant= merchantDomain.saveMerchant(request);
+
+        if(merchant.getShopId()==null){
+            //创建店铺
+            String shopTitle=merchant.getName();
+            if(merchant.getContact().getAddress()!=null){
+                shopTitle=shopTitle+"("+merchant.getContact().getAddress().toShortAddress()+")";
+            }
+            ShopDTO shopDTO=new ShopDTO();
+            shopDTO.setMerchantId(merchant.getId());
+            shopDTO.setTitle(shopTitle);
+            Shop shop= shopService.saveShop(shopDTO);
+            merchant.setShopId(shop.getId());
+        }
+
+        return merchant;
     }
 
     @Override

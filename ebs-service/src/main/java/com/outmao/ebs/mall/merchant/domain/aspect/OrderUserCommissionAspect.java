@@ -57,11 +57,11 @@ public class OrderUserCommissionAspect {
 
         Merchant merchant=merchantDao.getOne(order.getMerchantId());
 
-        if(order.getBrokerId()!=null&&merchant.getCommission()>0){
+        if(order.getBrokerId()!=null){
             saveUserCommissionRecord(merchant,order);
         }
 
-        if(order.getPartnerId()!=null&&merchant.getPartnerCommission()>0){
+        if(order.getPartnerId()!=null){
             saveUserCommissionRecordForPartner(merchant,order.getPartnerId(),0,order);
         }
 
@@ -70,33 +70,33 @@ public class OrderUserCommissionAspect {
 
     private void saveUserCommissionRecord(Merchant merchant,Order order){
 
-        MerchantBroker broker=merchantMemberDao.getOne(order.getBrokerId());
-
-        double amount=order.getCommissionAmount()*merchant.getCommission();
-
-        UserCommissionRecordDTO recordDTO=new UserCommissionRecordDTO();
-        recordDTO.setOrderId(order.getId());
-        recordDTO.setCommissionId(broker.getCommissionId());
-        recordDTO.setAmount(amount);
-        recordDTO.setType(0);
-        if(order.getProducts()!=null&&order.getProducts().size()>0) {
-            recordDTO.setImage(order.getProducts().get(0).getProductImage());
-            recordDTO.setRemark(order.getProducts().get(0).getProductTitle());
-        }
-
-        UserCommissionRecord record=userCommissionService.saveUserCommissionRecord(recordDTO);
-
-        //自动提现
-        try{
-            UserCommissionCashDTO cashDTO=new UserCommissionCashDTO();
-            cashDTO.setCommissionId(recordDTO.getCommissionId());
-            cashDTO.setAmount(recordDTO.getAmount());
-            cashDTO.setRemark("佣金收益");
-            cashDTO.setUserId(record.getUserId());
-            userCommissionService.saveUserCommissionCash(cashDTO);
-        }catch (Exception e){
-            log.error("佣金自动提现出错",e);
-        }
+//        MerchantBroker broker=merchantMemberDao.getOne(order.getBrokerId());
+//
+//        double amount=order.getCommissionAmount()*merchant.getCommission();
+//
+//        UserCommissionRecordDTO recordDTO=new UserCommissionRecordDTO();
+//        recordDTO.setOrderId(order.getId());
+//        recordDTO.setCommissionId(broker.getCommissionId());
+//        recordDTO.setAmount(amount);
+//        recordDTO.setType(0);
+//        if(order.getProducts()!=null&&order.getProducts().size()>0) {
+//            recordDTO.setImage(order.getProducts().get(0).getProductImage());
+//            recordDTO.setRemark(order.getProducts().get(0).getProductTitle());
+//        }
+//
+//        UserCommissionRecord record=userCommissionService.saveUserCommissionRecord(recordDTO);
+//
+//        //自动提现
+//        try{
+//            UserCommissionCashDTO cashDTO=new UserCommissionCashDTO();
+//            cashDTO.setCommissionId(recordDTO.getCommissionId());
+//            cashDTO.setAmount(recordDTO.getAmount());
+//            cashDTO.setRemark("佣金收益");
+//            cashDTO.setUserId(record.getUserId());
+//            userCommissionService.saveUserCommissionCash(cashDTO);
+//        }catch (Exception e){
+//            log.error("佣金自动提现出错",e);
+//        }
 
 
     }
@@ -106,7 +106,7 @@ public class OrderUserCommissionAspect {
 
         MerchantPartner partner=merchantPartnerDao.getOne(order.getPartnerId());
 
-        double rate=level==0?merchant.getPartnerCommission():merchant.getPartnerParentCommission();
+        double rate=1;
 
         double amount=order.getCommissionAmount()*rate;
 
@@ -123,9 +123,7 @@ public class OrderUserCommissionAspect {
 
         UserCommissionRecord record=userCommissionService.saveUserCommissionRecord(recordDTO);
 
-        if(level==0&&partner.getParent()!=null&&merchant.getPartnerParentCommission()>0){
-            saveUserCommissionRecordForPartner(merchant,partner.getParent().getId(),1,order);
-        }
+
 
         //自动提现
         try{

@@ -82,6 +82,14 @@ public class EnterpriseDomainImpl extends BaseDomain implements EnterpriseDomain
         return enterprise;
     }
 
+    @Transactional
+    @Override
+    public void deleteEnterpriseById(Long id) {
+        enterpriseAccountInformationDao.deleteAllByEnterpriseId(id);
+        enterpriseBrandInformationDao.deleteAllByEnterpriseId(id);
+        enterpriseDao.deleteById(id);
+    }
+
     private void saveAccountInformation(Enterprise enterprise, List<EnterpriseAccountInformation> list){
         if(enterprise.getAccountInformation()!=null&&enterprise.getAccountInformation().size()>0){
             List<EnterpriseAccountInformation> dels=enterprise.getAccountInformation().stream().filter(t->!list.contains(t)).collect(Collectors.toList());
@@ -132,6 +140,13 @@ public class EnterpriseDomainImpl extends BaseDomain implements EnterpriseDomain
 
         QEnterprise e= QEnterprise.enterprise;
 
+        Predicate p=getPredicate(request);
+
+        return enterpriseDao.findAll(p,pageable);
+    }
+
+    private Predicate getPredicate(GetEnterpriseListDTO request){
+        QEnterprise e= QEnterprise.enterprise;
         Predicate p=null;
 
         if(request.getUserId()!=null){
@@ -145,8 +160,7 @@ public class EnterpriseDomainImpl extends BaseDomain implements EnterpriseDomain
         if(StringUtil.isNotEmpty(request.getKeyword())){
             p=e.enterpriseName.like("%"+request.getKeyword()+"%").and(p);
         }
-
-        return enterpriseDao.findAll(p,pageable);
+        return p;
     }
 
 
@@ -179,19 +193,7 @@ public class EnterpriseDomainImpl extends BaseDomain implements EnterpriseDomain
 
         QEnterprise e= QEnterprise.enterprise;
 
-        Predicate p=null;
-
-        if(request.getUserId()!=null){
-            p=e.user.id.eq(request.getUserId());
-        }
-
-        if(request.getStatusIn()!=null){
-            p=e.status.in(request.getStatusIn()).and(p);
-        }
-
-        if(StringUtil.isNotEmpty(request.getKeyword())){
-            p=e.enterpriseName.like("%"+request.getKeyword()+"%").and(p);
-        }
+        Predicate p=getPredicate(request);
 
         Page<EnterpriseVO> page=queryPage(e,p,enterpriseVOConver,pageable);
 

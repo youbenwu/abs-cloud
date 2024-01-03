@@ -19,6 +19,7 @@ import com.outmao.ebs.user.dto.UserDTO;
 import com.outmao.ebs.user.dto.UserDetailsDTO;
 import com.outmao.ebs.user.entity.*;
 import com.outmao.ebs.user.vo.*;
+import com.outmao.ebs.wallet.common.annotation.BindingWallet;
 import com.querydsl.core.types.Predicate;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -66,6 +67,7 @@ public class UserDomainImpl extends BaseDomain implements UserDomain {
 
 	@Transactional
 	@BindingSubjectId
+	@BindingWallet
 	@Override
 	public User registerUser(RegisterDTO request) {
 
@@ -206,7 +208,38 @@ public class UserDomainImpl extends BaseDomain implements UserDomain {
 		return user;
 	}
 
+	@Transactional
+	@Override
+	public User setUserVerified(Long id, boolean verified, String realName) {
+		User user=userDao.findByIdLock(id);
+		user.setVerified(verified);
+		if(verified){
+			user.getDetails().setRealName(realName);
+		}else{
+			user.getDetails().setRealName(null);
+		}
+		userDao.save(user);
+		return user;
+	}
 
+	@Transactional
+	@Override
+	public User setUserEntVerified(Long id,boolean entVerified,Long enterpriseId,String enterpriseName) {
+		User user=userDao.findByIdLock(id);
+		if(user.isEntVerified()&&!user.getDetails().getEnterpriseId().equals(enterpriseId)){
+			return user;
+		}
+		user.setEntVerified(entVerified);
+		if(entVerified){
+			user.getDetails().setEnterpriseId(enterpriseId);
+			user.getDetails().setEnterpriseName(enterpriseName);
+		}else{
+			user.getDetails().setEnterpriseId(null);
+			user.getDetails().setEnterpriseName(null);
+		}
+		userDao.save(user);
+		return user;
+	}
 
 	@Override
 	public User getUserById(Long id) {
@@ -328,7 +361,7 @@ public class UserDomainImpl extends BaseDomain implements UserDomain {
 			details.setCompany(request.getCompany());
 		}
 		if(StringUtil.isNotEmpty(request.getRealName())){
-			if(user.isCertified()){
+			if(user.isVerified()){
 				if(!details.getRealName().equals(request.getRealName())){
 					throw new BusinessException("已实名，不能修改姓名");
 				}
@@ -366,7 +399,7 @@ public class UserDomainImpl extends BaseDomain implements UserDomain {
 		User user=userDao.findById(request.getId()).orElse(null);
 		UserDetails details = userDetailsDao.findByUserId(user.getId());
 
-		if(user.isCertified()){
+		if(user.isVerified()){
            if(!details.getRealName().equals(request.getRealName())){
            	  throw new BusinessException("已实名，不能修改姓名");
 		   }

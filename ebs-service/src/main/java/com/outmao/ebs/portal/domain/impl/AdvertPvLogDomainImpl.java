@@ -70,7 +70,7 @@ public class AdvertPvLogDomainImpl extends BaseDomain implements AdvertPvLogDoma
     public List<QyStatsAdvertByHotelVO> getQyStatsAdvertByHotelVOList(Long advertId) {
         QAdvertPvLog e=QAdvertPvLog.advertPvLog;
 
-        List<Tuple> tuples=QF.select(e.count(),e.spaceId).from(e).groupBy(e.spaceId).where(e.advertId.eq(advertId)).fetch();
+        List<Tuple> tuples=QF.select(e.count(),e.spaceId).from(e).groupBy(e.spaceId).where(e.advertId.eq(advertId).and(e.spaceId.isNotNull())).fetch();
 
         List<QyStatsAdvertByHotelVO> list=new ArrayList<>(tuples.size());
 

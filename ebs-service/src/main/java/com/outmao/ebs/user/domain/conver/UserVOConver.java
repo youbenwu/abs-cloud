@@ -22,7 +22,8 @@ public class UserVOConver implements BeanConver<QUser, UserVO> {
         vo.setAvatar(t.get(e.avatar));
         vo.setArea(t.get(e.area));
         vo.setAreaCode(t.get(e.areaCode));
-        vo.setCertified(t.get(e.certified));
+        vo.setVerified(t.get(e.verified));
+        vo.setEntVerified(t.get(e.entVerified));
         vo.setCredits(t.get(e.credits));
         vo.setLevel(t.get(e.level));
         vo.setVip(t.get(e.vip));
@@ -50,7 +51,8 @@ public class UserVOConver implements BeanConver<QUser, UserVO> {
                 e.area,
                 e.areaCode,
                 e.imei,
-                e.certified,
+                e.verified,
+                e.entVerified,
                 e.credits,
                 e.level,
                 e.vip,

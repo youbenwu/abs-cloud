@@ -35,7 +35,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 
-@Order(1)
+@Order(2)
 @Service
 public class OrgServiceImpl extends BaseService implements OrgService, CommandLineRunner {
 
