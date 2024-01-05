@@ -87,8 +87,10 @@ public class RongcloudAction {
 		if(StringUtils.isEmpty(avatar)){
 			if(user.getDetails().getSex()==1){
 				avatar=config.getBaseUrl()+"/h_1.jpg";
-			}else{
+			}else if(user.getDetails().getSex()==2){
 				avatar=config.getBaseUrl()+"/h_2.jpg";
+			}else{
+				avatar=config.getBaseUrl()+"/user_head.jpg";
 			}
 		}
 		userModel.setPortrait(avatar);

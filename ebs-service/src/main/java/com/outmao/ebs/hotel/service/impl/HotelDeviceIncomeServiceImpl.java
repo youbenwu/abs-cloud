@@ -40,19 +40,22 @@ public class HotelDeviceIncomeServiceImpl extends BaseService implements HotelDe
     @Transactional()
     @Override
     public HotelDeviceIncome saveHotelDeviceIncome(HotelDeviceIncomeDTO request) {
-        if(request.getStatus()==0){
-            if(request.getRenterFee()>0.01) {
-                User user = userService.getUserById(request.getRenterId());
+        HotelDeviceIncome income= hotelDeviceIncomeDomain.saveHotelDeviceIncome(request);
+
+        if(income.getStatus()==0){
+            if(income.getRenterFee()>0.01) {
+                User user = userService.getUserById(income.getRenterId());
                 TradeRechargeDTO rechargeDTO = new TradeRechargeDTO();
-                rechargeDTO.setAmount((long) (request.getRenterFee() * 100));
-                rechargeDTO.setRemark(request.getRemark());
+                rechargeDTO.setAmount((long) (income.getRenterFee() * 100));
+                rechargeDTO.setRemark(income.getRemark());
                 rechargeDTO.setCurrencyId("RMB");
                 rechargeDTO.setWalletId(user.getWalletId());
                 tradeService.tradeRecharge(rechargeDTO);
             }
-            request.setStatus(1);
+            income.setStatus(1);
         }
-        return hotelDeviceIncomeDomain.saveHotelDeviceIncome(request);
+
+        return income;
     }
 
     @Override

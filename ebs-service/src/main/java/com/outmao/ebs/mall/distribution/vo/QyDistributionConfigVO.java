@@ -68,4 +68,5 @@ public class QyDistributionConfigVO implements Serializable {
         return levelA.getRenterCommission();
     }
 
+
 }

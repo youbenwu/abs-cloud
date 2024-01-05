@@ -132,6 +132,7 @@ public interface HotelService {
     public void deviceDeploy(List<HotelRoomDeviceDeployDTO> request);
 
 
+    public HotelServiceStaffVO getHotelServiceStaffVOByHotelId(Long hotelId);
 
 
 

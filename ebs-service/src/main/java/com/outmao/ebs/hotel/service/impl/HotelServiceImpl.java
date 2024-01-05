@@ -15,7 +15,6 @@ import com.outmao.ebs.hotel.service.HotelService;
 import com.outmao.ebs.hotel.vo.*;
 import com.outmao.ebs.mall.merchant.dto.MerchantDTO;
 import com.outmao.ebs.mall.merchant.entity.Merchant;
-import com.outmao.ebs.mall.merchant.entity.UserCommission;
 import com.outmao.ebs.mall.merchant.service.MerchantService;
 import com.outmao.ebs.org.dto.MemberDTO;
 import com.outmao.ebs.org.entity.Member;
@@ -29,7 +28,6 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
@@ -449,100 +447,19 @@ public class HotelServiceImpl extends BaseService implements HotelService {
     }
 
 
+    @Override
+    public HotelServiceStaffVO getHotelServiceStaffVOByHotelId(Long hotelId) {
 
-    /**
-     *
-     * 广告计算佣金
-     *
-     * **/
-    // 秒 分 时 天 月 周几~
-    // 0 * * * * 0-7  每个月的每天每时每分每秒周一到周七都会执行
+        HotelVO hotel=hotelDomain.getHotelVOById(hotelId);
+        HotelServiceStaffVO vo=new HotelServiceStaffVO();
+        vo.setHotelId(hotelId);
+        vo.setHotelName(hotel.getName());
+        vo.setPhone(hotel.getServicePhone());
+        vo.setUserId(hotel.getUserId());
 
-    /**
-     * 30 15 10 * * ? 每天10点15分30 执行
-     *
-     * 30 0/5 10,18 * * ? 每天10时18时每个五分钟执行
-     * 0 15 10 ? * 1-6 每个月的周一到周六10.15分钟执行一次
-     */
-
-    //每分钟一次
-    //@Scheduled(cron = "0 0/1 * * * *")
-    //每小时一次
-    //@Scheduled(cron = "0 0 0/1 * * *")
-    public void commission(){
-
-//        List<HotelDeviceOwner> owners=hotelDeviceOwnerDomain.getHotelDeviceOwnerList();
-//
-//        owners.forEach(owner->{
-//            commission(owner);
-//        });
-//
-//
-//        List<MerchantPartner> partners= merchantPartnerService.getMerchantPartnerList();
-//
-//        partners.forEach(partner->{
-//            commission(partner);
-//        });
-
+        return vo;
 
     }
-
-
-
-//    //计算机主广告收益
-//    private void commission(HotelDeviceOwner owner){
-//        if(owner.getCommissionId()==null)
-//            return;
-//        UserCommission commission=userCommissionService.getUserCommissionById(owner.getCommissionId());
-//        List<HotelDevice> devices=hotelDeviceDomain.getHotelDeviceListByOwnerId(owner.getUserId());
-//        commission(commission,devices,0.35);
-//
-//    }
-//
-//    //计算推广员广告收益
-//    private void commission(MerchantPartner partner){
-//        if(partner.getCommissionId()==null)
-//            return;
-//        UserCommission commission=userCommissionService.getUserCommissionById(partner.getCommissionId());
-//        List<HotelDevice> devices=hotelDeviceDomain.getHotelDeviceListByPartnerId(partner.getId());
-//        commission(commission,devices,0.05);
-//    }
-
-
-    private void commission(UserCommission commission,List<HotelDevice> devices,double rate){
-
-//        if(commission==null)
-//            return;
-//        if(devices.isEmpty())
-//            return;
-//
-//        Date fromTime=commission.getStatsTime();
-//        Date toTime=new Date();
-//        if(fromTime==null){
-//            fromTime=DateUtil.beforeDays(360);
-//        }
-//
-//        StatsAdvertPvDTO dto=new StatsAdvertPvDTO();
-//        dto.setUsers(devices.stream().map(t->t.getUserId()).collect(Collectors.toList()));
-//        dto.setFromTime(fromTime);
-//        dto.setToTime(toTime);
-//        StatsAdvertPvVO vo=advertPvLogService.getStatsAdvertPvVO(dto);
-//
-//        System.out.println("统计广告收益：commissionId="+commission.getId()+"\n收益="+vo.getPvAmount()*rate);
-//
-//        if(vo.getPvAmount()==0)
-//            return;
-//
-//
-//        UserCommissionRecordDTO recordDTO=new UserCommissionRecordDTO();
-//        recordDTO.setCommissionId(commission.getId());
-//        recordDTO.setAmount(vo.getPvAmount()*rate);
-//        recordDTO.setType(0);
-//        recordDTO.setStatsTime(toTime);
-//        userCommissionService.saveUserCommissionRecord(recordDTO);
-
-    }
-
 
 
 }

@@ -20,7 +20,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -110,7 +109,11 @@ public class HotelAction {
     }
 
 
-
+    @ApiOperation(value = "获取酒店客服信息", notes = "获取酒店客服信息")
+    @PostMapping("/getServiceStaff")
+    public HotelServiceStaffVO getHotelServiceStaffVOByHotelId(Long hotelId){
+        return hotelService.getHotelServiceStaffVOByHotelId(hotelId);
+    }
 
 
 }
