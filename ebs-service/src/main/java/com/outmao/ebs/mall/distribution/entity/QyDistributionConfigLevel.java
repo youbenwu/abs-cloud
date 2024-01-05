@@ -23,8 +23,11 @@ public class QyDistributionConfigLevel implements Serializable {
 
     private int deviceNumberTo;
 
-    //设备租赁推广收益
+    //合伙人--设备租赁推广收益
     private double partnerAmount;
+
+    //机主提成
+    private double renterCommission;
 
 
 }

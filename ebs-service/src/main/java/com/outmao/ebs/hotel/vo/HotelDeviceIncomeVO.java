@@ -1,10 +1,9 @@
-package com.outmao.ebs.hotel.dto;
+package com.outmao.ebs.hotel.vo;
 
 
 import lombok.Data;
 
 import java.util.Date;
-
 
 /**
  *
@@ -12,16 +11,11 @@ import java.util.Date;
  *
  */
 @Data
-public class HotelDeviceIncomeDTO {
+public class HotelDeviceIncomeVO {
 
 
-    /**
-     *
-     * 0--未结算
-     * 1--已结算
-     *
-     */
-    private int status;
+    private Long id;
+
 
     /**
      *
@@ -36,6 +30,7 @@ public class HotelDeviceIncomeDTO {
      * 设备ID
      *
      */
+
     private Long deviceId;
 
     /**
@@ -81,9 +76,13 @@ public class HotelDeviceIncomeDTO {
      */
     private double renterFee;
 
+    /**
+     *
+     * 创建时间
+     *
+     */
+    private Date createTime;
 
-    private Date time;
 
-    private String remark;
 
 }

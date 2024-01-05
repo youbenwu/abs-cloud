@@ -13,7 +13,8 @@ import java.util.Date;
  */
 @Data
 @Entity
-@Table(name = "ebs_HotelDeviceIncome")
+@Table(name = "ebs_HotelDeviceIncome", uniqueConstraints = {
+        @UniqueConstraint(columnNames = {  "deviceId","type","createTime" }) })
 public class HotelDeviceIncome  implements Serializable {
 
     /**
@@ -29,6 +30,14 @@ public class HotelDeviceIncome  implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+
+    /**
+     *
+     * 0--未结算
+     * 1--已结算
+     *
+     */
+    private int status;
 
 
     /**
@@ -78,10 +87,17 @@ public class HotelDeviceIncome  implements Serializable {
 
     /**
      *
-     * 归属租客的佣金
+     * 租客
      *
      */
     private Long renterId;
+
+    /**
+     *
+     * 备注
+     *
+     */
+    private String remark;
 
     /**
      *

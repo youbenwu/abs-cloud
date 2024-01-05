@@ -41,6 +41,8 @@ public class QyDistributionConfigVO implements Serializable {
     private QyDistributionConfigLevel levelD;
 
 
+
+
     /**
      *
      * 创建时间
@@ -55,5 +57,15 @@ public class QyDistributionConfigVO implements Serializable {
      */
     private Date updateTime;
 
+
+    public double getRenterCommission(int deviceNumber){
+        if(deviceNumber>levelD.getDeviceNumberFrom())
+            return levelD.getRenterCommission();
+        if(deviceNumber>levelC.getDeviceNumberFrom())
+            return levelC.getRenterCommission();
+        if(deviceNumber>levelB.getDeviceNumberFrom())
+            return levelB.getRenterCommission();
+        return levelA.getRenterCommission();
+    }
 
 }

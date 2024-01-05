@@ -13,9 +13,11 @@ import com.outmao.ebs.hotel.dao.HotelDeviceLeaseRecordDao;
 import com.outmao.ebs.hotel.dao.HotelRoomDao;
 import com.outmao.ebs.hotel.domain.HotelDeviceDomain;
 import com.outmao.ebs.hotel.domain.conver.HotelDeviceVOConver;
+import com.outmao.ebs.hotel.domain.conver.SimpleHotelDeviceVOConver;
 import com.outmao.ebs.hotel.dto.*;
 import com.outmao.ebs.hotel.entity.*;
 import com.outmao.ebs.hotel.vo.HotelDeviceVO;
+import com.outmao.ebs.hotel.vo.SimpleHotelDeviceVO;
 import com.outmao.ebs.hotel.vo.StatsHotelDeviceCityVO;
 import com.outmao.ebs.hotel.vo.StatsHotelDeviceProvinceVO;
 import com.querydsl.core.Tuple;
@@ -30,6 +32,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
@@ -52,7 +55,7 @@ public class HotelDeviceDomainImpl extends BaseDomain implements HotelDeviceDoma
 
     private HotelDeviceVOConver hotelDeviceVOConver=new HotelDeviceVOConver();
 
-
+    private SimpleHotelDeviceVOConver simpleHotelDeviceVOConver=new SimpleHotelDeviceVOConver();
 
     @Transactional()
     @Override
@@ -233,6 +236,30 @@ public class HotelDeviceDomainImpl extends BaseDomain implements HotelDeviceDoma
         HotelDeviceVO vo=queryOne(e,e.deviceNo.eq(deviceNo),hotelDeviceVOConver);
 
         return vo;
+    }
+
+    @Override
+    public SimpleHotelDeviceVO getSimpleHotelDeviceVOByDeviceNo(String deviceNo) {
+        QHotelDevice e=QHotelDevice.hotelDevice;
+        return queryOne(e,e.deviceNo.eq(deviceNo),simpleHotelDeviceVOConver);
+    }
+
+    @Override
+    public SimpleHotelDeviceVO getSimpleHotelDeviceVOByUserId(Long userId) {
+        QHotelDevice e=QHotelDevice.hotelDevice;
+        return queryOne(e,e.userId.eq(userId),simpleHotelDeviceVOConver);
+    }
+
+    @Override
+    public List<SimpleHotelDeviceVO> getSimpleHotelDeviceVOByUserIdIn(Collection<Long> userIdIn) {
+        QHotelDevice e=QHotelDevice.hotelDevice;
+        return queryList(e,e.userId.in(userIdIn),simpleHotelDeviceVOConver);
+    }
+
+    @Override
+    public List<SimpleHotelDeviceVO> getSimpleHotelDeviceVOByUserIdInAndIsLease(Collection<Long> userIdIn) {
+        QHotelDevice e=QHotelDevice.hotelDevice;
+        return queryList(e,e.userId.in(userIdIn).and(e.lease.status.eq(1)),simpleHotelDeviceVOConver);
     }
 
     @Override

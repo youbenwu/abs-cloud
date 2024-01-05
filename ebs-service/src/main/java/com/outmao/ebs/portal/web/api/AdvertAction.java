@@ -1,8 +1,9 @@
 package com.outmao.ebs.portal.web.api;
 
 
-import com.outmao.ebs.hotel.entity.HotelDevice;
+import com.outmao.ebs.hotel.common.constant.HotelDeviceIncomeType;
 import com.outmao.ebs.hotel.service.HotelDeviceService;
+import com.outmao.ebs.hotel.vo.SimpleHotelDeviceVO;
 import com.outmao.ebs.mall.order.vo.SettleVO;
 import com.outmao.ebs.portal.dto.*;
 import com.outmao.ebs.portal.entity.Advert;
@@ -24,8 +25,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 
 @Api(value = "portal-advert", tags = "门户-广告")
@@ -109,21 +110,30 @@ public class AdvertAction {
     private void pvLog(List<AdvertVO> list,String deviceNo){
         if(list==null||list.isEmpty())
             return;
-        HotelDevice device=null;
+        SimpleHotelDeviceVO device=null;
         if(deviceNo!=null){
-            device=hotelDeviceService.getHotelDeviceByDeviceNo(deviceNo);
+            device=hotelDeviceService.getSimpleHotelDeviceVOByDeviceNo(deviceNo);
         }
         if(device==null){
             if(SecurityUtil.isAuthenticated()){
-                device=hotelDeviceService.getHotelDeviceByUserId(SecurityUtil.currentUserId());
+                device=hotelDeviceService.getSimpleHotelDeviceVOByUserId(SecurityUtil.currentUserId());
             }
         }
         if(device!=null){
-            AdvertPvLogListDTO listDTO = new AdvertPvLogListDTO();
-            listDTO.setAdverts(list.stream().map(t -> t.getId()).collect(Collectors.toList()));
-            listDTO.setUserId(device.getUserId());
-            listDTO.setSpaceId(device.getHotelId());
-            advertPvLogService.saveAdvertPvLogListAsync(listDTO);
+            List<AdvertPvLogDTO> dtos=new ArrayList<>(list.size());
+            for (AdvertVO advert:list){
+                AdvertPvLogDTO dto=new AdvertPvLogDTO();
+                dto.setUserId(device.getUserId());
+                dto.setSpaceId(device.getHotelId());
+                dto.setAdvertType(advert.getType());
+                dto.setAdvertId(advert.getId());
+                if(advert.getBuy()!=null) {
+                    dto.setAmount(advert.getBuy().getPrice());
+                }
+                dto.setIncomeType(HotelDeviceIncomeType.AdvertCPM.getType());
+                dtos.add(dto);
+            }
+            advertPvLogService.saveAdvertPvLogListAsync(dtos);
         }
 
     }
@@ -131,7 +141,7 @@ public class AdvertAction {
 
     @ApiOperation(value = "广告点击记录", notes = "广告点击记录")
     @PostMapping("/pv")
-    public void pv(AdvertPvLogDTO request) {
+    public void pv(AdvertPvLogRequest request) {
         advertPvLogService.saveAdvertPvLog(request);
     }
 

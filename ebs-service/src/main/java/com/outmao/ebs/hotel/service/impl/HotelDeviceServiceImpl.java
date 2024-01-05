@@ -13,6 +13,7 @@ import com.outmao.ebs.hotel.service.HotelDeviceLeaseService;
 import com.outmao.ebs.hotel.service.HotelDeviceService;
 import com.outmao.ebs.hotel.service.HotelService;
 import com.outmao.ebs.hotel.vo.HotelDeviceVO;
+import com.outmao.ebs.hotel.vo.SimpleHotelDeviceVO;
 import com.outmao.ebs.hotel.vo.StatsHotelDeviceCityVO;
 import com.outmao.ebs.hotel.vo.StatsHotelDeviceProvinceVO;
 import com.outmao.ebs.org.dto.MemberDTO;
@@ -32,6 +33,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 
@@ -153,6 +155,26 @@ public class HotelDeviceServiceImpl extends BaseService implements HotelDeviceSe
     @Override
     public HotelDevice getHotelDeviceByDeviceNo(String deviceNo) {
         return hotelDeviceDomain.getHotelDeviceByDeviceNo(deviceNo);
+    }
+
+    @Override
+    public SimpleHotelDeviceVO getSimpleHotelDeviceVOByDeviceNo(String deviceNo) {
+        return hotelDeviceDomain.getSimpleHotelDeviceVOByDeviceNo(deviceNo);
+    }
+
+    @Override
+    public SimpleHotelDeviceVO getSimpleHotelDeviceVOByUserId(Long userId) {
+        return hotelDeviceDomain.getSimpleHotelDeviceVOByUserId(userId);
+    }
+
+    @Override
+    public List<SimpleHotelDeviceVO> getSimpleHotelDeviceVOByUserIdIn(Collection<Long> userIdIn) {
+        return hotelDeviceDomain.getSimpleHotelDeviceVOByUserIdIn(userIdIn);
+    }
+
+    @Override
+    public List<SimpleHotelDeviceVO> getSimpleHotelDeviceVOByUserIdInAndIsLease(Collection<Long> userIdIn) {
+        return hotelDeviceDomain.getSimpleHotelDeviceVOByUserIdInAndIsLease(userIdIn);
     }
 
     @Override

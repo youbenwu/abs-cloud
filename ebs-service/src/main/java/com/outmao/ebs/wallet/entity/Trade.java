@@ -65,12 +65,19 @@ public class Trade implements Serializable {
 	private String statusRemark;
 
 
+	/**
+	 * 交易主题
+	 */
 	private String subject;
 
+	/**
+	 * 交易内容
+	 */
 	private String body;
 
 
 	/**
+	 *
 	 * 交易类型
 	 * 
 	 */
@@ -100,7 +107,6 @@ public class Trade implements Serializable {
 	 */
 	private int payChannel;
 
-
 	/**
 	 * 外部支付方式
 	 */
@@ -121,6 +127,11 @@ public class Trade implements Serializable {
 	 * 支出的总金额、包括交易金额和手续费
 	 */
 	private long totalAmount;
+
+	/**
+	 * 实收金额 第三方支付除去手续费
+	 */
+	private long receiptAmount;
 
 	/**
 	 * 实际已支付出的金额

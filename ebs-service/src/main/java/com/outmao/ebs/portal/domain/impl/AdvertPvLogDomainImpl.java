@@ -2,6 +2,7 @@ package com.outmao.ebs.portal.domain.impl;
 
 import com.outmao.ebs.common.base.BaseDomain;
 import com.outmao.ebs.common.util.DateUtil;
+import com.outmao.ebs.hotel.common.constant.HotelDeviceIncomeType;
 import com.outmao.ebs.portal.dao.AdvertDao;
 import com.outmao.ebs.portal.dao.AdvertPvLogDao;
 import com.outmao.ebs.portal.dao.AdvertUvLogDao;
@@ -11,6 +12,7 @@ import com.outmao.ebs.portal.entity.AdvertPvLog;
 import com.outmao.ebs.portal.entity.AdvertUvLog;
 import com.outmao.ebs.portal.entity.QAdvertPvLog;
 import com.outmao.ebs.portal.vo.QyStatsAdvertByHotelVO;
+import com.outmao.ebs.portal.vo.QyStatsAdvertPvForDeviceVO;
 import com.querydsl.core.Tuple;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,6 +45,7 @@ public class AdvertPvLogDomainImpl extends BaseDomain implements AdvertPvLogDoma
         log.setCreateTime(new Date());
         BeanUtils.copyProperties(request,log);
         log.setDate(DateUtil.yyyy_MM_dd.format(log.getCreateTime()));
+
 
         String uvKey=log.getUserId()+"_"+log.getAdvertId()+"_"+log.getDate();
         if(advertUvLogDao.findByKey(uvKey)==null){
@@ -83,6 +86,31 @@ public class AdvertPvLogDomainImpl extends BaseDomain implements AdvertPvLogDoma
 
         return list;
     }
+
+
+    @Override
+    public List<QyStatsAdvertPvForDeviceVO> getQyStatsAdvertPvForDeviceVOList(Date fromTime, Date toTime) {
+
+        QAdvertPvLog e=QAdvertPvLog.advertPvLog;
+
+        List<Tuple> tuples=QF.select(e.count(),e.amount.sum(),e.userId,e.incomeType).from(e).groupBy(e.userId,e.incomeType).where(e.createTime.between(fromTime,toTime)).fetch();
+
+        List<QyStatsAdvertPvForDeviceVO> list=new ArrayList<>(tuples.size());
+
+        tuples.forEach(t->{
+            QyStatsAdvertPvForDeviceVO vo=new QyStatsAdvertPvForDeviceVO();
+            vo.setPv(t.get(e.count()));
+            Double amount=t.get(e.amount.sum());
+            vo.setAmount(amount!=null?amount:0f);
+            vo.setUserId(t.get(e.userId));
+            vo.setIncomeType(t.get(e.incomeType));
+            list.add(vo);
+        });
+
+        return list;
+    }
+
+
 
 
 }

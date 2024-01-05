@@ -47,4 +47,6 @@ public interface HotelDeviceLeaseService {
     public List<MinHotelDeviceRenterVO> getMinHotelDeviceRenterVOListByUserIdIn(Collection<Long> userIdIn);
 
 
+
+
 }

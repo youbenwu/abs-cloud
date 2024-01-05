@@ -8,9 +8,11 @@ import com.outmao.ebs.common.util.StringUtil;
 import com.outmao.ebs.portal.dao.AdvertDao;
 import com.outmao.ebs.portal.dao.AdvertPlaceDao;
 import com.outmao.ebs.portal.domain.AdvertDomain;
+import com.outmao.ebs.portal.domain.conver.AdvertForPvLogVOConver;
 import com.outmao.ebs.portal.domain.conver.AdvertVOConver;
 import com.outmao.ebs.portal.dto.*;
 import com.outmao.ebs.portal.entity.*;
+import com.outmao.ebs.portal.vo.AdvertForPvLogVO;
 import com.outmao.ebs.portal.vo.AdvertPvVO;
 import com.outmao.ebs.portal.vo.AdvertVO;
 import com.outmao.ebs.portal.vo.StatsAdvertStatusVO;
@@ -41,6 +43,8 @@ public class AdvertDomainImpl extends BaseDomain implements AdvertDomain {
 
 
     private AdvertVOConver advertVOConver=new AdvertVOConver();
+
+    private AdvertForPvLogVOConver advertForPvLogVOConver=new AdvertForPvLogVOConver();
 
     @Transactional
     @Override
@@ -219,6 +223,12 @@ public class AdvertDomainImpl extends BaseDomain implements AdvertDomain {
         return vo;
     }
 
+    @Override
+    public AdvertForPvLogVO getAdvertForPvLogVOById(Long id) {
+        QAdvert e=QAdvert.advert;
+        AdvertForPvLogVO vo=queryOne(e,e.id.eq(id),advertForPvLogVOConver);
+        return vo;
+    }
 
     private void setChannelTitle(AdvertVO vo){
         QAdvertChannel c = QAdvertChannel.advertChannel;

@@ -21,6 +21,7 @@ import com.outmao.ebs.user.entity.User;
 import com.outmao.ebs.user.service.UserService;
 import com.outmao.ebs.user.vo.UserDetailsVO;
 import io.rong.models.chatroom.ChatroomMember;
+import io.rong.models.response.UserResult;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
@@ -81,7 +82,17 @@ public class RongcloudAction {
 		RcRegisterUserDTO userModel=new RcRegisterUserDTO();
 		userModel.setId(user.getId().toString());
 		userModel.setName(StringUtils.isEmpty(user.getNickname())?user.getUsername():user.getNickname());
-		userModel.setPortrait(StringUtils.isEmpty(user.getAvatar())?(config.getBaseUrl()+"/user_head.jpg"):user.getNickname());
+
+		String avatar=user.getAvatar();
+		if(StringUtils.isEmpty(avatar)){
+			if(user.getDetails().getSex()==1){
+				avatar=config.getBaseUrl()+"/h_1.jpg";
+			}else{
+				avatar=config.getBaseUrl()+"/h_2.jpg";
+			}
+		}
+		userModel.setPortrait(avatar);
+
 
         if(user.getType()== UserType.QyHotelDevice.getType()){
             HotelDevice device=hotelDeviceService.getHotelDeviceByUserId(user.getId());
@@ -134,13 +145,19 @@ public class RongcloudAction {
 		return new ArrayList<>();
 	}
 
-	@ApiOperation(value = "获取用户在线状态", notes = "获取用户在线状态")
+	@ApiOperation(value = "融云获取用户在线状态", notes = "融云获取用户在线状态")
 	@PostMapping("/user/checkOnline")
 	public Result rongCloudUserCheckOnline(String userId){
         String r=rongcloudService.rongCloudUserCheckOnline(userId);
 		return Result.successResult(r);
 	}
 
+
+	@ApiOperation(value = "融云获取用户信息", notes = "融云获取用户信息")
+	@PostMapping("/user/info")
+	public UserResult rongCloudUserInfo(String userId){
+		return rongcloudService.rongCloudUserInfo(userId);
+	}
 
 
 }

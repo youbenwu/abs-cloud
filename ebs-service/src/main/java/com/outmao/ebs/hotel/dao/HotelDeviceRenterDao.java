@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.jpa.repository.Query;
 
 import javax.persistence.LockModeType;
+import java.util.List;
 
 public interface HotelDeviceRenterDao extends JpaRepository<HotelDeviceRenter,Long> {
 
@@ -14,5 +15,7 @@ public interface HotelDeviceRenterDao extends JpaRepository<HotelDeviceRenter,Lo
     @Lock(value = LockModeType.PESSIMISTIC_READ)
     @Query("select c from HotelDeviceRenter c where c.userId=?1")
     public HotelDeviceRenter findByUserIdLock(Long userId);
+
+    public List<HotelDeviceRenter> findAllByQuantityAfter(int after);
 
 }

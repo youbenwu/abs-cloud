@@ -3,12 +3,14 @@ package com.outmao.ebs.hotel.service;
 import com.outmao.ebs.hotel.dto.*;
 import com.outmao.ebs.hotel.entity.HotelDevice;
 import com.outmao.ebs.hotel.vo.HotelDeviceVO;
+import com.outmao.ebs.hotel.vo.SimpleHotelDeviceVO;
 import com.outmao.ebs.hotel.vo.StatsHotelDeviceCityVO;
 import com.outmao.ebs.hotel.vo.StatsHotelDeviceProvinceVO;
 import com.outmao.ebs.user.vo.UserDetailsVO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.util.Collection;
 import java.util.List;
 
 public interface HotelDeviceService {
@@ -33,6 +35,15 @@ public interface HotelDeviceService {
     public HotelDeviceVO getHotelDeviceVOById(Long id);
 
     public HotelDeviceVO getHotelDeviceVOByDeviceNo(String deviceNo);
+
+
+    public SimpleHotelDeviceVO getSimpleHotelDeviceVOByDeviceNo(String deviceNo);
+    public SimpleHotelDeviceVO getSimpleHotelDeviceVOByUserId(Long userId);
+
+    public List<SimpleHotelDeviceVO> getSimpleHotelDeviceVOByUserIdIn(Collection<Long> userIdIn);
+
+    public List<SimpleHotelDeviceVO> getSimpleHotelDeviceVOByUserIdInAndIsLease(Collection<Long> userIdIn);
+
 
     public List<HotelDeviceVO> getHotelDeviceVOList(GetHotelDeviceListDTO request);
 

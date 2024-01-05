@@ -43,6 +43,9 @@ public class AdvertPvLog implements Serializable {
     @ApiModelProperty(name = "advertType", value = "广告类型 0--平台广告 1--企业广告 2--个人广告")
     private Integer advertType;
 
+    @ApiModelProperty(name = "amount", value = "用来计算广告收益")
+    private double amount;
+
     @ApiModelProperty(name = "userId", value = "点击用户")
     private Long userId;
 
@@ -57,6 +60,8 @@ public class AdvertPvLog implements Serializable {
 
     @ApiModelProperty(name = "type", value = "类型 0--爆光 1--点击广告链接 2--点击广告视频 3--扫广告二维码")
     private int type;
+
+    private int incomeType;
 
 
 

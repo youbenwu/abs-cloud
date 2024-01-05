@@ -4,6 +4,7 @@ import com.outmao.ebs.portal.dto.*;
 import com.outmao.ebs.portal.entity.Advert;
 import com.outmao.ebs.portal.entity.AdvertBuy;
 import com.outmao.ebs.portal.entity.AdvertBuyDisplay;
+import com.outmao.ebs.portal.vo.AdvertForPvLogVO;
 import com.outmao.ebs.portal.vo.AdvertVO;
 import com.outmao.ebs.portal.vo.StatsAdvertStatusVO;
 import org.springframework.data.domain.Page;
@@ -31,6 +32,8 @@ public interface AdvertDomain {
     public void randomAdvertSort();
 
     public AdvertVO getAdvertVOById(Long id);
+
+    public AdvertForPvLogVO getAdvertForPvLogVOById(Long id);
 
     public List<AdvertVO> getAdvertVOList(GetAdvertListDTO request);
 

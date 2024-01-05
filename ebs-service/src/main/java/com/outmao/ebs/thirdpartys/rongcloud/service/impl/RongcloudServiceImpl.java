@@ -17,10 +17,7 @@ import io.rong.models.chatroom.ChatroomDataModel;
 import io.rong.models.chatroom.ChatroomMember;
 import io.rong.models.chatroom.ChatroomModel;
 import io.rong.models.group.GroupMember;
-import io.rong.models.response.ChatroomUserQueryResult;
-import io.rong.models.response.CheckOnlineResult;
-import io.rong.models.response.ResponseResult;
-import io.rong.models.response.TokenResult;
+import io.rong.models.response.*;
 import io.rong.models.user.UserModel;
 import io.rong.util.CommonUtil;
 import io.rong.util.GsonUtil;
@@ -314,6 +311,20 @@ public class RongcloudServiceImpl implements RongcloudService {
         }catch (Exception e){
             log.error("融云获取用户在线状态出错",e);
             throw new BusinessException("融云获取用户在线状态出错");
+        }
+    }
+
+
+    @Override
+    public UserResult rongCloudUserInfo(String userId) {
+        try{
+            UserModel model=new UserModel();
+            model.setId(userId);
+            UserResult result=rongCloud.user.get(model);
+            return result;
+        }catch (Exception e){
+            log.error("融云获取用户信息出错",e);
+            throw new BusinessException("融云获取用户信息出错");
         }
     }
 

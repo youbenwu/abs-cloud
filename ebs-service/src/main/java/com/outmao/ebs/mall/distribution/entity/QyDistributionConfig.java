@@ -41,6 +41,7 @@ public class QyDistributionConfig implements Serializable {
             @AttributeOverride(name="deviceNumberFrom", column=@Column(name="deviceNumberFromA")),
             @AttributeOverride(name="deviceNumberTo", column=@Column(name="deviceNumberToA")),
             @AttributeOverride(name="partnerAmount", column=@Column(name="partnerAmountA")),
+            @AttributeOverride(name="renterCommission", column=@Column(name="renterCommissionA")),
     })
     private QyDistributionConfigLevel levelA;
 
@@ -49,6 +50,7 @@ public class QyDistributionConfig implements Serializable {
             @AttributeOverride(name="deviceNumberFrom", column=@Column(name="deviceNumberFromB")),
             @AttributeOverride(name="deviceNumberTo", column=@Column(name="deviceNumberToB")),
             @AttributeOverride(name="partnerAmount", column=@Column(name="partnerAmountB")),
+            @AttributeOverride(name="renterCommission", column=@Column(name="renterCommissionB")),
     })
     private QyDistributionConfigLevel levelB;
 
@@ -57,6 +59,7 @@ public class QyDistributionConfig implements Serializable {
             @AttributeOverride(name="deviceNumberFrom", column=@Column(name="deviceNumberFromC")),
             @AttributeOverride(name="deviceNumberTo", column=@Column(name="deviceNumberToC")),
             @AttributeOverride(name="partnerAmount", column=@Column(name="partnerAmountC")),
+            @AttributeOverride(name="renterCommission", column=@Column(name="renterCommissionC")),
     })
     private QyDistributionConfigLevel levelC;
 
@@ -65,6 +68,7 @@ public class QyDistributionConfig implements Serializable {
             @AttributeOverride(name="deviceNumberFrom", column=@Column(name="deviceNumberFromD")),
             @AttributeOverride(name="deviceNumberTo", column=@Column(name="deviceNumberToD")),
             @AttributeOverride(name="partnerAmount", column=@Column(name="partnerAmountD")),
+            @AttributeOverride(name="renterCommission", column=@Column(name="renterCommissionD")),
     })
     private QyDistributionConfigLevel levelD;
 
