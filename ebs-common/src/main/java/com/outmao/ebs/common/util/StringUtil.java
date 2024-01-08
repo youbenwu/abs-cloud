@@ -44,4 +44,11 @@ public class StringUtil {
     }
 
 
+    public static double format2f(Double v){
+        if(v==null)
+            return 0;
+        return Double.parseDouble(String.format("%.2f",v));
+    }
+
+
 }

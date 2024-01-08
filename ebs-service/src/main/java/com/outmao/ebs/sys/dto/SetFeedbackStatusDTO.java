@@ -1,4 +1,4 @@
-package com.outmao.ebs.user.dto;
+package com.outmao.ebs.sys.dto;
 
 import lombok.Data;
 

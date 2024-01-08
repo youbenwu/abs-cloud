@@ -1,4 +1,4 @@
-package com.outmao.ebs.user.entity;
+package com.outmao.ebs.sys.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
@@ -34,8 +34,15 @@ public class Feedback implements Serializable {
 
     private String contact;
 
+    //0--用户反馈 1--用户投诉
+    private int type;
+
+    //投诉项 逗号隔开
+    private String items;
+
     private String content;
 
+    //图片 逗号隔开
     private String images;
 
     private Date createTime;

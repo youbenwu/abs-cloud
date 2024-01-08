@@ -49,12 +49,6 @@ import org.springframework.web.bind.annotation.RestController;
 				@AccessPermission(title = "读取用户位置信息",url = "/user/location",name = "read"),
 		}),
 
-		@AccessPermissionParent(title = "用户反馈管理",url = "/user/feedback",name = "",children = {
-				@AccessPermission(title = "保存用户反馈",url = "/user/feedback",name = "save"),
-				@AccessPermission(title = "删除用户反馈",url = "/user/feedback",name = "delete"),
-				@AccessPermission(title = "读取用户反馈",url = "/user/feedback",name = "read"),
-				@AccessPermission(title = "审核用户反馈",url = "/user/feedback",name = "status"),
-		}),
 
 		@AccessPermissionParent(title = "用户配置数据管理",url = "/user/data",name = "",children = {
 				@AccessPermission(title = "保存用户配置数据",url = "/user/data",name = "save"),

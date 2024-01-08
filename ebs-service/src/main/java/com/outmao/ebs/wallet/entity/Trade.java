@@ -64,7 +64,6 @@ public class Trade implements Serializable {
 	 */
 	private String statusRemark;
 
-
 	/**
 	 * 交易主题
 	 */
@@ -74,7 +73,6 @@ public class Trade implements Serializable {
 	 * 交易内容
 	 */
 	private String body;
-
 
 	/**
 	 *
@@ -134,7 +132,7 @@ public class Trade implements Serializable {
 	private long receiptAmount;
 
 	/**
-	 * 实际已支付出的金额
+	 * 实际已给收款方的金额
 	 */
 	private long payAmount;
 	
@@ -148,6 +146,7 @@ public class Trade implements Serializable {
 	 */
 	private boolean refundOut;
 
+
 	/**
 	 * 交易的备注
 	 */
@@ -159,7 +158,7 @@ public class Trade implements Serializable {
 	private Date createTime;
 
 	/**
-	 * 交易成功时间
+	 * 支付成功时间
 	 */
 	private Date successTime;
 

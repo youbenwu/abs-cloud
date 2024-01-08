@@ -3,6 +3,7 @@ package com.outmao.ebs.hotel.domain.impl;
 import com.outmao.ebs.common.base.BaseDomain;
 import com.outmao.ebs.common.exception.BusinessException;
 import com.outmao.ebs.common.util.DateUtil;
+import com.outmao.ebs.common.util.StringUtil;
 import com.outmao.ebs.hotel.common.constant.HotelDeviceIncomeType;
 import com.outmao.ebs.hotel.dao.HotelDeviceIncomeDao;
 import com.outmao.ebs.hotel.dao.HotelDeviceIncomeStatsDao;
@@ -88,7 +89,7 @@ public class HotelDeviceIncomeDomainImpl extends BaseDomain implements HotelDevi
 
         Double total=QF.select(e.renterFee.sum()).from(e).where(p1).fetchOne();
 
-        vo.setAmount(total==null?0:total);
+        vo.setAmount(StringUtil.format2f(total));
 
         Date now=new Date();
         Date day7= DateUtil.addDays(now,-7);
@@ -97,7 +98,7 @@ public class HotelDeviceIncomeDomainImpl extends BaseDomain implements HotelDevi
 
         Double amount7day=QF.select(e.renterFee.sum()).from(e).where(p2).fetchOne();
 
-        vo.setAmount7day(amount7day==null?0:amount7day);
+        vo.setAmount7day(StringUtil.format2f(amount7day));
 
         Calendar calendar = Calendar.getInstance();
         calendar.set(Calendar.DAY_OF_MONTH, 1);
@@ -106,7 +107,10 @@ public class HotelDeviceIncomeDomainImpl extends BaseDomain implements HotelDevi
 
         Double amountMonth=QF.select(e.renterFee.sum()).from(e).where(p3).fetchOne();
 
-        vo.setAmountMonth(amountMonth==null?0:amountMonth);
+
+        vo.setAmountMonth(StringUtil.format2f(amountMonth));
+
+
 
         return vo;
 
@@ -124,7 +128,7 @@ public class HotelDeviceIncomeDomainImpl extends BaseDomain implements HotelDevi
 
         Double total=QF.select(e.renterFee.sum()).from(e).where(p1).fetchOne();
 
-        vo.setAmount(total==null?0:total);
+        vo.setAmount(StringUtil.format2f(total));
 
         Date now=new Date();
         Date day7= DateUtil.addDays(now,-7);
@@ -133,7 +137,7 @@ public class HotelDeviceIncomeDomainImpl extends BaseDomain implements HotelDevi
 
         Double amount7day=QF.select(e.renterFee.sum()).from(e).where(p2).fetchOne();
 
-        vo.setAmount7day(amount7day==null?0:amount7day);
+        vo.setAmount7day(StringUtil.format2f(amount7day));
 
 
         Calendar calendar = Calendar.getInstance();
@@ -143,7 +147,7 @@ public class HotelDeviceIncomeDomainImpl extends BaseDomain implements HotelDevi
 
         Double amountMonth=QF.select(e.renterFee.sum()).from(e).where(p3).fetchOne();
 
-        vo.setAmountMonth(amountMonth==null?0:amountMonth);
+        vo.setAmountMonth(StringUtil.format2f(amountMonth));
 
         return vo;
     }
@@ -174,7 +178,7 @@ public class HotelDeviceIncomeDomainImpl extends BaseDomain implements HotelDevi
         for(Tuple t:tuples){
             RenterHotelDeviceIncomeTypeStatsVO vo=listMap.get(t.get(e.type));
             Double amount=t.get(e.renterFee.sum());
-            vo.setAmount(amount==null?0:amount);
+            vo.setAmount(StringUtil.format2f(amount));
         }
 
         return list;

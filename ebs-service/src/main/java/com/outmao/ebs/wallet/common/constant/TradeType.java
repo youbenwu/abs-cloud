@@ -34,4 +34,5 @@ public enum TradeType {
         this.describe = describe;
     }
 
+
 }
