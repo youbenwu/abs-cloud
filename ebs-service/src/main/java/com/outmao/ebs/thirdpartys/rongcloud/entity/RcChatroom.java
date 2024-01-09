@@ -58,6 +58,7 @@ public class RcChatroom   implements Serializable {
     private Date updateTime;
 
 
+    
 
 
 }

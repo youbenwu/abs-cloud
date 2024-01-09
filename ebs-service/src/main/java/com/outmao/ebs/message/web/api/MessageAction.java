@@ -2,6 +2,7 @@ package com.outmao.ebs.message.web.api;
 
 
 import com.outmao.ebs.message.dto.GetUserMessageListDTO;
+import com.outmao.ebs.message.dto.SetUserMessageStatusDTO;
 import com.outmao.ebs.message.service.MessageService;
 import com.outmao.ebs.message.vo.UserMessageVO;
 import io.swagger.annotations.Api;
@@ -37,6 +38,12 @@ public class MessageAction {
 	@PostMapping("/page")
 	public Page<UserMessageVO> getUserMessageVOPage(@RequestBody GetUserMessageListDTO request, @PageableDefault(page = 0, size = 10, sort = { "id" }, direction = Sort.Direction.DESC) Pageable pageable) {
 		return messageService.getUserMessageVOPage(request, pageable);
+	}
+
+	@ApiOperation(value = "设置消息已读状态", notes = "设置消息已读状态")
+	@PostMapping("/setStatus")
+	public void setUserMessageStatus(@RequestBody SetUserMessageStatusDTO request){
+		messageService.setUserMessageStatus(request);
 	}
 
 	@ApiOperation(value = "获取用户最后一条消息,按消息类型分组", notes = "获取用户最后一条消息,按消息类型分组")

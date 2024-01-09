@@ -7,4 +7,6 @@ public class GetUserListDTO {
 
     private String keyword;
 
+    private Integer type;
+
 }

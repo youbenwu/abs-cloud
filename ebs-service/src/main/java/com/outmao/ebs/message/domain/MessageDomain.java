@@ -20,6 +20,7 @@ public interface MessageDomain {
 
 
     public void setUserMessageStatus(SetUserMessageStatusDTO request);
+
 	public Page<UserMessageVO> getUserMessageVOPage(GetUserMessageListDTO request, Pageable pageable);
 	public List<Map<String, Integer>> getUnreadCount(Long userId);
 	public List<Map<String, UserMessageVO>> getLastUserMessageVO(Long userId);

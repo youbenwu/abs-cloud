@@ -92,6 +92,8 @@ public class AdvertAdminAction {
         return advertService.getAdvertVOPage(request,pageable);
     }
 
+
+
     @PreAuthorize("hasPermission('/portal/advert','read')")
     @ApiOperation(value = "广告按状态统计数量", notes = "广告按状态统计数量")
     @PostMapping("/stats/status")

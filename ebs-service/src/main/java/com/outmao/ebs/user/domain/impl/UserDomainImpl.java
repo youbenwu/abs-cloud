@@ -285,6 +285,9 @@ public class UserDomainImpl extends BaseDomain implements UserDomain {
 		if(request.getKeyword()!=null){
 			p=e.keyword.like("%"+request.getKeyword()+"%");
 		}
+		if(request.getType()!=null){
+			p=e.type.eq(request.getType()).and(p);
+		}
 		Page<UserVO> page=queryPage(e,p,userVOConver,pageable);
 		return page;
 	}
@@ -295,6 +298,9 @@ public class UserDomainImpl extends BaseDomain implements UserDomain {
 		Predicate p=null;
 		if(request.getKeyword()!=null){
 			p=e.keyword.like("%"+request.getKeyword()+"%");
+		}
+		if(request.getType()!=null){
+			p=e.type.eq(request.getType()).and(p);
 		}
 		Page<UserDetailsVO> page=queryPage(e,p,userDetailsVOConver,pageable);
 		return page;

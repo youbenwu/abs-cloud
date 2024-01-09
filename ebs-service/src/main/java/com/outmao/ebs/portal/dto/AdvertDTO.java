@@ -33,7 +33,7 @@ public class AdvertDTO {
     @ApiModelProperty(name = "sort", value = "排序")
     private int sort;
 
-    @ApiModelProperty(name = "type", value = "广告类型 0--系统广告 1--企业广告 2--个人广告")
+    @ApiModelProperty(name = "type", value = "广告类型 0--系统广告 1--企业广告 2--个人广告 3--酒店广告")
     private int type;
 
     @ApiModelProperty(name = "item", value = "绑定商品 item.id--商品ID item.type--Product")

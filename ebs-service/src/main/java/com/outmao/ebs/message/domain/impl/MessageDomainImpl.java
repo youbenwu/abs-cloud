@@ -207,6 +207,10 @@ public class MessageDomainImpl extends BaseDomain implements MessageDomain {
 			p=e.type.in(request.getTypes()).and(p);
 		}
 
+		if(request.getStatus()!=null){
+			p=e.status.eq(request.getStatus()).and(p);
+		}
+
 		p=e.sendType.eq(SendType.MSG.getType()).and(p);
 
 		Page<UserMessageVO> page=queryPage(e,p,userMessageVOConver,pageable);

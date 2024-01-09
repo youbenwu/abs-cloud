@@ -325,6 +325,10 @@ public class AdvertDomainImpl extends BaseDomain implements AdvertDomain {
             p=e.userId.eq(request.getUserId()).and(p);
         }
 
+        if(request.getType()!=null){
+            p=e.type.eq(request.getType()).and(p);
+        }
+
         if(request.getSee()!=null){
             Date now =new Date();
             if(request.getSee()){
