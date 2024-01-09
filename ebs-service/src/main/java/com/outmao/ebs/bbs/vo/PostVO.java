@@ -80,7 +80,7 @@ public class PostVO implements SimpleUserSetter {
 	@ApiModelProperty(name = "images", value = "帖子图片")
 	private String images;
 
-	@ApiModelProperty(name = "video", value = "帖子视频")
+	@ApiModelProperty(name = "movie", value = "帖子视频")
 	private String video;
 
 	/**

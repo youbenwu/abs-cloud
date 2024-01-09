@@ -37,7 +37,7 @@ public class CommentVO implements SimpleUserSetter {
 	@ApiModelProperty(name = "images", value = "评论图片，逗号隔开")
 	private String images;
 
-	@ApiModelProperty(name = "video", value = "评论视频")
+	@ApiModelProperty(name = "movie", value = "评论视频")
 	private String video;
 
 	@ApiModelProperty(name = "content", value = "评论内容")

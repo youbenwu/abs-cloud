@@ -7,6 +7,7 @@ import lombok.Data;
 @Data
 public class RcChatroomDTO {
 
+
     @ApiModelProperty(name = "name", value = "聊天室名称")
     private String name;
 

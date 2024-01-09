@@ -9,10 +9,7 @@ import com.outmao.ebs.common.vo.Result;
 import com.outmao.ebs.hotel.entity.HotelDevice;
 import com.outmao.ebs.hotel.service.HotelDeviceService;
 import com.outmao.ebs.security.util.SecurityUtil;
-import com.outmao.ebs.thirdpartys.rongcloud.dto.RcChatroomBindRtcroomDTO;
-import com.outmao.ebs.thirdpartys.rongcloud.dto.RcChatroomDTO;
-import com.outmao.ebs.thirdpartys.rongcloud.dto.RcChatroomStatusDTO;
-import com.outmao.ebs.thirdpartys.rongcloud.dto.RcRegisterUserDTO;
+import com.outmao.ebs.thirdpartys.rongcloud.dto.*;
 import com.outmao.ebs.thirdpartys.rongcloud.entity.RcChatroom;
 import com.outmao.ebs.thirdpartys.rongcloud.service.RongcloudService;
 import com.outmao.ebs.thirdpartys.rongcloud.vo.Token;
@@ -120,6 +117,20 @@ public class RongcloudAction {
 		return rongcloudService.saveChatroom(request);
 	}
 
+	@ApiOperation(value = "修改聊天室名称", notes = "修改聊天室名称")
+	@PostMapping("/chatroom/update")
+	public RcChatroom updateChatroom(RcChatroomUpdateDTO request){
+		return rongcloudService.updateChatroom(request);
+	}
+
+	@ApiOperation(value = "删除聊天室", notes = "删除聊天室")
+	@PostMapping("/chatroom/delete")
+	public void deleteChatroomById(Long id){
+		rongcloudService.deleteChatroomById(id);
+	}
+
+
+
 	@ApiOperation(value = "融云聊天室绑定语聊室", notes = "融云聊天室绑定语聊室")
 	@PostMapping("/chatroom/bindRtcroom")
 	public RcChatroom chatroomBindRtcroom(RcChatroomBindRtcroomDTO request){
@@ -160,6 +171,9 @@ public class RongcloudAction {
 	public UserResult rongCloudUserInfo(String userId){
 		return rongcloudService.rongCloudUserInfo(userId);
 	}
+
+
+
 
 
 }

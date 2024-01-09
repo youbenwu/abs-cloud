@@ -19,7 +19,6 @@ public class TradeProfitSharingOrder  implements Serializable {
      */
     private static final long serialVersionUID = 1L;
 
-
     /**
      * 自动ID
      */
@@ -37,8 +36,13 @@ public class TradeProfitSharingOrder  implements Serializable {
      */
     private String orderNo;
 
-
+    /**
+     *
+     * 状态 1--处理中 2--分帐完成
+     *
+     */
     private int status;
+
 
 
     private Date createTime;

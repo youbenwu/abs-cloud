@@ -18,6 +18,7 @@ public interface MessageDomain {
 	public void setMessageStatus(SetMessageStatusDTO request);
 	public Page<MessageVO> getMessageVOPage(GetMessageListDTO request, Pageable pageable);
 
+
     public void setUserMessageStatus(SetUserMessageStatusDTO request);
 	public Page<UserMessageVO> getUserMessageVOPage(GetUserMessageListDTO request, Pageable pageable);
 	public List<Map<String, Integer>> getUnreadCount(Long userId);

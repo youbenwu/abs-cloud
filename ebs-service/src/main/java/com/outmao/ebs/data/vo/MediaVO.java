@@ -18,10 +18,10 @@ public class MediaVO {
 
     /**
      *
-     * 文件类型 image/video/pdf
+     * 文件类型 image/movie/pdf
      *
      */
-    @ApiModelProperty(name = "contentType", value = "文件类型 image/video/pdf")
+    @ApiModelProperty(name = "contentType", value = "文件类型 image/movie/pdf")
     private String contentType;
 
     @ApiModelProperty(name = "format", value = "文件格式 如：png")

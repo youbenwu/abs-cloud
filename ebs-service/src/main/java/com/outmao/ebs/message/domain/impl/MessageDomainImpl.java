@@ -8,6 +8,7 @@ import com.outmao.ebs.common.services.mail.MailService;
 import com.outmao.ebs.common.services.sms.SmsService;
 import com.outmao.ebs.common.services.wxmp.WXMP;
 import com.outmao.ebs.common.util.JsonUtil;
+import com.outmao.ebs.message.common.constant.MessageConstant;
 import com.outmao.ebs.message.common.constant.MessageStatus;
 import com.outmao.ebs.message.common.constant.SendType;
 import com.outmao.ebs.message.dao.MessageDao;
@@ -23,6 +24,9 @@ import com.outmao.ebs.message.entity.UserMessage;
 import com.outmao.ebs.message.vo.MessageVO;
 import com.outmao.ebs.message.vo.UserMessageVO;
 import com.outmao.ebs.org.dao.MemberDao;
+import com.outmao.ebs.thirdpartys.rongcloud.dto.PushBodyDTO;
+import com.outmao.ebs.thirdpartys.rongcloud.dto.PushDTO;
+import com.outmao.ebs.thirdpartys.rongcloud.service.RongcloudService;
 import com.outmao.ebs.user.common.annotation.SetSimpleUser;
 import com.outmao.ebs.user.dao.UserDao;
 import com.outmao.ebs.user.dao.UserDetailsDao;
@@ -70,6 +74,9 @@ public class MessageDomainImpl extends BaseDomain implements MessageDomain {
 	
 	@Autowired
 	private PushService pushService;
+
+	@Autowired
+	private RongcloudService rongcloudService;
 
 	@Autowired
 	private MailService mailSender;
@@ -328,12 +335,30 @@ public class MessageDomainImpl extends BaseDomain implements MessageDomain {
 
 	private void push(Long userId,Message message){
 		// 推送
-		pushService.pushToAlias(
-				new String[]{userId.toString()},
-				message.getContent(),
-				null,
-				1
-		);
+//		pushService.pushToAlias(
+//				new String[]{userId.toString()},
+//				message.getContent(),
+//				null,
+//				1
+//		);
+		PushMessageDTO m=new PushMessageDTO();
+		BeanUtils.copyProperties(message,m);
+		PushBodyDTO<PushMessageDTO> body=new PushBodyDTO<>();
+		body.setData(m);
+		body.setTitle(m.getTitle());
+		if(m.getType()!=null){
+			if(m.getType().startsWith(MessageConstant.message_type_order_success)){
+				body.setType(10);
+			}else if(m.getType().startsWith("order")){
+				body.setType(11);
+			}
+		}
+		body.setContent(m.getContent());
+		PushDTO pushDTO=new PushDTO<>();
+		pushDTO.setBody(body);
+		pushDTO.setTags(new String[]{userId.toString()});
+
+		rongcloudService.push(pushDTO);
 	}
 
 	private void sendMP(String openId,Message message) throws Exception{

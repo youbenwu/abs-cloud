@@ -58,7 +58,7 @@ public class HotelDTO extends BaseDTO {
      * 酒店视频
      *
      */
-    @ApiModelProperty(name = "video", value = "酒店视频")
+    @ApiModelProperty(name = "movie", value = "酒店视频")
     private String video;
 
     /**

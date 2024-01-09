@@ -45,6 +45,7 @@ public class Trade implements Serializable {
 	@JoinColumn(name = "toId")
 	private Wallet to;
 
+
 	/**
 	 * 交易的币种
 	 */
@@ -52,6 +53,7 @@ public class Trade implements Serializable {
 	@ManyToOne(cascade = CascadeType.REFRESH, optional = false, fetch = FetchType.LAZY)
 	@JoinColumn(name = "currencyId")
 	private Currency currency;
+
 
 	/**
 	 * 
@@ -82,6 +84,7 @@ public class Trade implements Serializable {
 	private int type;
 
 	/**
+	 *
 	 * 自定义业务类型
 	 * 
 	 */
@@ -132,7 +135,10 @@ public class Trade implements Serializable {
 	private long receiptAmount;
 
 	/**
+	 *
 	 * 实际已给收款方的金额
+	 *
+	 *
 	 */
 	private long payAmount;
 	

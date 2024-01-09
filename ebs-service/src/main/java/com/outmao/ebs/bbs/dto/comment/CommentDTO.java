@@ -27,7 +27,7 @@ public class CommentDTO {
 	@ApiModelProperty(name = "images", value = "评论图片地址，逗号隔开")
 	private String images;
 
-	@ApiModelProperty(name = "video", value = "评论视频地址")
+	@ApiModelProperty(name = "movie", value = "评论视频地址")
 	private String video;
 
 }

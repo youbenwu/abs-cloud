@@ -5,7 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
-public interface RcChatroomDao extends JpaRepository<RcChatroom,String> {
+public interface RcChatroomDao extends JpaRepository<RcChatroom,Long> {
 
     public RcChatroom findByChatroomId(String chatroomId);
 

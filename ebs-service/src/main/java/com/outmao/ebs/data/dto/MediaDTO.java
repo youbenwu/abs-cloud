@@ -30,7 +30,7 @@ public class MediaDTO {
     @ApiModelProperty(name = "item", value = "绑定对象")
     private BindingItem item;
 
-    @ApiModelProperty(name = "contentType", value = "文件类型 image/video")
+    @ApiModelProperty(name = "contentType", value = "文件类型 image/movie")
     private String contentType;
 
     @ApiModelProperty(name = "format", value = "文件格式 如：png")

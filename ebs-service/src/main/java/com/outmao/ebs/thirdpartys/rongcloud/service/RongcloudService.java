@@ -19,6 +19,11 @@ public interface RongcloudService {
 
     public RcChatroom saveChatroom(RcChatroomDTO request);
 
+    public RcChatroom updateChatroom(RcChatroomUpdateDTO request);
+
+
+    public void deleteChatroomById(Long id);
+
 
     public RcChatroom chatroomBindRtcroom(RcChatroomBindRtcroomDTO request);
 
@@ -36,6 +41,9 @@ public interface RongcloudService {
     public String rongCloudUserCheckOnline(String userId);
 
     public UserResult rongCloudUserInfo(String userId);
+
+
+    public void push(PushDTO<PushBodyDTO> request);
 
 
 }

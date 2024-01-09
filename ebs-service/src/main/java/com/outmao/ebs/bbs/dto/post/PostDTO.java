@@ -29,7 +29,7 @@ public class PostDTO  {
 	@ApiModelProperty(name = "images", value = "图片，逗号隔开")
 	private String images;
 
-	@ApiModelProperty(name = "video", value = "视频")
+	@ApiModelProperty(name = "movie", value = "视频")
 	private String video;
 
 	@ApiModelProperty(name = "mark", value = "标签")

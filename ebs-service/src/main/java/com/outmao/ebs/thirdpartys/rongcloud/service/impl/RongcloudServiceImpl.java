@@ -1,5 +1,6 @@
 package com.outmao.ebs.thirdpartys.rongcloud.service.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.outmao.ebs.common.exception.BusinessException;
 import com.outmao.ebs.common.util.StringUtil;
 import com.outmao.ebs.thirdpartys.rongcloud.config.RongcloudProperties;
@@ -17,9 +18,12 @@ import io.rong.models.chatroom.ChatroomDataModel;
 import io.rong.models.chatroom.ChatroomMember;
 import io.rong.models.chatroom.ChatroomModel;
 import io.rong.models.group.GroupMember;
+import io.rong.models.push.Audience;
+import io.rong.models.push.Notification;
+import io.rong.models.push.PushModel;
 import io.rong.models.response.*;
+import io.rong.models.user.TagModel;
 import io.rong.models.user.UserModel;
-import io.rong.util.CommonUtil;
 import io.rong.util.GsonUtil;
 import io.rong.util.HttpUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -55,8 +59,18 @@ public class RongcloudServiceImpl implements RongcloudService {
     public Token registerUser(RcRegisterUserDTO request) {
         User user = rongCloud.user;
         try {
+
             TokenResult result=user.register(request);
+
+
             if(result.code==200){
+
+                TagModel tagModel=new TagModel();
+                tagModel.setUserId(request.id);
+                tagModel.setTags(new String[]{request.getGroupId(),request.id});
+                user.tag.set(tagModel);
+
+
                 Token token=new Token();
                 BeanUtils.copyProperties(result,token);
 
@@ -69,7 +83,6 @@ public class RongcloudServiceImpl implements RongcloudService {
                 groupDTO.setMembers(new GroupMember[]{member});
                 saveGroup(groupDTO);
 
-
                 return token;
             }else{
                 log.error("注册融云用户出错",result.errorMessage);
@@ -79,6 +92,8 @@ public class RongcloudServiceImpl implements RongcloudService {
             log.error("注册融云用户出错",e);
             throw new BusinessException("注册融云用户出错");
         }
+
+
 
     }
 
@@ -114,6 +129,8 @@ public class RongcloudServiceImpl implements RongcloudService {
                 throw new BusinessException("融云加入群组出错");
             }
         }
+
+
 
         BeanUtils.copyProperties(request,group);
 
@@ -159,10 +176,96 @@ public class RongcloudServiceImpl implements RongcloudService {
             rongCloudChatroomCorrelationRtc(chatroom);
         }
 
+
+        try{
+
+            PushBodyDTO pushBodyDTO=new PushBodyDTO();
+            pushBodyDTO.setType(20);
+            pushBodyDTO.setTitle("创建群聊");
+            pushBodyDTO.setContent("创建群聊:"+chatroom.getName());
+            PushDTO pushDTO=new PushDTO();
+            pushDTO.setBody(pushBodyDTO);
+            pushDTO.setTags(new String[]{chatroom.getGroupId()});
+
+            push(pushDTO);
+
+        }catch (Exception e){
+            log.error("推送出错",e);
+        }
+
+
         return chatroom;
 
     }
 
+    @Transactional
+    @Override
+    public RcChatroom updateChatroom(RcChatroomUpdateDTO request) {
+        RcChatroom chatroom=rcChatroomDao.getOne(request.getId());
+        chatroom.setName(request.getName());
+        rcChatroomDao.save(chatroom);
+
+        try{
+
+            PushBodyDTO pushBodyDTO=new PushBodyDTO();
+            pushBodyDTO.setType(22);
+            pushBodyDTO.setTitle("修改群聊");
+            pushBodyDTO.setContent("修改群聊:"+chatroom.getName());
+            PushDTO pushDTO=new PushDTO();
+            pushDTO.setBody(pushBodyDTO);
+            pushDTO.setTags(new String[]{chatroom.getGroupId()});
+
+            push(pushDTO);
+
+        }catch (Exception e){
+            log.error("推送出错",e);
+        }
+
+        return chatroom;
+    }
+
+    @Transactional
+    @Override
+    public void deleteChatroomById(Long id) {
+        RcChatroom chatroom=rcChatroomDao.getOne(id);
+
+        try{
+
+            PushBodyDTO pushBodyDTO=new PushBodyDTO();
+            pushBodyDTO.setType(21);
+            pushBodyDTO.setTitle("删除群聊");
+            pushBodyDTO.setContent("删除群聊:"+chatroom.getName());
+            PushDTO pushDTO=new PushDTO();
+            pushDTO.setBody(pushBodyDTO);
+            pushDTO.setTags(new String[]{chatroom.getGroupId()});
+
+            push(pushDTO);
+
+        }catch (Exception e){
+            log.error("推送出错",e);
+        }
+
+        if(chatroom==null){
+            throw new BusinessException("聊天室不存在");
+        }
+
+        try{
+            ChatroomModel model=new ChatroomModel();
+            model.setId(id.toString());
+            Result result= rongCloud.chatroom.destroy(model);
+            if(result.getCode()!=200){
+                log.error("融云删除聊天室出错:{}",result.getErrorMessage());
+                throw new BusinessException("融云删除聊天室出错");
+            }
+        }catch (Exception e){
+            log.error("融云删除聊天室出错",e);
+            throw new BusinessException("融云删除聊天室出错");
+        }
+
+       rcChatroomDao.delete(chatroom);
+
+
+    }
 
     @Override
     public RcChatroom chatroomBindRtcroom(RcChatroomBindRtcroomDTO request) {
@@ -327,6 +430,37 @@ public class RongcloudServiceImpl implements RongcloudService {
             throw new BusinessException("融云获取用户信息出错");
         }
     }
+
+
+    @Override
+    public void push(PushDTO<PushBodyDTO> request) {
+        try{
+            PushModel pushModel=new PushModel();
+            pushModel.setPlatform(new String[]{"ios","android"});
+            Audience audience=new Audience();
+            audience.setTag(request.getTags());
+            pushModel.setAudience(audience);
+
+            Notification notification=new Notification();
+            notification.setAlert(JSON.toJSONString(request.getBody()));
+            notification.setTitle(request.getBody().getTitle());
+
+            pushModel.setNotification(notification);
+
+            Result result=rongCloud.push.push(pushModel);
+
+            if(result.getCode()!=200){
+                log.error("融云推送消息出错:{}",result.getErrorMessage());
+                throw new BusinessException("融云推送消息出错");
+            }
+
+
+        }catch (Exception e){
+            log.error("融云推送消息出错",e);
+            throw new BusinessException("融云推送消息出错");
+        }
+    }
+
 
 
 }

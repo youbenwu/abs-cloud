@@ -64,7 +64,7 @@ public class AdvertDTO {
     @ApiModelProperty(name = "url", value = "广告跳转地址")
     private String url;
 
-    @ApiModelProperty(name = "video", value = "广告视频地址")
+    @ApiModelProperty(name = "movie", value = "广告视频地址")
     private String video;
 
     @ApiModelProperty(name = "qrCode", value = "广告二维码地址")

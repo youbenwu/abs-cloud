@@ -163,7 +163,7 @@ public class HouseVO extends SubjectItemVO implements IItem {
      * 主图视频
      *
      */
-    @ApiModelProperty(name = "video", value = "主图视频")
+    @ApiModelProperty(name = "movie", value = "主图视频")
     private String video;
 
     /**
