@@ -269,6 +269,12 @@ public class HotelAdminAction {
         return  hotelService.getHotelRoomVOPage(request,pageable);
     }
 
+    @PreAuthorize("hasPermission('/hotel/room','read')")
+    @ApiOperation(value = "迁眼获取酒店房间列表", notes = "迁眼获取酒店房间列表")
+    @PostMapping("/room/qy/list")
+    public List<QyHotelRoomVO> getQyHotelRoomVOList(Long hotelId){
+        return hotelService.getQyHotelRoomVOList(hotelId);
+    }
 
     @PreAuthorize("hasPermission('/hotel/workOrder','save')")
     @ApiOperation(value = "保存酒店服务", notes = "保存酒店服务")
