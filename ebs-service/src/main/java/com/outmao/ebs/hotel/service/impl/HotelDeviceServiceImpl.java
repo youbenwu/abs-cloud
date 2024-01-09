@@ -177,6 +177,12 @@ public class HotelDeviceServiceImpl extends BaseService implements HotelDeviceSe
         return hotelDeviceDomain.getSimpleHotelDeviceVOByUserIdInAndIsLease(userIdIn);
     }
 
+
+    @Override
+    public List<SimpleHotelDeviceVO> getSimpleHotelDeviceVOByHotelId(Long hotelId) {
+        return hotelDeviceDomain.getSimpleHotelDeviceVOByHotelId(hotelId);
+    }
+
     @Override
     public HotelDevice getHotelDeviceByUserId(Long userId) {
         return hotelDeviceDomain.getHotelDeviceByUserId(userId);

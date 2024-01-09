@@ -44,6 +44,7 @@ public interface HotelDeviceService {
 
     public List<SimpleHotelDeviceVO> getSimpleHotelDeviceVOByUserIdInAndIsLease(Collection<Long> userIdIn);
 
+    public List<SimpleHotelDeviceVO> getSimpleHotelDeviceVOByHotelId(Long hotelId);
 
     public List<HotelDeviceVO> getHotelDeviceVOList(GetHotelDeviceListDTO request);
 

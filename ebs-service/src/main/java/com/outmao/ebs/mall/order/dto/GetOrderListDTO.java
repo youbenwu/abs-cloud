@@ -57,6 +57,7 @@ public class GetOrderListDTO {
     private Integer status;
 
 
+    private Integer[] statusIn;
 
 
 }

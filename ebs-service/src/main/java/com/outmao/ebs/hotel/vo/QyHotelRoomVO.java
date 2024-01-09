@@ -18,4 +18,7 @@ public class QyHotelRoomVO extends HotelRoomVO{
     private int deviceStatus;
 
 
+    private SimpleHotelDeviceVO device;
+
+
 }

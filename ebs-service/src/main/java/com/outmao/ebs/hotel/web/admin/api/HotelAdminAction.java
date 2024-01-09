@@ -171,17 +171,20 @@ public class HotelAdminAction {
         hotelService.deleteHotelPhotoById(id);
     }
 
+
     @ApiOperation(value = "删除酒店相册", notes = "删除酒店相册")
     @PostMapping("/photo/deleteAll")
     public void deleteAllHotelPhotoByHotelId(Long hotelId){
         hotelService.deleteAllHotelPhotoByHotelId(hotelId);
     }
 
+
     @ApiOperation(value = "获取酒店相册图片列表", notes = "获取酒店相册图片列表")
     @PostMapping("/photo/page")
     public Page<PhotoVO> getHotelPhotoVOPage(GetHotelPhotoListDTO request, Pageable pageable){
         return hotelService.getHotelPhotoVOPage(request,pageable);
     }
+
 
     @PreAuthorize("hasPermission('/hotel/room/type','save')")
     @ApiOperation(value = "保存酒店房型", notes = "保存酒店房型")

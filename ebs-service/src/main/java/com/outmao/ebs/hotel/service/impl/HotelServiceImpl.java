@@ -11,6 +11,7 @@ import com.outmao.ebs.hotel.common.util.HotelRoomUtil;
 import com.outmao.ebs.hotel.domain.*;
 import com.outmao.ebs.hotel.dto.*;
 import com.outmao.ebs.hotel.entity.*;
+import com.outmao.ebs.hotel.service.HotelDeviceService;
 import com.outmao.ebs.hotel.service.HotelService;
 import com.outmao.ebs.hotel.vo.*;
 import com.outmao.ebs.mall.merchant.dto.MerchantDTO;
@@ -31,10 +32,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
-import java.util.Collection;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
+
+import java.util.*;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -76,6 +76,10 @@ public class HotelServiceImpl extends BaseService implements HotelService {
 
     @Autowired
     private PhotoService photoService;
+
+
+    @Autowired
+    private HotelDeviceService hotelDeviceService;
 
 
 
@@ -310,7 +314,14 @@ public class HotelServiceImpl extends BaseService implements HotelService {
 
     @Override
     public List<QyHotelRoomVO> getQyHotelRoomVOList(Long hotelId) {
-        return hotelRoomDomain.getQyHotelRoomVOList(hotelId);
+        List<SimpleHotelDeviceVO> devices=hotelDeviceService.getSimpleHotelDeviceVOByHotelId(hotelId);
+        Map<String,SimpleHotelDeviceVO> deviceMap=devices.stream().collect(Collectors.toMap(t->t.getRoomNo(),t->t));
+
+        List<QyHotelRoomVO> list= hotelRoomDomain.getQyHotelRoomVOList(hotelId);
+        list.forEach(t->{
+            t.setDevice(deviceMap.get(t.getRoomNo()));
+        });
+        return list;
     }
 
     @Override

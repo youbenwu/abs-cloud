@@ -263,6 +263,12 @@ public class HotelDeviceDomainImpl extends BaseDomain implements HotelDeviceDoma
     }
 
     @Override
+    public List<SimpleHotelDeviceVO> getSimpleHotelDeviceVOByHotelId(Long hotelId) {
+        QHotelDevice e=QHotelDevice.hotelDevice;
+        return queryList(e,e.hotelId.eq(hotelId).and(e.status.eq(1)),simpleHotelDeviceVOConver);
+    }
+
+    @Override
     public List<HotelDeviceVO> getHotelDeviceVOList(GetHotelDeviceListDTO request) {
 
         QHotelDevice e=QHotelDevice.hotelDevice;

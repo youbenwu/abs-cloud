@@ -593,7 +593,10 @@ public class OrderDomainImpl extends BaseDomain implements OrderDomain {
 
         if(request.getStatus()!=null){
             p=e.status.eq(request.getStatus()).and(p);
+        }else if(request.getStatusIn()!=null){
+            p=e.status.in(request.getStatusIn()).and(p);
         }
+
         return p;
     }
 
