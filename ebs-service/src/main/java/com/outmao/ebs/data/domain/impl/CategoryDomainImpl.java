@@ -22,10 +22,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 
 @Component
@@ -42,16 +40,17 @@ public class CategoryDomainImpl extends BaseDomain implements CategoryDomain {
     @Transactional
     @Override
     public Category saveCategory(CategoryDTO request) {
-        Category category=request.getId()==null?null:categoryDao.findByIdForUpdate(request.getId());
+        Category category=request.getId()==null?null:categoryDao.findByIdLock(request.getId());
 
         if(category==null){
             category=new Category();
+            category.setOrgId(request.getOrgId());
             category.setType(request.getType());
             category.setTargetId(request.getTargetId());
             category.setCreateTime(new Date());
             category.setLeaf(true);
             if(request.getParentId()!=null){
-                Category parent=categoryDao.findByIdForUpdate(request.getParentId());
+                Category parent=categoryDao.findByIdLock(request.getParentId());
                 category.setParent(parent);
                 category.setLevel(parent.getLevel()+1);
                 if(parent.isLeaf()){
@@ -62,7 +61,7 @@ public class CategoryDomainImpl extends BaseDomain implements CategoryDomain {
 
         category.setLetter(StringUtil.toPinyin(request.getTitle()));
 
-        BeanUtils.copyProperties(request,category,"type","targetId");
+        BeanUtils.copyProperties(request,category,"orgId","type","targetId");
 
         category.setUpdateTime(new Date());
 
@@ -74,7 +73,7 @@ public class CategoryDomainImpl extends BaseDomain implements CategoryDomain {
     @Transactional
     @Override
     public Category setCategoryStatus(SetCategoryStatusDTO request) {
-        Category category=categoryDao.getOne(request.getId());
+        Category category=categoryDao.findByIdLock(request.getId());
         if(category==null){
             throw new BusinessException("分类不存在");
         }
@@ -93,6 +92,11 @@ public class CategoryDomainImpl extends BaseDomain implements CategoryDomain {
         if(!category.isLeaf()){
             throw new BusinessException("请先删除下级分类");
         }
+        if(category.getParent()!=null&&category.getParent().getChildren().size()==1){
+            Category parent=categoryDao.findByIdLock(category.getParent().getId());
+            parent.setLeaf(true);
+            categoryDao.save(parent);
+        }
         categoryDao.delete(category);
     }
 
@@ -100,30 +104,28 @@ public class CategoryDomainImpl extends BaseDomain implements CategoryDomain {
     public List<CategoryVO> getCategoryVOList(GetCategoryListDTO request) {
         QCategory e=QCategory.category;
 
-        Predicate p=null;
+        Predicate p=getPredicate(request);
 
-        if(StringUtil.isNotEmpty(request.getType())){
-            p=e.type.eq(request.getType()).and(p);
-        }
+        List<CategoryVO> list=queryList(e,p,e.sort.asc(),categoryVOConvert);
 
-        if(request.getTargetId()!=null){
-            p=e.targetId.eq(request.getTargetId()).and(p);
-        }
-
-        List<CategoryVO> list=queryList(e,e.level.eq(0).and(p),e.sort.asc(),categoryVOConvert);
-        loadCategoryVOListChildren(list);
-        return list;
+        return toLevel(list);
     }
 
-    private void loadCategoryVOListChildren(List<CategoryVO> list){
-        QCategory e=QCategory.category;
-        for(CategoryVO item:list){
-            if(!item.isLeaf()){
-                List<CategoryVO> children=queryList(e,e.parent.id.eq(item.getId()),e.sort.asc(),categoryVOConvert);
-                loadCategoryVOListChildren(children);
-                item.setChildren(children);
+    private List<CategoryVO> toLevel(List<CategoryVO> all){
+        Map<Long,CategoryVO> map=all.stream().collect(Collectors.toMap(t->t.getId(), t->t));
+        List<CategoryVO> list=new ArrayList<>();
+        for(CategoryVO vo:all){
+            if(vo.getParentId()!=null){
+                CategoryVO parent=map.get(vo.getParentId());
+                if(parent.getChildren()==null){
+                    parent.setChildren(new ArrayList<>());
+                }
+                parent.getChildren().add(vo);
+            }else{
+                list.add(vo);
             }
         }
+        return list;
     }
 
     @Override
@@ -149,19 +151,40 @@ public class CategoryDomainImpl extends BaseDomain implements CategoryDomain {
 
         QCategory e=QCategory.category;
 
+        Predicate p=getPredicate(request);
+
+        return queryPage(e,p,categoryVOConvert,pageable);
+    }
+
+
+    private Predicate getPredicate(GetCategoryListDTO request){
+        QCategory e=QCategory.category;
+
         Predicate p=null;
 
-        if(StringUtil.isNotEmpty(request.getType())){
-            p=e.type.eq(request.getType()).and(p);
+        if(request.getOrgId()!=null){
+            p=e.orgId.eq(request.getOrgId()).and(p);
         }
 
         if(request.getTargetId()!=null){
             p=e.targetId.eq(request.getTargetId()).and(p);
         }
 
-        return queryPage(e,p,categoryVOConvert,pageable);
+        if(StringUtil.isNotEmpty(request.getType())){
+            p=e.type.eq(request.getType()).and(p);
+        }
+
+        return p;
     }
 
+
+    @Transactional
+    @Override
+    public void sort(List<Long> ids) {
+        for(int i=0;i<ids.size();i++){
+            categoryDao.setSort(ids.get(i),i);
+        }
+    }
 
 
 }

@@ -6,8 +6,11 @@ import lombok.Data;
 @Data
 public class GetCategoryListDTO {
 
-    private String type;
+    private Long orgId;
 
     private Long targetId;
+
+    private String type;
+
 
 }

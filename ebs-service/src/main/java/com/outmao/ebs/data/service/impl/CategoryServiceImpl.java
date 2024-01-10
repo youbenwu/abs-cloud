@@ -48,4 +48,12 @@ public class CategoryServiceImpl extends BaseService implements CategoryService 
     public Page<CategoryVO> getCategoryVOPage(GetCategoryListDTO request, Pageable pageable) {
         return categoryDomain.getCategoryVOPage(request,pageable);
     }
+
+
+    @Override
+    public void sort(List<Long> ids) {
+        categoryDomain.sort(ids);
+    }
+
+
 }

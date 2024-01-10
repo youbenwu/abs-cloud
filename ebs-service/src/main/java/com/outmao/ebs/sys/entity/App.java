@@ -54,7 +54,6 @@ public class App  implements Serializable
      */
     private String packageUrl;
 
-
     /**
      * 创建时间
      */

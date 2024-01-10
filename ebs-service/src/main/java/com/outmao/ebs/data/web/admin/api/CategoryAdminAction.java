@@ -16,6 +16,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
@@ -31,7 +32,7 @@ import java.util.List;
 })
 
 
-@Api(value = "account-data-category", tags = "后台-数据-分类")
+@Api(value = "admin-data-category", tags = "后台-数据-分类")
 @RestController
 @RequestMapping("/api/admin/data/category")
 public class CategoryAdminAction {
@@ -76,6 +77,11 @@ public class CategoryAdminAction {
         return categoryService.getCategoryVOPage(request,pageable);
     }
 
+    @ApiOperation(value = "分类排序", notes = "分类排序")
+    @PostMapping("/sort")
+    public void sort(@RequestBody List<Long> ids){
+        categoryService.sort(ids);
+    }
 
 
 

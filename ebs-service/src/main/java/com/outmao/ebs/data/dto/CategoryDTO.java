@@ -12,6 +12,9 @@ public class CategoryDTO {
     @ApiModelProperty(name = "id", value = "分类ID")
     private Long id;
 
+    @ApiModelProperty(name = "orgId", value = "所属组织ID")
+    private Long orgId;
+
     @ApiModelProperty(name = "type", value = "类型")
     private String type;
 

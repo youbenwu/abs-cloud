@@ -34,6 +34,13 @@ public class Category implements Serializable {
 
     /**
      *
+     * 所属组织ID
+     *
+     */
+    private Long orgId;
+
+    /**
+     *
      * 分类的父分类
      *
      */

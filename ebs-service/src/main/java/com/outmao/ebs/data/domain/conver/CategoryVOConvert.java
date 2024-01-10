@@ -15,6 +15,7 @@ public class CategoryVOConvert implements BeanConver<QCategory, CategoryVO> {
 
         CategoryVO vo=new CategoryVO();
         vo.setId(t.get(e.id));
+        vo.setOrgId(t.get(e.orgId));
         vo.setType(t.get(e.type));
         vo.setTargetId(t.get(e.targetId));
         vo.setParentId(t.get(e.parent.id));
@@ -37,6 +38,7 @@ public class CategoryVOConvert implements BeanConver<QCategory, CategoryVO> {
                 e.type,
                 e.targetId,
                 e.id,
+                e.orgId,
                 e.parent.id,
                 e.level,
                 e.leaf,

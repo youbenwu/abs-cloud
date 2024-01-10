@@ -21,6 +21,9 @@ public class CategoryVO {
     @ApiModelProperty(name = "id", value = "ID")
     private Long id;
 
+    @ApiModelProperty(name = "orgId", value = "所属组织ID")
+    private Long orgId;
+
     /**
      *
      * 类型

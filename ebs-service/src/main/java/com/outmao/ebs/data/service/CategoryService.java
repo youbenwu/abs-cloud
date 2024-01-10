@@ -23,5 +23,6 @@ public interface CategoryService {
 
     public Page<CategoryVO> getCategoryVOPage(GetCategoryListDTO request, Pageable pageable);
 
+    public void sort(List<Long> ids);
 
 }
