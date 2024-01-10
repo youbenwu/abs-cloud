@@ -28,7 +28,9 @@ public class Movie implements Serializable, BindingSubjectId {
     private Long id;
 
     /**
+     *
      * 所属组织ID
+     *
      */
     private Long orgId;
 
@@ -52,13 +54,18 @@ public class Movie implements Serializable, BindingSubjectId {
      */
     private Long categoryId;
 
-
     /**
      * 付费类型
      * 0--免费 1--会员 2--付费
      */
     private int feeType;
 
+    /**
+     *
+     * 价格
+     *
+     */
+    private double price;
 
     /**
      * 影视名称
@@ -79,7 +86,6 @@ public class Movie implements Serializable, BindingSubjectId {
      * 上映时间
      */
     private Date releaseTime;
-
 
     /**
      * 创建时间

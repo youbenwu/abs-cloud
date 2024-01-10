@@ -221,6 +221,7 @@ public class HotelDomainImpl extends BaseDomain implements HotelDomain {
     @Data
     private class GetHotelListRequest extends GetHotelListDTO{
         private Collection<Long> idIn;
+        private String city;
     }
 
 
@@ -242,6 +243,11 @@ public class HotelDomainImpl extends BaseDomain implements HotelDomain {
 
         if(request.getIdIn()!=null){
             p=e.id.in(request.getIdIn());
+        }
+
+        if(!StringUtils.isEmpty(request.getCity())){
+            request.setCity(request.getCity().replace("市",""));
+            p=e.area.like("%"+request.getCity()+"%");
         }
 
         if(request.getLatitude()!=null&&request.getLongitude()!=null){
@@ -281,6 +287,7 @@ public class HotelDomainImpl extends BaseDomain implements HotelDomain {
             HotelVO vo=map.get(t.get(e.hotel.id));
             vo.setRoomCount(t.get(e.count()).intValue());
         }
+
 
 
     }

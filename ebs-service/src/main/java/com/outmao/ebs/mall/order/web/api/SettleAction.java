@@ -48,6 +48,7 @@ public class SettleAction {
     @ApiOperation(value = "下单", notes = "下单")
     @PostMapping("/buy")
     public ToOrderVO buy(@RequestBody ToOrderDTO request){
+
         return settleService.buy(request);
     }
 
@@ -57,6 +58,7 @@ public class SettleAction {
     public QyPadToOrderVO toOrderAndPay(QyPadToOrderDTO request){
         return settleService.toOrderAndPay(request);
     }
+
 
 
 }

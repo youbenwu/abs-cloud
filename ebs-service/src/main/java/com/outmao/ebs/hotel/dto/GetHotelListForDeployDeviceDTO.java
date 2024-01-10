@@ -16,4 +16,6 @@ public class GetHotelListForDeployDeviceDTO extends BaseDTO {
     @ApiModelProperty(name = "longitude", value = "查附近酒店--经度")
     private Double longitude;
 
+    private String city;
+
 }

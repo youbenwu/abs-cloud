@@ -40,4 +40,5 @@ public class AppDomainImpl extends BaseDomain implements AppDomain {
     public App getAppByCode(String code) {
         return appDao.findByCode(code);
     }
+
 }

@@ -14,7 +14,7 @@ public class AppDTO
     /**
      * 唯一编码 迁眼用户端小程序--qy-wechat
      */
-    @ApiModelProperty(name = "code", value = "唯一编码 迁眼用户端小程序--qy-wechat")
+    @ApiModelProperty(name = "code", value = "唯一编码 迁眼用户端小程序--qy-wechat   迁眼平板--qy-pad")
     private String code;
 
     /**
@@ -28,6 +28,15 @@ public class AppDTO
      */
     private String name;
 
+    /**
+     * 版本
+     */
+    private String version;
+
+    /**
+     * 安装包地址
+     */
+    private String packageUrl;
 
 
 

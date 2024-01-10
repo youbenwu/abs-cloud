@@ -27,7 +27,7 @@ public class App  implements Serializable
     private Long id;
 
     /**
-     * 唯一编码 迁眼用户端小程序--qy-wechat
+     * 唯一编码 迁眼用户端小程序--qy-wechat  迁眼平板--qy-pad
      */
     @Column(unique = true)
     private String code;
@@ -43,6 +43,16 @@ public class App  implements Serializable
      * 应用名称
      */
     private String name;
+
+    /**
+     * 版本
+     */
+    private String version;
+
+    /**
+     * 安装包地址
+     */
+    private String packageUrl;
 
 
     /**

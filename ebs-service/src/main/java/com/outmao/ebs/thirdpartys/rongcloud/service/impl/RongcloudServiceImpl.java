@@ -442,6 +442,7 @@ public class RongcloudServiceImpl implements RongcloudService {
             pushModel.setAudience(audience);
 
             Notification notification=new Notification();
+
             notification.setAlert(JSON.toJSONString(request.getBody()));
             notification.setTitle(request.getBody().getTitle());
 
