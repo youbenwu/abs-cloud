@@ -54,6 +54,11 @@ public class JobServiceImpl extends BaseService implements JobService {
     }
 
     @Override
+    public void deleteJobMemberByMemberId(Long memberId) {
+        jobDomain.deleteJobMemberByMemberId(memberId);
+    }
+
+    @Override
     public Page<JobMemberVO> getJobMemberVOPage(GetJobMemberListDTO request, Pageable pageable) {
         return jobDomain.getJobMemberVOPage(request,pageable);
     }

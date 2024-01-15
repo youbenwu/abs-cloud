@@ -3,9 +3,13 @@ package com.outmao.ebs.mall.merchant.dto;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @ApiModel(value = "SetMerchantStatusDTO", description = "设置商家状态")
+@AllArgsConstructor
+@NoArgsConstructor
 @Data
 public class SetMerchantStatusDTO {
 

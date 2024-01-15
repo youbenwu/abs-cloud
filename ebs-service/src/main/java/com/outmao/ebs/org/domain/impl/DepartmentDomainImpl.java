@@ -30,6 +30,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Component
 public class DepartmentDomainImpl extends BaseDomain implements DepartmentDomain {
@@ -53,13 +55,13 @@ public class DepartmentDomainImpl extends BaseDomain implements DepartmentDomain
     @Transactional
     @Override
     public Department saveDepartment(DepartmentDTO request) {
-        Department department= request.getId()==null?null:departmentDao.findByIdForUpdate(request.getId());
+        Department department= request.getId()==null?null:departmentDao.findByIdLock(request.getId());
         if(department==null){
             department=new Department();
             department.setCreateTime(new Date());
             department.setOrg(orgDao.getOne(request.getOrgId()));
             if(request.getParentId()!=null){
-                Department parent=departmentDao.findByIdForUpdate(request.getParentId());
+                Department parent=departmentDao.findByIdLock(request.getParentId());
                 department.setParent(parent);
                 department.setLevel(parent.getLevel()+1);
                 if(parent.isLeaf()) {
@@ -78,7 +80,7 @@ public class DepartmentDomainImpl extends BaseDomain implements DepartmentDomain
     @Override
     public void deleteDepartment(DeleteDepartmentDTO request) {
 
-        Department department=departmentDao.findByIdForUpdate(request.getId());
+        Department department=departmentDao.findByIdLock(request.getId());
 
         if(!department.isLeaf()){
             throw new BusinessException("请先删除下级部门");
@@ -92,24 +94,28 @@ public class DepartmentDomainImpl extends BaseDomain implements DepartmentDomain
     @Override
     public List<DepartmentVO> getDepartmentVOList(GetDepartmentListDTO request) {
         QDepartment e= QDepartment.department;
-        List<DepartmentVO> list= queryList(e,e.org.id.eq(request.getOrgId()).and(e.level.eq(0)),e.sort.asc(),new DepartmentVOConver());
-        loadDepartmentChildren(list);
+        List<DepartmentVO> list= queryList(e,e.org.id.eq(request.getOrgId()),e.sort.asc(),new DepartmentVOConver());
+        return toLevel(list);
+    }
+
+    private List<DepartmentVO> toLevel(List<DepartmentVO> all){
+        Map<Long,DepartmentVO> map=all.stream().collect(Collectors.toMap(t->t.getId(), t->t));
+        List<DepartmentVO> list=new ArrayList<>();
+        for(DepartmentVO vo:all){
+            if(vo.getParentId()!=null){
+                DepartmentVO parent=map.get(vo.getParentId());
+                if(parent.getChildren()==null){
+                    parent.setChildren(new ArrayList<>());
+                }
+                parent.getChildren().add(vo);
+            }else{
+                list.add(vo);
+            }
+        }
         return list;
     }
 
-    private void loadDepartmentChildren(List<DepartmentVO> list){
-        if(list.isEmpty())
-            return;
-        QDepartment e=QDepartment.department;
-        DepartmentVOConver conver=new DepartmentVOConver();
-        for (DepartmentVO d : list){
-            if(!d.isLeaf()){
-                List<DepartmentVO> subs=queryList(e,e.parent.id.eq(d.getId()),e.sort.asc(),conver);
-                d.setChildren(subs);
-                loadDepartmentChildren(subs);
-            }
-        }
-    }
+
 
 
     @Transactional
@@ -119,13 +125,11 @@ public class DepartmentDomainImpl extends BaseDomain implements DepartmentDomain
 
         if(m==null){
             m=new DepartmentMember();
+            m.setDepartment(departmentDao.getOne(request.getDepartmentId()));
             m.setMember(memberDao.getOne(request.getMemberId()));
             m.setCreateTime(new Date());
             departmentMemberDao.save(m);
-            departmentDao.membersAdd(request.getDepartmentId(),1);
-
         }
-
 
         return m;
     }
@@ -141,6 +145,7 @@ public class DepartmentDomainImpl extends BaseDomain implements DepartmentDomain
         request.getMembers().forEach(memberId->{
             if(!memberIds.contains(memberId)) {
                 DepartmentMember m = new DepartmentMember();
+                m.setDepartment(departmentDao.getOne(request.getDepartmentId()));
                 m.setMember(memberDao.getOne(memberId));
                 m.setCreateTime(new Date());
                 list.add(m);
@@ -148,7 +153,6 @@ public class DepartmentDomainImpl extends BaseDomain implements DepartmentDomain
         });
 
         departmentMemberDao.saveAll(list);
-        departmentDao.membersAdd(request.getDepartmentId(),list.size());
 
         return list;
     }
@@ -156,13 +160,13 @@ public class DepartmentDomainImpl extends BaseDomain implements DepartmentDomain
     @Transactional
     @Override
     public void deleteDepartmentMember(DeleteDepartmentMemberDTO request) {
-        DepartmentMember m=departmentMemberDao.findById(request.getId()).orElse(null);
-        if(m==null){
-            throw new BusinessException("部门成员不存在");
-        }
-        departmentMemberDao.delete(m);
-        departmentDao.membersAdd(m.getDepartment().getId(),-1);
+        departmentMemberDao.deleteById(request.getId());
+    }
 
+    @Transactional
+    @Override
+    public void deleteDepartmentMemberByMemberId(Long memberId) {
+        departmentMemberDao.deleteAllByMemberId(memberId);
     }
 
     @Override

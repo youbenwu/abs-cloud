@@ -16,6 +16,8 @@ public interface ProductAttributeDao extends JpaRepository<ProductAttribute,Long
 
 
     public void deleteAllByProductId(Long productId);
+    public void deleteAllByProductIdIn(Collection<Long> productIdIn);
+
 
     public void deleteAllByProductIdAndGroupIdNotIn(Long productId, Collection<Long> groupIdNotIn);
 

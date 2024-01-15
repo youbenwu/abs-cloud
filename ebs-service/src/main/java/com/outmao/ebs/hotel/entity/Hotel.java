@@ -2,6 +2,7 @@ package com.outmao.ebs.hotel.entity;
 
 
 import com.outmao.ebs.common.vo.Item;
+import com.outmao.ebs.mall.merchant.common.data.BindingMerchant;
 import com.outmao.ebs.org.common.data.BindingOrg;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -18,7 +19,7 @@ import java.util.Date;
 @Entity
 @Table(name = "ebs_Hotel",uniqueConstraints = {
         @UniqueConstraint(columnNames = { "name", "area" }) })
-public class Hotel implements Serializable ,BindingOrg {
+public class Hotel implements Serializable , BindingMerchant {
 
     /**
      *
@@ -55,6 +56,11 @@ public class Hotel implements Serializable ,BindingOrg {
      * 店铺ID
      */
     private Long shopId;
+
+    /**
+     * 商家钱包ID
+     */
+    private Long walletId;
 
     /**
      *
@@ -235,11 +241,6 @@ public class Hotel implements Serializable ,BindingOrg {
      */
     private Date updateTime;
 
-
-    @Override
-    public Long getParentOrgId() {
-        return null;
-    }
 
 
     @Override

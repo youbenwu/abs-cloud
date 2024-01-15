@@ -24,6 +24,8 @@ public interface MerchantDomain {
 
     public Merchant getMerchantByUserId(Long userId);
 
+    public boolean existsByUserId(Long userId);
+
     public MerchantVO getMerchantVOById(Long id);
 
     public MerchantVO getMerchantVOByOrgId(Long orgId);

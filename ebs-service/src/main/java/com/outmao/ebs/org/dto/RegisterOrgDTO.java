@@ -1,20 +1,24 @@
 package com.outmao.ebs.org.dto;
 
 
+import com.outmao.ebs.user.common.constant.Oauth;
+import com.outmao.ebs.user.common.data.RegisterUser;
+import com.outmao.ebs.user.dto.RegisterDTO;
 import lombok.Data;
+import org.springframework.util.StringUtils;
+
+import java.util.HashMap;
 
 
 @Data
-public class RegisterOrgDTO extends OrgDTO {
+public class RegisterOrgDTO extends OrgDTO implements RegisterUser {
 
     /**
      *
-     * 组织类型对应ID
-     * 租户ID
-     * 商家ID
-     * 门店ID
+     * 用户ID
+     *
      */
-    private Long targetId;
+    private Long userId;
 
     /**
      *
@@ -30,6 +34,11 @@ public class RegisterOrgDTO extends OrgDTO {
      */
     private int type;
 
+    /**
+     *
+     * 组织类型对应ID
+     */
+    private Long targetId;
 
     /**
      *
@@ -38,5 +47,20 @@ public class RegisterOrgDTO extends OrgDTO {
      */
     private String password;
 
+
+    @Override
+    public RegisterDTO getRegisterRequest() {
+        if(getContact()==null)
+            return null;
+        String username=getContact().getName();
+        String phone=getContact().getPhone();
+        RegisterDTO registerDTO=new RegisterDTO();
+        registerDTO.setPrincipal(StringUtils.isEmpty(phone)?username:phone);
+        registerDTO.setCredentials(password);
+        registerDTO.setOauth(StringUtils.isEmpty(phone)?Oauth.USERNAME.getName():Oauth.PHONE.getName());
+        registerDTO.setArgs(new HashMap<>());
+        registerDTO.getArgs().put("nickname",username);
+        return registerDTO;
+    }
 
 }

@@ -7,10 +7,11 @@ import lombok.Data;
 @Data
 public class GetOrgListDTO {
 
+    private Integer type;
+
     private Long userId;
 
     private String keyword;
 
-    private Integer type;
 
 }

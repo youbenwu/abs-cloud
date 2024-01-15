@@ -70,14 +70,14 @@ public class UserActiveAction {
 	private List<StatsUserActiveCountVO> getFalseData(){
 		List<StatsUserActiveCountVO> list=new ArrayList<>(7);
 
-        list.add(getFalseData(7,300000));
-		list.add(getFalseData(6,600000));
-		list.add(getFalseData(5,300000));
-		list.add(getFalseData(4,310000));
-		list.add(getFalseData(3,830000));
-		list.add(getFalseData(2,350000));
-		list.add(getFalseData(1,910000));
-		list.add(getFalseData(0,320000));
+        list.add(getFalseData(7,30));
+		list.add(getFalseData(6,60));
+		list.add(getFalseData(5,30));
+		list.add(getFalseData(4,31));
+		list.add(getFalseData(3,83));
+		list.add(getFalseData(2,35));
+		list.add(getFalseData(1,91));
+		list.add(getFalseData(0,32));
 		return list;
 	}
 

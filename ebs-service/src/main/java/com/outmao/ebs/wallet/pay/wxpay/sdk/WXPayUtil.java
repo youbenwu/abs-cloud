@@ -57,7 +57,7 @@ public class WXPayUtil {
             }
             return data;
         } catch (Exception ex) {
-            WXPayUtil.getLogger().warn("Invalid XML, can not convert to map. Error message: {}. XML content: {}", ex.getMessage(), strXML);
+            WXPayUtil.getLogger().warn("Invalid XML, can not conver to map. Error message: {}. XML content: {}", ex.getMessage(), strXML);
             throw ex;
         }
 

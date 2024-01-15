@@ -22,7 +22,7 @@ public class WXPayListener implements WXPayNotifyListener {
         String result_code = data.get("result_code");
         String out_trade_no = data.get("out_trade_no");
         if (result_code.equals("SUCCESS")) {
-            tradeService.tradePay(out_trade_no);
+            //tradeService.tradePay(out_trade_no);
         } else if (result_code.equals("FAIL")) {
             //tradeService.tradeClose(out_trade_no);
         }

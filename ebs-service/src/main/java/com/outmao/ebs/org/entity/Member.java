@@ -4,7 +4,6 @@ package com.outmao.ebs.org.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.outmao.ebs.user.entity.User;
 import lombok.Data;
-
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
@@ -65,7 +64,7 @@ public class Member implements Serializable {
 
     /**
      *
-     * 状态
+     * 状态 0--正常 1--禁用
      *
      */
     private int status;
@@ -85,6 +84,14 @@ public class Member implements Serializable {
     @Lob
     @Basic(fetch = FetchType.LAZY)
     private String keyword;
+
+    /**
+     *
+     * vip等级
+     *
+     */
+    private int vip;
+
 
     /**
      *

@@ -21,12 +21,19 @@ public class TradeVOConver implements BeanConver<QTrade, TradeVO> {
         vo.setCurrencyId(t.get(e.currency.id));
         vo.setAmount(t.get(e.amount));
         vo.setTotalAmount(t.get(e.totalAmount));
-        vo.setPayAmount(t.get(e.payAmount));
+        vo.setReceiptAmount(t.get(e.receiptAmount));
+        vo.setPayerAmount(t.get(e.payerAmount));
+        vo.setPayeeAmount(t.get(e.payeeAmount));
         vo.setRefundAmount(t.get(e.refundAmount));
         vo.setRefundOut(t.get(e.refundOut));
         vo.setRemark(t.get(e.remark));
         vo.setStatus(t.get(e.status));
         vo.setStatusRemark(t.get(e.statusRemark));
+        vo.setFreezeExpireTime(t.get(e.freezeExpireTime));
+        vo.setFreezeStatus(t.get(e.freezeStatus));
+        vo.setUnfreezeTime(t.get(e.unfreezeTime));
+        vo.setTimeoutTime(t.get(e.timeoutTime));
+        vo.setFinishTimeoutTime(t.get(e.finishTimeoutTime));
         vo.setCreateTime(t.get(e.createTime));
         vo.setSuccessTime(t.get(e.successTime));
         vo.setFinishTime(t.get(e.finishTime));
@@ -35,6 +42,7 @@ public class TradeVOConver implements BeanConver<QTrade, TradeVO> {
         vo.setBusinessType(t.get(e.businessType));
         vo.setTradeNo(t.get(e.tradeNo));
         vo.setPayChannel(t.get(e.payChannel));
+        vo.setOutPayType(t.get(e.outPayType));
         vo.setFee(t.get(e.fee));
         return vo;
     }
@@ -51,12 +59,19 @@ public class TradeVOConver implements BeanConver<QTrade, TradeVO> {
                 e.body,
                 e.amount,
                 e.totalAmount,
-                e.payAmount,
+                e.receiptAmount,
+                e.payerAmount,
+                e.payeeAmount,
                 e.refundAmount,
                 e.refundOut,
                 e.remark,
                 e.status,
                 e.statusRemark,
+                e.freezeExpireTime,
+                e.freezeStatus,
+                e.unfreezeTime,
+                e.timeoutTime,
+                e.finishTimeoutTime,
                 e.createTime,
                 e.successTime,
                 e.finishTime,
@@ -65,6 +80,7 @@ public class TradeVOConver implements BeanConver<QTrade, TradeVO> {
                 e.businessType,
                 e.tradeNo,
                 e.payChannel,
+                e.outPayType,
                 e.fee
         };
     }

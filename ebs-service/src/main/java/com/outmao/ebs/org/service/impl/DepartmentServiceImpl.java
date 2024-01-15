@@ -55,6 +55,11 @@ public class DepartmentServiceImpl extends BaseService implements DepartmentServ
     }
 
     @Override
+    public void deleteDepartmentMemberByMemberId(Long memberId) {
+        departmentDomain.deleteDepartmentMemberByMemberId(memberId);
+    }
+
+    @Override
     public Page<DepartmentMemberVO> getDepartmentMemberVOPage(GetDepartmentMemberListDTO request, Pageable pageable) {
         return departmentDomain.getDepartmentMemberVOPage(request,pageable);
     }

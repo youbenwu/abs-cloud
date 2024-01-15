@@ -11,7 +11,6 @@ public class OrderBindOwnerDTO {
 
     private Long userId;
 
-
     private String phone;
 
 

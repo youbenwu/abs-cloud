@@ -116,6 +116,11 @@ public class ProductCategoryDomainImpl extends BaseDomain implements ProductCate
     }
 
     @Override
+    public ProductCategory getProductCategoryByCode(String code) {
+        return productCategoryDao.findByCode(code);
+    }
+
+    @Override
     public List<ProductCategoryVO> getProductCategoryVOList() {
         List<ProductCategoryVO> list=getAll();
         return toLevel(list);

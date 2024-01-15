@@ -90,6 +90,15 @@ public class QrCodeDomainImpl extends BaseDomain implements QrCodeDomain {
 		return qrCode;
 	}
 
+	@Transactional
+	@Override
+	public QrCode updateQrCode(UpdateQrCodeDTO request) {
+		QrCode qrCode=qrCodeDao.findByIdForUpdate(request.getId());
+		BeanUtils.copyProperties(request,qrCode);
+		qrCodeDao.save(qrCode);
+		return qrCode;
+	}
+
 	private void generateQrCode(QrCode qrCode, String code){
 		String path = qrCodeGenerator.generateQrCode(new GenerateQrCodeDTO(code,500, 500));
 		qrCode.setCode(code);

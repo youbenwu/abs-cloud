@@ -19,6 +19,7 @@ public interface DepartmentService  {
     public DepartmentMember saveDepartmentMember(DepartmentMemberDTO request);
     public List<DepartmentMember> saveDepartmentMemberList(DepartmentMemberListDTO request);
     public void deleteDepartmentMember(DeleteDepartmentMemberDTO request);
+    public void deleteDepartmentMemberByMemberId(Long memberId);
     public Page<DepartmentMemberVO> getDepartmentMemberVOPage(GetDepartmentMemberListDTO request, Pageable pageable);
 
 

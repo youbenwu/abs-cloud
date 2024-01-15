@@ -3,6 +3,7 @@ package com.outmao.ebs.mall.product.service;
 import com.outmao.ebs.bbs.vo.SubjectBrowseVO;
 import com.outmao.ebs.bbs.vo.SubjectCollectionVO;
 import com.outmao.ebs.mall.product.entity.ProductBsType;
+import com.outmao.ebs.mall.product.entity.ProductSku;
 import com.outmao.ebs.portal.dto.GetRecommendListDTO;
 import com.outmao.ebs.portal.vo.RecommendVO;
 import com.outmao.ebs.mall.product.dto.*;
@@ -11,6 +12,7 @@ import com.outmao.ebs.mall.product.vo.ProductVO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.util.Collection;
 import java.util.List;
 
 public interface ProductService {
@@ -27,6 +29,8 @@ public interface ProductService {
 
     public void deleteProductById(Long id);
 
+    public void deleteProductList(Collection<Long> ids);
+
     public Product getProductById(Long id);
 
     public Product setProductOnSell(SetProductOnSellDTO request);
@@ -34,6 +38,10 @@ public interface ProductService {
     public Product setProductStatus(SetProductStatusDTO request);
 
     public Product setProductStock(SetProductStockDTO request);
+
+    public ProductSku saveProductSku(SaveProductSkuDTO request);
+
+    public ProductSku getProductSku(Long productId,String skuNo);
 
     public void skuStockOut(List<ProductSkuStockOutDTO> request);
 

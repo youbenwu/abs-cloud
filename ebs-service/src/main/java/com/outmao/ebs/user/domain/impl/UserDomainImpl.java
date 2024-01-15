@@ -57,6 +57,8 @@ public class UserDomainImpl extends BaseDomain implements UserDomain {
 
 	private HuaUserVOConver huaUserVOConver=new HuaUserVOConver();
 
+	private QyUserVOConver qyUserVOConver=new QyUserVOConver();
+
 	@Bean
 	private KCNamer kcNamer(){
 		System.out.println("=====kcNamer====");
@@ -463,4 +465,9 @@ public class UserDomainImpl extends BaseDomain implements UserDomain {
 	}
 
 
+	@Override
+	public List<QyUserVO> getQyUserVOListByIdIn(Collection<Long> idIn) {
+		QUser e=QUser.user;
+		return queryList(e,e.id.in(idIn),qyUserVOConver);
+	}
 }

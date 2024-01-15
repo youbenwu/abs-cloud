@@ -12,6 +12,8 @@ public class RcChatroomUpdateDTO {
     @ApiModelProperty(name = "name", value = "聊天室名称")
     private String name;
 
+    @ApiModelProperty(name = "notice", value = "群公告")
+    private String notice;
 
 
 }

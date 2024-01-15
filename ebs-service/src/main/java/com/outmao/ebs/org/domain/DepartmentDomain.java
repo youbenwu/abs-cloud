@@ -8,7 +8,6 @@ import com.outmao.ebs.org.vo.DepartmentMemberVO;
 import com.outmao.ebs.org.vo.DepartmentVO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-
 import java.util.List;
 
 public interface DepartmentDomain {
@@ -25,8 +24,9 @@ public interface DepartmentDomain {
 
     public void deleteDepartmentMember(DeleteDepartmentMemberDTO request);
 
-    public Page<DepartmentMemberVO> getDepartmentMemberVOPage(GetDepartmentMemberListDTO request, Pageable pageable);
+    public void deleteDepartmentMemberByMemberId(Long memberId);
 
+    public Page<DepartmentMemberVO> getDepartmentMemberVOPage(GetDepartmentMemberListDTO request, Pageable pageable);
 
 
 }

@@ -25,6 +25,8 @@ public interface ProductDao extends JpaRepository<Product,Long> {
     @Query("update Product a set a.sales=a.sales+?2 where a.id=?1")
     public void salesAdd(Long id,int q);
 
+    public void deleteAllByIdIn(Collection<Long> idIn);
+
 
     public List<Product> findAllByIdIn(Collection<Long> idIn);
 

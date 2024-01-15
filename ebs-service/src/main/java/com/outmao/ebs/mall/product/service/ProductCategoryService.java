@@ -15,6 +15,8 @@ public interface ProductCategoryService {
 
     public void deleteProductCategoryById(Long id);
 
+    public ProductCategory getProductCategoryByCode(String code);
+
     public List<ProductCategoryVO> getProductCategoryVOList();
 
     public Page<ProductCategoryVO> getProductCategoryVOPage(GetProductCategoryListDTO request, Pageable pageable);

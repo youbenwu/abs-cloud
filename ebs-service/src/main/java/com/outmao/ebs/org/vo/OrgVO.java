@@ -2,9 +2,9 @@ package com.outmao.ebs.org.vo;
 
 import com.outmao.ebs.org.entity.OrgContact;
 import lombok.Data;
-
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 @Data
 public class OrgVO implements Serializable {
@@ -17,10 +17,7 @@ public class OrgVO implements Serializable {
     /**
      *
      * 组织类型对应ID
-     * 租户ID
-     * 部门ID
-     * 商家ID
-     * 门店ID
+     *
      */
     private Long targetId;
 
@@ -52,7 +49,6 @@ public class OrgVO implements Serializable {
      */
     private boolean leaf=true;
 
-
     /**
      *
      * 状态 0--正常 1--禁用 2--未审核 3--审核中 4--审核成功 5--审核失败 6--删除
@@ -70,10 +66,17 @@ public class OrgVO implements Serializable {
 
     /**
      *
-     * 组织类型 0--平台 1--租户
+     * 组织类型
      *
      */
     private int type;
+
+    /**
+     *
+     * 组织类型
+     *
+     */
+    private List<OrgTypeVO> types;
 
     /**
      *
@@ -117,5 +120,17 @@ public class OrgVO implements Serializable {
      *
      */
     private Date updateTime;
+
+    public boolean isType(int type){
+        if(this.type==type)
+            return true;
+        if(types!=null&&!types.isEmpty()){
+            for (OrgTypeVO t:types){
+                if(t.getType()==type)
+                    return true;
+            }
+        }
+        return false;
+    }
 
 }

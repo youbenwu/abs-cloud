@@ -20,10 +20,9 @@ public class TradePrepareDTO {
     private long fee;//手续费
     private int businessType;//业务描述
     private String business;//业务描述
-    private String remark;//用户备注
-
-    //分帐列表
-    private List<RoyaltyDTO> royaltys;
-
+    private String remark;//交易备注
+    private String freezeExpress;//冻结时间表达式 7d
+    private String timeoutExpress;//超时表达式 30m
+    private String finishTimeoutExpress;//超时表达式 30m
 
 }

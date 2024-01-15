@@ -19,4 +19,6 @@ public interface ShopDao extends JpaRepository<Shop,Long> {
 
     public List<Shop> findAllByIdIn(Collection<Long> idIn);
 
+    public Shop findByOrgId(Long orgId);
+
 }

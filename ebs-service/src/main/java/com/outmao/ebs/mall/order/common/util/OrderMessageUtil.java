@@ -58,7 +58,13 @@ public class OrderMessageUtil {
         return mtype;
     }
 
-
+    public static String getMessageTypeBySeller(Integer type,int status){
+        String mtype=null;
+        if(status== OrderStatus.SUCCESSED.getStatus()){
+            mtype= MessageConstant.message_type_order_seller;
+        }
+        return mtype;
+    }
 
 
 }

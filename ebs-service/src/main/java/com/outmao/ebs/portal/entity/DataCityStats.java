@@ -35,6 +35,13 @@ public class DataCityStats implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
+    /**
+     *
+     * 0--显示 1--隐藏
+     *
+     */
+    private int status;
+
 
     /**
      *

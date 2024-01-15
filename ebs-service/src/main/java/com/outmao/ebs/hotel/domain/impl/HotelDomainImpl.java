@@ -19,6 +19,8 @@ import com.outmao.ebs.hotel.vo.HotelVO;
 import com.outmao.ebs.hotel.vo.QyHotelVO;
 import com.outmao.ebs.hotel.vo.SimpleHotelVO;
 import com.outmao.ebs.hotel.vo.StatsHotelCountVO;
+import com.outmao.ebs.mall.merchant.common.annotation.BindingMerchant;
+import com.outmao.ebs.user.common.annotation.AutoRegisterUser;
 import com.querydsl.core.Tuple;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Predicate;
@@ -60,6 +62,8 @@ public class HotelDomainImpl extends BaseDomain implements HotelDomain {
 
 
     @Transactional()
+    @AutoRegisterUser
+    @BindingMerchant
     @Override
     public Hotel registerHotel(RegisterHotelDTO request) {
 

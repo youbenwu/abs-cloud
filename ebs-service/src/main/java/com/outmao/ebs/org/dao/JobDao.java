@@ -11,11 +11,5 @@ import java.util.List;
 
 public interface JobDao extends JpaRepository<Job,Long> {
 
-    public List<Job> findAllByOrgId(Long orgId);
-
-
-    @Modifying
-    @Query("update Job e set e.members=e.members+?2 where e.id=?1")
-    public void membersAdd(Long id, int add);
 
 }

@@ -107,6 +107,11 @@ public class ShopDomainImpl extends BaseDomain implements ShopDomain {
         return shop;
     }
 
+    @Override
+    public Shop getShopByOrgId(Long orgId) {
+        return shopDao.findByOrgId(orgId);
+    }
+
     @SubjectBrowsesAdd
     @SubjectItemFilter
     @Override

@@ -26,6 +26,8 @@ public enum ProductType {
     HOTEL_DEVICE_LEASE(40, "酒店设备租赁"),
     HOTEL_DEVICE(41, "酒店设备购买"),
 
+    MOVIE(50, "影视"),
+
 
     OUT_CTRIP(100, "外部携程旅游商品");
 

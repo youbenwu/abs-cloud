@@ -55,6 +55,8 @@ public interface UserService {
 	//获取成都花卉小程序用户列表
 	public Page<HuaUserVO> getHuaUserVOPage(GetUserListDTO request, Pageable pageable);
 
+	public List<QyUserVO> getQyUserVOListByIdIn(Collection<Long> idIn);
+
 	//UserDetails
 	// 修改用户详细信息
 	public UserDetails saveUserDetails(UserDetailsDTO request);

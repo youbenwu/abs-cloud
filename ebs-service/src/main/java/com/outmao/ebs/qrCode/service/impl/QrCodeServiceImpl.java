@@ -42,6 +42,11 @@ public class QrCodeServiceImpl extends BaseService implements QrCodeService {
 	}
 
 	@Override
+	public QrCode updateQrCode(UpdateQrCodeDTO request) {
+		return qrCodeDomain.updateQrCode(request);
+	}
+
+	@Override
 	public void batchGenerateQrCode(BatchGenerateQrCodeDTO request) {
 		qrCodeDomain.batchGenerateQrCode(request);
 	}

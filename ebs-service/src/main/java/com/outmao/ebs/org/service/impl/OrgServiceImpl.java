@@ -5,23 +5,17 @@ package com.outmao.ebs.org.service.impl;
 import com.outmao.ebs.common.base.BaseService;
 import com.outmao.ebs.common.configuration.constant.Status;
 import com.outmao.ebs.common.vo.Contact;
-import com.outmao.ebs.common.vo.Item;
-import com.outmao.ebs.org.common.data.BindingOrg;
 import com.outmao.ebs.org.domain.AccountDomain;
 import com.outmao.ebs.org.domain.OrgDomain;
+import com.outmao.ebs.org.domain.OrgTypeDomain;
 import com.outmao.ebs.org.domain.RoleDomain;
 import com.outmao.ebs.org.dto.*;
 import com.outmao.ebs.org.dto.AccountDTO;
-import com.outmao.ebs.org.entity.Account;
-import com.outmao.ebs.org.entity.Org;
-import com.outmao.ebs.org.entity.Role;
+import com.outmao.ebs.org.entity.*;
 import com.outmao.ebs.org.service.OrgService;
 import com.outmao.ebs.org.vo.CacheOrgVO;
+import com.outmao.ebs.org.vo.OrgTypeVO;
 import com.outmao.ebs.org.vo.OrgVO;
-import com.outmao.ebs.user.common.constant.Oauth;
-import com.outmao.ebs.user.dto.RegisterDTO;
-import com.outmao.ebs.user.entity.User;
-import com.outmao.ebs.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.core.annotation.Order;
@@ -29,11 +23,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.Assert;
-import org.springframework.util.StringUtils;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
+
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Order(2)
 @Service
@@ -44,23 +36,22 @@ public class OrgServiceImpl extends BaseService implements OrgService, CommandLi
     private OrgDomain orgDomain;
 
     @Autowired
+    private OrgTypeDomain orgTypeDomain;
+
+    @Autowired
     private AccountDomain accountDomain;
 
     @Autowired
     private RoleDomain roleDomain;
 
-    @Autowired
-    private UserService userService;
 
     @Override
     public void run(String... args) throws Exception {
        //创建根组织
-       Org org=orgDomain.getOrg();
-       if(org==null){
+       if(orgDomain.getCacheOrgVO()==null){
            RegisterOrgDTO request=new RegisterOrgDTO();
            request.setName("系统组织");
-           request.setType(Org.TYPE_SYSTEM);
-           request.setPassword("123456");
+           request.setType(OrgType.TYPE_SYSTEM);
            request.setContact(new Contact());
            request.getContact().setName("admin");
            registerOrg(request);
@@ -71,42 +62,21 @@ public class OrgServiceImpl extends BaseService implements OrgService, CommandLi
     @Transactional
     @Override
     public Org registerOrg(RegisterOrgDTO request) {
-        if(request.getUserId()==null){
-            findOrRegisterUser(request);
-        }
         Org org= orgDomain.registerOrg(request);
-        createAdminAccount(org);
-        if(org.getType()==Org.TYPE_SYSTEM){
+
+        //创建管理员帐号
+        saveAdminAccount(org);
+
+        if(org.getType()==OrgType.TYPE_SYSTEM){
             org.setStatus(Status.NORMAL.getStatus());
             org.setStatusRemark(Status.NORMAL.getStatusRemark());
         }
+
         return org;
     }
 
-    @Override
-    public Org registerOrg(BindingOrg bindingOrg) {
-        Item item=bindingOrg.toItem();
-        RegisterOrgDTO orgDTO=new RegisterOrgDTO();
-        if(item.getType().equals("Merchant")){
-            orgDTO.setType(Org.TYPE_MERCHANT);
-        }else if(item.getType().equals("Store")){
-            orgDTO.setType(Org.TYPE_STORE);
-        }else if(item.getType().equals("Shop")){
-            orgDTO.setType(Org.TYPE_SHOP);
-        }else if(item.getType().equals("Hotel")){
-            orgDTO.setType(Org.TYPE_HOTEL);
-        }
-        orgDTO.setParentId(bindingOrg.getParentOrgId());
-        orgDTO.setTargetId(item.getId());
-        orgDTO.setUserId(bindingOrg.getUserId());
-        orgDTO.setName(item.getTitle());
-        orgDTO.setContact(bindingOrg.getContact());
-        Org org=registerOrg(orgDTO);
-        bindingOrg.setOrgId(org.getId());
-        return org;
-    }
 
-    private void createAdminAccount(Org org){
+    private void saveAdminAccount(Org org){
         AccountDTO accountDTO=new AccountDTO();
         accountDTO.setOrgId(org.getId());
         accountDTO.setUserId(org.getUser().getId());
@@ -125,29 +95,6 @@ public class OrgServiceImpl extends BaseService implements OrgService, CommandLi
 
     }
 
-    private void findOrRegisterUser(RegisterOrgDTO request){
-
-        Assert.notNull(request.getContact(),"联系人不能为空");
-
-        String name=request.getContact().getName();
-        String phone=request.getContact().getPhone();
-
-        User user=userService.getUserByUsername(StringUtils.isEmpty(phone)?name:phone);
-
-        if(user==null){
-            RegisterDTO registerDTO=new RegisterDTO();
-            registerDTO.setPrincipal(StringUtils.isEmpty(phone)?name:phone);
-            registerDTO.setCredentials(request.getPassword());
-            registerDTO.setOauth(StringUtils.isEmpty(phone)?Oauth.USERNAME.getName():Oauth.PHONE.getName());
-            registerDTO.setArgs(new HashMap<>());
-            registerDTO.getArgs().put("nickname",name);
-
-            user=userService.registerUser(registerDTO);
-        }
-
-        request.setUserId(user.getId());
-
-    }
 
     @Override
     public Org saveOrg(OrgDTO request) {
@@ -161,12 +108,13 @@ public class OrgServiceImpl extends BaseService implements OrgService, CommandLi
 
     @Override
     public void deleteOrgById(Long id) {
+        orgTypeDomain.deleteOrgTypeByOrgId(id);
         orgDomain.deleteOrgById(id);
     }
 
     @Override
-    public Org addOrgParent(Long id, Long parentId) {
-        return orgDomain.addOrgParent(id,parentId);
+    public OrgParent saveOrgParent(OrgParentDTO request) {
+        return orgDomain.saveOrgParent(request);
     }
 
     @Override
@@ -176,37 +124,61 @@ public class OrgServiceImpl extends BaseService implements OrgService, CommandLi
 
     @Override
     public Org getOrgByTargetId(Long targetId) {
-        return orgDomain.getOrgByTargetId(targetId);
+
+        Org org= orgDomain.getOrgByTargetId(targetId);
+
+        if(org==null){
+            OrgType type=orgTypeDomain.getOrgTypeByTargetId(targetId);
+            if(type!=null){
+                return getOrgById(type.getOrgId());
+            }
+        }
+
+        return org;
     }
 
     @Override
-    public Org getOrg() {
-        return orgDomain.getOrg();
-    }
+    public OrgVO getOrgVOById(Long id)
+    {
 
-    @Override
-    public List<Org> getOrgListByIdIn(Collection<Long> idIn) {
-        return orgDomain.getOrgListByIdIn(idIn);
-    }
+        OrgVO vo= orgDomain.getOrgVOById(id);
 
-    @Override
-    public Long getOrgIdByTargetId(Long targetId) {
-        return orgDomain.getOrgIdByTargetId(targetId);
-    }
+        if(vo!=null){
+            setOrgType(Arrays.asList(vo));
+        }
 
-    @Override
-    public OrgVO getOrgVOById(Long id) {
-        return orgDomain.getOrgVOById(id);
-    }
-
-    @Override
-    public List<OrgVO> getOrgVOListByIdIn(Collection<Long> idIn) {
-        return orgDomain.getOrgVOListByIdIn(idIn);
+        return vo;
     }
 
     @Override
     public Page<OrgVO> getOrgVOPage(GetOrgListDTO request, Pageable pageable) {
-        return orgDomain.getOrgVOPage(request,pageable);
+        Page<OrgVO> page= orgDomain.getOrgVOPage(request,pageable);
+        setOrgType(page.getContent());
+        return page;
+    }
+
+    @Override
+    public List<OrgVO> getOrgVOListByIdIn(Collection<Long> idIn) {
+        List<OrgVO> list=orgDomain.getOrgVOListByIdIn(idIn);
+        setOrgType(list);
+        return list;
+    }
+
+    private void setOrgType(List<OrgVO> list){
+        if(list.isEmpty())
+            return;
+        Map<Long,OrgVO> map=list.stream().collect(Collectors.toMap(t->t.getId(),t->t));
+
+        List<OrgTypeVO> types=orgTypeDomain.getOrgTypeVOListByOrgIdIn(map.keySet());
+
+        for (OrgTypeVO t:types){
+            OrgVO vo=map.get(t.getOrgId());
+            if(vo.getTypes()==null){
+                vo.setTypes(new ArrayList<>());
+            }
+            vo.getTypes().add(t);
+        }
+
     }
 
     @Override
@@ -218,5 +190,32 @@ public class OrgServiceImpl extends BaseService implements OrgService, CommandLi
     public CacheOrgVO getCacheOrgVO() {
         return orgDomain.getCacheOrgVO();
     }
+
+
+    @Override
+    public OrgType saveOrgType(OrgTypeDTO request) {
+        return orgTypeDomain.saveOrgType(request);
+    }
+
+    @Override
+    public void deleteOrgTypeById(Long id) {
+        orgTypeDomain.deleteOrgTypeById(id);
+    }
+
+    @Override
+    public void deleteOrgTypeByOrgId(Long orgId) {
+        orgTypeDomain.deleteOrgTypeByOrgId(orgId);
+    }
+
+    @Override
+    public OrgType getOrgTypeByTargetId(Long targetId) {
+        return orgTypeDomain.getOrgTypeByTargetId(targetId);
+    }
+
+    @Override
+    public List<OrgTypeVO> getOrgTypeVOListByOrgIdIn(Collection<Long> orgIdIn) {
+        return orgTypeDomain.getOrgTypeVOListByOrgIdIn(orgIdIn);
+    }
+
 
 }

@@ -1,5 +1,7 @@
 package com.outmao.ebs.common.util;
 
+import com.outmao.ebs.common.configuration.web.DateFormatPlugin;
+
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -14,6 +16,16 @@ public class DateUtil {
     public static DateFormat yyyy_MM_dd=new SimpleDateFormat("yyyy-MM-dd");
     public static DateFormat yyyy_MM_dd_HH_mm=new SimpleDateFormat("yyyy-MM-dd HH:mm");
     public static DateFormat yyyy_MM_dd_HH_mm_ss=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+    public static DateFormatPlugin dateFormatPlugin=new DateFormatPlugin();
+
+    public static Date parse(String s){
+        try {
+            return dateFormatPlugin.parse(s);
+        }catch (Exception e){
+            return null;
+        }
+    }
 
 
     public static Date format_yyyy_MM(Date date){
@@ -62,6 +74,13 @@ public class DateUtil {
         Calendar calendar=Calendar.getInstance();
         calendar.setTime(date);
         calendar.add(Calendar.DATE, days);
+        return calendar.getTime();
+    }
+
+    public static Date addHours(Date date,int hours){
+        Calendar calendar=Calendar.getInstance();
+        calendar.setTime(date);
+        calendar.add(HOUR, hours);
         return calendar.getTime();
     }
 

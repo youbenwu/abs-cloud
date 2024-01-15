@@ -23,6 +23,8 @@ public interface MerchantService {
 
     public Merchant getMerchantByUserId(Long userId);
 
+    public boolean existsByUserId(Long userId);
+
     public MerchantVO getMerchantVOByOrgId(Long orgId);
 
     public MerchantVO getMerchantVOById(Long id);

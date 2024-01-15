@@ -4,7 +4,7 @@ package com.outmao.ebs.org.web.api;
 import com.outmao.ebs.org.dto.GetOrgListDTO;
 import com.outmao.ebs.org.dto.OrgDTO;
 import com.outmao.ebs.org.dto.RegisterOrgDTO;
-import com.outmao.ebs.org.entity.Org;
+import com.outmao.ebs.org.entity.OrgType;
 import com.outmao.ebs.org.service.OrgService;
 import com.outmao.ebs.org.vo.OrgVO;
 import com.outmao.ebs.security.util.SecurityUtil;
@@ -18,8 +18,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -32,7 +30,6 @@ public class OrgAction {
 	@Autowired
     private OrgService orgService;
 
-
     /**
      *
      * 注册组织信息
@@ -42,9 +39,10 @@ public class OrgAction {
     @ApiOperation(value = "注册组织信息", notes = "注册组织信息")
     @PostMapping("/register")
     public void registerOrg(@RequestBody RegisterOrgDTO request){
-        request.setType(Org.TYPE_TENANT);
+        request.setType(OrgType.TYPE_TENANT);
         orgService.registerOrg(request);
     }
+
     /**
      *
      * 修改组织信息
@@ -69,7 +67,6 @@ public class OrgAction {
         return orgService.getOrgVOPage(request,pageable);
     }
 
-
     @ApiOperation(value = "获取组织信息", notes = "获取组织信息")
     @PostMapping("/get")
     public OrgVO getOrgVOById(Long id) {
@@ -77,20 +74,13 @@ public class OrgAction {
     }
 
 
-
-    @ApiOperation(value = "获取组织信息列表", notes = "获取组织信息列表")
-    @PostMapping("/listByIdIn")
-    public List<OrgVO> getOrgVOListByIdIn(@RequestBody Collection<Long> idIn){
-        return orgService.getOrgVOListByIdIn(idIn);
-    }
-
     @ApiOperation(value = "获取用户管理的组织列表", notes = "获取用户管理的组织列表")
     @PostMapping("/list")
     public List<OrgVO> getOrgVOList(Integer type) {
         List<OrgVO> list=orgService.getOrgVOListByIdIn(SecurityUtil.currentUser().getMembers().stream().map(t->t.getOrgId()).collect(Collectors.toList()));
         if(type==null)
             return list;
-        return list.stream().filter(t->t.getType()==type).collect(Collectors.toList());
+        return list.stream().filter(t->t.isType(type)).collect(Collectors.toList());
     }
 
 

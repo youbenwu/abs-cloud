@@ -12,6 +12,7 @@ public interface ProductPropertyItemDao extends JpaRepository<ProductPropertyIte
     public List<ProductPropertyItem> findAllByPropertyId(Long propertyId);
 
     public void deleteAllByProductId(Long productId);
+    public void deleteAllByProductIdIn(Collection<Long> productIdIn);
 
     public void deleteAllByProductIdAndPropertyIdNotIn(Long productId, Collection<Long> propertyIdNotIn);
 

@@ -138,6 +138,11 @@ public class MerchantDomainImpl extends BaseDomain implements MerchantDomain {
         return merchantDao.findByOrgId(orgId);
     }
 
+    @Override
+    public boolean existsByUserId(Long userId) {
+        return merchantDao.existsByUser(userDao.getOne(userId));
+    }
+
     @SetSimpleUser
     @Override
     public MerchantVO getMerchantVOById(Long id) {

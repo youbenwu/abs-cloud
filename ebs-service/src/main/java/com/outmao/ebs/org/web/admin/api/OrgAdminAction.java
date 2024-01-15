@@ -9,7 +9,6 @@ import com.outmao.ebs.org.dto.OrgDTO;
 import com.outmao.ebs.org.entity.Org;
 import com.outmao.ebs.org.service.OrgService;
 import com.outmao.ebs.org.vo.OrgVO;
-import com.outmao.ebs.security.util.SecurityUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,10 +20,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
 import java.util.Collection;
 import java.util.List;
-import java.util.stream.Collectors;
 
 
 @AccessPermissionGroup(title="组织管理",url="/org",name="",children = {
@@ -51,15 +48,6 @@ import java.util.stream.Collectors;
                 @AccessPermission(title = "读取角色菜单",url = "/org/role/menu",name = "read"),
         }),
 
-
-        @AccessPermissionParent(title = "成员管理",url = "/org/member",name = "",children = {
-                @AccessPermission(title = "保存成员",url = "/org/member",name = "save"),
-                @AccessPermission(title = "删除成员",url = "/org/member",name = "delete"),
-                @AccessPermission(title = "读取成员",url = "/org/member",name = "read"),
-                @AccessPermission(title = "保存成员角色",url = "/org/member/role",name = "save"),
-                @AccessPermission(title = "删除成员角色",url = "/org/member/role",name = "delete"),
-                @AccessPermission(title = "读取成员角色",url = "/org/member/role",name = "read"),
-        }),
 
         @AccessPermissionParent(title = "组织信息管理",url = "/org/org",name = "",children = {
                 @AccessPermission(title = "保存组织信息",url = "/org/org",name = "save"),
@@ -116,22 +104,8 @@ OrgAdminAction {
         return orgService.getOrgVOById(id);
     }
 
-    @PostAuthorize("principal.hasOrg(returnObject.id)")
-    @ApiOperation(value = "获取总系统组织信息", notes = "获取总系统组织信息")
-    @PostMapping("/getSysOrg")
-    public OrgVO getOrgVO() {
-        return orgService.getOrgVOById(orgService.getOrg().getId());
-    }
 
-
-    @ApiOperation(value = "获取组织信息列表", notes = "获取组织信息列表")
-    @PostMapping("/listByIdIn")
-    public List<OrgVO> getOrgVOListByIdIn(Collection<Long> idIn) {
-        return orgService.getOrgVOListByIdIn(idIn);
-    }
-
-
-    @PreAuthorize("hasPermission('/org/org','read')")
+    @PreAuthorize("hasPermission(null,'/org/org','read')")
     @ApiOperation(value = "获取组织信息列表", notes = "获取组织信息列表")
     @PostMapping("/page")
     public Page<OrgVO> getOrgVOPage(GetOrgListDTO request, Pageable pageable){

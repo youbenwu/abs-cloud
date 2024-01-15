@@ -2,12 +2,9 @@ package com.outmao.ebs.org.domain;
 
 import com.outmao.ebs.org.dto.*;
 import com.outmao.ebs.org.entity.Member;
-import com.outmao.ebs.org.entity.MemberRole;
-import com.outmao.ebs.org.vo.MemberRoleVO;
 import com.outmao.ebs.org.vo.MemberVO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import java.util.List;
 
 public interface MemberDomain {
 
@@ -17,7 +14,6 @@ public interface MemberDomain {
      *
      * */
     public Member saveMember(MemberDTO request);
-
 
     /**
      *
@@ -36,6 +32,14 @@ public interface MemberDomain {
 
     /**
      *
+     * 设置成员VIP等级
+     *
+     * */
+    public Member setMemberVip(Long id,int vip);
+
+
+    /**
+     *
      * 获取成员信息
      *
      * */
@@ -49,7 +53,6 @@ public interface MemberDomain {
      * */
     public Member getMember(Long orgId, Long userId);
 
-
     /**
      *
      * 获取成员详情
@@ -57,6 +60,12 @@ public interface MemberDomain {
      * */
     public MemberVO getMemberVOById(Long id);
 
+    /**
+     *
+     * 获取成员详情
+     *
+     * */
+    public MemberVO getMemberVO(Long orgId,Long userId);
 
     /**
      *
@@ -64,37 +73,6 @@ public interface MemberDomain {
      *
      * */
     public Page<MemberVO> getMemberVOPage(GetMemberListDTO request, Pageable pageable);
-
-
-
-    /**
-     *
-     * 保存成员角色
-     *
-     * */
-    public MemberRole saveMemberRole(MemberRoleDTO request);
-
-
-    /**
-     *
-     * 保存成员角色列表
-     *
-     * */
-    public List<MemberRole> setMemberRole(SetMemberRoleDTO request);
-
-    /**
-     *
-     * 删除成员角色
-     *
-     * */
-    public void deleteMemberRoleById(Long id);
-
-    /**
-     *
-     * 获取成员角色列表
-     *
-     * */
-    public List<MemberRoleVO> getMemberRoleVOList(GetMemberRoleListDTO request);
 
 
 

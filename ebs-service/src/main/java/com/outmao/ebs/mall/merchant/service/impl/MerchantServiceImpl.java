@@ -100,6 +100,10 @@ public class MerchantServiceImpl extends BaseService implements MerchantService,
         return merchantDomain.getMerchantByUserId(userId);
     }
 
+    @Override
+    public boolean existsByUserId(Long userId) {
+        return merchantDomain.existsByUserId(userId);
+    }
 
     @Override
     public MerchantVO getMerchantVOByOrgId(Long orgId) {

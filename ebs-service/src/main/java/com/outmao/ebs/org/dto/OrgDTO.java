@@ -18,20 +18,6 @@ public class OrgDTO {
 
     /**
      *
-     * 用户ID
-     *
-     */
-    private Long userId;
-
-    /**
-     *
-     * 企业ID
-     *
-     * */
-    private Long enterpriseId;
-
-    /**
-     *
      * 编码
      *
      */

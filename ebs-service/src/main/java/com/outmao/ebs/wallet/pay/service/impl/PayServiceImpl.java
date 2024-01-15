@@ -10,7 +10,8 @@ import com.outmao.ebs.wallet.common.constant.PayChannel;
 import com.outmao.ebs.wallet.common.constant.TradeStatus;
 import com.outmao.ebs.wallet.common.exception.WalletPasswordErrorException;
 import com.outmao.ebs.wallet.common.listener.TradeStatusListener;
-import com.outmao.ebs.wallet.dto.TradePayToDTO;
+import com.outmao.ebs.wallet.dto.TradePayDTO;
+import com.outmao.ebs.wallet.dto.TradePayeeDTO;
 import com.outmao.ebs.wallet.dto.TradePrepareDTO;
 import com.outmao.ebs.wallet.dto.TradeRefundDTO;
 import com.outmao.ebs.wallet.entity.Trade;
@@ -147,7 +148,12 @@ public class PayServiceImpl implements PayService {
             }
         }
 
-        trade= tradeService.tradePay(request.getTradeNo());
+        TradePayDTO payDTO=new TradePayDTO();
+        payDTO.setTradeNo(request.getTradeNo());
+        payDTO.setPayChannel(trade.getPayChannel());
+        payDTO.setOutPayType(trade.getOutPayType());
+        payDTO.setReceiptAmount(trade.getTotalAmount());
+        trade= tradeService.tradePay(payDTO);
 
         return trade;
     }
@@ -167,12 +173,17 @@ public class PayServiceImpl implements PayService {
             //查一下看有没支付成功
             if (trade.getPayChannel()== PayChannel.AliPay.getType()) {
                 AlipayTradeQueryResponse response = alipayService.tradeQuery(tradeNo);
+
                 if(response!=null) {
-                    if (response.getTradeStatus().equals("TRADE_SUCCESS")) {
-                        trade = tradeService.tradePay(tradeNo);
-                    } else if (response.getTradeStatus().equals("TRADE_FINISHED")) {
-                        trade = tradeService.tradePay(tradeNo);
-                    } else if (response.getTradeStatus().equals("TRADE_CLOSED")) {
+
+                    if (response.getTradeStatus().equals("TRADE_SUCCESS")||response.getTradeStatus().equals("TRADE_FINISHED")) {
+                        TradePayDTO payDTO=new TradePayDTO();
+                        payDTO.setTradeNo(trade.getTradeNo());
+                        payDTO.setPayChannel(PayChannel.AliPay.getType());
+                        payDTO.setOutPayType(trade.getOutPayType());
+                        payDTO.setReceiptAmount((long) (Double.parseDouble(response.getReceiptAmount())*100));
+                        trade = tradeService.tradePay(payDTO);
+                    }  else if (response.getTradeStatus().equals("TRADE_CLOSED")) {
 
                     }
                 }
@@ -196,7 +207,12 @@ public class PayServiceImpl implements PayService {
                      **/
                     switch (transaction.getTradeState()) {
                         case SUCCESS:
-                            trade = tradeService.tradePay(tradeNo);
+                            TradePayDTO payDTO=new TradePayDTO();
+                            payDTO.setTradeNo(trade.getTradeNo());
+                            payDTO.setPayChannel(PayChannel.WxPay.getType());
+                            payDTO.setOutPayType(trade.getOutPayType());
+                            payDTO.setReceiptAmount(transaction.getAmount().getTotal());
+                            trade = tradeService.tradePay(payDTO);
                             break;
                         case REFUND:
                             break;
@@ -222,8 +238,8 @@ public class PayServiceImpl implements PayService {
 
 
     @Override
-    public Trade tradePayTo(TradePayToDTO request) {
-        return tradeService.tradePayTo(request);
+    public Trade tradePayTo(TradePayeeDTO request) {
+        return tradeService.tradePayee(request);
     }
 
     @Override
@@ -249,7 +265,7 @@ public class PayServiceImpl implements PayService {
             throw new BusinessException("交易状态异常");
         }
 
-        long amount=trade.getAmount()-trade.getPayAmount()-trade.getRefundAmount();
+        long amount=trade.getAmount()-trade.getPayeeAmount()-trade.getRefundAmount();
 
         trade=tradeService.tradeRefund(new TradeRefundDTO(tradeNo,amount,0,null,"交易退款"));
 

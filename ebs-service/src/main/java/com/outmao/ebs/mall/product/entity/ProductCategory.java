@@ -28,6 +28,14 @@ public class ProductCategory implements Serializable {
 
 	/**
 	 *
+	 * 唯一编码
+	 *
+	 */
+	@Column(unique = true)
+	private String code;
+
+	/**
+	 *
 	 * 商品类型
 	 *
 	 */

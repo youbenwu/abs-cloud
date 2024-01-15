@@ -416,7 +416,30 @@ public class ProductDomainImpl extends BaseDomain implements ProductDomain {
 
     }
 
+    @Transactional
+    @Override
+    public ProductSku saveProductSku(SaveProductSkuDTO request) {
+        ProductSku sku=null;
+        if(request.getId()!=null){
+            sku=productSkuDao.getOne(request.getId());
+        }
+        if(sku==null&&request.getProductId()!=null&&request.getSkuNo()!=null){
+            sku=productSkuDao.findByProductIdAndSkuNo(request.getProductId(),request.getSkuNo());
+        }
+        if(sku==null){
+            sku=new ProductSku();
+            sku.setKey(UUID.randomUUID().toString());
+            sku.setProduct(productDao.getOne(request.getProductId()));
+        }
+        BeanUtils.copyProperties(request,sku,"id");
+        productSkuDao.save(sku);
+        return sku;
+    }
 
+    @Override
+    public ProductSku getProductSku(Long productId, String skuNo) {
+        return productSkuDao.findByProductIdAndSkuNo(productId,skuNo);
+    }
 
     @Transactional
     @Override
@@ -461,6 +484,21 @@ public class ProductDomainImpl extends BaseDomain implements ProductDomain {
         productMediaDao.deleteAllByProductId(id);
         productDao.deleteById(id);
 
+    }
+
+    @Transactional
+    @Override
+    public void deleteProductList(Collection<Long> ids) {
+        productAttributeDao.deleteAllByProductIdIn(ids);
+        productAttributeGroupDao.deleteAllByProductIdIn(ids);
+        productPropertyItemDao.deleteAllByProductIdIn(ids);
+        productPropertyDao.deleteAllByProductIdIn(ids);
+        productSkuDao.deleteAllByProductIdIn(ids);
+        productAddressDao.deleteAllByProductIdIn(ids);
+        productSalesAddressDao.deleteAllByProductIdIn(ids);
+        productImageDao.deleteAllByProductIdIn(ids);
+        productMediaDao.deleteAllByProductIdIn(ids);
+        productDao.deleteAllByIdIn(ids);
     }
 
     @Transactional

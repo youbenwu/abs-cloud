@@ -11,11 +11,13 @@ import com.outmao.ebs.hotel.service.HotelDeviceService;
 import com.outmao.ebs.security.util.SecurityUtil;
 import com.outmao.ebs.thirdpartys.rongcloud.dto.*;
 import com.outmao.ebs.thirdpartys.rongcloud.entity.RcChatroom;
+import com.outmao.ebs.thirdpartys.rongcloud.entity.RcChatroomUser;
 import com.outmao.ebs.thirdpartys.rongcloud.service.RongcloudService;
 import com.outmao.ebs.thirdpartys.rongcloud.vo.Token;
 import com.outmao.ebs.user.common.constant.UserType;
 import com.outmao.ebs.user.entity.User;
 import com.outmao.ebs.user.service.UserService;
+import com.outmao.ebs.user.vo.QyUserVO;
 import com.outmao.ebs.user.vo.UserDetailsVO;
 import io.rong.models.chatroom.ChatroomMember;
 import io.rong.models.response.UserResult;
@@ -31,6 +33,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 
@@ -140,7 +143,36 @@ public class RongcloudAction {
 	@ApiOperation(value = "获取融云聊天室列表", notes = "获取融云聊天室列表")
 	@PostMapping("/chatroom/list")
 	public List<RcChatroom> getChatroomListByGroupId(String groupId){
-		return rongcloudService.getChatroomListByGroupId(groupId);
+		Long userId=null;
+		if(SecurityUtil.isAuthenticated()){
+			userId=SecurityUtil.currentUserId();
+		}
+		List<RcChatroom> list= rongcloudService.getChatroomListByGroupId(groupId);
+		if(list.isEmpty())
+			return list;
+		Map<Long,RcChatroom> map=list.stream().collect(Collectors.toMap(t->t.getId(),t->t));
+		List<RcChatroomUser> us=rongcloudService.getRcChatroomUserListByChatroomIdIn(map.keySet());
+
+		if(us.isEmpty())
+			return list;
+
+		List<QyUserVO> users=userService.getQyUserVOListByIdIn(us.stream().map(t->t.getUserId()).collect(Collectors.toList()));
+
+		Map<Long,QyUserVO> userMap=users.stream().collect(Collectors.toMap(t->t.getId(),t->t));
+
+		for (RcChatroomUser u:us){
+			RcChatroom room=map.get(u.getChatroomId());
+			QyUserVO user=userMap.get(u.getUserId());
+			if(room.getUsers()==null){
+				room.setUsers(new ArrayList<>());
+			}
+			room.getUsers().add(user);
+			if(u.getUserId().equals(userId)){
+				room.setMember(true);
+			}
+		}
+
+		return list;
 	}
 
 

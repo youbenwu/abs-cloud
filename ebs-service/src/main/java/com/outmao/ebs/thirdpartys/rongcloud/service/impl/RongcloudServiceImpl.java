@@ -1,13 +1,16 @@
 package com.outmao.ebs.thirdpartys.rongcloud.service.impl;
 
+import cn.jiguang.common.utils.StringUtils;
 import com.alibaba.fastjson.JSON;
 import com.outmao.ebs.common.exception.BusinessException;
 import com.outmao.ebs.common.util.StringUtil;
 import com.outmao.ebs.thirdpartys.rongcloud.config.RongcloudProperties;
 import com.outmao.ebs.thirdpartys.rongcloud.dao.RcChatroomDao;
+import com.outmao.ebs.thirdpartys.rongcloud.dao.RcChatroomUserDao;
 import com.outmao.ebs.thirdpartys.rongcloud.dao.RcGroupDao;
 import com.outmao.ebs.thirdpartys.rongcloud.dto.*;
 import com.outmao.ebs.thirdpartys.rongcloud.entity.RcChatroom;
+import com.outmao.ebs.thirdpartys.rongcloud.entity.RcChatroomUser;
 import com.outmao.ebs.thirdpartys.rongcloud.entity.RcGroup;
 import com.outmao.ebs.thirdpartys.rongcloud.service.RongcloudService;
 import com.outmao.ebs.thirdpartys.rongcloud.vo.Token;
@@ -34,6 +37,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.net.HttpURLConnection;
 import java.net.URLEncoder;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
@@ -53,6 +57,9 @@ public class RongcloudServiceImpl implements RongcloudService {
 
     @Autowired
     private RcChatroomDao rcChatroomDao;
+
+    @Autowired
+    private RcChatroomUserDao rcChatroomUserDao;
 
     @Transactional
     @Override
@@ -202,7 +209,12 @@ public class RongcloudServiceImpl implements RongcloudService {
     @Override
     public RcChatroom updateChatroom(RcChatroomUpdateDTO request) {
         RcChatroom chatroom=rcChatroomDao.getOne(request.getId());
-        chatroom.setName(request.getName());
+        if(!StringUtils.isEmpty(request.getName())){
+            chatroom.setName(request.getName());
+        }
+        if(!StringUtils.isEmpty(request.getNotice())){
+            chatroom.setNotice(request.getNotice());
+        }
         rcChatroomDao.save(chatroom);
 
         try{
@@ -339,13 +351,32 @@ public class RongcloudServiceImpl implements RongcloudService {
         return list;
     }
 
+    @Override
+    public List<RcChatroomUser> getRcChatroomUserListByChatroomIdIn(Collection<Long> chatroomIdIn) {
+        return rcChatroomUserDao.findAllByChatroomIdIn(chatroomIdIn);
+    }
+
     @Transactional
     @Override
     public void chatroomStatusNotify(List<RcChatroomStatusDTO> request) {
         if(request==null||request.isEmpty())
             return;
         request.forEach(t->{
-            if(t.getType()==3){
+            if(t.getType()==1){
+                //加入聊天室
+                RcChatroomUser user=new RcChatroomUser();
+                user.setChatroomId(Long.parseLong(t.getChatRoomId()));
+                user.setUserId(Long.parseLong(t.getUserIds().get(0)));
+                if(!rcChatroomUserDao.existsByChatroomIdAndUserId(user.getChatroomId(),user.getUserId())){
+                    rcChatroomUserDao.save(user);
+                }
+
+            }else if(t.getType()==2){
+                //退出聊天室
+                rcChatroomUserDao.deleteByChatroomIdAndUserId(Long.parseLong(t.getChatRoomId()),Long.parseLong(t.getUserIds().get(0)));
+
+
+            }else if(t.getType()==3){
                 //销毁聊天室
                 RcChatroom chatroom=rcChatroomDao.findByChatroomId(t.getChatRoomId());
                 if(chatroom!=null){

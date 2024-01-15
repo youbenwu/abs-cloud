@@ -36,7 +36,7 @@ public class UserServiceImpl extends BaseService implements UserService, Command
 	public void run(String... args) throws Exception {
 
 		//创建管理员用户
-		User admin = this.getUserByUsername("admin");
+		User admin = getUserByUsername("admin");
 		if (admin == null) {
 			registerUser(new RegisterDTO(
 					Oauth.USERNAME.getName(),
@@ -138,6 +138,11 @@ public class UserServiceImpl extends BaseService implements UserService, Command
 	}
 
 	@Override
+	public List<QyUserVO> getQyUserVOListByIdIn(Collection<Long> idIn) {
+		return userDomain.getQyUserVOListByIdIn(idIn);
+	}
+
+	@Override
 	public UserDetails saveUserDetails(UserDetailsDTO request) {
 		return userDomain.saveUserDetails(request);
 	}
@@ -185,7 +190,6 @@ public class UserServiceImpl extends BaseService implements UserService, Command
 		return userOauthDomain.getUserOauthSessionByToken(token);
 	}
 
-
 	@Override
 	public UserOauthSession setAuthenticated(SetAuthenticatedDTO request) {
 		return userOauthDomain.setAuthenticated(request);
@@ -200,4 +204,5 @@ public class UserServiceImpl extends BaseService implements UserService, Command
 	public Page<User> getUserPageByType(int type, Pageable pageable) {
 		return userDomain.getUserPageByType(type,pageable);
 	}
+
 }

@@ -14,6 +14,9 @@ public class ProductCategoryDTO {
     @ApiModelProperty(name = "id", value = "分类ID")
     private Long id;
 
+    @ApiModelProperty(name = "code", value = "唯一编码")
+    private String code;
+
     @ApiModelProperty(name = "typeId", value = "商品类型ID")
     private Long typeId;
 

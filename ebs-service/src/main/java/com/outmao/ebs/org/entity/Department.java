@@ -39,8 +39,6 @@ public class Department implements Serializable {
     private boolean leaf=true;
     private int sort;
 
-    private int members;//部门人数
-
     private String name; //部门名称
     private String intro;//部门简介
 

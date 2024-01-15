@@ -16,8 +16,7 @@ public class CacheOrgVO implements Serializable {
     /**
      * 多个父级组织ID
      */
-    private Set<Long> parents;
-
+    private List<Long> parents;
 
     /**
      *
@@ -26,14 +25,12 @@ public class CacheOrgVO implements Serializable {
      */
     private Long parentId;
 
-
     /**
      *
      * 上级组织ID
      *
      */
     private CacheOrgVO parent;
-
 
     /**
      *

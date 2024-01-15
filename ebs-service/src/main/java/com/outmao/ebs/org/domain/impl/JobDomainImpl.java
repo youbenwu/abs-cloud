@@ -72,17 +72,14 @@ public class JobDomainImpl extends BaseDomain implements JobDomain {
     @Transactional()
     @Override
     public void deleteJob(DeleteJobDTO request) {
-        Job job=jobDao.getOne(request.getId());
         jobMemberDao.deleteAllByJobId(request.getId());
-        jobDao.delete(job);
+        jobDao.deleteById(request.getId());
     }
 
 
     @Override
     public List<JobVO> getJobVOList(GetJobListDTO request) {
-
         QJob e=QJob.job;
-
         return queryList(e,e.org.id.eq(request.getOrgId()),jobVOConver);
     }
 
@@ -98,7 +95,6 @@ public class JobDomainImpl extends BaseDomain implements JobDomain {
             m.setMember(memberDao.getOne(request.getMemberId()));
             m.setCreateTime(new Date());
             jobMemberDao.save(m);
-            jobDao.membersAdd(request.getJobId(),1);
         }
         return m;
     }
@@ -119,7 +115,6 @@ public class JobDomainImpl extends BaseDomain implements JobDomain {
         });
 
         jobMemberDao.saveAll(list);
-        jobDao.membersAdd(request.getJobId(),list.size());
 
         return list;
     }
@@ -127,12 +122,13 @@ public class JobDomainImpl extends BaseDomain implements JobDomain {
     @Transactional()
     @Override
     public void deleteJobMember(DeleteJobMemberDTO request) {
-        JobMember m=jobMemberDao.findById(request.getId()).orElse(null);
-        if(m==null){
-            throw new BusinessException("岗位成员不存在");
-        }
-        jobMemberDao.delete(m);
-        jobDao.membersAdd(m.getJob().getId(),-1);
+        jobMemberDao.deleteById(request.getId());
+    }
+
+    @Transactional()
+    @Override
+    public void deleteJobMemberByMemberId(Long memberId) {
+        jobMemberDao.deleteAllByMemberId(memberId);
     }
 
     @Override

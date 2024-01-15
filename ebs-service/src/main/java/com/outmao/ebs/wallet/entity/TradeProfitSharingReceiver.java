@@ -25,14 +25,45 @@ public class TradeProfitSharingReceiver  implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    private Long tradeId;
+    /**
+     * 分账单号ID
+     */
+    private Long sharingId;
 
-    private Long orderId;
+    /**
+     * 交易号
+     */
+    private String tradeNo;
 
-    private Long walletId;
 
+    /**
+     * 目标钱包ID
+     */
+    private Long account;
+
+    /**
+     * 分账金额
+     */
     private long amount;
 
-    private String description;
+    /**
+     * 分账备注
+     */
+    private String remark;
+
+    /**
+     *
+     * 自定义业务类型
+     *
+     */
+    private int businessType;
+
+    /**
+     *
+     * 自定义业务说明
+     *
+     */
+    private String business;
+
 
 }

@@ -1,14 +1,12 @@
 package com.outmao.ebs.org.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.outmao.ebs.common.configuration.constant.Status;
 import com.outmao.ebs.user.entity.User;
 import lombok.Data;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
 
 /**
  *
@@ -26,26 +24,6 @@ public class Org implements Serializable {
     private static final long serialVersionUID = 1L;
 
     /**
-     *
-     * 组织类型
-     * 0--平台
-     * 1--租户
-     * 2--部门
-     * 3--商家
-     * 4--门店
-     * 5--店铺
-     * 6--酒店
-     *
-     */
-    public static final int TYPE_SYSTEM=0;
-    public static final int TYPE_TENANT=1;
-    public static final int TYPE_DEPART=2;
-    public static final int TYPE_MERCHANT=3;
-    public static final int TYPE_STORE=4;
-    public static final int TYPE_SHOP=5;
-    public static final int TYPE_HOTEL=6;
-
-    /**
      * 自动编号
      */
     @Id
@@ -53,18 +31,16 @@ public class Org implements Serializable {
     private Long id;
 
     /**
-     * 多个父级组织ID
+     *
+     * 组织类型
+     *
      */
-    private String parents;
+    private int type;
 
     /**
      *
      * 组织类型对应ID
-     * 租户ID
-     * 部门ID
-     * 商家ID
-     * 门店ID
-     * 店铺ID
+     *
      */
     @Column(unique = true)
     private Long targetId;
@@ -114,25 +90,20 @@ public class Org implements Serializable {
 
     /**
      *
-     * 状态 0--正常 1--禁用 2--未审核 3--审核中 4--审核成功 5--审核失败 6--删除
+     *
+     * 状态 0--正常 1--禁用 2--未审核 3--审核中 4--审核失败
      *
      *
      */
-    private int status= Status.NotAudit.getStatus();
+    private int status;
 
     /**
      *
      * 状态
      *
      */
-    private String statusRemark=Status.NotAudit.getStatusRemark();
+    private String statusRemark;
 
-    /**
-     *
-     * 组织类型 0--平台 1--租户
-     *
-     */
-    private int type=TYPE_SYSTEM;
 
     /**
      *
@@ -141,13 +112,6 @@ public class Org implements Serializable {
      */
     @Column(unique = true)
     private String orgNo;
-
-    /**
-     *
-     * 企业ID
-     *
-     * */
-    private Long enterpriseId;
 
 
     /**

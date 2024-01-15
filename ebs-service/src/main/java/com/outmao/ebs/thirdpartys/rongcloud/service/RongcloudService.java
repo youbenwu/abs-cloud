@@ -2,11 +2,13 @@ package com.outmao.ebs.thirdpartys.rongcloud.service;
 
 import com.outmao.ebs.thirdpartys.rongcloud.dto.*;
 import com.outmao.ebs.thirdpartys.rongcloud.entity.RcChatroom;
+import com.outmao.ebs.thirdpartys.rongcloud.entity.RcChatroomUser;
 import com.outmao.ebs.thirdpartys.rongcloud.entity.RcGroup;
 import com.outmao.ebs.thirdpartys.rongcloud.vo.Token;
 import io.rong.models.chatroom.ChatroomMember;
 import io.rong.models.response.UserResult;
 
+import java.util.Collection;
 import java.util.List;
 
 public interface RongcloudService {
@@ -29,6 +31,8 @@ public interface RongcloudService {
 
 
     public List<RcChatroom> getChatroomListByGroupId(String groupId);
+
+    public List<RcChatroomUser> getRcChatroomUserListByChatroomIdIn(Collection<Long> chatroomIdIn);
 
     public void chatroomStatusNotify(List<RcChatroomStatusDTO> request);
 

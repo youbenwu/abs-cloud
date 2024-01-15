@@ -36,6 +36,14 @@ public class OrderStatusChangeEventListenerImpl extends ActionEventListener<Orde
         if(type!=null) {
             sendMessageUser(order, type);
         }
+
+        String sellerType=OrderMessageUtil.getMessageTypeBySeller(order.getType(),order.getStatus());
+
+
+        if(sellerType!=null){
+            sendMessageSeller(order,type);
+        }
+
     }
 
     private void sendMessageUser(OrderStatusChangeEvent.Model order,String type){
@@ -56,5 +64,25 @@ public class OrderStatusChangeEventListenerImpl extends ActionEventListener<Orde
         messageService.sendMessageAsync(dto);
 
     }
+
+    private void sendMessageSeller(OrderStatusChangeEvent.Model order,String type){
+
+        List<Long> tos= Arrays.asList(order.getSellerId());
+
+        SendMessageByTypeDTO dto=new SendMessageByTypeDTO();
+        dto.setType(type);
+        dto.setFromId(order.getSellerId());
+        dto.setTos(tos);
+        dto.setData(order);
+        BindingItem item=new BindingItem();
+        item.setId(order.getId());
+        item.setType("Order");
+        item.setSubType(order.getType()!=null?order.getType().toString():null);
+        dto.setItem(item);
+
+        messageService.sendMessageAsync(dto);
+
+    }
+
 
 }

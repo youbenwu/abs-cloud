@@ -12,6 +12,8 @@ import com.outmao.ebs.org.vo.MemberRoleVO;
 import com.outmao.ebs.org.vo.MemberVO;
 import com.outmao.ebs.org.vo.RolePermissionVO;
 import com.outmao.ebs.org.vo.RoleVO;
+import com.outmao.ebs.user.common.annotation.AutoRegisterUser;
+import com.outmao.ebs.user.common.annotation.SetSimpleUser;
 import com.outmao.ebs.user.dao.UserDao;
 import com.querydsl.core.types.Predicate;
 import org.springframework.beans.BeanUtils;
@@ -28,39 +30,25 @@ import java.util.stream.Collectors;
 @Component
 public class MemberDomainImpl extends BaseDomain implements MemberDomain {
 
-    @Autowired
-    private UserDao userDao;
-
 
     @Autowired
     private MemberDao memberDao;
 
     @Autowired
-    private OrgDao orgDao;
+    private UserDao userDao;
 
     @Autowired
-    private MemberRoleDao memberRoleDao;
+    private OrgDao orgDao;
 
     @Autowired
     private DepartmentMemberDao departmentMemberDao;
 
-    @Autowired
-    private JobMemberDao jobMemberDao;
-
-
-    @Autowired
-    private RoleDao roleDao;
-
-
-    private MemberRoleVOConver memberRoleVOConver=new MemberRoleVOConver();
 
     private MemberVOConver memberVOConver=new MemberVOConver();
 
-    private RolePermissionVOConver rolePermissionVOConver=new RolePermissionVOConver();
-
-
 
     @Transactional
+    @AutoRegisterUser
     @Override
     public Member saveMember(MemberDTO request) {
 //        if(StringUtil.isEmpty(request.getName())){
@@ -72,7 +60,7 @@ public class MemberDomainImpl extends BaseDomain implements MemberDomain {
 //        if(!Validation.isPhone(request.getPhone())){
 //            throw new BusinessException("请填写正确的手机号码");
 //        }
-        Member member=request.getId()==null?null:memberDao.getOne(request.getId());
+        Member member=request.getId()==null?null:memberDao.findByIdLock(request.getId());
         if(member==null){
             member=new Member();
             member.setCreateTime(new Date());
@@ -81,9 +69,10 @@ public class MemberDomainImpl extends BaseDomain implements MemberDomain {
         }
 
         BeanUtils.copyProperties(request,member);
-        member.setUpdateTime(new Date());
 
         member.setKeyword(getKeyword(member));
+
+        member.setUpdateTime(new Date());
 
         memberDao.save(member);
 
@@ -109,7 +98,7 @@ public class MemberDomainImpl extends BaseDomain implements MemberDomain {
     @Transactional
     @Override
     public Member setMemberStatus(SetMemberStatusDTO request) {
-        Member m=memberDao.getOne(request.getId());
+        Member m=memberDao.findByIdLock(request.getId());
         m.setStatus(request.getStatus());
         m.setStatusRemark(request.getStatusRemark());
         m.setUpdateTime(new Date());
@@ -118,17 +107,24 @@ public class MemberDomainImpl extends BaseDomain implements MemberDomain {
 
     @Transactional
     @Override
+    public Member setMemberVip(Long id, int vip) {
+        Member member=memberDao.findByIdLock(id);
+        member.setVip(vip);
+        memberDao.save(member);
+        return member;
+    }
+
+    @Transactional
+    @Override
     public void deleteMemberById(Long id) {
 
-        Member m=memberDao.getOne(id);
+        departmentMemberDao.deleteAllByMemberId(id);
 
-        memberRoleDao.deleteAllByMemberId(m.getId());
-        departmentMemberDao.deleteAllByMemberId(m.getId());
-        jobMemberDao.deleteAllByMemberId(m.getId());
-
-        memberDao.delete(m);
+        memberDao.deleteById(id);
 
     }
+
+
 
     @Override
     public Member getMemberById(Long id) {
@@ -142,46 +138,30 @@ public class MemberDomainImpl extends BaseDomain implements MemberDomain {
     }
 
 
+    @SetSimpleUser
     @Override
     public MemberVO getMemberVOById(Long id) {
         QMember e= QMember.member;
         MemberVO vo= queryOne(e,e.id.eq(id),memberVOConver);
-        if(vo!=null){
-            loadRoles(vo);
-        }
         return vo;
     }
 
-
-    private void loadRoles(MemberVO vo){
-
-        QMemberRole e=QMemberRole.memberRole;
-        List<MemberRoleVO> list=queryList(e,e.member.id.eq(vo.getId()),memberRoleVOConver);
-
-        List<RoleVO> roles=list.stream().map(t->t.getRole()).collect(Collectors.toList());
-
-        loadPermissions(roles);
-
-        vo.setRoles(list);
-
+    @SetSimpleUser
+    @Override
+    public MemberVO getMemberVO(Long orgId, Long userId) {
+        QMember e= QMember.member;
+        MemberVO vo= queryOne(e,e.org.id.eq(orgId).and(e.user.id.eq(userId)),memberVOConver);
+        return vo;
     }
 
-
-
-    private void loadPermissions(List<RoleVO> roles){
-        QRolePermission e=QRolePermission.rolePermission;
-        List<RolePermissionVO> rolePermissions=queryList(e,e.role.id.in(roles.stream().map(t->t.getId()).collect(Collectors.toList())),rolePermissionVOConver);
-
-        roles.forEach(t->{
-            t.setPermissions(rolePermissions.stream().filter(rp->rp.getRoleId().equals(t.getId())).collect(Collectors.toList()));
-        });
-
-    }
-
+    @SetSimpleUser
     @Override
     public Page<MemberVO> getMemberVOPage(GetMemberListDTO request, Pageable pageable) {
+
         QMember e=QMember.member;
+
         Predicate p=null;
+
         if(!StringUtils.isEmpty(request.getKeyword())){
             p=e.keyword.like("%"+request.getKeyword()+"%");
         }
@@ -190,93 +170,19 @@ public class MemberDomainImpl extends BaseDomain implements MemberDomain {
             p=e.user.id.in(request.getUsers()).and(p);
         }
 
-        p=e.org.id.eq(request.getOrgId()).and(p);
+        if(request.getOrgId()!=null) {
+            p = e.org.id.eq(request.getOrgId()).and(p);
+        }
 
+        if(request.getTypes()!=null&&request.getTypes().size()>0){
+            QMemberType t=QMemberType.memberType;
+            p=e.id.eq(t.memberId).and(t.type.in(request.getTypes())).and(p);
+        }
 
         Page<MemberVO> page= queryPage(e,p,memberVOConver,pageable);
 
-        loadRoles(page.getContent());
-
         return page;
     }
-
-    private void loadRoles(List<MemberVO> members){
-
-        if(members==null||members.isEmpty())
-            return;
-
-        List<Long> idIn=members.stream().map(t->t.getId()).collect(Collectors.toList());
-
-        QMemberRole e=QMemberRole.memberRole;
-
-        List<MemberRoleVO> list=queryList(e,e.member.id.in(idIn),memberRoleVOConver);
-
-        members.forEach(t->{
-            t.setRoles(list.stream().filter(r->r.getMemberId().equals(t.getId())).collect(Collectors.toList()));
-        });
-
-    }
-
-
-
-    @Transactional
-    @Override
-    public MemberRole saveMemberRole(MemberRoleDTO request) {
-        MemberRole mr=memberRoleDao.findByMemberIdAndRoleId(request.getMemberId(),request.getRoleId());
-        if(mr==null){
-            mr=new MemberRole();
-            mr.setMember(memberDao.getOne(request.getMemberId()));
-            mr.setRole(roleDao.getOne(request.getRoleId()));
-            mr.setCreateTime(new Date());
-            memberRoleDao.save(mr);
-        }
-        return mr;
-    }
-
-
-
-    @Transactional
-    @Override
-    public List<MemberRole> setMemberRole(SetMemberRoleDTO request) {
-        Member member=memberDao.getOne(request.getMemberId());
-        List<MemberRole> roles=memberRoleDao.findAllByMemberId(member.getId());
-        Map<Long,MemberRole> roleMap=roles.stream().collect(Collectors.toMap(t->t.getRole().getId(),t->t));
-
-        List<MemberRole> list=new ArrayList<>();
-
-        request.getRoles().forEach(roleId->{
-            MemberRole mr=roleMap.get(roleId);
-            if(mr==null){
-                mr = new MemberRole();
-                mr.setMember(member);
-                mr.setRole(roleDao.getOne(roleId));
-                mr.setCreateTime(new Date());
-            }
-            list.add(mr);
-        });
-
-        memberRoleDao.saveAll(list);
-
-        memberRoleDao.deleteAllByMemberIdAndRoleIdNotIn(member.getId(),request.getRoles());
-
-        return list;
-    }
-
-
-    @Transactional
-    @Override
-    public void deleteMemberRoleById(Long id) {
-        MemberRole mr=memberRoleDao.getOne(id);
-        memberRoleDao.delete(mr);
-    }
-
-
-    @Override
-    public List<MemberRoleVO> getMemberRoleVOList(GetMemberRoleListDTO request) {
-        QMemberRole e=QMemberRole.memberRole;
-        return queryList(e,e.member.id.eq(request.getMemberId()),memberRoleVOConver);
-    }
-
 
 
 }

@@ -1,5 +1,6 @@
 package com.outmao.ebs.wallet.vo;
 
+import com.outmao.ebs.common.vo.Duration;
 import lombok.Data;
 
 import java.util.Date;
@@ -51,8 +52,14 @@ public class TradeVO {
      */
     private int businessType;
 
+    /**
+     * 交易主题
+     */
     private String subject;
 
+    /**
+     * 交易内容
+     */
     private String body;
 
     /**
@@ -72,6 +79,38 @@ public class TradeVO {
      */
     private int payChannel;
 
+    /**
+     * 外部支付方式
+     */
+    private int outPayType;
+
+
+    /**
+     * 冻结到期时间
+     */
+    private Date freezeExpireTime;
+
+    /**
+     * 解冻时间
+     */
+    private Date unfreezeTime;
+
+
+    /**
+     * 冻结状态 0--未冻结 1--已冻结 2--已解冻
+     */
+    private int freezeStatus;
+
+    /**
+     * 超时时间
+     */
+    private Date timeoutTime;
+
+    /**
+     * 支付成功后 完成交易超时时间
+     */
+    private Date finishTimeoutTime;
+
 
     /**
      * 交易金额
@@ -89,9 +128,25 @@ public class TradeVO {
     private long totalAmount;
 
     /**
-     * 实际已支付出的金额
+     *
+     * 平台实收金额 第三方支付除去手续费
+     *
      */
-    private long payAmount;
+    private long receiptAmount;
+
+    /**
+     *
+     * 付款方实际支付的金额
+     *
+     */
+    private long payerAmount;
+
+    /**
+     *
+     * 实际已给收款方的金额
+     *
+     */
+    private long payeeAmount;
 
     /**
      * 已退金额、不包括退的手续费

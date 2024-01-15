@@ -3,7 +3,7 @@ package com.outmao.ebs.wallet.pay.service;
 
 import com.alipay.api.response.AlipayFundTransToaccountTransferResponse;
 import com.outmao.ebs.wallet.common.listener.TradeStatusListener;
-import com.outmao.ebs.wallet.dto.TradePayToDTO;
+import com.outmao.ebs.wallet.dto.TradePayeeDTO;
 import com.outmao.ebs.wallet.dto.TradePrepareDTO;
 import com.outmao.ebs.wallet.entity.Trade;
 import com.outmao.ebs.wallet.pay.dto.PayPrepareDTO;
@@ -43,7 +43,7 @@ public interface PayService {
 	 * 付款到对方钱包、同一交易可以分多次付款、可以付款给多个人、付款后不能退
 	 *
 	 * */
-	public Trade tradePayTo(TradePayToDTO request);
+	public Trade tradePayTo(TradePayeeDTO request);
 
 	/**
 	 *

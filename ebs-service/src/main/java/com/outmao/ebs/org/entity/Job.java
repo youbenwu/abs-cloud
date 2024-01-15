@@ -3,7 +3,6 @@ package com.outmao.ebs.org.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
-
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
@@ -54,13 +53,6 @@ public class Job implements Serializable {
      *
      */
     private String description;
-
-    /**
-     *
-     * 岗位人数
-     *
-     */
-    private int members;
 
     /**
      *

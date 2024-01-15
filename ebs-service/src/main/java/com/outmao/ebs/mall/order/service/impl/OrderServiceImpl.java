@@ -3,8 +3,15 @@ package com.outmao.ebs.mall.order.service.impl;
 import com.outmao.ebs.common.base.BaseService;
 import com.outmao.ebs.common.exception.BusinessException;
 import com.outmao.ebs.common.exception.IdempotentException;
+import com.outmao.ebs.hotel.common.constant.HotelDeviceIncomeType;
+import com.outmao.ebs.hotel.dto.HotelDeviceIncomeDTO;
+import com.outmao.ebs.hotel.entity.HotelDevice;
+import com.outmao.ebs.hotel.service.HotelDeviceIncomeService;
 import com.outmao.ebs.hotel.service.HotelDeviceLeaseService;
+import com.outmao.ebs.hotel.service.HotelDeviceService;
 import com.outmao.ebs.hotel.vo.HotelDeviceLeaseOrderVO;
+import com.outmao.ebs.mall.merchant.entity.Merchant;
+import com.outmao.ebs.mall.merchant.service.MerchantService;
 import com.outmao.ebs.mall.order.common.constant.OrderStatus;
 import com.outmao.ebs.mall.order.domain.OrderDomain;
 import com.outmao.ebs.mall.order.domain.OrderStatsDomain;
@@ -32,9 +39,12 @@ import com.outmao.ebs.user.service.UserService;
 import com.outmao.ebs.wallet.common.constant.*;
 import com.outmao.ebs.wallet.common.listener.TradeStatusListener;
 import com.outmao.ebs.wallet.dto.TradePrepareDTO;
+import com.outmao.ebs.wallet.dto.TradeProfitSharingDTO;
+import com.outmao.ebs.wallet.dto.TradeProfitSharingReceiverDTO;
 import com.outmao.ebs.wallet.entity.Currency;
 import com.outmao.ebs.wallet.entity.Trade;
 import com.outmao.ebs.wallet.pay.service.PayService;
+import com.outmao.ebs.wallet.service.TradeService;
 import com.outmao.ebs.wallet.service.WalletService;
 import com.outmao.ebs.wallet.vo.TradeVO;
 import lombok.extern.slf4j.Slf4j;
@@ -79,9 +89,19 @@ public class OrderServiceImpl extends BaseService implements OrderService, Trade
     private PayService payService;
 
     @Autowired
+    private TradeService tradeService;
+
+    @Autowired
     private QrCodeService qrCodeService;
 
+    @Autowired
+    private HotelDeviceService hotelDeviceService;
 
+    @Autowired
+    private HotelDeviceIncomeService hotelDeviceIncomeService;
+
+    @Autowired
+    private MerchantService merchantService;
 
 
     @Override
@@ -111,7 +131,8 @@ public class OrderServiceImpl extends BaseService implements OrderService, Trade
                 setOrderStatusDTO.setStatus(OrderStatus.SUCCESSED.getStatus());
                 setOrderStatusDTO.setStatusRemark(OrderStatus.SUCCESSED.getStatusRemark());
             }else if(trade.getStatus()== TradeStatus.TRADE_FINISHED.getStatus()){
-
+                setOrderStatusDTO.setStatus(OrderStatus.FINISHED.getStatus());
+                setOrderStatusDTO.setStatusRemark(OrderStatus.FINISHED.getStatusRemark());
             }else if(trade.getStatus()== TradeStatus.TRADE_CLOSED.getStatus()){
                 //交易关闭修改订单状态
                 setOrderStatusDTO.setStatus(OrderStatus.CLOSED.getStatus());
@@ -193,13 +214,107 @@ public class OrderServiceImpl extends BaseService implements OrderService, Trade
             dto.setStatusRemark(StoreSkuStockOutStatus.CLOSED.getStatusRemark());
             storeSkuService.setStoreSkuStockOutStatus(dto);
         }
+
+        if(order.getStatus()==OrderStatus.CLOSED.getStatus()){
+            payService.tradeFinish(order.getOrderNo());
+            //分账
+            if(order.getHotelId()!=null){
+                profitSharing(order);
+            }
+        }
+
         return order;
+    }
+
+
+    private void profitSharing(Order order){
+        //平台
+        double totalFee=order.getTotalAmount()*0.05;
+        if(totalFee<0.01)
+            return;
+
+
+        HotelDevice device=hotelDeviceService.getHotelDeviceByHotelIdAndRoomNo(order.getHotelId(),order.getRoomNo());
+
+        double fee=totalFee;
+
+        //机主
+        double renterFee=0;
+
+        if(device!=null&&device.getLease().getStatus()==1){
+            renterFee=totalFee*0.35;
+            fee=totalFee-renterFee;
+        }
+
+        TradeProfitSharingDTO sharingDTO=new TradeProfitSharingDTO();
+        sharingDTO.setTradeNo(order.getOrderNo());
+        sharingDTO.setSharingNo(order.getOrderNo());
+        sharingDTO.setUnfreeze(true);
+        sharingDTO.setReceivers(new ArrayList<>());
+
+        if(fee>0.01){
+            User user=userService.getUserByUsername("admin");
+            TradeProfitSharingReceiverDTO receiverDTO=new TradeProfitSharingReceiverDTO();
+            receiverDTO.setAccount(user.getWalletId());
+            receiverDTO.setAmount((long)(fee*100));
+            receiverDTO.setBusinessType(WalletConstant.business_type_fee);
+            receiverDTO.setBusiness("平台收取手续费");
+            receiverDTO.setRemark("平台收取手续费");
+            sharingDTO.getReceivers().add(receiverDTO);
+        }
+
+        if(renterFee>0.01){
+            User user=userService.getUserById(device.getLease().getRenterId());
+            TradeProfitSharingReceiverDTO receiverDTO=new TradeProfitSharingReceiverDTO();
+            receiverDTO.setAccount(user.getWalletId());
+            receiverDTO.setAmount((long)(renterFee*100));
+            receiverDTO.setBusinessType(WalletConstant.business_type_fee);
+            receiverDTO.setBusiness("酒店服务机主收益");
+            receiverDTO.setRemark("酒店服务机主收益");
+            sharingDTO.getReceivers().add(receiverDTO);
+
+            HotelDeviceIncomeType type;
+            if(order.getType()==ProductType.MOVIE.getType()){
+                type=HotelDeviceIncomeType.Vod;
+            }else{
+                type=HotelDeviceIncomeType.HotelService;
+            }
+            HotelDeviceIncomeDTO dto=new HotelDeviceIncomeDTO();
+            dto.setDeviceId(device.getId());
+            dto.setType(HotelDeviceIncomeType.HotelService.getType());
+            dto.setTotalAmount(order.getTotalAmount());
+            dto.setTotalFee(totalFee);
+            dto.setRenterId(device.getLease().getRenterId());
+            dto.setRenterFee(renterFee);
+            dto.setFee(fee);
+
+            dto.setTime(new Date());
+            dto.setRemark(type.getDescription()+"收益");
+
+            dto.setStatus(1);
+            hotelDeviceIncomeService.saveHotelDeviceIncome(new HotelDeviceIncomeDTO());
+        }
+
+        if(sharingDTO.getReceivers().size()>0){
+            tradeService.saveTradeProfitSharing(sharingDTO);
+        }
+
     }
 
 
     @Override
     public Order closeOrder(CloseOrderDTO request) {
         return orderDomain.closeOrder(request);
+    }
+
+    @Override
+    public Order finishOrder(FinishOrderDTO request) {
+        SetOrderStatusDTO statusDTO=new SetOrderStatusDTO();
+        statusDTO.setOrderNo(request.getOrderNo());
+        statusDTO.setStatus(OrderStatus.FINISHED.getStatus());
+        statusDTO.setStatusRemark(OrderStatus.FINISHED.getStatusRemark());
+        statusDTO.setSubStatus(request.getSubStatus());
+        return setOrderStatus(statusDTO);
     }
 
     @Override
@@ -299,7 +414,9 @@ public class OrderServiceImpl extends BaseService implements OrderService, Trade
         order.setPayChannel(request.getPayChannel());
 
         User fromUser=userService.getUserById(order.getUserId());
+
         User toUser=userService.getUserById(order.getSellerId());
+        Merchant merchant=merchantService.getMerchantByUserId(order.getSellerId());
 
         Currency rmb=walletService.getCurrencyById("RMB");
 
@@ -314,7 +431,7 @@ public class OrderServiceImpl extends BaseService implements OrderService, Trade
         TradePrepareDTO dto=new TradePrepareDTO();
         dto.setTradeNo(order.getOrderNo());
         dto.setFromId(fromUser.getWalletId());
-        dto.setToId(toUser.getWalletId());
+        dto.setToId(merchant.getWalletId()!=null?merchant.getWalletId():toUser.getWalletId());
         dto.setCurrencyId(request.getCurrency());
         dto.setAmount(amount);
         dto.setType(TradeType.Pay.getType());

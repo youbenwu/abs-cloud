@@ -73,4 +73,9 @@ public class MessageConstant {
 
 
 
+    //商家订单消息--订单提醒
+    public static final String message_type_order_seller="order-seller";
+
+
+
 }

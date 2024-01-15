@@ -8,7 +8,6 @@ import com.outmao.ebs.org.vo.JobMemberVO;
 import com.outmao.ebs.org.vo.JobVO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-
 import java.util.List;
 
 public interface JobDomain {
@@ -27,13 +26,13 @@ public interface JobDomain {
      * */
     public void deleteJob(DeleteJobDTO request);
 
+
     /*
      *
      * 获取职位列表
      *
      * */
     public List<JobVO> getJobVOList(GetJobListDTO request);
-
 
     /*
      *
@@ -55,6 +54,14 @@ public interface JobDomain {
      *
      * */
     public void deleteJobMember(DeleteJobMemberDTO request);
+
+    /*
+     *
+     * 删除职位成员
+     *
+     * */
+    public void deleteJobMemberByMemberId(Long memberId);
+
 
     /*
      *

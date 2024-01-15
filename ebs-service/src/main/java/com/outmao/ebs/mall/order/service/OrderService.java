@@ -20,6 +20,8 @@ public interface OrderService {
 
     public Order closeOrder(CloseOrderDTO request);
 
+    public Order finishOrder(FinishOrderDTO request);
+
     public Order orderBindOwner(OrderBindOwnerDTO request);
 
     public Order getOrderByOrderNo(String orderNo);

@@ -1,6 +1,8 @@
 package com.outmao.ebs.wallet.pay.service.impl;
 
 import com.outmao.ebs.common.exception.BusinessException;
+import com.outmao.ebs.wallet.common.constant.PayChannel;
+import com.outmao.ebs.wallet.dto.TradePayDTO;
 import com.outmao.ebs.wallet.entity.Trade;
 import com.outmao.ebs.wallet.pay.alipay.AlipayNotifyListener;
 import com.outmao.ebs.wallet.service.TradeService;
@@ -54,7 +56,12 @@ public class AlipayListener implements AlipayNotifyListener {
             tradeService.tradeFinish(trade.getTradeNo());
         } else if (tradeStatus.equals("TRADE_SUCCESS")) {
             // 交易支付成功
-            tradeService.tradePay(trade.getTradeNo());
+            TradePayDTO payDTO=new TradePayDTO();
+            payDTO.setTradeNo(trade.getTradeNo());
+            payDTO.setPayChannel(PayChannel.AliPay.getType());
+            payDTO.setOutPayType(trade.getOutPayType());
+            payDTO.setReceiptAmount(trade.getTotalAmount());
+            tradeService.tradePay(payDTO);
         } else if (tradeStatus.equals("TRADE_CLOSED")) {
             // 未付款交易超时关闭，或支付完成后全额退款
             tradeService.tradeClose(trade.getTradeNo());

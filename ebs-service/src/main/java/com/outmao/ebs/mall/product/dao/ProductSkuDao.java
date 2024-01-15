@@ -20,10 +20,13 @@ public interface ProductSkuDao extends JpaRepository<ProductSku,Long> {
     public List<ProductSku> findAllByProductId(Long productId);
 
     public void deleteAllByProductId(Long productId);
+    public void deleteAllByProductIdIn(Collection<Long> productIdIn);
 
     public void deleteAllByProductIdAndIdNotIn(Long productId, Collection<Long> idNotIn);
 
 
     public List<ProductSku> findAllByIdIn(Collection<Long> idIn);
+
+    public ProductSku findByProductIdAndSkuNo(Long productId,String skuNo);
 
 }

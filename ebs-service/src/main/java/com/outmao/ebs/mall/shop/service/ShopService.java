@@ -18,6 +18,8 @@ public interface ShopService {
 
     public Shop setShopStatus(SetShopStatusDTO request);
 
+    public Shop getShopByOrgId(Long orgId);
+
 
     public ShopVO getShopVOById(Long id);
 

@@ -2,6 +2,7 @@ package com.outmao.ebs.mall.product.domain;
 
 import com.outmao.ebs.mall.product.dto.*;
 import com.outmao.ebs.mall.product.entity.Product;
+import com.outmao.ebs.mall.product.entity.ProductSku;
 import com.outmao.ebs.mall.product.vo.MiniProductSkuVO;
 import com.outmao.ebs.mall.product.vo.MiniProductVO;
 import com.outmao.ebs.mall.product.vo.ProductVO;
@@ -19,11 +20,17 @@ public interface ProductDomain {
 
       public void deleteProductById(Long id);
 
+      public void deleteProductList(Collection<Long> ids);
+
       public Product setProductOnSell(SetProductOnSellDTO request);
 
       public Product setProductStatus(SetProductStatusDTO request);
 
       public Product setProductStock(SetProductStockDTO request);
+
+      public ProductSku saveProductSku(SaveProductSkuDTO request);
+
+      public ProductSku getProductSku(Long productId,String skuNo);
 
       public void skuStockOut(List<ProductSkuStockOutDTO> request);
 

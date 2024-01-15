@@ -35,4 +35,13 @@ public enum WalletStatus {
     }
 
 
+    public static boolean isNotNormal(int status){
+        return status!=WALLET_STATUS_NORMAL.getStatus();
+    }
+
+    public static boolean isNormal(int status){
+        return status==WALLET_STATUS_NORMAL.getStatus();
+    }
+
+
 }

@@ -37,6 +37,10 @@ public interface QrCodeService {
 	 */
 	public QrCode saveQrCode(QrCodeDTO request);
 
+	/*
+	 * 更新码信息
+	 */
+	public QrCode updateQrCode(UpdateQrCodeDTO request);
 
 	/*
 	 * 批量生成码

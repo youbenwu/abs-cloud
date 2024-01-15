@@ -24,7 +24,7 @@ public class MemberRoleVOConver implements BeanConver<QMemberRole, MemberRoleVO>
 
     @Override
     public Expression<?>[] select(QMemberRole e) {
-        return ArrayUtil.merge(new Expression<?>[][]{
+        return ArrayUtil.merge(
                 new Expression<?>[]{
                         e.id,
                         e.role.id,
@@ -32,6 +32,8 @@ public class MemberRoleVOConver implements BeanConver<QMemberRole, MemberRoleVO>
                         e.createTime
                 },
                 roleVOConver.select(e.role)
-        });
+        );
     }
+
+
 }

@@ -37,6 +37,11 @@ public class ShopServiceImpl extends BaseService implements ShopService {
     }
 
     @Override
+    public Shop getShopByOrgId(Long orgId) {
+        return shopDomain.getShopByOrgId(orgId);
+    }
+
+    @Override
     public ShopVO getShopVOById(Long id) {
         return shopDomain.getShopVOById(id);
     }

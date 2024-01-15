@@ -10,6 +10,7 @@ import com.outmao.ebs.bbs.vo.SubjectCollectionVO;
 import com.outmao.ebs.mall.merchant.entity.Merchant;
 import com.outmao.ebs.mall.merchant.service.MerchantService;
 import com.outmao.ebs.mall.product.entity.ProductBsType;
+import com.outmao.ebs.mall.product.entity.ProductSku;
 import com.outmao.ebs.portal.dto.GetRecommendListDTO;
 import com.outmao.ebs.portal.service.RecommendService;
 import com.outmao.ebs.portal.vo.RecommendVO;
@@ -84,6 +85,10 @@ public class ProductServiceImpl extends BaseService implements ProductService {
         productDomain.deleteProductById(id);
     }
 
+    @Override
+    public void deleteProductList(Collection<Long> ids) {
+        productDomain.deleteProductList(ids);
+    }
 
     @Override
     public Product setProductStatus(SetProductStatusDTO request) {
@@ -99,6 +104,16 @@ public class ProductServiceImpl extends BaseService implements ProductService {
     @Override
     public Product setProductStock(SetProductStockDTO request) {
         return productDomain.setProductStock(request);
+    }
+
+    @Override
+    public ProductSku saveProductSku(SaveProductSkuDTO request) {
+        return productDomain.saveProductSku(request);
+    }
+
+    @Override
+    public ProductSku getProductSku(Long productId, String skuNo) {
+        return productDomain.getProductSku(productId,skuNo);
     }
 
     @Override

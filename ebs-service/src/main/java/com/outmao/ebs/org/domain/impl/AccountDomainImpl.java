@@ -17,6 +17,7 @@ import com.outmao.ebs.org.vo.AccountRoleVO;
 import com.outmao.ebs.org.vo.AccountVO;
 import com.outmao.ebs.org.vo.RolePermissionVO;
 import com.outmao.ebs.org.vo.RoleVO;
+import com.outmao.ebs.user.common.annotation.AutoRegisterUser;
 import com.outmao.ebs.user.dao.UserDao;
 import com.querydsl.core.types.Predicate;
 import org.springframework.beans.BeanUtils;
@@ -58,6 +59,7 @@ public class AccountDomainImpl extends BaseDomain implements AccountDomain {
 
 
     @Transactional
+    @AutoRegisterUser
     @Override
     public Account saveAccount(AccountDTO request) {
         Account account =request.getId()==null?

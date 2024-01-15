@@ -158,6 +158,11 @@ public class HotelDeviceServiceImpl extends BaseService implements HotelDeviceSe
     }
 
     @Override
+    public HotelDevice getHotelDeviceByHotelIdAndRoomNo(Long hotelId, String roomNo) {
+        return hotelDeviceDomain.getHotelDeviceByHotelIdAndRoomNo(hotelId,roomNo);
+    }
+
+    @Override
     public SimpleHotelDeviceVO getSimpleHotelDeviceVOByDeviceNo(String deviceNo) {
         return hotelDeviceDomain.getSimpleHotelDeviceVOByDeviceNo(deviceNo);
     }

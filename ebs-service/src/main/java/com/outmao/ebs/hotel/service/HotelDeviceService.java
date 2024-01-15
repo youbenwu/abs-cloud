@@ -32,6 +32,8 @@ public interface HotelDeviceService {
 
     public HotelDevice getHotelDeviceByUserId(Long userId);
 
+    public HotelDevice getHotelDeviceByHotelIdAndRoomNo(Long hotelId, String roomNo);
+
     public HotelDeviceVO getHotelDeviceVOById(Long id);
 
     public HotelDeviceVO getHotelDeviceVOByDeviceNo(String deviceNo);

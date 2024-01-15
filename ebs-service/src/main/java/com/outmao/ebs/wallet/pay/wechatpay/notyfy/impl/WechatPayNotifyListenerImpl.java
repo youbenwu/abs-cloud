@@ -1,5 +1,8 @@
 package com.outmao.ebs.wallet.pay.wechatpay.notyfy.impl;
 
+import com.outmao.ebs.wallet.common.constant.PayChannel;
+import com.outmao.ebs.wallet.dto.TradePayDTO;
+import com.outmao.ebs.wallet.entity.Trade;
 import com.outmao.ebs.wallet.pay.wechatpay.notyfy.WechatPayNotifyListener;
 import com.outmao.ebs.wallet.service.TradeService;
 import com.wechat.pay.java.service.payments.model.Transaction;
@@ -38,7 +41,13 @@ public class WechatPayNotifyListenerImpl implements WechatPayNotifyListener {
     public void notify(Transaction transaction) {
         switch(transaction.getTradeState()){
             case SUCCESS:
-                tradeService.tradePay(transaction.getOutTradeNo());
+                Trade trade=tradeService.getTradeByTradeNo(transaction.getOutTradeNo());
+                TradePayDTO payDTO=new TradePayDTO();
+                payDTO.setTradeNo(transaction.getOutTradeNo());
+                payDTO.setPayChannel(PayChannel.WxPay.getType());
+                payDTO.setOutPayType(trade.getOutPayType());
+                payDTO.setReceiptAmount(transaction.getAmount().getTotal());
+                tradeService.tradePay(payDTO);
                 break;
             case CLOSED:
                 tradeService.tradeClose(transaction.getOutTradeNo());

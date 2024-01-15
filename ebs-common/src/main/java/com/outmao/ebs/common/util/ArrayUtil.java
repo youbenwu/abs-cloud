@@ -184,11 +184,11 @@ public class ArrayUtil {
         int[] arr=new int[count];
         int t=total-min*count;
         if(t<0){
-            throw new BusinessException("不合理");
+            throw new BusinessException("数据出错");
         }
         int m=max-min;
         if(m<=0){
-            throw new BusinessException("不合理");
+            throw new BusinessException("数据出错");
         }
         for(int i=0;i<count;i++){
             if(t>0) {

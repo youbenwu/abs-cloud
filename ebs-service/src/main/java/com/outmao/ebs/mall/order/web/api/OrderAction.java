@@ -41,12 +41,20 @@ public class OrderAction {
 
     @ApiOperation(value = "取消订单", notes = "取消订单")
     @PostMapping("/cancel")
-    public Order closeOrder(String orderNo){
+    public void closeOrder(String orderNo){
         CloseOrderDTO dto=new CloseOrderDTO();
         dto.setOrderNo(orderNo);
         dto.setSubStatus(OrderSubStatus.CLOSED_BUYER.getStatus());
-        Order order=orderService.closeOrder(dto);
-        return order;
+        orderService.closeOrder(dto);
+    }
+
+    @ApiOperation(value = "完成订单", notes = "完成订单")
+    @PostMapping("/finish")
+    public void finishOrder(String orderNo){
+        FinishOrderDTO dto=new FinishOrderDTO();
+        dto.setOrderNo(orderNo);
+        dto.setSubStatus(OrderSubStatus.FINISHED_BUYER.getStatus());
+        orderService.finishOrder(dto);
     }
 
     @ApiOperation(value = "订单绑定用户", notes = "订单绑定用户")

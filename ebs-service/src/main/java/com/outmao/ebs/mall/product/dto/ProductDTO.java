@@ -19,6 +19,10 @@ public class ProductDTO {
     @ApiModelProperty(name = "id", value = "id")
     private Long id;
 
+
+    @ApiModelProperty(name = "code", value = "唯一编码")
+    private String code;
+
     /**
      *
      * 商品店铺ID

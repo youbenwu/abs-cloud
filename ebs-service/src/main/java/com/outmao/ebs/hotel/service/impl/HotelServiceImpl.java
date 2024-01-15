@@ -21,6 +21,7 @@ import com.outmao.ebs.org.dto.MemberDTO;
 import com.outmao.ebs.org.entity.Member;
 import com.outmao.ebs.org.service.MemberService;
 import com.outmao.ebs.org.service.OrgService;
+import com.outmao.ebs.user.common.annotation.AutoRegisterUser;
 import com.outmao.ebs.user.common.constant.Oauth;
 import com.outmao.ebs.user.dto.RegisterDTO;
 import com.outmao.ebs.user.entity.User;
@@ -82,71 +83,19 @@ public class HotelServiceImpl extends BaseService implements HotelService {
     private HotelDeviceService hotelDeviceService;
 
 
-
-    @Transactional()
     @Override
     public Hotel registerHotel(RegisterHotelDTO request) {
-
-        if(request.getUserId()==null){
-            findUserOrRegister(request);
-        }
-
-        Hotel hotel= hotelDomain.registerHotel(request);
-
-        //给酒店创建组织
-        if(hotel.getOrgId()==null){
-            orgService.registerOrg(hotel);
-        }
-
-        if(hotel.getMerchantId()==null){
-            findMerchantOrRegister(hotel);
-        }
-
-        return hotel;
-    }
-
-    @Override
-    public Hotel saveHotel(HotelDTO request) {
-        return hotelDomain.saveHotel(request);
-    }
-
-
-    private void findMerchantOrRegister(Hotel hotel){
-        //给酒店创建商家
-        Merchant merchant=merchantService.getMerchantByUserId(hotel.getUserId());
-        if(merchant==null){
-            MerchantDTO merchantDTO=new MerchantDTO();
-            merchantDTO.setUserId(hotel.getUserId());
-            merchantDTO.setName(hotel.getName());
-            merchant=merchantService.saveMerchant(merchantDTO);
-        }
-        orgService.addOrgParent(merchant.getOrgId(),hotel.getOrgId());
-        hotel.setMerchantId(merchant.getId());
-        hotel.setShopId(merchant.getShopId());
-    }
-
-    private void findUserOrRegister(RegisterHotelDTO request){
 
         Assert.notNull(request.getContact(),"联系人不能为空");
         Assert.notNull(request.getContact().getPhone(),"联系人电话不能为空");
         Assert.notNull(request.getContact().getName(),"联系人姓名不能为空");
 
+        return hotelDomain.registerHotel(request);
+    }
 
-        User user=userService.getUserByUsername(request.getContact().getPhone());
-
-        if(user==null){
-            RegisterDTO registerDTO=new RegisterDTO();
-            registerDTO.setPrincipal(request.getContact().getPhone());
-            registerDTO.setCredentials(request.getPassword());
-            registerDTO.setOauth(Oauth.PHONE.getName());
-            registerDTO.setArgs(new HashMap<>());
-            registerDTO.getArgs().put("nickname",request.getContact().getName());
-
-            user=userService.registerUser(registerDTO);
-        }
-
-        request.setUserId(user.getId());
-
+    @Override
+    public Hotel saveHotel(HotelDTO request) {
+        return hotelDomain.saveHotel(request);
     }
 
     @Override

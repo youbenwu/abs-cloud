@@ -12,6 +12,7 @@ public interface ProductAttributeGroupDao extends JpaRepository<ProductAttribute
     public List<ProductAttributeGroup> findAllByProductId(Long productId);
 
     public void deleteAllByProductId(Long productId);
+    public void deleteAllByProductIdIn(Collection<Long> productIdIn);
 
     public void deleteAllByProductIdAndIdNotIn(Long productId, Collection<Long> idNotIn);
 

@@ -1,15 +1,14 @@
 package com.outmao.ebs.org.domain;
 
 
-import com.outmao.ebs.org.dto.GetOrgListDTO;
-import com.outmao.ebs.org.dto.OrgDTO;
-import com.outmao.ebs.org.dto.RegisterOrgDTO;
-import com.outmao.ebs.org.dto.SetOrgStatusDTO;
+import com.outmao.ebs.org.dto.*;
 import com.outmao.ebs.org.entity.Org;
+import com.outmao.ebs.org.entity.OrgParent;
 import com.outmao.ebs.org.vo.CacheOrgVO;
 import com.outmao.ebs.org.vo.OrgVO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+
 import java.util.Collection;
 import java.util.List;
 
@@ -44,13 +43,12 @@ public interface OrgDomain {
      * */
     public void deleteOrgById(Long id);
 
-
     /**
      *
      * 增加父组织
      *
      * */
-    public Org addOrgParent(Long id,Long parentId);
+    public OrgParent saveOrgParent(OrgParentDTO request);
 
     /**
      *
@@ -68,40 +66,10 @@ public interface OrgDomain {
 
     /**
      *
-     * 获取系统组织信息
-     *
-     * */
-    public Org getOrg();
-
-
-    /**
-     *
-     * 获取组织信息列表
-     *
-     * */
-    public List<Org> getOrgListByIdIn(Collection<Long> idIn);
-
-    /**
-     *
-     * 获取组织ID
-     *
-     * */
-    public Long getOrgIdByTargetId(Long targetId);
-
-    /**
-     *
      * 获取组织信息
      *
      * */
     public OrgVO getOrgVOById(Long id);
-
-
-    /**
-     *
-     * 获取组织信息列表
-     *
-     * */
-    public List<OrgVO> getOrgVOListByIdIn(Collection<Long> idIn);
 
     /**
      *
@@ -111,10 +79,28 @@ public interface OrgDomain {
     public Page<OrgVO> getOrgVOPage(GetOrgListDTO request, Pageable pageable);
 
 
+    /**
+     *
+     * 获取组织信息列表
+     *
+     * */
+    public List<OrgVO> getOrgVOListByIdIn(Collection<Long> idIn);
 
+
+    /**
+     *
+     * 获取组织
+     *
+     * */
     public CacheOrgVO getCacheOrgVOById(Long id);
 
+    /**
+     *
+     * 获取根组织
+     *
+     * */
     public CacheOrgVO getCacheOrgVO();
+
 
 
 }

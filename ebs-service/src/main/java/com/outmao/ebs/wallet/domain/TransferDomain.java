@@ -3,12 +3,16 @@ package com.outmao.ebs.wallet.domain;
 
 import com.outmao.ebs.wallet.dto.GetTransferListDTO;
 import com.outmao.ebs.wallet.entity.Trade;
+import com.outmao.ebs.wallet.entity.TradeProfitSharingReceiver;
 import com.outmao.ebs.wallet.entity.Transfer;
 import com.outmao.ebs.wallet.entity.Wallet;
 import com.outmao.ebs.wallet.vo.StatsTransferVO;
 import com.outmao.ebs.wallet.vo.TransferVO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+
+import java.util.List;
+
 
 public interface TransferDomain {
 
@@ -43,7 +47,7 @@ public interface TransferDomain {
     /**
      *
      * 预付款
-     * 发起方佘额-->收款方预付款 或 发起方预付款
+     * 发起方佘额-->发起方预付款
      *
      */
     public Transfer transferAdvance(Trade trade);
@@ -52,7 +56,7 @@ public interface TransferDomain {
     /**
      *
      * 确定支付
-     * 发起方预付款-->收款方佘额
+     * 发起方预付款-->收款方佘额 或 收款方冻结
      *
      */
     public Transfer transferTo(Trade trade);
@@ -60,6 +64,7 @@ public interface TransferDomain {
     /**
      *
      * 确定支付
+     * 发起方预付款-->收款方佘额
      *
      */
     public Transfer transferTo(
@@ -80,6 +85,20 @@ public interface TransferDomain {
     public Transfer transferFee(Trade trade);
 
 
+    /**
+     *
+     * 解冻
+     *
+     */
+    public Transfer transferUnfreeze(Trade trade);
+
+    /**
+     *
+     * 分账
+     *
+     */
+    public List<Transfer> transferProfitSharing(Trade trade,List<TradeProfitSharingReceiver> receivers);
+
 
     /**
      *
@@ -95,7 +114,6 @@ public interface TransferDomain {
     );
 
 
-
     /**
      *
      * 获取交易明细
@@ -103,7 +121,11 @@ public interface TransferDomain {
      */
     public Page<TransferVO> getTransferVOPage(GetTransferListDTO request, Pageable pageable);
 
-
+    /**
+     *
+     * 获取交易统计
+     *
+     */
     public StatsTransferVO getStatsTransferVO(GetTransferListDTO request);
 
 

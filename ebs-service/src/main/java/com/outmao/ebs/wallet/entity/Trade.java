@@ -2,6 +2,7 @@ package com.outmao.ebs.wallet.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.outmao.ebs.common.vo.Duration;
 import lombok.Data;
 import javax.persistence.*;
 import java.io.Serializable;
@@ -113,6 +114,58 @@ public class Trade implements Serializable {
 	 */
 	private int outPayType;
 
+	/**
+	 * 冻结期限
+	 */
+	@Embedded
+	@AttributeOverrides({
+			@AttributeOverride(name="field", column=@Column(name="freeze_field")),
+			@AttributeOverride(name="value", column=@Column(name="freeze_value"))
+	})
+	private Duration freeze;
+
+	/**
+	 * 冻结到期时间
+	 */
+	private Date freezeExpireTime;
+
+	/**
+	 * 解冻时间
+	 */
+	private Date unfreezeTime;
+
+
+	/**
+	 * 冻结状态 0--未冻结 1--已冻结 2--已解冻
+	 */
+	private int freezeStatus;
+
+	/**
+	 * 冻结金额
+	 */
+	private long freezeAmount;
+
+	/**
+	 * 超时时间
+	 */
+	private Date timeoutTime;
+
+
+	/**
+	 * 支付成功后 完成交易超时时间
+	 */
+	@Embedded
+	@AttributeOverrides({
+			@AttributeOverride(name="field", column=@Column(name="finish_timeout_field")),
+			@AttributeOverride(name="value", column=@Column(name="finish_timeout_value"))
+	})
+	private Duration finishTimeout;
+
+	/**
+	 * 支付成功后 完成交易超时时间
+	 */
+	private Date finishTimeoutTime;
+
 
 	/**
 	 * 交易金额
@@ -130,17 +183,25 @@ public class Trade implements Serializable {
 	private long totalAmount;
 
 	/**
-	 * 实收金额 第三方支付除去手续费
+	 *
+	 * 平台实收金额 第三方支付除去手续费
+	 *
 	 */
 	private long receiptAmount;
 
 	/**
 	 *
-	 * 实际已给收款方的金额
-	 *
+	 * 付款方实际支付的金额
 	 *
 	 */
-	private long payAmount;
+	private long payerAmount;
+
+	/**
+	 *
+	 * 实际已给收款方的金额
+	 *
+	 */
+	private long payeeAmount;
 	
 	/**
 	 * 已退金额、不包括退的手续费
@@ -151,7 +212,6 @@ public class Trade implements Serializable {
 	 * 退款，是否原路退回，否则退回钱包
 	 */
 	private boolean refundOut;
-
 
 	/**
 	 * 交易的备注

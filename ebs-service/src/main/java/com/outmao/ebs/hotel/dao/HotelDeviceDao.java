@@ -35,6 +35,9 @@ public interface HotelDeviceDao extends JpaRepository<HotelDevice,Long> {
     public List<HotelDevice> findAllByNoActivateLock(PageRequest request);
 
 
+    public HotelDevice findByHotelIdAndRoomNo(Long hotelId,String roomNo);
+
+
     public long countByStatusAndIdIn(int status,Collection<Long> idIn);
 
     public long countByBuyPartnerId(Long buyPartnerId);

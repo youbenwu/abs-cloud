@@ -47,6 +47,4 @@ public interface AdvertService {
 
 
 
-
-
 }

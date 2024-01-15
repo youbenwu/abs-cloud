@@ -42,7 +42,7 @@ public class BindingOrgAspect {
 
 	@Transactional
 	@AfterReturning(returning = "bindingOrg",value = "BindingOrg()")
-	public void afterBindingSubject(JoinPoint jp, BindingOrg bindingOrg) {
+	public void afterBindingOrg(JoinPoint jp, BindingOrg bindingOrg) {
 		if(bindingOrg.getOrgId()!=null)
 			return;
 

@@ -13,4 +13,6 @@ public class GetMemberListDTO {
 
     private List<Long> users;
 
+    private List<Integer> types;
+
 }

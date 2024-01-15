@@ -5,8 +5,10 @@ package com.outmao.ebs.wallet.domain.impl;
 import com.outmao.ebs.common.base.BaseDomain;
 import com.outmao.ebs.common.exception.BusinessException;
 import com.outmao.ebs.common.services.eventBus.annotation.ActionEvent;
+import com.outmao.ebs.common.util.DateUtil;
 import com.outmao.ebs.common.util.OrderNoUtil;
 import com.outmao.ebs.common.util.ServletRequestUtil;
+import com.outmao.ebs.common.vo.Duration;
 import com.outmao.ebs.wallet.common.constant.*;
 import com.outmao.ebs.wallet.common.event.WalletTradeEvent;
 import com.outmao.ebs.wallet.common.exception.TradeNoFoundException;
@@ -14,17 +16,14 @@ import com.outmao.ebs.wallet.common.exception.TradeStatusException;
 import com.outmao.ebs.wallet.common.exception.WalletException;
 import com.outmao.ebs.wallet.common.exception.WalletStatusException;
 import com.outmao.ebs.wallet.common.listener.TradeStatusListener;
-import com.outmao.ebs.wallet.dao.CurrencyDao;
-import com.outmao.ebs.wallet.dao.TradeDao;
-import com.outmao.ebs.wallet.dao.WalletDao;
+import com.outmao.ebs.wallet.common.util.TradeUtil;
+import com.outmao.ebs.wallet.dao.*;
 import com.outmao.ebs.wallet.domain.TradeDomain;
 import com.outmao.ebs.wallet.domain.TransferDomain;
 import com.outmao.ebs.wallet.domain.conver.TradeVOConver;
 import com.outmao.ebs.wallet.dto.*;
+import com.outmao.ebs.wallet.entity.*;
 import com.outmao.ebs.wallet.entity.Currency;
-import com.outmao.ebs.wallet.entity.QTrade;
-import com.outmao.ebs.wallet.entity.Trade;
-import com.outmao.ebs.wallet.entity.Wallet;
 import com.outmao.ebs.wallet.vo.TradeVO;
 import com.querydsl.core.types.Predicate;
 import lombok.extern.slf4j.Slf4j;
@@ -32,14 +31,12 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 @Slf4j
 @Component
@@ -56,11 +53,16 @@ public class TradeDomainImpl extends BaseDomain implements TradeDomain {
     private CurrencyDao currencyDao;
 
     @Autowired
+    private TradeProfitSharingDao tradeProfitSharingDao;
+
+    @Autowired
+    private TradeProfitSharingReceiverDao tradeProfitSharingReceiverDao;
+
+    @Autowired
     private TransferDomain transferDomain;
 
     @Autowired
     private TradeVOConver tradeVOConver;
-
 
     private List<TradeStatusListener> listeners=new ArrayList<>();
 
@@ -69,8 +71,8 @@ public class TradeDomainImpl extends BaseDomain implements TradeDomain {
             try{
                 l.statusChanged(trade);
             }catch (Exception e){
-                log.error("订单状态修改出错",e);
-                throw new BusinessException("系统繁忙，请稍候再试");
+                log.error("交易状态修改出错",e);
+                throw new BusinessException("服务器繁忙，请稍候再试");
             }
         }
     }
@@ -104,33 +106,70 @@ public class TradeDomainImpl extends BaseDomain implements TradeDomain {
 
         Currency currency=currencyDao.getOne(request.getCurrencyId());
 
+        BeanUtils.copyProperties(request,trade);
+
         trade.setFrom(from);
         trade.setTo(to);
         trade.setCurrency(currency);
-        trade.setTotalAmount(request.getAmount()+request.getFee());
+        trade.setTotalAmount(trade.getAmount()+trade.getFee());
+        trade.setPayerAmount(trade.getTotalAmount());
 
-        trade.setCreateTime(new Date());
+        if(request.getFreezeExpress()!=null){
+            Duration duration=Duration.parse(request.getFreezeExpress());
+            if(duration!=null) {
+                trade.setFreeze(duration);
+            }else{
+                trade.setFreezeExpireTime(DateUtil.parse(request.getFreezeExpress()));
+            }
+        }
+
+        trade.setTimeoutTime(getFromExpress(request.getTimeoutExpress(),DateUtil.addDays(new Date(),7)));
+
+        if(request.getFinishTimeoutExpress()!=null){
+            Duration duration=Duration.parse(request.getFinishTimeoutExpress());
+            trade.setFinishTimeout(duration);
+        }
+
+        if(trade.getFinishTimeout()==null){
+            Duration duration=new Duration(Duration.d,30);
+            trade.setFinishTimeout(duration);
+        }
+
         trade.setStatus(TradeStatus.TRADE_WAIT_PAY.getStatus());
         trade.setStatusRemark(TradeStatus.TRADE_WAIT_PAY.getStatusRemark());
 
-        BeanUtils.copyProperties(request,trade);
+        trade.setCreateTime(new Date());
 
-        checkTrade(trade);
+        check(trade);
 
         tradeDao.save(trade);
 
         return trade;
     }
 
+    private Date getFromExpress(String s,Date def){
+        if(s==null)
+            return def;
+        Duration duration=Duration.parse(s);
+        Date date;
+        if(duration!=null){
+            date= duration.getToTime(new Date());
+        }else{
+            date= DateUtil.parse(s);
+        }
+        if(date==null)
+            return def;
+        return date;
+    }
 
     //检查交易是否能进行
-    private void checkTrade(Trade trade){
+    private void check(Trade trade){
         //检查钱包状态
-        if(trade.getFrom()!=null&&trade.getFrom().getStatus()!= WalletStatus.WALLET_STATUS_NORMAL.getStatus()){
+        if(trade.getFrom()!=null&&WalletStatus.isNotNormal(trade.getFrom().getStatus())){
             throw new WalletStatusException();
         }
 
-        if(trade.getTo()!=null&&trade.getTo().getStatus()!=WalletStatus.WALLET_STATUS_NORMAL.getStatus()){
+        if(trade.getTo()!=null&&WalletStatus.isNotNormal(trade.getTo().getStatus())){
             throw new WalletStatusException();
         }
     }
@@ -139,34 +178,37 @@ public class TradeDomainImpl extends BaseDomain implements TradeDomain {
     @ActionEvent(WalletTradeEvent.class)
     @Transactional
     @Override
-    public Trade tradePay(String tradeNo) {
-
-        Trade trade = tradeDao.findByTradeNoLock(tradeNo);
-        return tradePay(trade);
+    public Trade tradePay(TradePayDTO request) {
+        Trade trade = tradeDao.findByTradeNoLock(request.getTradeNo());
+        return tradePay(trade,request);
     }
 
-    private Trade tradePay(Trade trade) {
+
+    private Trade tradePay(Trade trade,TradePayDTO request) {
 
         if(trade==null){
             throw new TradeNoFoundException();
         }
 
-        if (trade.getStatus() == TradeStatus.TRADE_SUCCEED.getStatus()) {
+        if (TradeUtil.isSucceed(trade)) {
             //已经支付成功
             return trade;
         }
 
-        if (trade.getStatus() != TradeStatus.TRADE_WAIT_PAY.getStatus()) {
-            //状态异常
+        if (TradeUtil.isNotWaitPay(trade)) {
+            //交易状态异常
             throw new TradeStatusException();
         }
 
         ServletRequestUtil.setAttribute(WalletConstant.action_key, UUID.randomUUID().toString());
 
+        BeanUtils.copyProperties(request,trade);
+
         if (trade.getType() == TradeType.Transfer.getType()) {
 
             transferDomain.transferBalance(trade);
             transferDomain.transferFee(trade);
+            trade.setSuccessTime(new Date());
             trade.setFinishTime(new Date());
             trade.setStatus(TradeStatus.TRADE_FINISHED.getStatus());
             trade.setStatusRemark(TradeStatus.TRADE_FINISHED.getStatusRemark());
@@ -182,6 +224,7 @@ public class TradeDomainImpl extends BaseDomain implements TradeDomain {
 
             //充值
             transferDomain.transferBalance(trade);
+            trade.setSuccessTime(new Date());
             trade.setFinishTime(new Date());
             trade.setStatus(TradeStatus.TRADE_FINISHED.getStatus());
             trade.setStatusRemark(TradeStatus.TRADE_FINISHED.getStatusRemark());
@@ -190,11 +233,15 @@ public class TradeDomainImpl extends BaseDomain implements TradeDomain {
 
             //提现支付
             transferDomain.transferAdvance(trade);
-            //transferDomain.transferFee(trade);
             trade.setSuccessTime(new Date());
             trade.setStatus(TradeStatus.TRADE_SUCCEED.getStatus());
             trade.setStatusRemark(TradeStatus.TRADE_SUCCEED.getStatusRemark());
 
+        }
+
+        if(TradeUtil.isSucceed(trade)&&trade.getFinishTimeout()!=null){
+            //设置自动完成时间
+            trade.setFinishTimeoutTime(trade.getFinishTimeout().getToTime(new Date()));
         }
 
         tradeDao.save(trade);
@@ -209,7 +256,7 @@ public class TradeDomainImpl extends BaseDomain implements TradeDomain {
     @ActionEvent(WalletTradeEvent.class)
     @Transactional
     @Override
-    public Trade tradePayTo(TradePayToDTO request) {
+    public Trade tradePayee(TradePayeeDTO request) {
 
         Trade trade = tradeDao.findByTradeNoLock(request.getTradeNo());
 
@@ -217,14 +264,13 @@ public class TradeDomainImpl extends BaseDomain implements TradeDomain {
             throw new TradeNoFoundException();
         }
 
-        if (trade.getStatus() != TradeStatus.TRADE_SUCCEED.getStatus()) {
+        if (!TradeUtil.isSucceed(trade)) {
             throw new TradeStatusException();
         }
 
         ServletRequestUtil.setAttribute(WalletConstant.action_key, UUID.randomUUID().toString());
 
         Wallet to=walletDao.getOne(request.getToId());
-
 
         transferDomain.transferTo(
                 trade,
@@ -235,10 +281,9 @@ public class TradeDomainImpl extends BaseDomain implements TradeDomain {
                 request.getRemark()
         );
 
-        if(trade.getPayAmount()+trade.getRefundAmount()>=trade.getAmount()){
-
+        if(trade.getPayeeAmount()+trade.getRefundAmount()>=trade.getAmount()){
+            //收取手续费
             transferDomain.transferFee(trade);
-
             //支付完成
             trade.setFinishTime(new Date());
             trade.setStatus(TradeStatus.TRADE_FINISHED.getStatus());
@@ -260,10 +305,10 @@ public class TradeDomainImpl extends BaseDomain implements TradeDomain {
         if(trade==null){
             throw new TradeNoFoundException();
         }
-        if (trade.getStatus() == TradeStatus.TRADE_FINISHED.getStatus()) {
+        if (TradeUtil.isFinished(trade)) {
             return trade;
         }
-        if (trade.getStatus() != TradeStatus.TRADE_SUCCEED.getStatus()) {
+        if (!TradeUtil.isSucceed(trade)) {
             throw new TradeStatusException();
         }
 
@@ -293,14 +338,14 @@ public class TradeDomainImpl extends BaseDomain implements TradeDomain {
             throw new TradeNoFoundException();
         }
 
-        if (trade.getStatus() != TradeStatus.TRADE_SUCCEED.getStatus()) {
+        if (!TradeUtil.isSucceed(trade)) {
             throw new TradeStatusException();
         }
 
         ServletRequestUtil.setAttribute(WalletConstant.action_key, UUID.randomUUID().toString());
 
         long refund=request.getAmount();
-        long maxRefund=trade.getAmount()-trade.getPayAmount()-trade.getRefundAmount();
+        long maxRefund=trade.getAmount()-trade.getPayeeAmount()-trade.getRefundAmount();
         if(refund<maxRefund){
             throw  new WalletException("退款金额超过最大可退金额");
         }
@@ -325,7 +370,8 @@ public class TradeDomainImpl extends BaseDomain implements TradeDomain {
             trade.setCloseTime(new Date());
             trade.setStatus(TradeStatus.TRADE_CLOSED.getStatus());
             trade.setStatusRemark(TradeStatus.TRADE_CLOSED.getStatusRemark());
-        }else if(trade.getPayAmount()+trade.getRefundAmount()>=trade.getAmount()){
+        }else if(trade.getPayeeAmount()+trade.getRefundAmount()>=trade.getAmount()){
+            //订单完成
             transferDomain.transferFee(trade);
             trade.setFinishTime(new Date());
             trade.setStatus(TradeStatus.TRADE_FINISHED.getStatus());
@@ -349,17 +395,17 @@ public class TradeDomainImpl extends BaseDomain implements TradeDomain {
         if(trade==null){
             throw new TradeNoFoundException();
         }
-        if (trade.getStatus() == TradeStatus.TRADE_CLOSED.getStatus()) {
+        if (TradeUtil.isClosed(trade)) {
             return trade;
         }
 
-        if (trade.getStatus() != TradeStatus.TRADE_WAIT_PAY.getStatus()) {
+        if (!TradeUtil.isWaitPay(trade)) {
             throw new TradeStatusException();
         }
 
         trade.setCloseTime(new Date());
         trade.setStatus(TradeStatus.TRADE_CLOSED.getStatus());
-        trade.setStatusRemark("交易关闭");
+        trade.setStatusRemark(TradeStatus.TRADE_CLOSED.getStatusRemark());
 
         trade = tradeDao.save(trade);
 
@@ -368,6 +414,43 @@ public class TradeDomainImpl extends BaseDomain implements TradeDomain {
         return trade;
     }
 
+    @ActionEvent(WalletTradeEvent.class)
+    @Transactional
+    @Override
+    public Trade tradeUnfreeze(String tradeNo) {
+        ServletRequestUtil.setAttribute(WalletConstant.action_key, UUID.randomUUID().toString());
+        Trade trade = tradeDao.findByTradeNoLock(tradeNo);
+        return tradeUnfreeze(trade);
+    }
+
+    private Trade tradeUnfreeze(Trade trade ) {
+
+        if(trade==null){
+            throw new TradeNoFoundException();
+        }
+        if (trade.getFreezeStatus()==3) {
+            //已解冻
+            return trade;
+        }
+
+        if(trade.getFreezeAmount()<=0) {
+            return trade;
+        }
+
+        if (!TradeUtil.isFinished(trade)) {
+            throw new TradeStatusException();
+        }
+
+        if(trade.getFreezeStatus()!=1){
+            throw new TradeStatusException();
+        }
+
+        transferDomain.transferUnfreeze(trade);
+
+        trade = tradeDao.save(trade);
+
+        return trade;
+    }
 
     @ActionEvent(WalletTradeEvent.class)
     @Transactional
@@ -380,16 +463,64 @@ public class TradeDomainImpl extends BaseDomain implements TradeDomain {
         dto.setCurrencyId(request.getCurrencyId());
         dto.setPayChannel(PayChannel.WalletPay.getType());
         dto.setType(TradeType.Recharge.getType());
-        dto.setBusiness(StringUtils.isEmpty(request.getRemark())?"充值":request.getRemark());
-        dto.setBusinessType(WalletConstant.business_type_recharge);
+        dto.setBusiness(StringUtils.isEmpty(request.getBusiness())?request.getRemark():request.getBusiness());
+        dto.setBusinessType(request.getBusinessType()==0?WalletConstant.business_type_recharge:request.getBusinessType());
+        dto.setRemark(request.getRemark());
+
         Trade trade=tradePrepare(dto);
 
-        trade=tradePay(trade);
+        TradePayDTO payDTO=new TradePayDTO();
+        payDTO.setTradeNo(trade.getTradeNo());
+        payDTO.setPayChannel(trade.getPayChannel());
+        payDTO.setOutPayType(trade.getOutPayType());
+        payDTO.setReceiptAmount(trade.getTotalAmount());
+        trade=tradePay(trade,payDTO);
 
         return trade;
     }
 
 
+    @ActionEvent(WalletTradeEvent.class)
+    @Transactional
+    @Override
+    public TradeProfitSharing tradeProfitSharing(String sharingNo) {
+        TradeProfitSharing sharing=tradeProfitSharingDao.findBySharingNoLock(sharingNo);
+        if(sharing==null)
+            return null;
+
+        if(sharing.getStatus()==2)
+            return sharing;
+
+        List<TradeProfitSharingReceiver> receivers=tradeProfitSharingReceiverDao.findAllBySharingId(sharing.getId());
+
+        Trade trade=tradeDao.findByTradeNoLock(sharing.getTradeNo());
+
+        if(trade==null){
+            throw new TradeNoFoundException();
+        }
+
+        ServletRequestUtil.setAttribute(WalletConstant.action_key, UUID.randomUUID().toString());
+
+        transferDomain.transferProfitSharing(trade,receivers);
+
+        sharing.setStatus(2);
+        sharing.setUpdateTime(new Date());
+        tradeProfitSharingDao.save(sharing);
+
+        tradeDao.save(trade);
+
+        if(sharing.isUnfreeze()){
+            tradeUnfreeze(trade);
+        }
+
+        return sharing;
+    }
+
+    @Async
+    @Override
+    public TradeProfitSharing tradeProfitSharingAsync(String sharingNo) {
+        return tradeProfitSharing(sharingNo);
+    }
 
     @Override
     public Trade getTradeByTradeNo(String tradeNo) {
@@ -435,6 +566,69 @@ public class TradeDomainImpl extends BaseDomain implements TradeDomain {
         Page<TradeVO> page=queryPage(e,p,tradeVOConver,pageable);
 
         return page;
+    }
+
+    @Override
+    public Collection<String> getAllTimeoutTradeNo() {
+        return tradeDao.findAllTradeNoByTimeoutTimeBefore(new Date());
+    }
+
+    @Override
+    public Collection<String> getAllFinishTimeoutTradeNo() {
+        return tradeDao.findAllTradeNoByFinishTimeoutTimeBefore(new Date());
+    }
+
+    @Override
+    public Collection<String> getAllFreezeExpireTradeNo() {
+        return tradeDao.findAllTradeNoByFreezeExpireTimeBefore(new Date());
+    }
+
+
+    @Transactional
+    @Override
+    public TradeProfitSharing saveTradeProfitSharing(TradeProfitSharingDTO request) {
+        TradeProfitSharing sharing=tradeProfitSharingDao.findBySharingNoLock(request.getSharingNo());
+        if(sharing!=null)
+            return sharing;
+
+        Trade trade=tradeDao.findByTradeNoLock(request.getTradeNo());
+
+        long amount=0;
+        for (TradeProfitSharingReceiverDTO receiver:request.getReceivers()){
+            amount+=receiver.getAmount();
+        }
+
+        if(trade.getFreezeAmount()<amount){
+            throw new BusinessException("可用的分账金额不足");
+        }
+
+        trade.setFreezeAmount(trade.getFreezeAmount()-amount);
+
+        sharing=new TradeProfitSharing();
+        sharing.setCreateTime(new Date());
+        sharing.setUpdateTime(new Date());
+        sharing.setStatus(1);
+        BeanUtils.copyProperties(request,sharing);
+
+        tradeProfitSharingDao.save(sharing);
+
+        tradeDao.save(trade);
+
+        for (TradeProfitSharingReceiverDTO receiver:request.getReceivers()){
+            saveTradeProfitSharingReceiver(sharing,receiver);
+        }
+
+        return sharing;
+    }
+
+
+    private TradeProfitSharingReceiver saveTradeProfitSharingReceiver(TradeProfitSharing sharing,TradeProfitSharingReceiverDTO request){
+        TradeProfitSharingReceiver receiver=new TradeProfitSharingReceiver();
+        BeanUtils.copyProperties(receiver,receiver);
+        receiver.setSharingId(sharing.getId());
+        receiver.setTradeNo(sharing.getTradeNo());
+        tradeProfitSharingReceiverDao.save(receiver);
+        return receiver;
     }
 
 

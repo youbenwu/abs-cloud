@@ -104,9 +104,9 @@ public class DataStatsDomainImpl extends BaseDomain implements DataStatsDomain {
     public List<DataCityStats> getDataCityStatsList(GetDataCityStatsListDTO request) {
         QDataCityStats e=QDataCityStats.dataCityStats;
 
-        Predicate p=null;
+        Predicate p=e.status.eq(0);
         if(request.getType()!=null){
-           p=e.type.eq(request.getType());
+           p=e.type.eq(request.getType()).and(p);
         }
 
         return QF.select(e).from(e).where(p).orderBy(e.count.desc()).fetch();
@@ -115,11 +115,21 @@ public class DataStatsDomainImpl extends BaseDomain implements DataStatsDomain {
     @Override
     public Page<DataCityStats> getDataCityStatsPage(GetDataCityStatsListDTO request, Pageable pageable) {
 
+        QDataCityStats e=QDataCityStats.dataCityStats;
+
+        Predicate p=e.status.eq(0);
+
         if(request.getType()!=null){
-            return dataCityStatsDao.findAllByType(request.getType(),pageable);
+            p=e.type.eq(request.getType()).and(p);
         }
 
-        return dataCityStatsDao.findAll(pageable);
+        return dataCityStatsDao.findAll(p,pageable);
+
+//        if(request.getType()!=null){
+//            return dataCityStatsDao.findAllByType(request.getType(),pageable);
+//        }
+//
+//        return dataCityStatsDao.findAll(pageable);
     }
 
 
@@ -127,10 +137,10 @@ public class DataStatsDomainImpl extends BaseDomain implements DataStatsDomain {
     public List<DataProvinceStatsVO> getDataProvinceStatsVOList(GetDataProvinceStatsListDTO request) {
         QDataCityStats e=QDataCityStats.dataCityStats;
 
-        Predicate p=null;
+        Predicate p=e.status.eq(0);
 
         if(request.getType()!=null){
-            p=e.type.eq(request.getType());
+            p=e.type.eq(request.getType()).and(p);
         }
 
         List<Tuple> tuples=QF.select(e.amount.sum(),e.count.sum(),e.province).from(e).where(p).groupBy(e.province).orderBy(e.count.desc()).fetch();

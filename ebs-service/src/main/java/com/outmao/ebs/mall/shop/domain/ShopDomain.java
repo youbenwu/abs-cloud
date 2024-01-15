@@ -22,6 +22,9 @@ public interface ShopDomain {
     public Shop setShopStatus(SetShopStatusDTO request);
 
 
+    public Shop getShopByOrgId(Long orgId);
+
+
     public ShopVO getShopVOById(Long id);
 
 

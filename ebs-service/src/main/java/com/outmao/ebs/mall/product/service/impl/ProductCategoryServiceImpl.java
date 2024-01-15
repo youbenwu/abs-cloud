@@ -33,6 +33,11 @@ public class ProductCategoryServiceImpl extends BaseService implements ProductCa
     }
 
     @Override
+    public ProductCategory getProductCategoryByCode(String code) {
+        return productCategoryDomain.getProductCategoryByCode(code);
+    }
+
+    @Override
     public List<ProductCategoryVO> getProductCategoryVOList() {
         return productCategoryDomain.getProductCategoryVOList();
     }

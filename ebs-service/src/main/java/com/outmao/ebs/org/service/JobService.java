@@ -7,7 +7,6 @@ import com.outmao.ebs.org.vo.JobMemberVO;
 import com.outmao.ebs.org.vo.JobVO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-
 import java.util.List;
 
 public interface JobService {
@@ -56,9 +55,17 @@ public interface JobService {
 
     /*
      *
+     * 删除职位成员
+     *
+     * */
+    public void deleteJobMemberByMemberId(Long memberId);
+
+    /*
+     *
      * 获取职位成员列表
      *
      * */
     public Page<JobMemberVO> getJobMemberVOPage(GetJobMemberListDTO request, Pageable pageable);
+
 
 }

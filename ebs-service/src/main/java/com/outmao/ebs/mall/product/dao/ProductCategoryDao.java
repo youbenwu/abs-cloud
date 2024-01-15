@@ -9,6 +9,7 @@ import javax.persistence.LockModeType;
 
 public interface ProductCategoryDao extends JpaRepository<ProductCategory,Long> {
 
+
     @Lock(value = LockModeType.PESSIMISTIC_READ)
     @Query("select c from ProductCategory c where c.id=?1")
     public ProductCategory findByIdForUpdate(Long id);
@@ -17,5 +18,9 @@ public interface ProductCategoryDao extends JpaRepository<ProductCategory,Long> 
     @Modifying
     @Query("update ProductCategory c set c.sort=?2  where c.id=?1")
     public void setSort(Long id, int sort);
+
+
+    public ProductCategory findByCode(String code);
+
 
 }

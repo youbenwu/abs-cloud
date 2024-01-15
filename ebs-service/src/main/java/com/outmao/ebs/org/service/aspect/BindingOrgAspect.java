@@ -6,6 +6,7 @@ import com.outmao.ebs.common.vo.Item;
 import com.outmao.ebs.org.common.data.BindingOrg;
 import com.outmao.ebs.org.dto.RegisterOrgDTO;
 import com.outmao.ebs.org.entity.Org;
+import com.outmao.ebs.org.entity.OrgType;
 import com.outmao.ebs.org.service.OrgService;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.AfterReturning;
@@ -29,20 +30,22 @@ public class BindingOrgAspect {
 
 	}
 
-//    public static final int TYPE_SYSTEM=0;
-//    public static final int TYPE_TENANT=1;
-//    public static final int TYPE_DEPART=2;
-//    public static final int TYPE_MERCHANT=3;
-//    public static final int TYPE_STORE=4;
-//    public static final int TYPE_SHOP=5;
-
 	@Transactional
 	@AfterReturning(returning = "bindingOrg",value = "BindingOrg()")
-	public void afterBindingSubject(JoinPoint jp, BindingOrg bindingOrg) {
+	public void afterBindingOrg(JoinPoint jp, BindingOrg bindingOrg) {
 		if(bindingOrg.getOrgId()!=null)
 			return;
 
-        orgService.registerOrg(bindingOrg);
+		Item item=bindingOrg.toItem();
+		RegisterOrgDTO orgDTO=new RegisterOrgDTO();
+		orgDTO.setType(OrgType.getType(item.getType()));
+		orgDTO.setParentId(bindingOrg.getParentOrgId());
+		orgDTO.setTargetId(item.getId());
+		orgDTO.setUserId(bindingOrg.getUserId());
+		orgDTO.setName(item.getTitle());
+		orgDTO.setContact(bindingOrg.getContact());
+		Org org=orgService.registerOrg(orgDTO);
+		bindingOrg.setOrgId(org.getId());
 
 	}
 

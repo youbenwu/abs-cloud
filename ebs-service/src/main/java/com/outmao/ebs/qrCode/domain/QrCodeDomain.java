@@ -1,5 +1,6 @@
 package com.outmao.ebs.qrCode.domain;
 
+import com.google.zxing.qrcode.encoder.QRCode;
 import com.outmao.ebs.qrCode.dto.*;
 import com.outmao.ebs.qrCode.entity.QrCode;
 import org.springframework.data.domain.Page;
@@ -35,6 +36,9 @@ public interface QrCodeDomain {
 	 * 生成码
 	 */
 	public QrCode saveQrCode(QrCodeDTO request);
+
+
+	public QrCode updateQrCode(UpdateQrCodeDTO request);
 
 
 	/*

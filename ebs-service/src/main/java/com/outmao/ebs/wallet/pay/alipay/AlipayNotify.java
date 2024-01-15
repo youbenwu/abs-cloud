@@ -81,6 +81,9 @@ public class AlipayNotify {
 			String trade_no = new String(request.getParameter("trade_no").getBytes("ISO-8859-1"), "UTF-8");
 			// 付款金额
 			String total_amount = new String(request.getParameter("total_amount").getBytes("ISO-8859-1"), "UTF-8");
+
+			//String receipt_amount=new String(request.getParameter("receipt_amount").getBytes("ISO-8859-1"), "UTF-8");
+
 			// TRADE_FINISHED(表示交易已经成功结束，并不能再对该交易做后续操作);
 			// TRADE_SUCCESS(表示交易已经成功结束，可以对该交易做后续操作，如：分润、退款等);
 

@@ -2,23 +2,18 @@ package com.outmao.ebs.org.domain.impl;
 
 
 
-import com.alibaba.fastjson.JSON;
 import com.outmao.ebs.common.base.BaseDomain;
 import com.outmao.ebs.common.exception.BusinessException;
-import com.outmao.ebs.org.dao.OrgContactDao;
 import com.outmao.ebs.org.dao.OrgDao;
+import com.outmao.ebs.org.dao.OrgParentDao;
 import com.outmao.ebs.org.domain.OrgDomain;
 import com.outmao.ebs.org.domain.conver.CacheOrgVOConvert;
 import com.outmao.ebs.org.domain.conver.OrgVOConvert;
-import com.outmao.ebs.org.dto.GetOrgListDTO;
-import com.outmao.ebs.org.dto.OrgDTO;
-import com.outmao.ebs.org.dto.RegisterOrgDTO;
-import com.outmao.ebs.org.dto.SetOrgStatusDTO;
-import com.outmao.ebs.org.entity.Org;
-import com.outmao.ebs.org.entity.OrgContact;
-import com.outmao.ebs.org.entity.QOrg;
+import com.outmao.ebs.org.dto.*;
+import com.outmao.ebs.org.entity.*;
 import com.outmao.ebs.org.vo.CacheOrgVO;
 import com.outmao.ebs.org.vo.OrgVO;
+import com.outmao.ebs.user.common.annotation.AutoRegisterUser;
 import com.outmao.ebs.user.dao.UserDao;
 import com.querydsl.core.types.Predicate;
 import org.springframework.beans.BeanUtils;
@@ -30,7 +25,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
-
 import java.util.*;
 
 
@@ -44,7 +38,7 @@ public class OrgDomainImpl extends BaseDomain implements OrgDomain {
     private OrgDao orgDao;
 
     @Autowired
-    private OrgContactDao orgContactDao;
+    private OrgParentDao orgParentDao;
 
     private OrgVOConvert orgVOConvert=new OrgVOConvert();
 
@@ -52,31 +46,38 @@ public class OrgDomainImpl extends BaseDomain implements OrgDomain {
 
 
     @Transactional()
+    @AutoRegisterUser
     @Override
     public Org registerOrg(RegisterOrgDTO request) {
+
         Org org=new Org();
+
+        org.setContact(new OrgContact());
+
         org.setUser(userDao.getOne(request.getUserId()));
+
         if(request.getParentId()!=null) {
-            Org parent=orgDao.findByIdForUpdate(request.getParentId());
+            Org parent=orgDao.findByIdLock(request.getParentId());
             org.setParent(parent);
             org.setLevel(parent.getLevel()+1);
             if(parent.isLeaf()){
                 parent.setLeaf(false);
             }
         }
-        BeanUtils.copyProperties(request,org,"contact","id");
 
-        org.setContact(new OrgContact());
+        BeanUtils.copyProperties(request,org,"contact","id");
 
         if(request.getContact()!=null) {
             BeanUtils.copyProperties(request.getContact(), org.getContact(),"id");
         }
 
         org.setCreateTime(new Date());
+
         org.setUpdateTime(org.getCreateTime());
 
-        orgDao.save(org);
+        org.setKeyword(getKeyword(org));
 
+        orgDao.save(org);
 
         return org;
     }
@@ -85,7 +86,7 @@ public class OrgDomainImpl extends BaseDomain implements OrgDomain {
     @Override
     public Org saveOrg(OrgDTO request) {
 
-        Org org= orgDao.findByIdForUpdate(request.getId());
+        Org org= orgDao.findByIdLock(request.getId());
 
         BeanUtils.copyProperties(request,org,"contact","id");
 
@@ -122,7 +123,7 @@ public class OrgDomainImpl extends BaseDomain implements OrgDomain {
     @Transactional()
     @Override
     public Org setOrgStatus(SetOrgStatusDTO request) {
-        Org org=orgDao.findByIdForUpdate(request.getId());
+        Org org=orgDao.findByIdLock(request.getId());
         org.setStatus(request.getStatus());
         org.setStatusRemark(request.getStatusRemark());
         orgDao.save(org);
@@ -133,12 +134,13 @@ public class OrgDomainImpl extends BaseDomain implements OrgDomain {
     @Transactional()
     @Override
     public void deleteOrgById(Long id) {
-        Org org=orgDao.findByIdForUpdate(id);
+        orgParentDao.deleteAllByOrgId(id);
+        Org org=orgDao.findByIdLock(id);
         if(!org.isLeaf()){
             throw new BusinessException("请先删除下级组织");
         }
         if(org.getParent()!=null) {
-            Org parent = orgDao.findByIdForUpdate(org.getParent().getId());
+            Org parent = orgDao.findByIdLock(org.getParent().getId());
             if (parent.getChildren().size() == 1) {
                 parent.setLeaf(true);
             }
@@ -149,20 +151,14 @@ public class OrgDomainImpl extends BaseDomain implements OrgDomain {
     @CacheEvict(value = "cache_org", key = "#id")
     @Transactional()
     @Override
-    public Org addOrgParent(Long id, Long parentId) {
-        Org org=orgDao.findByIdForUpdate(id);
-
-
-        Set<Long> parents=new HashSet<>();
-        if(org.getParents()!=null){
-            List<Long> ps= JSON.parseArray(org.getParents(),Long.class);
-            parents.addAll(ps);
+    public OrgParent saveOrgParent(OrgParentDTO request) {
+        OrgParent parent=orgParentDao.findByOrgIdAndParentId(request.getOrgId(),request.getParentId());
+        if(parent==null){
+            parent=new OrgParent();
+            BeanUtils.copyProperties(request,parent);
+            orgParentDao.save(parent);
         }
-        parents.add(parentId);
-        org.setParents(JSON.toJSONString(parents));
-
-        orgDao.save(org);
-        return org;
+        return parent;
     }
 
     @Override
@@ -175,31 +171,11 @@ public class OrgDomainImpl extends BaseDomain implements OrgDomain {
         return orgDao.findByTargetId(targetId);
     }
 
-    @Override
-    public Org getOrg() {
-        return orgDao.findByType(Org.TYPE_SYSTEM);
-    }
-
-    @Override
-    public List<Org> getOrgListByIdIn(Collection<Long> idIn) {
-        return orgDao.findAllByIdIn(idIn);
-    }
-
-    @Override
-    public Long getOrgIdByTargetId(Long targetId) {
-        return orgDao.findIdByTargetId(targetId);
-    }
 
     @Override
     public OrgVO getOrgVOById(Long id) {
         QOrg e=QOrg.org;
         return queryOne(e,e.id.eq(id),orgVOConvert);
-    }
-
-    @Override
-    public List<OrgVO> getOrgVOListByIdIn(Collection<Long> idIn) {
-        QOrg e=QOrg.org;
-        return queryList(e,e.id.in(idIn),orgVOConvert);
     }
 
     @Override
@@ -215,7 +191,8 @@ public class OrgDomainImpl extends BaseDomain implements OrgDomain {
         }
 
         if(request.getType()!=null){
-            p=e.type.eq(request.getType()).and(p);
+            QOrgType t=QOrgType.orgType;
+            p=e.id.eq(t.orgId).and(e.type.eq(request.getType()).or(t.type.eq(request.getType()))).and(p);
         }
 
         Page<OrgVO> page=queryPage(e,p,orgVOConvert,pageable);
@@ -223,6 +200,11 @@ public class OrgDomainImpl extends BaseDomain implements OrgDomain {
         return page;
     }
 
+    @Override
+    public List<OrgVO> getOrgVOListByIdIn(Collection<Long> idIn) {
+        QOrg e=QOrg.org;
+        return queryList(e,e.id.in(idIn),orgVOConvert);
+    }
 
     @Cacheable(value = "cache_org", key = "#id",condition = "#id!=null",unless = "#result == null")
     @Override
@@ -232,6 +214,9 @@ public class OrgDomainImpl extends BaseDomain implements OrgDomain {
         if(vo!=null&&vo.getParentId()!=null){
             vo.setParent(getCacheOrgVOById(vo.getParentId()));
         }
+        if(vo!=null){
+            vo.setParents(orgParentDao.findAllParentIdByOrgId(id));
+        }
         return vo;
     }
 
@@ -239,7 +224,7 @@ public class OrgDomainImpl extends BaseDomain implements OrgDomain {
     @Override
     public CacheOrgVO getCacheOrgVO() {
         QOrg e=QOrg.org;
-        CacheOrgVO vo=queryOne(e,e.type.eq(Org.TYPE_SYSTEM),cacheOrgVOConvert);
+        CacheOrgVO vo=queryOne(e,e.type.eq(OrgType.TYPE_SYSTEM),cacheOrgVOConvert);
         return vo;
     }
 

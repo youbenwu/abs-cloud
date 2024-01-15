@@ -17,7 +17,6 @@ public class DepartmentVO {
     private int sort;
     private String name; //部门名称
     private String intro;//部门描述
-    private int members;
     private Date createTime;
     private Date updateTime;
 

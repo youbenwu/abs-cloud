@@ -1,11 +1,16 @@
 package com.outmao.ebs.org.dto;
 
+import com.outmao.ebs.user.common.constant.Oauth;
+import com.outmao.ebs.user.common.data.RegisterUser;
+import com.outmao.ebs.user.dto.RegisterDTO;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.util.StringUtils;
 
+import java.util.HashMap;
 import java.util.List;
 
 
@@ -13,7 +18,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-public class AccountDTO {
+public class AccountDTO implements RegisterUser {
 
     @ApiModelProperty(name = "id", value = "ID")
     private Long id;
@@ -34,4 +39,16 @@ public class AccountDTO {
 
     private List<Long> roles;
 
+    @Override
+    public RegisterDTO getRegisterRequest() {
+        if(StringUtils.isEmpty(phone))
+            return null;
+        RegisterDTO registerDTO=new RegisterDTO();
+        registerDTO.setPrincipal(phone);
+        registerDTO.setCredentials(password);
+        registerDTO.setOauth(Oauth.PHONE.getName());
+        registerDTO.setArgs(new HashMap<>());
+        registerDTO.getArgs().put("nickname",name);
+        return registerDTO;
+    }
 }
