@@ -46,10 +46,24 @@ public class StudioDomainImpl extends BaseDomain implements StudioDomain {
         BeanUtils.copyProperties(request,studio);
         studio.setUpdateTime(new Date());
 
+        studio.setKeyword(getKeyword(studio));
+
         studioDao.save(studio);
 
         return studio;
     }
+
+    private String getKeyword(Studio data){
+        StringBuffer s=new StringBuffer();
+        s.append(data.getName());
+        if(!StringUtils.isEmpty(data.getIntro())){
+            s.append(" "+data.getIntro());
+        }
+
+        return s.toString();
+    }
+
+
 
     @Transactional
     @Override
