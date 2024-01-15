@@ -88,7 +88,7 @@ public class HotelDomainImpl extends BaseDomain implements HotelDomain {
         BeanUtils.copyProperties(request,hotel,"contact");
 
 
-        BeanUtils.copyProperties(request.getContact(),hotel.getContact());
+        BeanUtils.copyProperties(request.getContact(),hotel.getContact(),"id");
 
         hotel.setArea(area);
         hotel.setLatitude(hotel.getContact().getAddress().getLatitude());

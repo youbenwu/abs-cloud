@@ -68,12 +68,6 @@ public class HotelServiceImpl extends BaseService implements HotelService {
     private MemberService memberService;
 
 
-    @Autowired
-    private OrgService orgService;
-
-
-    @Autowired
-    private MerchantService merchantService;
 
     @Autowired
     private PhotoService photoService;

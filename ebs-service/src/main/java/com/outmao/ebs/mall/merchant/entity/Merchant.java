@@ -126,7 +126,7 @@ public class Merchant implements Serializable , BindingOrg, BindingWallet {
      * 联系信息
      *
      */
-    @OneToOne(cascade = CascadeType.REFRESH, fetch = FetchType.LAZY)
+    @OneToOne(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
     @JoinColumn(name = "contactId")
     private MerchantContact contact;
 

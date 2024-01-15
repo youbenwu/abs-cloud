@@ -22,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.OutputStream;
 import java.util.Date;
+import java.util.List;
 
 @Slf4j
 @Component
@@ -139,10 +140,10 @@ public class QrCodeDomainImpl extends BaseDomain implements QrCodeDomain {
 	public QrCode activateQrCode(ActivateQrCodeDTO request) {
 
 		QQrCode e=QQrCode.qrCode;
-		Long id=QF.select(e.id).from(e).where(e.status.eq(QrCodeStatus.NotActivated.getStatus())).fetchFirst();
+		List<Long> ids=QF.select(e.id).from(e).where(e.status.eq(QrCodeStatus.NotActivated.getStatus())).limit(1).fetch();
 
-		if(id!=null){
-			QrCode qrCode=qrCodeDao.findByIdForUpdate(id);
+		if(!ids.isEmpty()){
+			QrCode qrCode=qrCodeDao.findByIdForUpdate(ids.get(0));
 			if(qrCode.getStatus()==QrCodeStatus.NotActivated.getStatus()){
 				qrCode.setUrl(request.getUrl());
 				qrCode.setBusiness(request.getBusiness());

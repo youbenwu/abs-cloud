@@ -3,7 +3,6 @@ package com.outmao.ebs.mall.merchant.domain.impl;
 import com.outmao.ebs.common.configuration.constant.Status;
 import com.outmao.ebs.common.base.BaseDomain;
 import com.outmao.ebs.common.util.StringUtil;
-import com.outmao.ebs.mall.merchant.dao.MerchantContactDao;
 import com.outmao.ebs.org.common.annotation.BindingOrg;
 import com.outmao.ebs.mall.merchant.dao.MerchantDao;
 import com.outmao.ebs.mall.merchant.domain.MerchantDomain;
@@ -46,9 +45,6 @@ public class MerchantDomainImpl extends BaseDomain implements MerchantDomain {
     private MerchantDao merchantDao;
 
     @Autowired
-    private MerchantContactDao merchantContactDao;
-
-    @Autowired
     private QrCodeService qrcodeService;
 
     private MerchantVOConver merchantVOConver=new MerchantVOConver();
@@ -70,7 +66,7 @@ public class MerchantDomainImpl extends BaseDomain implements MerchantDomain {
         }
 
         if(request.getContact()!=null){
-            BeanUtils.copyProperties(request.getContact(),merchant.getContact());
+            BeanUtils.copyProperties(request.getContact(),merchant.getContact(),"id");
         }
 
         BeanUtils.copyProperties(request,merchant,"id","contact");
@@ -81,7 +77,6 @@ public class MerchantDomainImpl extends BaseDomain implements MerchantDomain {
         merchant.setStatus(Status.NotAudit.getStatus());
         merchant.setStatusRemark(Status.NotAudit.getStatusRemark());
 
-        merchantContactDao.save(merchantContactDao.save(merchant.getContact()));
         merchantDao.save(merchant);
 
         if(merchant.getUrl()==null){
