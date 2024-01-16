@@ -350,13 +350,7 @@ public class MessageDomainImpl extends BaseDomain implements MessageDomain {
 		PushBodyDTO<PushMessageDTO> body=new PushBodyDTO<>();
 		body.setData(m);
 		body.setTitle(m.getTitle());
-		if(m.getType()!=null){
-			if(m.getType().startsWith(MessageConstant.message_type_order_success)){
-				body.setType(10);
-			}else if(m.getType().startsWith("order")){
-				body.setType(11);
-			}
-		}
+		body.setType(m.getType());
 		body.setContent(m.getContent());
 		PushDTO pushDTO=new PushDTO<>();
 		pushDTO.setBody(body);

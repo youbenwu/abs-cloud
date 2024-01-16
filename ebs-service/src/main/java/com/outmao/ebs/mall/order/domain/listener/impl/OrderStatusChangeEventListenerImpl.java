@@ -41,7 +41,7 @@ public class OrderStatusChangeEventListenerImpl extends ActionEventListener<Orde
 
 
         if(sellerType!=null){
-            sendMessageSeller(order,type);
+            sendMessageSeller(order,sellerType);
         }
 
     }

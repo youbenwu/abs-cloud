@@ -187,7 +187,7 @@ public class RongcloudServiceImpl implements RongcloudService {
         try{
 
             PushBodyDTO pushBodyDTO=new PushBodyDTO();
-            pushBodyDTO.setType(20);
+            pushBodyDTO.setType("chatroom-create");
             pushBodyDTO.setTitle("创建群聊");
             pushBodyDTO.setContent("创建群聊:"+chatroom.getName());
             PushDTO pushDTO=new PushDTO();
@@ -220,7 +220,7 @@ public class RongcloudServiceImpl implements RongcloudService {
         try{
 
             PushBodyDTO pushBodyDTO=new PushBodyDTO();
-            pushBodyDTO.setType(22);
+            pushBodyDTO.setType("chatroom-update");
             pushBodyDTO.setTitle("修改群聊");
             pushBodyDTO.setContent("修改群聊:"+chatroom.getName());
             PushDTO pushDTO=new PushDTO();
@@ -244,7 +244,7 @@ public class RongcloudServiceImpl implements RongcloudService {
         try{
 
             PushBodyDTO pushBodyDTO=new PushBodyDTO();
-            pushBodyDTO.setType(21);
+            pushBodyDTO.setType("chatroom-delete");
             pushBodyDTO.setTitle("删除群聊");
             pushBodyDTO.setContent("删除群聊:"+chatroom.getName());
             PushDTO pushDTO=new PushDTO();
