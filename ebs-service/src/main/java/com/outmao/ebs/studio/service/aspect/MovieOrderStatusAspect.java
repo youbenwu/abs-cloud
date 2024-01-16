@@ -43,7 +43,7 @@ public class MovieOrderStatusAspect {
 
 		if(order.isSuccessed()){
 			MovieEpisode episode = JSON.parseObject(order.getData(),MovieEpisode.class);
-			movieService.saveUserMovieEpisode(order.getOwnerId(),episode.getId());
+			movieService.saveUserMovieEpisode(order.getOwnerId()!=null?order.getOwnerId():order.getUserId(),episode.getId());
 		}
 
 		FinishOrderDTO dto=new FinishOrderDTO();

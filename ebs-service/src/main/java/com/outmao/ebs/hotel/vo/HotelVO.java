@@ -45,6 +45,12 @@ public class HotelVO {
     @ApiModelProperty(name = "shopId", value = "店铺ID")
     private Long shopId;
 
+    /**
+     * 商家钱包ID
+     */
+    @ApiModelProperty(name = "walletId", value = "商家钱包ID")
+    private Long walletId;
+
 
     /**
      *
